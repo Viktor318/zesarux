@@ -1645,6 +1645,15 @@ static int scrsdl_hungarian_keyboard_event(SDL_Event *event)
     if (keysym.mod & KMOD_SHIFT) host_mods |=HUNGARIAN_KEYBOARD_MOD_SHIFT;
     if (keysym.mod & (KMOD_CTRL|KMOD_ALT)) host_mods |=HUNGARIAN_KEYBOARD_MOD_SYMBOL;
 
+    //Mientras se envia una secuencia (simbolos del modo extendido), los modificadores del host
+    //no deben tocar Caps/Symbol shift: solo se recuerdan para el final
+    if (hungarian_keyboard_sequence_running() &&
+        (sym==SDLK_LSHIFT || sym==SDLK_RSHIFT || sym==SDLK_LCTRL || sym==SDLK_RCTRL ||
+         sym==SDLK_LALT || sym==SDLK_RALT || sym==SDLK_MODE)) {
+        hungarian_keyboard_host_mods_changed(host_mods);
+        return 1;
+    }
+
     //Al soltar, liberar siempre lo que hayamos pulsado nosotros, aunque ya no este activo
     if (event->type==SDL_KEYUP) return hungarian_keyboard_release(keyid,host_mods);
 

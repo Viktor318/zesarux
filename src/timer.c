@@ -79,6 +79,7 @@
 #include "ql_zx8302.h"
 
 #include "autoselectoptions.h"
+#include "hungarian_keyboard.h"
 
 
 
@@ -1214,6 +1215,9 @@ void timer_check_interrupt(void)
             z88_pendiente_cerrar_tapa_timer--;
             if (z88_pendiente_cerrar_tapa_timer==0) z88_close_flap_ahora();
         }
+
+        //Secuencias de teclas del teclado hungaro (simbolos del modo extendido)
+        hungarian_keyboard_timer();
 
         //Input file keyboard
         if (send_text_as_keystrokes_is_playing() ) {
