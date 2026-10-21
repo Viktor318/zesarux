@@ -53,6 +53,7 @@
 #include "pcw.h"
 #include "baseconf.h"
 #include "scorpion.h"
+#include "hungarian_keyboard.h"
 
 
 SDL_Window *window=NULL;
@@ -1488,6 +1489,59 @@ int scrsdl_recibido_resize(SDL_Event *event)
     return 0;
 }
 
+
+//Teclado hungaro: gestiona un evento de tecla usando el caracter que genera el sistema operativo
+//(evento SDL_TEXTINPUT que llega justo despues del SDL_KEYDOWN).
+//Retorna 1 si el evento se ha gestionado y no debe pasar por la gestion normal
+static int scrsdl_hungarian_keyboard_event(SDL_Event *event)
+{
+    SDL_Keysym keysym=event->key.keysym;
+    int keyid=keysym.scancode;
+
+    int host_mods=0;
+    if (keysym.mod & KMOD_SHIFT) host_mods |=HUNGARIAN_KEYBOARD_MOD_SHIFT;
+    if (keysym.mod & (KMOD_CTRL|KMOD_ALT)) host_mods |=HUNGARIAN_KEYBOARD_MOD_SYMBOL;
+
+    //Al soltar, liberar siempre lo que hayamos pulsado nosotros, aunque ya no este activo
+    if (event->type==SDL_KEYUP) return hungarian_keyboard_release(keyid,host_mods);
+
+    if (!hungarian_keyboard_is_active()) return 0;
+
+    //Autorepeticion de una tecla nuestra
+    if (hungarian_keyboard_key_is_held(keyid)) {
+        //Descartar el texto de la repeticion, si viene a continuacion
+        SDL_Event siguiente;
+        if (SDL_PeepEvents(&siguiente,1,SDL_PEEKEVENT,SDL_FIRSTEVENT,SDL_LASTEVENT)==1 && siguiente.type==SDL_TEXTINPUT) {
+            SDL_PeepEvents(&siguiente,1,SDL_GETEVENT,SDL_TEXTINPUT,SDL_TEXTINPUT);
+        }
+        return 1;
+    }
+
+    int sym=keysym.sym;
+
+    //Solo teclas que pueden generar un caracter imprimible. Espacio, enter, borrar, cursores,
+    //F1..F12, teclado numerico, etc siguen por la gestion normal
+    if (sym<=32 || sym==SDLK_DELETE || (sym & SDLK_SCANCODE_MASK)) return 0;
+
+    //AltGr: en Linux suele ser RALT o MODE; en Windows llega como LCtrl+RAlt
+    int altgr=( (keysym.mod & (KMOD_RALT|KMOD_MODE)) ? 1 : 0);
+
+    //Ctrl o Alt izquierdo sin AltGr: es Symbol shift del Spectrum; no se genera texto
+    if (!altgr && (keysym.mod & (KMOD_CTRL|KMOD_LALT))) return 0;
+
+    SDL_Event siguiente;
+    if (SDL_PeepEvents(&siguiente,1,SDL_PEEKEVENT,SDL_FIRSTEVENT,SDL_LASTEVENT)==1 && siguiente.type==SDL_TEXTINPUT) {
+        SDL_PeepEvents(&siguiente,1,SDL_GETEVENT,SDL_TEXTINPUT,SDL_TEXTINPUT);
+        unsigned int codepoint=hungarian_keyboard_utf8_decode(siguiente.text.text);
+        return hungarian_keyboard_press(keyid,codepoint);
+    }
+
+    //Sin texto con AltGr: tecla muerta (por ejemplo AltGr+1). Se absorbe
+    if (altgr) return hungarian_keyboard_press(keyid,0);
+
+    return 0;
+}
+
 void scrsdl_actualiza_tablas_teclado(void)
 {
 
@@ -1496,6 +1550,9 @@ void scrsdl_actualiza_tablas_teclado(void)
     int pressrelease;
 
     //SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
+
+    //El teclado hungaro necesita los eventos SDL_TEXTINPUT
+    if (hungarian_keyboard.v && !SDL_IsTextInputActive()) SDL_StartTextInput();
 
 
     while( SDL_PollEvent( &event ) ){
@@ -1536,6 +1593,9 @@ void scrsdl_actualiza_tablas_teclado(void)
 
                 joystick_possible_leftalt_key(0);
 
+                //Teclas pulsadas por el teclado hungaro
+                hungarian_keyboard_release_all();
+
             }
 			if (event.window.event==SDL_WINDOWEVENT_FOCUS_GAINED) {
 
@@ -1545,7 +1605,11 @@ void scrsdl_actualiza_tablas_teclado(void)
 
 		}
 
-		if (event.type==SDL_KEYDOWN || event.type==SDL_KEYUP) {
+		if ( (event.type==SDL_KEYDOWN || event.type==SDL_KEYUP) && scrsdl_hungarian_keyboard_event(&event) ) {
+			//Gestionada por el teclado hungaro
+		}
+
+		else if (event.type==SDL_KEYDOWN || event.type==SDL_KEYUP) {
 			if (event.type==SDL_KEYDOWN) pressrelease=1;
 			if (event.type==SDL_KEYUP) pressrelease=0;
 

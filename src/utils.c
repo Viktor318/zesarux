@@ -175,6 +175,7 @@
 #include "qsound.h"
 #include "scorpion.h"
 #include "didaktikgama.h"
+#include "hungarian_keyboard.h"
 
 //Nota: funciones de simular teclas desde archivo de texto o portapapeles, los nombres
 //tienen el prefijo send_text_as_keystrokes_ o input_file_keyboard_ , son lo mismo, solo que el segundo es el nombre antiguo
@@ -5066,6 +5067,8 @@ int util_write_configfile(void)
                                                     ADD_STRING_CONFIG,"--keymap %d",z88_cpc_keymap_type);
 
     if (azerty_keyboard_numbers_no_shift.v)         ADD_STRING_CONFIG,"--azerty-kbd-num-no-shift");
+
+    if (hungarian_keyboard.v)                       ADD_STRING_CONFIG,"--hungarian-keyboard");
 
     if (autoload_snapshot_on_start.v)               ADD_STRING_CONFIG,"--autoloadsnap");
     if (autosave_snapshot_on_exit.v)                ADD_STRING_CONFIG,"--autosavesnap");
