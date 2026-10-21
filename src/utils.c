@@ -49,6 +49,8 @@
 
 #ifdef MINGW
 //Para usar GetLogicalDrives
+//En MinGW-w64 winbase.h necesita que antes se incluya windows.h
+#include <windows.h>
 #include <winbase.h>
 #endif
 
@@ -11388,7 +11390,13 @@ char *get_tmpdir_base(void)
         sprintf (template_dir,"%s\\zesarux-XXXXXX",windows_temp);
 
         char *dir;
+#ifdef __MINGW64_VERSION_MAJOR
+        //MinGW-w64 no tiene mkdtemp: generar el nombre con _mktemp y crear la carpeta
+        dir=_mktemp(template_dir);
+        if (dir!=NULL && mkdir(dir)!=0) dir=NULL;
+#else
         dir=mkdtemp(template_dir);
+#endif
 
                 if (dir==NULL) {
                         debug_printf (VERBOSE_DEBUG,"Error getting temporary directory: %s",strerror(errno) );

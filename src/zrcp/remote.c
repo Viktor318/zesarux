@@ -6531,6 +6531,11 @@ void zrcp_set_char_mode(int sock_connected_client)
 
 }
 
+//En MinGW-w64, winbase.h define S_NORMAL, que choca con el enum siguiente
+#ifdef S_NORMAL
+#undef S_NORMAL
+#endif
+
 //CSI : Control Sequence Introducer
 enum enum_estados_char {
     S_NORMAL, S_ESC, S_CSI
