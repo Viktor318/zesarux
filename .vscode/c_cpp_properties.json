@@ -1,0 +1,27 @@
+{
+    "configurations": [
+        {
+            "name": "Windows (MinGW-w64)",
+            "includePath": [
+                "${workspaceFolder}/src/**",
+                "${env:HOME}/.cache/zesarux-windows-build/SDL2-2.30.9/x86_64-w64-mingw32/include/SDL2"
+            ],
+            "defines": ["MINGW", "WIN32", "_WIN32"],
+            "compilerPath": "/usr/bin/x86_64-w64-mingw32-gcc",
+            "cStandard": "gnu11",
+            "intelliSenseMode": "windows-gcc-x64"
+        },
+        {
+            "name": "Linux (WSL)",
+            "includePath": [
+                "${workspaceFolder}/src/**",
+                "/usr/include/SDL2"
+            ],
+            "defines": ["_GNU_SOURCE", "_DEFAULT_SOURCE"],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu11",
+            "intelliSenseMode": "linux-gcc-x64"
+        }
+    ],
+    "version": 4
+}

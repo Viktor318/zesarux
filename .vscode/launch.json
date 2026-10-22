@@ -1,0 +1,25 @@
+{
+    // Hibakeresés a WSL-es (linuxos) változattal: F5.
+    // Előtte egyszer kell: Terminal -> Run Task... -> ZEsarUX (Linux): configure
+    // Töréspont: kattints a sorszám mellé (piros pötty).
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "ZEsarUX (Linux) hibakeresés",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/zesarux",
+            "args": ["--vo", "sdl", "--hungarian-keyboard"],
+            "cwd": "${workspaceFolder}/src",
+            "stopAtEntry": false,
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "preLaunchTask": "ZEsarUX (Linux): fordítás",
+            "setupCommands": [
+                { "description": "Szép kiírás", "text": "-enable-pretty-printing", "ignoreFailures": true },
+                { "description": "SIGPIPE ne állítsa meg", "text": "handle SIGPIPE nostop noprint pass", "ignoreFailures": true }
+            ]
+        }
+    ]
+}

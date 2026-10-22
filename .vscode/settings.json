@@ -1,0 +1,17 @@
+{
+    "files.encoding": "utf8",
+    "files.eol": "\n",
+    "files.trimTrailingWhitespace": false,
+    "C_Cpp.default.cStandard": "gnu11",
+    "files.exclude": {
+        "**/*.o": true
+    },
+    "search.exclude": {
+        "**/*.o": true,
+        "src/*.rom": true,
+        "src/*.mmc": true,
+        "src/*.flash": true,
+        "src/*.hdf": true,
+        "src/*.dsk": true
+    }
+}
