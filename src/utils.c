@@ -9467,8 +9467,36 @@ z80_byte antes_puerto_especial_joystick=puerto_especial_joystick;
   }
 }
 
+//Teclado numerico en maquinas sin teclado numerico propio (Spectrum, ZX80/81, Jupiter Ace...):
+//las cifras, el punto y Enter actuan como las teclas normales.
+//CPC, SAM y PCW tienen sus propias teclas para el teclado numerico, alli no se cambia nada
+//Retorna la tecla normal equivalente, o UTIL_KEY_NONE si no hay que convertir
+enum util_teclas util_keypad_as_main_key(enum util_teclas tecla)
+{
+    if (MACHINE_IS_CPC || MACHINE_IS_SAM || MACHINE_IS_PCW) return UTIL_KEY_NONE;
+
+    switch (tecla) {
+        case UTIL_KEY_KP0: return '0';
+        case UTIL_KEY_KP1: return '1';
+        case UTIL_KEY_KP2: return '2';
+        case UTIL_KEY_KP3: return '3';
+        case UTIL_KEY_KP4: return '4';
+        case UTIL_KEY_KP5: return '5';
+        case UTIL_KEY_KP6: return '6';
+        case UTIL_KEY_KP7: return '7';
+        case UTIL_KEY_KP8: return '8';
+        case UTIL_KEY_KP9: return '9';
+        case UTIL_KEY_KP_COMMA: return '.';
+        case UTIL_KEY_KP_ENTER: return UTIL_KEY_ENTER;
+        default: return UTIL_KEY_NONE;
+    }
+}
+
 void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrelease)
 {
+
+    enum util_teclas tecla_normal=util_keypad_as_main_key(tecla);
+    if (tecla_normal!=UTIL_KEY_NONE) tecla=tecla_normal;
 
     //Si se pulsa caps+symbol+m y el setting zxvision_setting_use_speccy_keys, simula F5
     if (zxvision_setting_use_speccy_keys.v) {
