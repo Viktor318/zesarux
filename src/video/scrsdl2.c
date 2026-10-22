@@ -1201,7 +1201,21 @@ void scrsdl_deal_keys(int pressrelease,int tecla)
         break;
 
         case SDLK_ASTERISK:
+        case SDLK_KP_MULTIPLY:
             util_set_reset_key(UTIL_KEY_KP_MULTIPLY,pressrelease);
+        break;
+
+        //Operaciones del teclado numerico, igual que las del teclado principal
+        case SDLK_KP_MINUS:
+            util_set_reset_key(UTIL_KEY_KP_MINUS,pressrelease);
+        break;
+
+        case SDLK_KP_PLUS:
+            util_set_reset_key(UTIL_KEY_KP_PLUS,pressrelease);
+        break;
+
+        case SDLK_KP_DIVIDE:
+            util_set_reset_key(UTIL_KEY_KP_DIVIDE,pressrelease);
         break;
 
         case SDLK_NUMLOCKCLEAR:
@@ -1303,7 +1317,25 @@ void scrsdl_deal_keys(int pressrelease,int tecla)
                 util_set_reset_key(UTIL_KEY_PAGE_DOWN,pressrelease);
         break;
 
-        //Teclas del keypad
+        //Teclas del keypad. Con Num Lock apagado, 2 4 6 8 son los cursores
+        case SDLK_KP_2:
+        case SDLK_KP_4:
+        case SDLK_KP_6:
+        case SDLK_KP_8:
+            if (!(SDL_GetModState() & KMOD_NUM)) {
+                if (tecla==SDLK_KP_2) util_set_reset_key(UTIL_KEY_DOWN,pressrelease);
+                else if (tecla==SDLK_KP_4) util_set_reset_key(UTIL_KEY_LEFT,pressrelease);
+                else if (tecla==SDLK_KP_6) util_set_reset_key(UTIL_KEY_RIGHT,pressrelease);
+                else util_set_reset_key(UTIL_KEY_UP,pressrelease);
+            }
+            else {
+                if (tecla==SDLK_KP_2) util_set_reset_key(UTIL_KEY_KP2,pressrelease);
+                else if (tecla==SDLK_KP_4) util_set_reset_key(UTIL_KEY_KP4,pressrelease);
+                else if (tecla==SDLK_KP_6) util_set_reset_key(UTIL_KEY_KP6,pressrelease);
+                else util_set_reset_key(UTIL_KEY_KP8,pressrelease);
+            }
+        break;
+
         case SDLK_KP_0:
             util_set_reset_key(UTIL_KEY_KP0,pressrelease);
         break;
@@ -1312,32 +1344,16 @@ void scrsdl_deal_keys(int pressrelease,int tecla)
                 util_set_reset_key(UTIL_KEY_KP1,pressrelease);
         break;
 
-        case SDLK_KP_2:
-                util_set_reset_key(UTIL_KEY_KP2,pressrelease);
-        break;
-
         case SDLK_KP_3:
                 util_set_reset_key(UTIL_KEY_KP3,pressrelease);
-        break;
-
-        case SDLK_KP_4:
-                util_set_reset_key(UTIL_KEY_KP4,pressrelease);
         break;
 
         case SDLK_KP_5:
                 util_set_reset_key(UTIL_KEY_KP5,pressrelease);
         break;
 
-        case SDLK_KP_6:
-                util_set_reset_key(UTIL_KEY_KP6,pressrelease);
-        break;
-
         case SDLK_KP_7:
                 util_set_reset_key(UTIL_KEY_KP7,pressrelease);
-        break;
-
-        case SDLK_KP_8:
-                util_set_reset_key(UTIL_KEY_KP8,pressrelease);
         break;
 
         case SDLK_KP_9:
