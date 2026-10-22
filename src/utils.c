@@ -14325,10 +14325,10 @@ struct s_machines_short_names_id machines_short_names_id[]={
    {"TBBlue",19,bitmap_button_ext_desktop_my_machine_spectrum_next},
 
    {"Pentagon",21,bitmap_button_ext_desktop_my_machine_pentagon},
-   {"Scorpion",MACHINE_ID_SCORPION_ZS_256,bitmap_button_ext_desktop_userdefined},
-   {"Scorpiontp",MACHINE_ID_SCORPION_ZS_256_TURBO_PLUS,bitmap_button_ext_desktop_userdefined},
-   {"Scorpiongmx",MACHINE_ID_SCORPION_GMX,bitmap_button_ext_desktop_userdefined},
-   {"Didaktik",MACHINE_ID_DIDAKTIKGAMA,bitmap_button_ext_desktop_userdefined},
+   {"Scorpion",MACHINE_ID_SCORPION_ZS_256,bitmap_button_ext_desktop_my_machine_scorpion},
+   {"Scorpiontp",MACHINE_ID_SCORPION_ZS_256_TURBO_PLUS,bitmap_button_ext_desktop_my_machine_scorpion},
+   {"Scorpiongmx",MACHINE_ID_SCORPION_GMX,bitmap_button_ext_desktop_my_machine_scorpion},
+   {"Didaktik",MACHINE_ID_DIDAKTIKGAMA,bitmap_button_ext_desktop_my_machine_didaktikgama},
    {"Chrome",MACHINE_ID_CHROME,bitmap_button_ext_desktop_my_machine_generic},
    {"BaseConf",MACHINE_ID_BASECONF,bitmap_button_ext_desktop_my_machine_baseconf},
    {"TSConf",MACHINE_ID_TSCONF,bitmap_button_ext_desktop_my_machine_tsconf},
@@ -20955,6 +20955,11 @@ int util_convert_zsf_to_scr(char *filename,char *archivo_destino)
                 }
             break;
 
+            case ZSF_DIDAKTIKGAMA_CONF:
+                // La pantalla de la Gama está siempre en el bloque RAM fijo 0.
+                pagina_pantalla=0;
+            break;
+
             case ZSF_QL_RAMBLOCK:
                 /*
                 A ram binary block for a QL, of 16kb
@@ -21119,7 +21124,8 @@ int util_convert_zsf_to_scr(char *filename,char *archivo_destino)
             case ZSF_ZXUNO_RAMBLOCK:
             case ZSF_TSCONF_RAMBLOCK:
             case ZSF_CHROME_RAMBLOCK:
-                //Codigo compatible tanto para 128k, zxuno, tsconf o chrome, los bloques con iguales excepto por el id
+            case ZSF_DIDAKTIKGAMA_RAMBLOCK:
+                // Formato de bloque compatible para 128K, ZXUno, TSConf, Chrome y Didaktik.
                 /*
                 -Block ID 6: ZSF_SPEC128_RAMBLOCK
                 A ram binary block for a spectrum 128, p2 or p2a machine
@@ -21184,7 +21190,7 @@ int util_convert_zsf_to_scr(char *filename,char *archivo_destino)
                 ram_page=block_data[i];
                 i++;
 
-                //Paginas 5 o 7 de RAM
+                // Página de pantalla seleccionada por la configuración de la máquina.
                 if (ram_page==pagina_pantalla) {
                     //Ya tenemos pantalla
                     salir=1;

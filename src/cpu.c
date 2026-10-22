@@ -2205,6 +2205,7 @@ void set_machine_params(void)
     }
 
     else if (MACHINE_IS_DIDAKTIKGAMA) {
+        // La Gama usa los parámetros de vídeo e INT de 48K ya establecidos arriba.
         contend_read=contend_read_48k;
         contend_read_no_mreq=contend_read_no_mreq_48k;
         contend_write_no_mreq=contend_write_no_mreq_48k;
@@ -2447,10 +2448,7 @@ void set_machine_params(void)
 
         z80_cpu_current_type=Z80_TYPE_CMOS;
 
-        //Temp timings 128k
-        screen_testados_linea=228;
-        screen_invisible_borde_superior=7;
-        screen_invisible_borde_derecho=104;
+        baseconf_update_timing(1);
 
     }
 

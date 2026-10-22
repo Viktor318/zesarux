@@ -35,6 +35,7 @@
 #include "zxevo.h"
 #include "mmc.h"
 #include "betadisk.h"
+#include "timer.h"
 
 
 // Estado de alimentación SD escrito por el firmware en el puerto 77h.
@@ -632,6 +633,48 @@ z80_byte baseconf_last_port_bf7;
 
 // Velocidad de CPU aplicada por última vez, en décimas de MHz.
 static int baseconf_cpu_speed_selected=70;
+// Raster AVR aplicado a los tiempos del emulador.
+static int baseconf_timing_raster_applied=-1;
+// Multiplicador de CPU aplicado a los tiempos del emulador.
+static int baseconf_timing_speed_applied=-1;
+
+// Aplica la geometría temporal del raster AVR; force obliga a recalcularla.
+void baseconf_update_timing(int force)
+{
+    int raster=(baseconf_avr_modes_register>>4)&3;
+    int testados_linea;
+
+    if (!force && raster==baseconf_timing_raster_applied &&
+        cpu_turbo_speed==baseconf_timing_speed_applied) return;
+
+    baseconf_timing_raster_applied=raster;
+    baseconf_timing_speed_applied=cpu_turbo_speed;
+    pentagon_timing.v=(raster==0);
+
+    screen_invisible_borde_superior=8;
+    screen_borde_superior=56;
+    screen_total_borde_inferior=56;
+    screen_invisible_borde_derecho=96;
+    testados_linea=224;
+
+    if (raster==0) {
+        screen_invisible_borde_superior=16;
+        screen_borde_superior=64;
+        screen_total_borde_inferior=48;
+    }
+    else if (raster==1 || raster==3) {
+        // El modo AVR de 60 Hz aún no se emula: se usan los tiempos de 128K.
+        screen_invisible_borde_superior=7;
+        screen_invisible_borde_derecho=104;
+        testados_linea=228;
+    }
+
+    screen_testados_linea=testados_linea*cpu_turbo_speed;
+    screen_set_video_params_indices();
+    inicializa_tabla_contend();
+    original_timer_sleep_machine=20000;
+    set_emulator_speed();
+}
 
 
 // Aplica la velocidad de CPU indicada por los puertos BaseConf; sin parámetros ni retorno.
@@ -712,6 +755,16 @@ z80_byte baseconf_get_video_mode(void)
     return (baseconf_last_port_eff7&0x20) |
         ((baseconf_last_port_eff7&1)<<1) |
         (baseconf_last_port_77&7);
+}
+
+// Muestra el modo de vídeo nuevo si difiere de anterior; sin retorno.
+static void baseconf_show_video_mode_change(z80_byte anterior)
+{
+    if (anterior!=baseconf_get_video_mode()) {
+        char mensaje[256];
+        snprintf(mensaje,sizeof(mensaje),"Setting video mode %s",baseconf_get_video_mode_string());
+        screen_print_splash_text_center_no_if_previous(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,mensaje);
+    }
 }
 
 // Comprueba el modo de vídeo actual; devuelve 1 si es un modo de texto.
@@ -1486,6 +1539,8 @@ void baseconf_hard_reset(void)
 
     baseconf_set_memory_pages();
 
+    baseconf_update_timing(0);
+
 }
 
 //Cambia el valor de entrada de numero de pagina ram segun :
@@ -1630,18 +1685,22 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
 
         //xx77H
         else if ( (puerto&0x00FF)==0x77 && baseconf_shadow_ports_available() ) {
+               z80_byte video_anterior=baseconf_get_video_mode();
                 baseconf_shadow_mode_port_77=puerto_h;
                baseconf_last_port_77=valor;
                baseconf_set_cpu_speed();
 
                baseconf_set_memory_pages();
+               baseconf_show_video_mode_change(video_anterior);
         }
 
         else if (puerto==0xEFF7) {
+                z80_byte video_anterior=baseconf_get_video_mode();
                 //printf ("setting port EFF7 value\n");
                 baseconf_last_port_eff7=valor;
                 baseconf_set_cpu_speed();
                 baseconf_set_memory_pages();
+                baseconf_show_video_mode_change(video_anterior);
         }
 
 

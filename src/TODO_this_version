@@ -48,7 +48,7 @@ Todo esto es para tener esas ventanas auxiliares útiles cuando se está cargand
 
 
 
--Máquina Chrome. Menu "load dos from rom". que tiene que hacer? falta una rom?
+
 
 ok tape, realtape, outtape -con --tape por consola, si hay un zesarux_autosave.zsf, no carga la cinta, aunque la inserta (y se queda topspeed y un pendiente load"").
 Esto es porque primero se llama a tape_init() que inserta la cinta y posteriormente a autoload_snapshot();
@@ -210,6 +210,7 @@ https://zxaaa.net/view_demos.php?t=%2F&s=Base&title=Title&vers=35
 
 -habilitar covox pentagon?
 
+-*snapshots zsf
 
 ***Spectrum Next*****
 
@@ -290,21 +291,10 @@ SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior machines/tsconf.c:1251:2
 
 
 
-*desde WC:
-ok -carga de spg va
--carga de scl, trd o tap no va
---ok trd
---ok scl
---ok tap
-ok -musicas pt3 van
-
 
 -NeoGS emular?
 
 
--ide smuc
-ok -ide nemo
-todos esos a zxevo_* y ponerlo en zxevo.c
 ------
 
 
@@ -351,9 +341,9 @@ por tanto nunca devolveria 255
 acabar de probarlo **modos de video ampliado
 *gigascreen. visor de imagenes gmxpv. imagen 0139.mcx
 *probar la rom traducida profgmx6xx043.9226se.en.rom y publicarla en extras? comprimida para ocupar menos por ejemplo
+
 *en ansi06.scl habla de un modo turbo2+ 80x25. que es? y 384x304
 *gmx no tiene paleta de colores diferente?
-*alguna Demo scorpion gmx 80x25?
 
 *usamos scorpiongmx-fat32.ide
 *usamos pruebascorpiongmx.mmc
@@ -366,12 +356,11 @@ soft? https://zxaaa.net/view_demos.php?t=&s=scorpion&title=Title&vers=35
 *probar gmx en otros drivers de video
 ok *soporte ide gmx con smuc
 
+
 ------
 
 -didaktik Gama
 *de DEVELOPMENT, pendiente desde keyboard_48p.bmp en adelante
-*timings?
-*snapshots zsf
 
 
 ---
@@ -379,10 +368,14 @@ ok *soporte ide gmx con smuc
 -----
 -en features agregar nuevos accesos ide, sd en tsconf, baseconf, gmx
 
--en baseconf, tsconf y gmx explicar como acceder a los dispositivos SD y IDE de cada uno
+
+---
 
 
-gmx:
+-tests de cpu que fallan, revisar
+-timings tsconf
+ok-timings baseconf
 
-
--sd: nmi-> b.save & load -> rom disk-> fatall 0.25
+echo "Timing_Tests-48k_v1.0.sna. errores normalmente en test 36 in a etc, test 37 in a etc"
+sleep 4
+./zesarux --noconfigfile --advancedmenus ./extras/media/spectrum/tests/Timing_Tests-48k_v1.0.snah
