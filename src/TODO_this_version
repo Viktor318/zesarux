@@ -210,6 +210,7 @@ https://zxaaa.net/view_demos.php?t=%2F&s=Base&title=Title&vers=35
 
 -habilitar covox pentagon?
 
+-*snapshots zsf
 
 ***Spectrum Next*****
 
@@ -290,21 +291,10 @@ SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior machines/tsconf.c:1251:2
 
 
 
-*desde WC:
-ok -carga de spg va
--carga de scl, trd o tap no va
---ok trd
---ok scl
---ok tap
-ok -musicas pt3 van
-
 
 -NeoGS emular?
 
 
--ide smuc
-ok -ide nemo
-todos esos a zxevo_* y ponerlo en zxevo.c
 ------
 
 
@@ -366,12 +356,11 @@ soft? https://zxaaa.net/view_demos.php?t=&s=scorpion&title=Title&vers=35
 *probar gmx en otros drivers de video
 ok *soporte ide gmx con smuc
 
+
 ------
 
 -didaktik Gama
 *de DEVELOPMENT, pendiente desde keyboard_48p.bmp en adelante
-*timings?
-*snapshots zsf
 
 
 ---
@@ -379,7 +368,14 @@ ok *soporte ide gmx con smuc
 -----
 -en features agregar nuevos accesos ide, sd en tsconf, baseconf, gmx
 
-ok -en baseconf, tsconf y gmx explicar como acceder a los dispositivos SD y IDE de cada uno
 
 ---
 
+
+-tests de cpu que fallan, revisar
+-timings tsconf
+ok-timings baseconf
+
+echo "Timing_Tests-48k_v1.0.sna. errores normalmente en test 36 in a etc, test 37 in a etc"
+sleep 4
+./zesarux --noconfigfile --advancedmenus ./extras/media/spectrum/tests/Timing_Tests-48k_v1.0.snah
