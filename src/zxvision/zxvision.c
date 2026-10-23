@@ -25034,6 +25034,8 @@ void menu_add_ESC_item(menu_item *array_menu_item)
 
         if (gui_language==GUI_LANGUAGE_SPANISH) sprintf (mensaje_esc,"%s %s",esc_key_message,accion_esc);
         else if (gui_language==GUI_LANGUAGE_CATALAN) sprintf (mensaje_esc,"%s %s",esc_key_message,accio_esc);
+        else if (gui_language==GUI_LANGUAGE_HUNGARIAN) sprintf (mensaje_esc,"%s %s",esc_key_message,
+            (menu_old_behaviour_close_menus.v || menu_es_stdout()) ? "Vissza" : "Bezárás");
         else sprintf (mensaje_esc,"%s %s",esc_key_message,action_esc);
 
         menu_add_item_menu(array_menu_item,mensaje_esc,MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
