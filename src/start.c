@@ -8559,6 +8559,9 @@ int first_start_wizard_disabled=0;
 //Proceso inicial
 int zesarux_main (int main_argc,char *main_argv[]) {
 
+    //Default actions of the F keys, before reading the configuration
+    zxvision_init_default_f_keys();
+
     if (main_argc>1) {
         if (!strcmp(main_argv[1],"--version")) {
         //	printf ("ZEsarUX Version: " EMULATOR_VERSION " Date: " EMULATOR_DATE " - " EMULATOR_EDITION_NAME "\n");

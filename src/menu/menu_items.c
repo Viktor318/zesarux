@@ -50270,6 +50270,18 @@ void menu_process_f_functions_by_action_name(int id_funcion,
             menu_interface_footer(0);
         break;
 
+        case F_FUNCION_ZOOM_IN:
+            if (!ventana_fullscreen && zoom_x<9 && zoom_y<9) screen_set_window_zoom(zoom_x+1,zoom_y+1);
+        break;
+
+        case F_FUNCION_ZOOM_OUT:
+            if (!ventana_fullscreen && zoom_x>1 && zoom_y>1) screen_set_window_zoom(zoom_x-1,zoom_y-1);
+        break;
+
+        case F_FUNCION_SWITCH_ZXDESKTOP:
+            if (!ventana_fullscreen && scr_driver_can_ext_desktop()) menu_ext_desk_settings_enable(0);
+        break;
+
         case F_FUNCION_VISUALREALTAPE:
             menu_visual_realtape(0);
         break;

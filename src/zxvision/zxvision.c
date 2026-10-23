@@ -286,6 +286,9 @@ defined_f_function defined_direct_functions_array[MAX_F_FUNCTIONS]={
     {"SwitchBorder",F_FUNCION_SWITCHBORDER,bitmap_button_ext_desktop_switchborder,"","Switch Border"},
     {"SwitchFullScr",F_FUNCION_SWITCHFULLSCREEN,bitmap_button_ext_desktop_fullscreen,"","Switch Full Screen"},
     {"SwitchFooter",F_FUNCION_SWITCHFOOTER,bitmap_button_ext_desktop_switchfooter,"","Switch Fotter"},
+    {"ZoomIn",F_FUNCION_ZOOM_IN,bitmap_button_ext_desktop_zoomin,"","Increase window zoom"},
+    {"ZoomOut",F_FUNCION_ZOOM_OUT,bitmap_button_ext_desktop_zoomout,"","Decrease window zoom"},
+    {"SwitchZXDesktop",F_FUNCION_SWITCH_ZXDESKTOP,bitmap_button_ext_desktop_switchzxdesktop,"","Switch ZX Desktop on/off"},
 
     //Actuar sobre storage
     {"ReloadMMC",F_FUNCION_RELOADMMC,bitmap_button_ext_desktop_reloadmmc,"","Reload MMC"},
@@ -364,6 +367,31 @@ int defined_f_functions_keys_array[MAX_F_FUNCTIONS_KEYS]={
     0,
     0 //F15
 };
+
+//Default actions of the F keys (indexes into defined_direct_functions_array). Set by zxvision_init_default_f_keys
+int defined_f_functions_keys_array_default[MAX_F_FUNCTIONS_KEYS];
+
+static int zxvision_f_function_index(enum defined_f_function_ids id)
+{
+    int i;
+    for (i=0;i<MAX_F_FUNCTIONS;i++) {
+        if (defined_direct_functions_array[i].id_funcion==id) return i;
+    }
+    return 0;
+}
+
+//Default F keys: F7 zoom out, F8 zoom in, F9 ZX Desktop on/off
+void zxvision_init_default_f_keys(void)
+{
+    int i;
+    for (i=0;i<MAX_F_FUNCTIONS_KEYS;i++) defined_f_functions_keys_array_default[i]=0;
+
+    defined_f_functions_keys_array_default[6]=zxvision_f_function_index(F_FUNCION_ZOOM_OUT);
+    defined_f_functions_keys_array_default[7]=zxvision_f_function_index(F_FUNCION_ZOOM_IN);
+    defined_f_functions_keys_array_default[8]=zxvision_f_function_index(F_FUNCION_SWITCH_ZXDESKTOP);
+
+    for (i=0;i<MAX_F_FUNCTIONS_KEYS;i++) defined_f_functions_keys_array[i]=defined_f_functions_keys_array_default[i];
+}
 
 //Extra info de las Funciones de teclas F mapeadas. Desde F1 hasta F15
 //Esto de momento solo se usa al asignar tecla F a accion Openwindow, y el nombre de la ventana se asigna aqui

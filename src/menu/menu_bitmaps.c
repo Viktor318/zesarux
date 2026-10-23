@@ -5173,6 +5173,93 @@ char *bitmap_button_ext_desktop_switchfooter[EXT_DESKTOP_BUTTONS_ANCHO]={
     "  bbbbbbbbbbbbbbbbbb   x  " 	 //25
 };
 
+char *bitmap_button_ext_desktop_zoomin[EXT_DESKTOP_BUTTONS_ANCHO]={
+    "                          ",
+    "                          ",
+    "      xxxxxxxx            ",
+    "    xx        xx          ",
+    "   x            x         ",
+    "  x              x        ",
+    "  x      bb      x        ",
+    " x       bb       x       ",
+    " x       bb       x       ",
+    " x   bbbbbbbbbb   x       ",
+    " x   bbbbbbbbbb   x       ",
+    " x       bb       x       ",
+    " x       bb       x       ",
+    "  x      bb      x        ",
+    "  x              x        ",
+    "   x            xx        ",
+    "    xx        xxxxx       ",
+    "      xxxxxxxx  xxxxx     ",
+    "                 xxxxx    ",
+    "                  xxxxx   ",
+    "                   xxxxx  ",
+    "                    xxxxx ",
+    "                     xxx  ",
+    "                          ",
+    "                          ",
+    "                          "
+};
+
+char *bitmap_button_ext_desktop_zoomout[EXT_DESKTOP_BUTTONS_ANCHO]={
+    "                          ",
+    "                          ",
+    "      xxxxxxxx            ",
+    "    xx        xx          ",
+    "   x            x         ",
+    "  x              x        ",
+    "  x              x        ",
+    " x                x       ",
+    " x                x       ",
+    " x   bbbbbbbbbb   x       ",
+    " x   bbbbbbbbbb   x       ",
+    " x                x       ",
+    " x                x       ",
+    "  x              x        ",
+    "  x              x        ",
+    "   x            xx        ",
+    "    xx        xxxxx       ",
+    "      xxxxxxxx  xxxxx     ",
+    "                 xxxxx    ",
+    "                  xxxxx   ",
+    "                   xxxxx  ",
+    "                    xxxxx ",
+    "                     xxx  ",
+    "                          ",
+    "                          ",
+    "                          "
+};
+
+char *bitmap_button_ext_desktop_switchzxdesktop[EXT_DESKTOP_BUTTONS_ANCHO]={
+    "                          ",
+    "                          ",
+    "                          ",
+    " xxxxxxxxxxxxxxxxxxxxxxxx ",
+    " x          xbbbbbbbbbbbx ",
+    " x          xbbbbbbbbbbbx ",
+    " x  xxxxxx  xbbbbbbbbbbbx ",
+    " x  x    x  xbbbbbbbbbbbx ",
+    " x  x    x  xbbbbbbbbbbbx ",
+    " x  x    x  xbbbbbbbbbbbx ",
+    " x  xxxxxx  xbbbbbbbbbbbx ",
+    " x          xbbbbbbbbbbbx ",
+    " x          xbbbbbbbbbbbx ",
+    " xxxxxxxxxxxxbbbbbbbbbbbx ",
+    " xbbbbbbbbbbbbbbbbbbbbbbx ",
+    " xbbbbbbbbbbbbbbbbbbbbbbx ",
+    " xxxxxxxxxxxxxxxxxxxxxxxx ",
+    "                          ",
+    "      R   R               ",
+    "       R R                ",
+    "        R      xxx        ",
+    "       R R    x   x       ",
+    "      R   R   x   x       ",
+    "               xxx        ",
+    "                          ",
+    "                          "
+};
+
 char *bitmap_button_ext_desktop_topspeed[EXT_DESKTOP_BUTTONS_ANCHO]={
     //01234567890123456789012345
     "                          ",     //0

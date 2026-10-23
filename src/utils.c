@@ -5802,7 +5802,7 @@ int util_write_configfile(void)
     for (i=0;i<MAX_F_FUNCTIONS_KEYS;i++) {
         int indice=defined_f_functions_keys_array[i];
         enum defined_f_function_ids accion=menu_da_accion_direct_functions_indice(indice);
-        if (accion!=F_FUNCION_DEFAULT) {
+        if (accion!=F_FUNCION_DEFAULT || indice!=defined_f_functions_keys_array_default[i]) {
                                                     ADD_STRING_CONFIG,"--def-f-function F%d \"%s\"",i+1,defined_direct_functions_array[indice].texto_funcion);
         }
     }

@@ -64,6 +64,7 @@ extern void menu_hardware_set_f_functions(MENU_ITEM_PARAMETERS);
 
 extern void menu_settings_statistics(MENU_ITEM_PARAMETERS);
 extern void menu_interface_footer(MENU_ITEM_PARAMETERS);
+extern void menu_ext_desk_settings_enable(MENU_ITEM_PARAMETERS);
 
 extern void menu_chardetection_settings(MENU_ITEM_PARAMETERS);
 
