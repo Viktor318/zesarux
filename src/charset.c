@@ -174,6 +174,10 @@ void charset_add_hungarian_glyphs(void)
 
     memcpy(&char_set_spectrum[offset],char_set_hungarian_extra,sizeof(char_set_hungarian_extra));
 
+    //ZX Spectrum: Í with the accent at the same place as in Á
+    static const unsigned char spectrum_i_acute[8]={0x04,0x08,0x3E,0x08,0x08,0x08,0x3E,0x00};
+    memcpy(&char_set_spectrum[(178-32)*8],spectrum_i_acute,8);
+
     //AtariTOS (default charset) has bold letters: use bold Hungarian letters too
     memcpy(&char_set_ataritos[offset],char_set_hungarian_ataritos,sizeof(char_set_hungarian_ataritos));
 }
