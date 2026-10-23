@@ -140,6 +140,9 @@ void charset_add_hungarian_glyphs(void)
     int offset=(174-32)*8;
 
     for (i=0;charset_list[i].puntero!=NULL;i++) {
+        //Los charsets pequeños se generan a partir de charset_icons_text, en charset_generate_zesarux_tiny
+        if (charset_list[i].puntero==char_set_tom_thumb || charset_list[i].puntero==char_set_zesarux_tiny) continue;
+
         memcpy(&charset_list[i].puntero[offset],char_set_hungarian_extra,sizeof(char_set_hungarian_extra));
     }
 
@@ -178,6 +181,10 @@ void charset_generate_zesarux_tiny(void)
         char_set_zesarux_tiny[destino++]=0;
         char_set_zesarux_tiny[destino++]=0;
     }
+
+    //Las letras hungaras (174-184) del Tom Thumb, igual que las de 128 en adelante, son las del zesarux_tiny
+    int offset=(174-32)*8;
+    memcpy(&char_set_tom_thumb[offset],&char_set_zesarux_tiny[offset],(MAX_CHARSET_GRAPHIC-174+1)*8);
 
 }
 
@@ -4340,7 +4347,7 @@ unsigned char char_set_templeos[TOTAL_ASCII_CHARSET_ELEMENTS]={
 //Los caracteres 32-127 salen del charset original. Son 3x6, rellenando dos bytes en blanco para hacerlo 8 de alto
 //La mayoria de letras no usan la sexta linea de pixeles, a excepción de alguna letra como la "p", la "q" o la "y" por poner algun ejemplo
 //Caracteres 128 en adelante se copiaron desde zesarux_tiny
-unsigned char char_set_tom_thumb[]={
+unsigned char char_set_tom_thumb[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00, //32
 0x40,0x40,0x40,0x00,0x40,0x00,0x00,0x00,
 0xA0,0xA0,0x00,0x00,0x00,0x00,0x00,0x00,
