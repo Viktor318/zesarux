@@ -87,6 +87,7 @@ extern int stats_normal_overlay_menu_drawn_chars;
 #define GUI_LANGUAGE_DEFAULT 0
 #define GUI_LANGUAGE_SPANISH 1
 #define GUI_LANGUAGE_CATALAN 2
+#define GUI_LANGUAGE_HUNGARIAN 3
 
 //tecla F1
 #define MENU_TECLA_AYUDA 21
@@ -1794,6 +1795,7 @@ extern void zxvision_sound_event_aux(char *nota,int duracion);
 extern int zxvision_any_window_over_me(zxvision_window *w);
 
 extern char *menu_get_string_language(char *texto);
+extern char *menu_hungarian(const char *english);
 
 extern void menu_init_strings_language_array(void);
 

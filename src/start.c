@@ -1164,7 +1164,7 @@ printf (
 
         "--advancedmenus                Show advanced menu items\n"
         "--simplemenus                  Show very simple menus\n"
-        "--language language            Select menu language. Available languages: es (Spanish), ca (Catalan). Default language if not set: English\n"
+        "--language language            Select menu language. Available languages: es (Spanish), ca (Catalan), hu (Hungarian). Default language if not set: English\n"
         "--online-download-path p       Where to download files from the speccy and zx81 online browser. If not set, they are download to a temporary folder\n"
 
         "--disable-search-menu          Disable search menu feature (enabled by default)\n"
@@ -6496,6 +6496,9 @@ int parse_cmdline_options(int desde_commandline)
                 else if (!strcasecmp(argv[puntero_parametro],"ca")) {
                     gui_language=GUI_LANGUAGE_CATALAN;
                 }
+                else if (!strcasecmp(argv[puntero_parametro],"hu")) {
+                    gui_language=GUI_LANGUAGE_HUNGARIAN;
+                }
                 else {
                     debug_printf(VERBOSE_ERR,"Invalid language");
 
@@ -8864,6 +8867,7 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
 
     snapshots_in_ram_reset();
 
+    charset_add_hungarian_glyphs();
     charset_generate_zesarux_tiny();
 
     main_leezx81_init_semaphore();

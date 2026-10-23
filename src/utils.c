@@ -5433,6 +5433,7 @@ int util_write_configfile(void)
 
     if (gui_language==GUI_LANGUAGE_SPANISH)         ADD_STRING_CONFIG,"--language es");
     if (gui_language==GUI_LANGUAGE_CATALAN)         ADD_STRING_CONFIG,"--language ca");
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN)       ADD_STRING_CONFIG,"--language hu");
 
     if (online_download_path[0]!=0)                 ADD_STRING_CONFIG,"--online-download-path \"%s\"",online_download_path);
 

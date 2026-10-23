@@ -107,6 +107,45 @@ int get_charset_id_by_name(char *nombre)
 
 }
 
+
+//Letras para el idioma hungaro (174-184). Se copian en todos los charsets al inicio
+static unsigned char char_set_hungarian_extra[]={
+    //ö o con dieresis - 174
+    0x28,0x00,0x38,0x44,0x44,0x44,0x38,0x00,
+    //ő o con doble acento - 175
+    0x14,0x28,0x38,0x44,0x44,0x44,0x38,0x00,
+    //ű u con doble acento - 176
+    0x14,0x28,0x44,0x44,0x44,0x44,0x38,0x00,
+    //É E mayuscula acentuada - 177
+    0x08,0x10,0x7E,0x40,0x7C,0x40,0x7E,0x00,
+    //Í I mayuscula acentuada - 178
+    0x08,0x10,0x3E,0x08,0x08,0x08,0x3E,0x00,
+    //Ó O mayuscula acentuada - 179
+    0x08,0x10,0x3C,0x42,0x42,0x42,0x3C,0x00,
+    //Ö O mayuscula con dieresis - 180
+    0x24,0x00,0x3C,0x42,0x42,0x42,0x3C,0x00,
+    //Ő O mayuscula con doble acento - 181
+    0x12,0x24,0x3C,0x42,0x42,0x42,0x3C,0x00,
+    //Ú U mayuscula acentuada - 182
+    0x08,0x10,0x42,0x42,0x42,0x42,0x3C,0x00,
+    //Ü U mayuscula con dieresis - 183
+    0x24,0x00,0x42,0x42,0x42,0x42,0x3C,0x00,
+    //Ű U mayuscula con doble acento - 184
+    0x12,0x24,0x42,0x42,0x42,0x42,0x3C,0x00,
+};
+
+void charset_add_hungarian_glyphs(void)
+{
+    int i;
+    int offset=(174-32)*8;
+
+    for (i=0;charset_list[i].puntero!=NULL;i++) {
+        memcpy(&charset_list[i].puntero[offset],char_set_hungarian_extra,sizeof(char_set_hungarian_extra));
+    }
+
+    memcpy(&char_set_spectrum[offset],char_set_hungarian_extra,sizeof(char_set_hungarian_extra));
+}
+
 void charset_generate_zesarux_tiny(void)
 {
 
@@ -5538,6 +5577,94 @@ char *charset_icons_text[]={
 "  x ",
 " x  ",
 "x   ",
+"xxx ",
+"    ",
+
+//ö o con dieresis - 174
+"x x ",
+"    ",
+"xxx ",
+"x x ",
+"xxx ",
+"    ",
+
+//ő o con doble acento - 175
+"x x ",
+"    ",
+"xxx ",
+"x x ",
+"xxx ",
+"    ",
+
+//ű u con doble acento - 176
+"x x ",
+"    ",
+"x x ",
+"x x ",
+"xxx ",
+"    ",
+
+//É E mayuscula acentuada - 177
+"  x ",
+"xxx ",
+"xx  ",
+"x   ",
+"xxx ",
+"    ",
+
+//Í I mayuscula acentuada - 178
+"  x ",
+" x  ",
+" x  ",
+" x  ",
+" x  ",
+"    ",
+
+//Ó O mayuscula acentuada - 179
+"  x ",
+"xxx ",
+"x x ",
+"x x ",
+"xxx ",
+"    ",
+
+//Ö O mayuscula con dieresis - 180
+"x x ",
+"xxx ",
+"x x ",
+"x x ",
+"xxx ",
+"    ",
+
+//Ő O mayuscula con doble acento - 181
+"x x ",
+"xxx ",
+"x x ",
+"x x ",
+"xxx ",
+"    ",
+
+//Ú U mayuscula acentuada - 182
+"  x ",
+"x x ",
+"x x ",
+"x x ",
+"xxx ",
+"    ",
+
+//Ü U mayuscula con dieresis - 183
+"x x ",
+"    ",
+"x x ",
+"x x ",
+"xxx ",
+"    ",
+
+//Ű U mayuscula con doble acento - 184
+"x x ",
+"    ",
+"x x ",
+"x x ",
 "xxx ",
 "    ",
 

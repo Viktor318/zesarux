@@ -68,7 +68,7 @@ extern void set_user_charset(void);
 
 extern void charset_generate_zesarux_tiny(void);
 
-#define MAX_CHARSET_GRAPHIC 173
+#define MAX_CHARSET_GRAPHIC 184
 
 
 #define CHAR_Z_LOGO_SMALL_TOPBAR 173
@@ -87,6 +87,8 @@ extern void charset_generate_zesarux_tiny(void);
 
 
 extern char *charset_icons_text[];
+
+extern void charset_add_hungarian_glyphs(void);
 
 //El tipo de letra usado para iconos
 #define CHARSET_ICONS_ANCHO 4

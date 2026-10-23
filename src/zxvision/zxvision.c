@@ -9063,7 +9063,7 @@ void menu_convierte_texto_sin_modificadores(char *texto,char *texto_destino)
 
 int menu_es_prefijo_utf(z80_byte caracter)
 {
-    if (caracter==0xD0 || caracter==0xD1 || caracter==0xC2 || caracter==0xC3 || caracter==0xC9 || caracter==0xCE) return 1;
+    if (caracter==0xD0 || caracter==0xD1 || caracter==0xC2 || caracter==0xC3 || caracter==0xC5 || caracter==0xC9 || caracter==0xCE) return 1;
     else return 0;
 }
 
@@ -9081,6 +9081,34 @@ int si_menu_muestra_caracteres_extendidos(void)
 //TODO: solo soportamos utf-8 de 2 bytes, de momento no usamos de mas longitud, pero hay que tenerlo en cuenta para el futuro
 unsigned char menu_escribe_texto_convert_utf(unsigned char prefijo_utf,unsigned char caracter)
 {
+
+    //Letras del idioma hungaro (174-184)
+    {
+        int extendido=si_menu_muestra_caracteres_extendidos();
+
+        if (prefijo_utf==0xC3) {
+            switch (caracter) {
+                case 0xB6: return (extendido ? 174 : 'o'); //ö
+                case 0x89: return (extendido ? 177 : 'E'); //É
+                case 0x8D: return (extendido ? 178 : 'I'); //Í
+                case 0x93: return (extendido ? 179 : 'O'); //Ó
+                case 0x96: return (extendido ? 180 : 'O'); //Ö
+                case 0x9A: return (extendido ? 182 : 'U'); //Ú
+                case 0x9C: return (extendido ? 183 : 'U'); //Ü
+            }
+        }
+
+        if (prefijo_utf==0xC5) {
+            switch (caracter) {
+                case 0x91: return (extendido ? 175 : 'o'); //ő
+                case 0x90: return (extendido ? 181 : 'O'); //Ő
+                case 0xB1: return (extendido ? 176 : 'u'); //ű
+                case 0xB0: return (extendido ? 184 : 'U'); //Ű
+            }
+            return '?';
+        }
+    }
+
 
 
     if (prefijo_utf==0xC2) {
@@ -11920,6 +11948,7 @@ void zxvision_new_window_no_check_range(zxvision_window *w,int x,int y,int visib
     w->default_paper=ESTILO_GUI_PAPEL_NORMAL;
 
     //Establecer titulo ventana
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) title=menu_hungarian(title);
     strcpy(w->window_title,title);
 
     zxvision_alloc_memory(w,total_width,total_height);
@@ -22698,6 +22727,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
     if (gui_language==GUI_LANGUAGE_SPANISH) titulo=titulo_es;
     else if (gui_language==GUI_LANGUAGE_CATALAN) titulo=titulo_ca;
+    else if (gui_language==GUI_LANGUAGE_HUNGARIAN) titulo=menu_hungarian(titulo_en);
     else titulo=titulo_en;
 
 
@@ -24182,6 +24212,8 @@ void menu_add_item_menu_inicial(menu_item **p,char *texto,int tipo_opcion,t_menu
         if (m==NULL) cpu_panic("Cannot allocate initial menu item");
 
     //comprobacion de maximo
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) texto=menu_hungarian(texto);
+
     if (strlen(texto)>MAX_TEXTO_OPCION) cpu_panic ("Text item greater than maximum");
 
     //m->texto=texto;
@@ -24238,6 +24270,8 @@ void menu_add_item_menu(menu_item *m,char *texto,int tipo_opcion,t_menu_funcion 
     //tengan ese parametro
     int es_menu_tabulado;
     es_menu_tabulado=m->es_menu_tabulado;
+
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) texto=menu_hungarian(texto);
 
     //comprobacion de maximo
     if (strlen(texto)>MAX_TEXTO_OPCION) cpu_panic ("Text item greater than maximum");
@@ -24653,8 +24687,34 @@ int menu_get_string_language_debug_ultimas_iteraciones;
 Si la cantidad de textos fuese muy grande, seria mucho mejor no usar función hash y directamente
 insertar los elementos y luego ordenarlos alfabéticamente , y luego para buscar usar una búsqueda típica sobre elementos ordenados
 */
+/* Hungarian texts: a table of English -> Hungarian, generated from
+   translations/hu.tsv (translations/make_table.py), sorted by the English
+   text so that it can be searched with bsearch */
+#include "zxvision_hungarian_table.h"
+
+static int menu_hungarian_compare(const void *key,const void *element)
+{
+    return strcmp((const char *)key,((const struct s_hungarian_string *)element)->english);
+}
+
+//Retorna el texto en hungaro si existe, o el mismo texto si no
+char *menu_hungarian(const char *english)
+{
+    const struct s_hungarian_string *found;
+
+    if (english==NULL || english[0]==0) return (char *)english;
+
+    found=bsearch(english,hungarian_strings,
+        sizeof(hungarian_strings)/sizeof(hungarian_strings[0]),
+        sizeof(hungarian_strings[0]),menu_hungarian_compare);
+
+    return (char *)(found!=NULL ? found->hungarian : english);
+}
+
 char *menu_get_string_language(char *string_english)
 {
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) return menu_hungarian(string_english);
+
     if (!inicializado_strings_language_array) menu_init_strings_language_array();
 
     int i;
@@ -24908,6 +24968,8 @@ void menu_add_item_menu_misc(menu_item *m,char *texto_misc)
 //Parametros: puntero de menu_item inicial. texto con formato
 void menu_add_item_menu_format(menu_item *m,int tipo_opcion,t_menu_funcion menu_funcion,t_menu_funcion_activo menu_funcion_activo,const char * format , ...)
 {
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) format=menu_hungarian(format);
+
     char buffer[100];
     va_list args;
     va_start (args, format);
@@ -24938,6 +25000,8 @@ char *english,char *spanish,char *catalan)
 //Parametros: puntero al puntero de menu_item inicial. texto con formato
 void menu_add_item_menu_inicial_format(menu_item **p,int tipo_opcion,t_menu_funcion menu_funcion,t_menu_funcion_activo menu_funcion_activo,const char * format , ...)
 {
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) format=menu_hungarian(format);
+
         char buffer[100];
         va_list args;
         va_start (args, format);

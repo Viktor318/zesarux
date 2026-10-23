@@ -920,7 +920,7 @@ void menu_interface_language(MENU_ITEM_PARAMETERS)
 {
     gui_language++;
 
-    if (gui_language>GUI_LANGUAGE_CATALAN) gui_language=0;
+    if (gui_language>GUI_LANGUAGE_HUNGARIAN) gui_language=0;
 
     menu_first_aid("language");
 
@@ -1390,6 +1390,7 @@ void menu_general_settings(MENU_ITEM_PARAMETERS)
         strcpy(idioma,"Default");
         if (gui_language==GUI_LANGUAGE_SPANISH) strcpy(idioma,"Español");
         if (gui_language==GUI_LANGUAGE_CATALAN) strcpy(idioma,"Català");
+        if (gui_language==GUI_LANGUAGE_HUNGARIAN) strcpy(idioma,"Magyar");
 
            menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_language,NULL,
             "~~Language","~~Lenguaje","~~Llenguatge");
