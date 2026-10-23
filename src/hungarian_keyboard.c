@@ -51,6 +51,9 @@
 
 z80_bit hungarian_keyboard={0};
 
+//Left Alt + number keys = Caps shift + number (Spectrum). Enabled by default
+z80_bit keyboard_alt_caps_shift={1};
+
 struct s_hungarian_keyboard_tecla {
     //Si esta pulsada (gestionada por nosotros)
     int pulsada;

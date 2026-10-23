@@ -1195,7 +1195,6 @@ ZX Recreated mode	ZX Recreated mód	item
 Also on menu	A menüben is	item
 Swap Enter - Return	Enter és Return felcserélése	item
 [%c] SDL Raw keyboard	[%c] SDL nyers billentyűzet	item
-Hungarian keyboard	Magyar billentyűzet	item
 Chloe Keyboard	Chloe billentyűzet	item
 Speccy keyb. ~~ghosting	~~Spectrum billentyű-szellemképek	item
 K~~eymap [%s]	B~~illentyűkiosztás [%s]	item
@@ -1904,3 +1903,5 @@ Downgraded version	Régebbi változat	window title
 Disabled save settings	Beállítások mentése tiltva	window title
 Updated version	Frissített változat	window title
 New version available	Új változat érhető el	window title
+Use Windows keyboard layout	Windows billentyűzetkiosztás használata	item
+Use left Alt as Caps Shift with number keys	A bal Alt legyen Caps Shift a számbillentyűknél	item

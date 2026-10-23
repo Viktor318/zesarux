@@ -5070,7 +5070,9 @@ int util_write_configfile(void)
 
     if (azerty_keyboard_numbers_no_shift.v)         ADD_STRING_CONFIG,"--azerty-kbd-num-no-shift");
 
-    if (hungarian_keyboard.v)                       ADD_STRING_CONFIG,"--hungarian-keyboard");
+    if (hungarian_keyboard.v)                       ADD_STRING_CONFIG,"--windows-layout");
+
+    if (!keyboard_alt_caps_shift.v)                 ADD_STRING_CONFIG,"--no-alt-caps-shift");
 
     if (autoload_snapshot_on_start.v)               ADD_STRING_CONFIG,"--autoloadsnap");
     if (autosave_snapshot_on_exit.v)                ADD_STRING_CONFIG,"--autosavesnap");
@@ -9720,7 +9722,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                 //puerto_32766    db              255  ; B    N    M    Simb Space ;7
 
                 if (pressrelease) {
-                    puerto_32766  &=255-2;
+                    if (!MACHINE_IS_SPECTRUM) puerto_32766  &=255-2; //On Spectrum only Ctrl is Symbol shift
                     blink_kbd_a15 &= (255-64);
 
                     //ALT en CPC es CLR
@@ -9735,7 +9737,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
 
 
                 else  {
-                    puerto_32766 |=2;
+                    if (!MACHINE_IS_SPECTRUM) puerto_32766 |=2;
                     blink_kbd_a15 |= 64;
 
                     //ALT en CPC es CLR
@@ -9776,7 +9778,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                 //puerto_32766    db              255  ; B    N    M    Simb Space ;7
 
                 if (pressrelease) {
-                    puerto_32766  &=255-2;
+                    if (!MACHINE_IS_SPECTRUM) puerto_32766  &=255-2; //On Spectrum only Ctrl is Symbol shift
                     blink_kbd_a15 &= (255-64);
 
                     //ALT en CPC es CLR
@@ -9788,7 +9790,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
 
 
                 else  {
-                    puerto_32766 |=2;
+                    if (!MACHINE_IS_SPECTRUM) puerto_32766 |=2;
                     blink_kbd_a15 |= 64;
 
                     //ALT en CPC es CLR

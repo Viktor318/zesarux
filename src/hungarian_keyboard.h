@@ -37,6 +37,9 @@
 
 extern z80_bit hungarian_keyboard;
 
+//Left Alt + number keys = Caps shift + number (Spectrum)
+extern z80_bit keyboard_alt_caps_shift;
+
 extern int hungarian_keyboard_is_active(void);
 extern int hungarian_keyboard_key_is_held(int keyid);
 extern int hungarian_keyboard_press(int keyid,unsigned int codepoint);

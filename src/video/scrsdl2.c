@@ -1516,7 +1516,7 @@ static int scrsdl_hungarian_keyboard_event(SDL_Event *event)
 
     int host_mods=0;
     if (keysym.mod & KMOD_SHIFT) host_mods |=HUNGARIAN_KEYBOARD_MOD_SHIFT;
-    if (keysym.mod & (KMOD_CTRL|KMOD_ALT)) host_mods |=HUNGARIAN_KEYBOARD_MOD_SYMBOL;
+    if (keysym.mod & KMOD_CTRL) host_mods |=HUNGARIAN_KEYBOARD_MOD_SYMBOL;
 
     //Mientras se envia una secuencia (simbolos del modo extendido), los modificadores del host
     //no deben tocar Caps/Symbol shift: solo se recuerdan para el final
@@ -1552,7 +1552,7 @@ static int scrsdl_hungarian_keyboard_event(SDL_Event *event)
     //AltGr: en Linux suele ser RALT o MODE; en Windows llega como LCtrl+RAlt
     int altgr=( (keysym.mod & (KMOD_RALT|KMOD_MODE)) ? 1 : 0);
 
-    //Ctrl o Alt izquierdo sin AltGr: es Symbol shift del Spectrum; no se genera texto
+    //Ctrl o Alt izquierdo sin AltGr: Ctrl es Symbol shift del Spectrum; Alt izquierdo solo pasa la tecla. No se genera texto
     if (!altgr && (keysym.mod & (KMOD_CTRL|KMOD_LALT))) return 0;
 
     SDL_Event siguiente;
@@ -1566,6 +1566,71 @@ static int scrsdl_hungarian_keyboard_event(SDL_Event *event)
     if (altgr) return hungarian_keyboard_press(keyid,0);
 
     return 0;
+}
+
+//Left Alt + number keys = Caps shift + number keys (Spectrum)
+//Caps shift is pressed together with the number key and released after the number key is released
+static unsigned char scrsdl_alt_caps_keys[SDL_NUM_SCANCODES];
+static int scrsdl_alt_caps_total=0;
+static int scrsdl_alt_caps_release_pending=0;
+
+static void scrsdl_alt_caps_shift_event(SDL_Event *event)
+{
+    if (event->type!=SDL_KEYDOWN && event->type!=SDL_KEYUP) return;
+
+    SDL_Keysym keysym=event->key.keysym;
+    int scancode=keysym.scancode;
+    if (scancode<0 || scancode>=SDL_NUM_SCANCODES) return;
+
+    if (event->type==SDL_KEYDOWN) {
+        //Autorepeat
+        if (scrsdl_alt_caps_keys[scancode]) return;
+
+        if (!keyboard_alt_caps_shift.v || !MACHINE_IS_SPECTRUM || sdl_raw_keyboard_read.v) return;
+
+        //Only left Alt, not AltGr
+        if (!(keysym.mod & KMOD_LALT) || (keysym.mod & (KMOD_RALT|KMOD_MODE))) return;
+
+        if (keysym.sym<'0' || keysym.sym>'9') return;
+
+        scrsdl_alt_caps_keys[scancode]=1;
+        scrsdl_alt_caps_total++;
+        util_set_reset_key(UTIL_KEY_CAPS_SHIFT,1);
+    }
+
+    else {
+        if (!scrsdl_alt_caps_keys[scancode]) return;
+
+        scrsdl_alt_caps_keys[scancode]=0;
+        scrsdl_alt_caps_total--;
+        if (scrsdl_alt_caps_total<=0) {
+            scrsdl_alt_caps_total=0;
+            scrsdl_alt_caps_release_pending=1;
+        }
+    }
+}
+
+//Release Caps shift once the number key has been released (unless a Shift key is held)
+static void scrsdl_alt_caps_shift_release_pending(void)
+{
+    if (!scrsdl_alt_caps_release_pending) return;
+    scrsdl_alt_caps_release_pending=0;
+
+    if (scrsdl_alt_caps_total) return;
+    if (SDL_GetModState() & KMOD_SHIFT) return;
+
+    util_set_reset_key(UTIL_KEY_CAPS_SHIFT,0);
+}
+
+static void scrsdl_alt_caps_shift_release_all(void)
+{
+    if (scrsdl_alt_caps_total) {
+        int i;
+        for (i=0;i<SDL_NUM_SCANCODES;i++) scrsdl_alt_caps_keys[i]=0;
+        scrsdl_alt_caps_total=0;
+        util_set_reset_key(UTIL_KEY_CAPS_SHIFT,0);
+    }
+    scrsdl_alt_caps_release_pending=0;
 }
 
 void scrsdl_actualiza_tablas_teclado(void)
@@ -1582,6 +1647,9 @@ void scrsdl_actualiza_tablas_teclado(void)
 
 
     while( SDL_PollEvent( &event ) ){
+
+        //Caps shift of a previous left Alt + number key
+        scrsdl_alt_caps_shift_release_pending();
 
 //printf ("evento: %d\n",event.type);
 
@@ -1622,6 +1690,8 @@ void scrsdl_actualiza_tablas_teclado(void)
                 //Teclas pulsadas por el teclado hungaro
                 hungarian_keyboard_release_all();
 
+                scrsdl_alt_caps_shift_release_all();
+
             }
 			if (event.window.event==SDL_WINDOWEVENT_FOCUS_GAINED) {
 
@@ -1630,6 +1700,9 @@ void scrsdl_actualiza_tablas_teclado(void)
 			}
 
 		}
+
+		//Left Alt + number keys = Caps shift + number keys
+		scrsdl_alt_caps_shift_event(&event);
 
 		if ( (event.type==SDL_KEYDOWN || event.type==SDL_KEYUP) && scrsdl_hungarian_keyboard_event(&event) ) {
 			//Gestionada por el teclado hungaro
@@ -1766,6 +1839,8 @@ See the SDL documentation. Scancodes represent the physical position of the keys
 
 	}
 
+    //Caps shift of a left Alt + number key released in the last event
+    scrsdl_alt_caps_shift_release_pending();
 
 }
 
