@@ -4,9 +4,9 @@ Type (1:RD,2:WR,3:RW)	Típus (1:olvas, 2:ír, 3:mindkettő)	window title
 List Memory Breakpoints	Memória-töréspontok listája	window title
 Clear Mem breakpoints	Memória-töréspontok törlése	question
 Delete all breakpoints	Minden töréspont törlése	question
-~~Edit Breakpoint	Töréspont sz~~erkesztése	item
+~~Edit Breakpoint	Töréspont ~~szerkesztése	item
 ~~List breakpoints	Töréspontok ~~listája	item
-~~Clear breakpoints	Töréspontok törlése	item
+~~Clear breakpoints	~~Töréspontok törlése	item
 Memory Breakpoints	Memória-töréspontok	menu title
 Condition?	Feltétel?	window title
 Action? (empty=normal)	Művelet? (üres=normál)	window title
@@ -14,13 +14,13 @@ Pass count? (0=normal)	Áthaladások száma? (0=normál)	window title
 Delete breakpoint	Töréspont törlése	window title
 Edit Breakpoint	Töréspont szerkesztése	window title
 [~^OK]	[~^OK]	item
-[Ca~^ncel]	[Mégse]	item
-[~^Delete]	[Törlés]	item
-[He~^lp]	[Súgó]	item
+[Ca~^ncel]	[~^Mégse]	item
+[~^Delete]	[~^Törlés]	item
+[He~^lp]	[~^Súgó]	item
 Expression	Kifejezés	window title
 Result	Eredmény	window title
-~~Breakpoints enabled	Töréspontok ~~bekapcsolva	item
-~~Evaluate Expression	Kif~~ejezés kiértékelése	item
+~~Breakpoints enabled	~~Töréspontok bekapcsolva	item
+~~Evaluate Expression	~~Kifejezés kiértékelése	item
 ~~Memory breakpoints	~~Memória-töréspontok	item
 Enable all breakpoints	Minden töréspont bekapcsolása	item
 Disable all breakpoints	Minden töréspont kikapcsolása	item
@@ -41,18 +41,18 @@ GAC objects	GAC objektumok	window title
 GAC dictionary	GAC szótár	window title
 GAC locations	GAC helyszínek	window title
 GAC messages	GAC üzenetek	window title
-~~Dictionary	Szótár	item
+~~Dictionary	~~Szótár	item
 ~~Objects	~~Objektumok	item
-~~Verbs	Igék	item
-~~Nouns	Fő~~nevek	item
+~~Verbs	~~Igék	item
+~~Nouns	~~Főnevek	item
 ~~Adverbs	H~~atározószók	item
-~~Locations	He~~lyszínek	item
-~~Messages	Üzenetek	item
+~~Locations	~~Helyszínek	item
+~~Messages	Ü~~zenetek	item
 Message type	Üzenet típusa	menu title
-~~User Messages	Felhasználói üzenetek	item
-~~System Messages	Rend~~szerüzenetek	item
-~~Compression Tokens	Tömörítési tokenek	item
-~~Vocabulary	Szókincs	item
+~~User Messages	~~Felhasználói üzenetek	item
+~~System Messages	~~Rendszerüzenetek	item
+~~Compression Tokens	~~Tömörítési tokenek	item
+~~Vocabulary	~~Szókincs	item
 Graphics commands	Grafikai parancsok	window title
 Export commands	Parancsok exportálása	window title
 Graph number	Grafika száma	window title
@@ -60,21 +60,21 @@ Initial X	Kezdő X	window title
 Initial Y	Kezdő Y	window title
 Default ink	Alap tinta	window title
 Default paper	Alap papír	window title
-~~Set	Beállítá~~s	item
+~~Set	Beá~~llítás	item
 Ink %d	Tinta %d	item
 Pap %d	Papír %d	item
-~~commands	paran~~csok	item
+~~commands	p~~arancsok	item
 Exp.	Exp.	item
 [%c] ~~Gosub	[%c] ~~Gosub	item
 [%c] Rec~~t	[%c] ~~Téglalap	item
 [%c] ~~Ellip	[%c] ~~Ellipszis	item
 [%c] ~~Block	[%c] ~~Blokk	item
-[%c] ~~Text	[%c] Szöveg	item
+[%c] ~~Text	[%c] ~~Szöveg	item
 [%c] Pl~~ot	[%c] P~~ont	item
-[%c] ~~Line	[%c] Vona~~l	item
+[%c] ~~Line	[%c] ~~Vonal	item
 [%c] ~~Ink	[%c] T~~inta	item
-[%c] P~~aper	[%c] P~~apír	item
-[%c] B~~right	[%c] Fényesség	item
+[%c] P~~aper	[%c] ~~Papír	item
+[%c] B~~right	[%c] ~~Fényesség	item
 PAWS Graphics Render	PAWS grafika megjelenítése	menu title
 Enable & start cpu history?	Bekapcsolod és elindítod a CPU-előzményeket?	question
 Cpu history	CPU-előzmények	window title
@@ -197,13 +197,13 @@ Audio Chip Registers	Hangchip regiszterei	window title
 Video Info	Videó adatai	window title
 Sprite navigator	Sprite-böngésző	window title
 Waveform	Hullámforma	window title
-[%s] ~~Shape	[%s] Alak	item
-[%s] ~~View	[%s] Nézet	item
+[%s] ~~Shape	[%s] ~~Alak	item
+[%s] ~~View	[%s] ~~Nézet	item
 Visualmem Type	Vizuális memória típusa	menu title
 Visual memory	Vizuális memória	window title
-~~Bright: %d	Fényesség: %d	item
-[%c] ~~Defrag style	[%c] Töre~~dezettségmentesítő stílus	item
-~~Looking: %s	Keresett: %s	item
+~~Bright: %d	~~Fényesség: %d	item
+[%c] ~~Defrag style	[%c] ~~Töredezettségmentesítő stílus	item
+~~Looking: %s	~~Keresett: %s	item
 Length (0-1310)	Hossz (0-1310)	window title
 Length (0-60)	Hossz (0-60)	window title
 Mark item	Elem megjelölése	window title
@@ -218,14 +218,14 @@ Save marked items playlist	Megjelölt elemek mentése listába	item
 Playlist contents:	A lejátszási lista tartalma:	item
 Playlist	Lejátszási lista	menu title
 AY Player	AY lejátszó	window title
-~~Add	Hozzá~~adás	item
-P~~rev	Előző	item
-N~~ext	Köv~~etkező	item
-E~~dit	Szerkesztés	item
-~~Prev	Előző	item
-~~Stop	Leállítá~~s	item
-Pa~~use	Szünet	item
-~~Next	Következő	item
+~~Add	~~Hozzáadás	item
+P~~rev	~~Előző	item
+N~~ext	Kö~~vetkező	item
+E~~dit	Sze~~rkesztés	item
+~~Prev	Elő~~ző	item
+~~Stop	~~Leállítás	item
+Pa~~use	~~Szünet	item
+~~Next	~~Következő	item
 [%c] Shuffle	[%c] Véletlen sorrend	item
 [%c] Repeat	[%c] Ismétlés	item
 [%c] Exitend	[%c] Exitend	item
@@ -286,7 +286,7 @@ Log file [%s]	Naplófájl [%s]	item
 CPU Transaction Log	CPU tranzakciónapló	menu title
 Height?	Magasság?	window title
 Sprites	Sprite-ok	window title
-[%d] Selected ~~Chip	[%d] Kiválasztott ~~chip	item
+[%d] Selected ~~Chip	[%d] ~~Kiválasztott chip	item
 Audio Chip Sheet (60 BPM)	Hangchip kotta (60 BPM)	menu title
 Will empty buffer	Kiüríti a puffert	window title
 Stop recording	Felvétel leállítása	window title
@@ -319,10 +319,10 @@ Test MIDI	MIDI teszt	item
 Reset channels	Csatornák alaphelyzetbe	item
 MIDI status	MIDI állapot	item
 Audio Chip to MIDI output	Hangchipből MIDI kimenet	menu title
-[%c] AY ~~Envelopes	[%c] AY burkológörbék	item
-[%c] AY ~~Speech	[%c] AY be~~széd	item
+[%c] AY ~~Envelopes	[%c] AY ~~burkológörbék	item
+[%c] AY ~~Speech	[%c] ~~AY beszéd	item
 [%c] AY ~~MIDI registers	[%c] AY ~~MIDI regiszterek	item
-    AY S~~tereo: %s	    AY sz~~tereó: %s	item
+    AY S~~tereo: %s	    AY ~~sztereó: %s	item
     Ch. A: %s	    A csat.: %s	item
     Ch. B: %s	    B csat.: %s	item
     Ch. C: %s	    C csat.: %s	item
@@ -339,8 +339,8 @@ AY mixer	AY keverő	menu title
 i8049 mixer	i8049 keverő	menu title
 Audio Chip Info	Hangchip adatai	window title
 ~~File [%s]	~~Fájl [%s]	item
-[X] ~~Enabled	[X] B~~ekapcsolva	item
-[ ] ~~Enabled	[ ] B~~ekapcsolva	item
+[X] ~~Enabled	[~~X] Bekapcsolva	item
+[ ] ~~Enabled	[ ] ~~Bekapcsolva	item
 [Default] Speed	[Alap] Sebesség	item
 [%d] Speed	[%d] Sebesség	item
 UART Bridge	UART híd	menu title
@@ -350,10 +350,10 @@ Snapshot every ms?	Pillanatkép hány ms-onként?	window title
 Still connecting	Kapcsolódás folyamatban	window title
 Remote host?	Távoli gép?	window title
     Connecting...	    Kapcsolódás...	item
-[%c] ~~Enabled	[%c] B~~ekapcsolva	item
-Remote ~~Hosts [%s]	Távoli gépek [%s]	item
+[%c] ~~Enabled	[%c] ~~Bekapcsolva	item
+Remote ~~Hosts [%s]	~~Távoli gépek [%s]	item
 Remote Port [%d]	Távoli port [%d]	item
-[%c] ~~Master	[%c] Fő gép (~~master)	item
+[%c] ~~Master	[%c] ~~Fő gép (master)	item
 Snapshot freq [%d ms]	Pillanatkép gyakorisága [%d ms]	item
 [%c] Force reconnect	[%c] Újrakapcsolódás kényszerítése	item
 [%c] Send input events	[%c] Bemeneti események küldése	item
@@ -373,9 +373,9 @@ Response	Válasz	window title
 File downloaded	A fájl letöltve	window title
 Network Traffic	Hálózati forgalom	window title
 ~~UART Bridge emulation	~~UART híd emuláció	item
-~~ZX81 online browser	~~ZX81 online böngésző	item
+~~ZX81 online browser	ZX81 online ~~böngésző	item
 ~~Speccy online browser	~~Spectrum online böngésző	item
-Download ZEsarUX e~~xtras	ZEsarU~~X extrák letöltése	item
+Download ZEsarUX e~~xtras	~~ZEsarUX extrák letöltése	item
 Network traffic	Hálózati forgalom	item
 Test Http request	HTTP-kérés teszt	item
 --- Network Gaming ---	--- Hálózati játék ---	item
@@ -407,39 +407,39 @@ Empty trash	Kuka ürítése	question
 Empty Trash	Kuka ürítése	item
 Trash Can	Kuka	menu title
 Window name	Ablak neve	window title
-~~Process switcher	Folyamatváltó	item
-~~Cascade all windows	Minden ablak lép~~csőzetesen	item
+~~Process switcher	~~Folyamatváltó	item
+~~Cascade all windows	Minden ablak ~~lépcsőzetesen	item
 Rearrange all windows	Minden ablak elrendezése	item
-~~Reduce all windows	Minden ablak kicsinyítése	item
+~~Reduce all windows	Minden ablak ~~kicsinyítése	item
 Reduce+rearrange all windows	Minden ablak kicsinyítése és elrendezése	item
 Minimize+rearrange all windows	Minden ablak ikonra és elrendezése	item
-M~~inimize all windows	Minden ablak ~~ikonra (minimize)	item
+M~~inimize all windows	~~Minden ablak ikonra (minimize)	item
 M~~aximize all windows	Minden ~~ablak teljes méretre (maximize)	item
 Send message to a window (BETA)	Üzenet küldése egy ablaknak (BÉTA)	item
 Windows	Ablakok	menu title
 Aventure location image	Kalandjáték helyszínének képe	window title
 Max (in ms)	Max. (ms)	window title
 Min (in ms)	Min. (ms)	window title
-On Screen ~~Adventure Keyboard	Képernyős k~~alandbillentyűzet	item
-~~Extract words to Adv. Keyb.	Szavak kiny~~erése a kalandbill.-be	item
+On Screen ~~Adventure Keyboard	~~Képernyős kalandbillentyűzet	item
+~~Extract words to Adv. Keyb.	~~Szavak kinyerése a kalandbill.-be	item
 Location Description Processing	Helyszínleírás feldolgozása	item
     Converter	    Átalakító	item
     Algorithm	    Algoritmus	item
     Minimum no-char	    Minimum nem-karakter	item
     Minimum after-room	    Minimum szoba után	item
     Minimum between images	    Minimum képek között	item
-    Window ~~image	    Kép ablak	item
+    Window ~~image	    Kép ~~ablak	item
     Info: Total conversions	    Infó: összes átalakítás	item
-~~Print char traps	Karakterkiírás figyelése	item
+~~Print char traps	Ka~~rakterkiírás figyelése	item
 Text Adventure Tools	Szöveges kaland eszközei	menu title
 Video Output	Videókimenet	window title
-~~Load Screen	Képernyő betö~~ltése	item
-~~Save Screen	Képernyő menté~~se	item
-Qu~~icksave Screen	Képernyő gyorsmentése	item
-~~View Screen	Képernyő megtekintése	item
-View ~~Colour Palettes	Színpaletták megtekintése	item
+~~Load Screen	Képernyő ~~betöltése	item
+~~Save Screen	Képernyő ~~mentése	item
+Qu~~icksave Screen	Képernyő ~~gyorsmentése	item
+~~View Screen	Ké~~pernyő megtekintése	item
+View ~~Colour Palettes	~~Színpaletták megtekintése	item
 On Screen ~~Keyboard	~~Képernyő-billentyűzet	item
-~~Text Adventure Tools	Szöveges kaland eszközei	item
+~~Text Adventure Tools	Szöveges kaland ~~eszközei	item
 Display	Kijelző	menu title
 [%d] Zoom	[%d] Nagyítás	item
 Audio Chip Piano	Hangchip zongora	menu title
@@ -447,12 +447,12 @@ Wave Piano	Hullám zongora	menu title
 Block info	Blokk adatai	window title
 Memory Info	Memória adatai	window title
 Sprite disable	Sprite-ok tiltása	window title
-Video ~~Info	V~~ideó adatai	item
+Video ~~Info	Videó ~~adatai	item
 [%c] Debug borders	[%c] Keretek hibakeresése	item
-Video ~~Layers	Videórétegek	item
+Video ~~Layers	~~Videórétegek	item
 ~~Sprite navigator	~~Sprite-böngésző	item
-Sprite ~~disabling	Sprite-ok tiltása	item
-~~Tile navigator	Csempeböngésző	item
+Sprite ~~disabling	Sprite-~~ok tiltása	item
+~~Tile navigator	~~Csempeböngésző	item
 [%c] Copper enabled	[%c] Copper bekapcsolva	item
 ~~Memory Info	~~Memória adatai	item
 Virtual Keyboard	Virtuális billentyűzet	window title
@@ -504,9 +504,9 @@ End scan	Keresés vége	window title
 Value: 	Érték: 	window title
 Start Address: 	Kezdőcím: 	window title
 Memory Cheat	Memória-csalás	window title
-[~^Start First Scan]	[El~^ső keresés indítása]	item
-[~^View Results (%d)]	[Eredmények (%d)]	item
-[Run ~^Next Scan]	[Következő keresés]	item
+[~^Start First Scan]	[Első keresés ~^indítása]	item
+[~^View Results (%d)]	[~^Eredmények (%d)]	item
+[Run ~^Next Scan]	[~^Következő keresés]	item
 [Watch %d]	[%d. figyelés]	item
 Basic Variables	BASIC változók	window title
 Meter Type	Mérő típusa	menu title
@@ -516,12 +516,12 @@ View Sensors	Érzékelők megtekintése	window title
 Display value	Érték kijelzése	window title
 Display percentage	Százalék kijelzése	window title
 Visual Real Tape	Vizuális valódi kazetta	window title
-~~Rew	Visszateke~~rés	item
+~~Rew	~~Visszatekerés	item
 Rew 1%%	Vissza 1%%	item
 FF 1%%	Előre 1%%	item
-~~FF	Előre	item
-R~~einsert	Újra b~~ehelyezés	item
-~~Insert	Behelyezés	item
+~~FF	~~Előre	item
+R~~einsert	Ú~~jra behelyezés	item
+~~Insert	~~Behelyezés	item
 StopBegin	Leáll. elején	item
 ZX Spectrum+ 48k (Spanish)	ZX Spectrum+ 48k (spanyol)	item
 Microdigital TK90X (Portuguese)	Microdigital TK90X (portugál)	item
@@ -542,7 +542,7 @@ Custom rom	Egyéni ROM	item
  Rom file	 ROM fájl	item
  Set +2e/+3e rom	 +2e/+3e ROM beállítása	item
  Reset machine	 Gép újraindítása	item
-~~Hotswap machine	Gépcsere menet közben	item
+~~Hotswap machine	Gépcsere ~~futás közben	item
 --- Select manufacturer ---	--- Gyártó kiválasztása ---	item
 Machine	Gép	menu title
 --- Select family ---	--- Család kiválasztása ---	item
@@ -555,52 +555,52 @@ Background Windows Help	Háttérablakok súgója	window title
 ~~Information	~~Információ	item
 ~~Atomlite (from simcoupe)	~~Atomlite (a simcoupe-ból)	item
 Disassembler (from ~~fuse)	Disassembler (a ~~fuse-ból)	item
-D~~OS font	D~~OS betűkészlet	item
-Mac OS video driver (from ~~Qemu)	Mac OS videómeghajtó (a ~~Qemu-ból)	item
-~~Motorola Core	~~Motorola mag	item
-~~SCMP Core	~~SCMP mag	item
-SPG ~~loader (from unrealspeccy)	SPG betö~~ltő (az unrealspeccy-ből)	item
-Tom Thum~~b Charset	Tom Thumb ~~betűkészlet	item
+D~~OS font	DOS ~~betűkészlet	item
+Mac OS video driver (from ~~Qemu)	Mac OS ~~videómeghajtó (a Qemu-ból)	item
+~~Motorola Core	Moto~~rola mag	item
+~~SCMP Core	SCMP ~~mag	item
+SPG ~~loader (from unrealspeccy)	~~SPG betöltő (az unrealspeccy-ből)	item
+Tom Thum~~b Charset	T~~om Thumb betűkészlet	item
 Licenses	Licencek	menu title
-~~About	Névjegy	item
-~~Software from David	David programjai	item
+~~About	~~Névjegy	item
+~~Software from David	~~David programjai	item
 In Memoriam David	In Memoriam David	menu title
-~~Software from Diego & Oscar	Diego é~~s Oscar programjai	item
+~~Software from Diego & Oscar	~~Diego és Oscar programjai	item
 In Memoriam Diego	In Memoriam Diego	menu title
 About In Memoriam	In Memoriam – névjegy	window title
-~~About In Memoriam	In Memori~~am – névjegy	item
+~~About In Memoriam	~~In Memoriam – névjegy	item
 Welcome	Üdvözöljük	text
 Enabled	Bekapcsolva	text
 Select English Language	Angol nyelv kiválasztása	item
 Cancel	Mégse	item
 ~~Features	~~Funkciók	item
 ~~Exclusive features	~~Egyedi funkciók	item
-~~History	Történet	item
-~~Changelog	Változásnapló	item
+~~History	~~Történet	item
+~~Changelog	~~Változásnapló	item
 Project	Projekt	menu title
-~~Help	Súgó	item
-~~Background Windows Help	Háttéra~~blakok súgója	item
-~~Readme	Olvass el (~~Readme)	item
-~~FAQ	GYIK	item
-~~Included tapes	Mellékelt kazetták	item
+~~Help	~~Súgó	item
+~~Background Windows Help	~~Háttérablakok súgója	item
+~~Readme	~~Olvass el (Readme)	item
+~~FAQ	~~GYIK	item
+~~Included tapes	~~Mellékelt kazetták	item
 ~~Alternate ROMS	~~Alternatív ROM-ok	item
 Documentation	Dokumentáció	menu title
-~~Acknowledgements	Köszönetnyilvánítás	item
-~~Donors	Támogatók	item
-D~~onate	Ad~~ományozás	item
+~~Acknowledgements	~~Köszönetnyilvánítás	item
+~~Donors	~~Támogatók	item
+D~~onate	~~Adományozás	item
 Community	Közösség	menu title
 ~~Statistics	~~Statisztika	item
-~~Core Statistics	Mag statisztikája	item
-R~~unning info	F~~utási adatok	item
-C~~ompile info	F~~ordítási adatok	item
-Insta~~ll	Te~~lepítés	item
+~~Core Statistics	~~Mag statisztikája	item
+R~~unning info	Futási ~~adatok	item
+C~~ompile info	~~Fordítási adatok	item
+Insta~~ll	~~Telepítés	item
 Install on ~~Windows	Telepítés ~~Windowsra	item
 Technical	Műszaki	menu title
 ~~Virtual Keyboard	~~Virtuális billentyűzet	item
 ~~Documentation	~~Dokumentáció	item
 ~~Project	~~Projekt	item
-~~Community	Közösség	item
-~~Technical	Műszaki	item
+~~Community	~~Közösség	item
+~~Technical	Mű~~szaki	item
 ~~Licenses	~~Licencek	item
 Key length	Billentyű hossza	window title
 Send Keystrokes Status	Billentyűküldés állapota	window title
@@ -619,20 +619,20 @@ Recorded time	Felvett idő	item
 Total Size	Teljes méret	item
 Capture Audio to File	Hang rögzítése fájlba	menu title
 Audio Chip ~~Registers	Hangchip ~~regiszterei	item
-Audio Chip P~~iano	Hangch~~ip zongora	item
-Audio Chip ~~Sheet	Hangchip kotta	item
+Audio Chip P~~iano	Ha~~ngchip zongora	item
+Audio Chip ~~Sheet	Hangchip ~~kotta	item
 General Sound Info	General Sound adatai	item
-W~~ave Piano	Hullám zongor~~a	item
-~~Waveform	Hullámforma	item
-AY ~~Player	AY lejátszó	item
+W~~ave Piano	Hullám ~~zongora	item
+~~Waveform	H~~ullámforma	item
+AY ~~Player	AY ~~lejátszó	item
 --- External Audio Source ---	--- Külső hangforrás ---	item
-Enable ~~External Audio Source	Külső hangforrás b~~ekapcsolása	item
+Enable ~~External Audio Source	Külső hangforrás ~~bekapcsolása	item
 Selected card	Kiválasztott kártya	item
 External Audio Source Window	Külső hangforrás ablaka	item
 Spectrum Analyzer	Spektrumanalizátor	item
-i8049 Mi~~xer	i8049 keverő	item
-AY Mi~~xer	AY keverő	item
-Audio Chip to .~~mid	Hangchipből .~~mid	item
+i8049 Mi~~xer	~~i8049 keverő	item
+AY Mi~~xer	~~AY keverő	item
+Audio Chip to .~~mid	~~Hangchipből .mid	item
 Audio	Hang	menu title
 Reset CPU	CPU újraindítása	question
 Reset to failsafe?	Újraindítás biztonsági módba?	question
@@ -657,59 +657,59 @@ Ascii Table	ASCII táblázat	window title
 GO SUB stack	GO SUB verem	window title
 CPU Info	CPU adatai	window title
 View Basic ~~listing	BASIC ~~lista megtekintése	item
-View Basic ~~variables	BASIC ~~változók megtekintése	item
+View Basic ~~variables	~~BASIC változók megtekintése	item
 View ~~GO SUB stack	~~GO SUB verem megtekintése	item
 Basic	BASIC	menu title
-~~Reset	Új~~raindítás	item
+~~Reset	Ú~~jraindítás	item
 Reset to Failsafe mode	Újraindítás biztonsági módba	item
 ~~Hard Reset	~~Hidegindítás	item
-Generate ~~NMI	~~NMI előidézése	item
-~~Debug CPU	CPU hibakereső	item
+Generate ~~NMI	NMI ~~előidézése	item
+~~Debug CPU	~~CPU hibakereső	item
 Debug Adventure	Kalandjáték hibakeresése	item
 Machine Info	Gép adatai	item
 Load Source Code	Forráskód betöltése	item
 Unload Source Code	Forráskód eltávolítása	item
 Show symbol table	Szimbólumtábla megjelenítése	item
-Debug D~~MA	D~~MA hibakeresés	item
-Debug ~~I/O Ports	~~I/O portok hibakeresése	item
+Debug D~~MA	~~DMA hibakeresés	item
+Debug ~~I/O Ports	I/~~O portok hibakeresése	item
 Debug ~~I/O Addresses	~~I/O címek hibakeresése	item
-He~~xadecimal Editor	He~~xadecimális szerkesztő	item
-~~Sprite Viewer	~~Sprite-nézegető	item
+He~~xadecimal Editor	Hexadecimális ~~szerkesztő	item
+~~Sprite Viewer	Sprite-~~nézegető	item
 ~~Visual memory	~~Vizuális memória	item
-L~~oad binary block	Bináris bl~~okk betöltése	item
-S~~ave binary block	Bináris blokk mentése	item
-File ~~utilities	Fájlkezelő eszközök	item
+L~~oad binary block	Biná~~ris blokk betöltése	item
+S~~ave binary block	~~Bináris blokk mentése	item
+File ~~utilities	~~Fájlkezelő eszközök	item
 Write message	Üzenet írása	item
 [%c] Timesensors	[%c] Időmérők	item
     List Timesensors	    Időmérők listája	item
     Init Timesensors	    Időmérők alaphelyzetbe	item
-~~Basic	~~BASIC	item
-~~CPU Transaction Log	~~CPU tranzakciónapló	item
-~~Find	Keresés	item
+~~Basic	B~~ASIC	item
+~~CPU Transaction Log	CP~~U tranzakciónapló	item
+~~Find	~~Keresés	item
 Debug	Hibakeresés	menu title
 Quicksave	Gyorsmentés	window title
 Generate config for	Beállítás készítése ehhez	window title
 Save autoconfig	Automatikus beállítás mentése	window title
 Snapshot note	Pillanatkép megjegyzése	window title
 Loaded note	Betöltött megjegyzés	window title
-~~Load snapshot	Pi~~llanatkép betöltése	item
-~~Save snapshot	Pillanatkép menté~~se	item
+~~Load snapshot	Pillanatkép ~~betöltése	item
+~~Save snapshot	Pillanatkép ~~mentése	item
 Add note to next ZSF snapshot	Megjegyzés a következő ZSF pillanatképhez	item
 View loaded ZSF note	A betöltött ZSF megjegyzése	item
 Stop RZX Play	RZX lejátszás leállítása	item
-Quickl~~oad	Gy~~orsbetöltés	item
-Quicks~~ave	Gyorsmentés	item
-Save a~~utoconfig file	A~~utomatikus beállítás mentése fájlba	item
-Snapshots to ~~RAM	Pillanatképek a ~~RAM-ba	item
+Quickl~~oad	~~Gyorsbetöltés	item
+Quicks~~ave	Gy~~orsmentés	item
+Save a~~utoconfig file	~~Automatikus beállítás mentése fájlba	item
+Snapshots to ~~RAM	~~Pillanatképek a RAM-ba	item
 Snapshot	Pillanatkép	menu title
 Eject Cartridge	Cartridge kivétele	window title
-~~Load Cartridge	Cartridge betö~~ltése	item
+~~Load Cartridge	~~Cartridge betöltése	item
 Mapper type [%s]	Leképező típusa [%s]	item
 Cartridge Size [%d KB]	Cartridge mérete [%d KB]	item
 [%s] Mapper type	[%s] Leképező típusa	item
 --- Info ---	--- Adatok ---	item
 Cartridge Size: %d KB	Cartridge mérete: %d KB	item
-~~Eject Cartridge	Cartridg~~e kivétele	item
+~~Eject Cartridge	Cartridge ~~kivétele	item
 RAM Size	RAM mérete	menu title
 Size	Méret	menu title
 Eprom Size	EPROM mérete	menu title
@@ -745,7 +745,7 @@ Input Spectrum Analyzer	Bemeneti spektrumanalizátor	window title
 Will flush prev. changes	Elveti a korábbi változásokat	window title
 Default SPI Flash file	Alapértelmezett SPI Flash fájl	window title
 ~~Flash File: [%s]	~~Flash fájl: [%s]	item
-[%c] ~~Write protect	[%c] Írásvédelem	item
+[%c] ~~Write protect	[%c] Í~~rásvédelem	item
 [%c] Persistent Writes	[%c] Tartós írás	item
 Reset button	Újraindító gomb	window title
 [%c] ~~Transtape Enabled	[%c] ~~Transtape bekapcsolva	item
@@ -766,8 +766,8 @@ Run ~~Mantransfer	~~Mantransfer futtatása	item
 Phoenix emulation	Phoenix emuláció	menu title
 [%c] ~~Defcon Enabled	[%c] ~~Defcon bekapcsolva	item
 Defcon emulation	Defcon emuláció	menu title
-[%c] ~~Ramjet Enabled	[%c] ~~Ramjet bekapcsolva	item
-[%d] Ramjet ~~Version	[%d] Ramjet ~~változat	item
+[%c] ~~Ramjet Enabled	[%c] Ramjet ~~bekapcsolva	item
+[%d] Ramjet ~~Version	[%d] ~~Ramjet változat	item
 Ramjet emulation	Ramjet emuláció	menu title
 [%c] ~~Pokeador Enabled	[%c] ~~Pokeador bekapcsolva	item
 Type	Típus	item
@@ -784,58 +784,58 @@ ROM Information	ROM adatai	window title
     Info	    Adatok	item
 Additional ROMS	További ROM-ok	menu title
 --- Rom at C000 ---	--- ROM a C000 címen ---	item
-~~Enable	B~~ekapcsolás	item
+~~Enable	~~Bekapcsolás	item
 ~~Type	~~Típus	item
 LEC Memory	LEC memória	menu title
 Z88 Memory Slot %d	Z88 %d. memóriafoglalat	item
 Close Z88 Flap	Z88 fedél lezárása	item
 Open Z88 Flap	Z88 fedél kinyitása	item
-~~Microdrive & Floppy	~~Microdrive és floppy	item
+~~Microdrive & Floppy	Micro~~drive és floppy	item
 ~~Tape	Kaze~~tta	item
-3" CF2 F~~loppy	3" CF2 f~~loppy	item
+3" CF2 F~~loppy	~~3" CF2 floppy	item
 Timex ~~Cartridge	Timex ~~cartridge	item
-MSX ~~Cartridge	MSX ~~cartridge	item
-Coleco ~~Cartridge	~~Coleco cartridge	item
-SG-1000 ~~Cartridge	SG-1000 ~~cartridge	item
-SMS ~~Cartridge	SMS ~~cartridge	item
-SVI ~~Cartridge	SVI ~~cartridge	item
+MSX ~~Cartridge	MS~~X cartridge	item
+Coleco ~~Cartridge	Co~~leco cartridge	item
+SG-1000 ~~Cartridge	SG-~~1000 cartridge	item
+SMS ~~Cartridge	SMS ca~~rtridge	item
+SVI ~~Cartridge	S~~VI cartridge	item
 LEC memory	LEC memória	item
 ZX~~pand emulation	ZX~~pand emuláció	item
 C~~opy Interfaces	Más~~oló interfészek	item
 Storage	Háttértár	menu title
-[%c] ~~Paused	[%c] Szünet	item
-[%c] ~~Grid	[%c] Rács	item
+[%c] ~~Paused	[%c] ~~Szünet	item
+[%c] ~~Grid	[%c] ~~Rács	item
 ~~Edit	Sz~~erkesztés	item
-~~Random	Véletlen	item
-~~Clear	Törlés	item
+~~Random	~~Véletlen	item
+~~Clear	~~Törlés	item
 Clock	Óra	window title
 Calculator	Számológép	window title
-C~~alculator	Számológép	item
-C~~lock	Óra	item
+C~~alculator	Szá~~mológép	item
+C~~lock	Ó~~ra	item
 Extras	Extrák	menu title
 Process Switcher	Folyamatváltó	window title
 Visual Casette Tape	Vizuális kazetta	window title
-[%c] ~~Slow movement	[%c] La~~ssú mozgás	item
+[%c] ~~Slow movement	[%c] ~~Lassú mozgás	item
 Visual Cassette Tape	Vizuális kazetta	menu title
 On Screen Keyboard	Képernyő-billentyűzet	window title
 Save config	Beállítások mentése	text
 Save snapshot	Pillanatkép mentése	text
 Search results	Keresési eredmények	window title
-~~Smart load	Oko~~s betöltés	item
-S~~napshot	Pilla~~natkép	item
-~~Machine	Gép	item
-~~Audio	H~~ang	item
-~~Display	Kijelző	item
+~~Smart load	~~Okos betöltés	item
+S~~napshot	Pi~~llanatkép	item
+~~Machine	~~Gép	item
+~~Audio	~~Hang	item
+~~Display	~~Kijelző	item
 S~~torage	Há~~ttértár	item
-D~~ebug	Hibak~~eresés	item
-Netw~~ork	Hálózat	item
-~~Windows	Ablakok	item
-Sett~~ings	Beállítások	item
+D~~ebug	H~~ibakeresés	item
+Netw~~ork	Háló~~zat	item
+~~Windows	~~Ablakok	item
+Sett~~ings	~~Beállítások	item
 Show full menus	Teljes menük	item
 Show simple menus	Egyszerű menük	item
-Sea~~rch menu	Ke~~resés a menüben	item
-E~~xtras	E~~xtrák	item
-He~~lp	Súgó	item
+Sea~~rch menu	Keresés a ~~menüben	item
+E~~xtras	~~Extrák	item
+He~~lp	~~Súgó	item
 Close menu	Menü bezárása	item
 Main Menu	Főmenü	menu title
 Window title	Ablak címe	window title
@@ -848,10 +848,10 @@ Config Path	Beállítások helye	window title
 Delete configuration file	Beállításfájl törlése	window title
 Change config file path	Beállításfájl helyének módosítása	window title
 ~~Autosave on exit	~~Automatikus mentés kilépéskor	item
-    ~~Save configuration	    Beállítá~~sok mentése	item
-    ~~View config file	    Beállításfájl megtekintése	item
-    Show config file ~~path	    Beállításfájl helyének mutatása	item
-    ~~Change config file path	    Beállításfájl helyének módosítása	item
+    ~~Save configuration	    Beállítások ~~mentése	item
+    ~~View config file	    ~~Beállításfájl megtekintése	item
+    Show config file ~~path	    B~~eállításfájl helyének mutatása	item
+    ~~Change config file path	    Beállításfájl ~~helyének módosítása	item
     Delete config file	    Beállításfájl törlése	item
 Configuration file	Beállításfájl	menu title
 Frameskip	Képkocka-kihagyás	window title
@@ -865,7 +865,7 @@ Change Video Driver	Videómeghajtó cseréje	menu title
 Reset search index	Keresési index alaphelyzetbe	question
 Full index scan	Teljes indexelés	question
 Emulator Speed (%)	Emuláció sebessége (%)	window title
-~~Language	Nye~~lv	item
+~~Language	~~Nyelv	item
 Online Download Path	Online letöltések helye	item
 Search indexing	Keresési index	item
     Reset search index	    Keresési index alaphelyzetbe	item
@@ -876,13 +876,13 @@ Welcome logo and message	Üdvözlő logó és üzenet	item
 Fast welcome logo & message	Gyors üdvözlő logó és üzenet	item
 Quick exit	Gyors kilépés	item
 General Settings	Általános beállítások	menu title
-[%c] ~~Red display	[%c] Vö~~rös kijelző	item
-[%c] ~~Green display	[%c] Zöld kijelző	item
-[%c] ~~Blue display	[%c] Kék kijelző	item
-[%c] ~~Inverse colours	[%c] Fordított színek	item
+[%c] ~~Red display	[%c] ~~Vörös kijelző	item
+[%c] ~~Green display	[%c] ~~Zöld kijelző	item
+[%c] ~~Blue display	[%c] ~~Kék kijelző	item
+[%c] ~~Inverse colours	[%c] ~~Fordított színek	item
 8 bit color	8 bites színek	item
 [%c] ~~Dithering	[%c] Árnyalás (~~dithering)	item
-[%c] R~~eal palette	[%c] Valódi pal~~etta	item
+[%c] R~~eal palette	[%c] Valódi ~~paletta	item
 [%c] Vision-QL palette	[%c] Vision-QL paletta	item
 Colour Settings	Színbeállítások	menu title
 Change type	Típus módosítása	menu title
@@ -903,7 +903,7 @@ Old CRT	Régi CRT	question
 My Old CRT	Az én régi CRT-m	question
 Anaglyph	Anaglif	item
 Insert effects group	Effektcsoport beszúrása	menu title
-Enable F~~X	F~~X bekapcsolása	item
+Enable F~~X	~~FX bekapcsolása	item
 --- Effects ---	--- Effektek ---	item
  [%s] Factor reduction	 [%s] Csökkentési tényező	item
  [%c]  Antialias	 [%c]  Élsimítás	item
@@ -950,7 +950,7 @@ Blue	Kék	item
 Color Percent	Szín százaléka	item
 Emulated Display FX	Emulált kijelző effektjei	menu title
 --- Full Screen ---	--- Teljes képernyő ---	item
-[%c] ~~Full Screen	[%c] Teljes képernyő	item
+[%c] ~~Full Screen	[%c] ~~Teljes képernyő	item
 Show ZX Desktop in Full Screen	ZX Desktop teljes képernyőn	item
  Restore windows after leaving Full Screen	 Ablakok visszaállítása kilépéskor	item
 Show Border in Full Screen	Keret teljes képernyőn	item
@@ -958,20 +958,20 @@ Show Footer in Full Screen	Lábléc teljes képernyőn	item
 Disable fullscreen on exit ZEsarUX	Teljes képernyő ki ZEsarUX kilépéskor	item
 --- Zoom ---	--- Nagyítás ---	item
 Keep horizontal and vertical zoom equal	Vízszintes és függőleges nagyítás egyezzen	item
-~~Zoom	Nagyítás	item
+~~Zoom	~~Nagyítás	item
 Window Size Width Zoom	Ablak vízszintes nagyítása	item
 Window Size Height Zoom	Ablak függőleges nagyítása	item
 Auto-adjust zoom for large displays	Nagyítás igazítása nagy kijelzőhöz	item
 --- Border ---	--- Keret ---	item
-~~Border	Keret	item
+~~Border	K~~eret	item
 --- Frameskip ---	--- Képkocka-kihagyás ---	item
-F~~rameskip	Képkocka-kihagyás	item
+F~~rameskip	~~Képkocka-kihagyás	item
 Frameskip on ZX Desktop background	Képkocka-kihagyás ZX Desktop háttéren	item
 Auto Frameskip	Automatikus képkocka-kihagyás	text
 Also when moving objects	Objektumok mozgatásakor is	item
 RPi slow improve performance	Lassú RPi teljesítmény javítása	item
 --- Footer ---	--- Lábléc ---	item
-[%c] F~~ooter	[%c] Lábléc	item
+[%c] F~~ooter	[%c] ~~Lábléc	item
 [%c]  F~~PS	[%c]  F~~PS	item
 ~~CPU usage	~~CPU-használat	item
 [%c]  CPU temperature	[%c]  CPU hőmérséklet	item
@@ -984,7 +984,7 @@ Style info	Stílus adatai	window title
 --15 colour based--	--15 szín alapú--	item
 --Tiny styles--	--Apró stílusok--	item
 --Misc--	--Egyéb--	item
-Style ~~info	Stílus adata~~i	item
+Style ~~info	~~Stílus adatai	item
 Change day/night	Nappal/éjszaka váltás	item
 Style	Stílus	menu title
 Restore windows geometry	Ablakok elhelyezésének visszaállítása	question
@@ -1031,33 +1031,33 @@ Show Top Menu moving mouse to top	Felső menü, ha az egér felülre ér	item
 Show Top Menu short menu names	Rövid menünevek a felső menüben	item
 Use mouse in menus	Egér használata a menükben	item
 Mouse pointer	Egérmutató	item
-Mouse Cl~~ick opens menu	Egérkatt~~intás megnyitja a menüt	item
+Mouse Cl~~ick opens menu	Egérkattintás megnyitja ~~a menüt	item
 Li~~mit menu opening	~~Menünyitás korlátozása	item
 Use speccy keys	Spectrum billentyűk használata	item
-Always show ~~hotkeys	Gyorsbillentyűk mindig látszanak	item
+Always show ~~hotkeys	~~Gyorsbillentyűk mindig látszanak	item
 Skip confirmation dialogs	Megerősítő kérdések kihagyása	item
 Submenu indicator	Almenü jelzése	item
 Show previous submenus	Előző almenük mutatása	item
 Right mouse button sends ESC	Jobb egérgomb = ESC	item
 Old menu behaviour (ESC, etc)	Régi menüműködés (ESC stb.)	item
 --- Task Management ---	--- Feladatkezelés ---	item
-M~~ultitask	Többfeladatos mód	item
-Sto~~p emulation in menus	Emuláció megállítása a menükben	item
-~~Background windows	Háttéra~~blakok	item
+M~~ultitask	~~Többfeladatos mód	item
+Sto~~p emulation in menus	~~Emuláció megállítása a menükben	item
+~~Background windows	~~Háttérablakok	item
 Even when menu closed	Bezárt menünél is	item
 --- Help ---	--- Súgó ---	item
-[%c] ~~Tooltips	[%c] Buboréksúgók	item
+[%c] ~~Tooltips	[%c] ~~Buboréksúgók	item
 First-use help	Első használati súgó	item
     Restore all first-use messages	    Minden első használati üzenet vissza	item
 Apps	Alkalmazások	item
 Special FX	Speciális effektek	item
 Window features	Ablakfunkciók	item
 ZX Vision Settings	ZX Vision beállításai	menu title
-~~Splash texts	Nyitó ~~szövegek	item
+~~Splash texts	~~Nyitó szövegek	item
 --- Watermark ---	--- Vízjel ---	item
 Visibility	Láthatóság	item
 Rotate colors on device act.	Színforgatás eszközműködéskor	item
-~~Position	Hely	item
+~~Position	~~Hely	item
 OSD Settings	OSD beállításai	menu title
 External tools paths	Külső eszközök helye	menu title
 Skip Columns	Kihagyott oszlopok	window title
@@ -1067,40 +1067,40 @@ Filter mask	Szűrőmaszk	menu title
 Source code "L" Prefix	Forráskód "L" előtagja	item
 Source code skip columns	Forráskód kihagyott oszlopai	item
 --- Debug execution ---	--- Hibakereső futtatás ---	item
-Step ~~over interrupt	Megszakítás átlépése	item
+Step ~~over interrupt	~~Megszakítás átlépése	item
 Show display while debugging	Kijelző mutatása hibakeresés közben	item
 Show CRT beam while debugging	CRT sugár mutatása hibakeresés közben	item
 Highlight zones beyond sync	Szinkronon túli területek kiemelése	item
 Show on border fired Halt	Végrehajtott HALT jelzése a kereten	item
 Step Over RST8 +2	RST8 +2 átlépése	item
 Show opcode timings	Utasítások idejének mutatása	item
-~~Breakpoint behaviour	Töréspontok működése	item
+~~Breakpoint behaviour	~~Töréspontok működése	item
 Show triggered breakpoints	Kiváltott töréspontok mutatása	item
 --- Debug windows ---	--- Hibakereső ablakok ---	item
 Show address in View Basic	Cím mutatása a BASIC nézetben	item
 Show decimal results in Watches	Decimális eredmények a figyelésekben	item
 Visualmem type	Vizuális memória típusa	item
 --- Debug messages ---	--- Hibakereső üzenetek ---	item
-Verbose ~~level	Rész~~letesség szintje	item
+Verbose ~~level	Részletesség ~~szintje	item
 Message filter	Üzenetszűrő	item
 Debug console window	Hibakereső konzolablak	item
 Always log debug to terminal	Hibaüzenetek mindig a terminálra	item
-View r~~egisters in terminal	R~~egiszterek a terminálon	item
-Show ~~invalid opcodes	Érvénytelen utasítások mutatása	item
+View r~~egisters in terminal	~~Regiszterek a terminálon	item
+Show ~~invalid opcodes	Érvénytelen ~~utasítások mutatása	item
 --- Execution behaviour ---	--- Futtatás működése ---	item
 Dump snapshot on panic	Pillanatkép mentése összeomláskor	item
 Max CPU history items	CPU-előzmények max. száma	item
 --- Hardware Debug ---	--- Hardver hibakeresés ---	item
-Hardware ~~debug ports	Har~~dver hibakereső portok	item
-Byte ~~file	Bájt ~~fájl	item
+Hardware ~~debug ports	~~Hardver hibakereső portok	item
+Byte ~~file	~~Bájt fájl	item
 Debug Settings	Hibakereső beállításai	menu title
 Audio Driver: %s	Hangmeghajtó: %s	item
 Change Audio Driver	Hangmeghajtó cseréje	menu title
 File information	Fájl adatai	window title
 Port Value	Port értéke	window title
 Raspberry GPIO Pin number	Raspberry GPIO láb száma	window title
-    Output ~~Volume	    Kimeneti hangerő	item
-A~~uto-enable AY Chip	AY chip a~~utomatikus bekapcsolása	item
+    Output ~~Volume	    ~~Kimeneti hangerő	item
+A~~uto-enable AY Chip	A~~Y chip automatikus bekapcsolása	item
 ~~AY Chip	~~AY chip	item
 AY ~~Chips [%d] %s	AY ~~chipek [%d] %s	item
 [%c] i8049 sound chip	[%c] i8049 hangchip	item
@@ -1110,21 +1110,21 @@ Handle ROM traps	ROM-hívások elfogása	item
 [%c] Beepe~~r	[%c] Beepe~~r	item
 [%c] Detect VSYNC Sound	[%c] VSYNC hang felismerése	item
 [%c] VSYNC Sound	[%c] VSYNC hang	item
-[%c] Real ~~Beeper	[%c] Valódi ~~beeper	item
+[%c] Real ~~Beeper	[%c] ~~Valódi beeper	item
     Beeper & MIC mode: [%s]	    Beeper és MIC mód: [%s]	item
 [%c] MIC sound	[%c] MIC hang	item
 [%c] Cassette Out sound	[%c] Kazettakimenet hangja	item
 [%c] General Sound	[%c] General Sound	item
 General Sound RAM [%4d KB]	General Sound RAM [%4d KB]	item
 [%c] ~~DAC	[%c] ~~DAC	item
-    ~~DAC Type [%s]	    ~~DAC típusa [%s]	item
+    ~~DAC Type [%s]	    DAC ~~típusa [%s]	item
 DAC port [%02XH]	DAC port [%02XH]	item
-Si~~lence detector	Csendérzéke~~lő	item
+Si~~lence detector	Cs~~endérzékelő	item
 [%c] 1 bit filter	[%c] 1 bites szűrő	item
 [%c] Nagravision	[%c] Nagravision	item
-    Audio ~~out to file	    Hang kimenete fájlba	item
-Audio file ~~inserted	Hangfájl behelyezve	item
-Change Audio Driv~~er	Hangm~~eghajtó cseréje	item
+    Audio ~~out to file	    Hang kimenete ~~fájlba	item
+Audio file ~~inserted	Hangfájl ~~behelyezve	item
+Change Audio Driv~~er	~~Hangmeghajtó cseréje	item
 --- Audio SDL settings ---	--- SDL hangbeállítások ---	item
 Callback Type	Callback típusa	item
 --- One Bit Speaker settings ---	--- Egybites hangszóró beállításai ---	item
@@ -1147,14 +1147,14 @@ Total scanlines: %d	Összes képsor: %d	item
 Total T-states: %d	Összes T-állapot: %d	item
 Total Hz: %d	Összes Hz: %d	item
 Advanced Timing Settings	Haladó időzítési beállítások	menu title
-ULA ~~timing	ULA időzí~~tés	item
-~~Contended memory	Versengő memória (~~contended)	item
+ULA ~~timing	ULA ~~időzítés	item
+~~Contended memory	~~Versengő memória (contended)	item
 ULA IM2 s~~low	~~Lassú ULA IM2	item
 ~~Pentagon timing	~~Pentagon időzítés	item
 Allow ROM Paging	ROM lapozás engedélyezése	item
 Allow RAM Paging	RAM lapozás engedélyezése	item
 ~~ULA Databus value	~~ULA adatbusz értéke	item
-~~Advanced timing settings	H~~aladó időzítési beállítások	item
+~~Advanced timing settings	~~Haladó időzítési beállítások	item
 ULA Settings	ULA beállításai	menu title
 Major	Fő	window title
 Minor	Al	window title
@@ -1166,7 +1166,7 @@ RAM size (KB)	RAM mérete (KB)	window title
 RAM? (3, 19, 35 or 51)	RAM? (3, 19, 35 vagy 51)	window title
 Standard RAM	Alap RAM	window title
 Poke low RAM with	Alsó RAM feltöltése ezzel	window title
-Allow ~~write in ROM	Írás engedélyezése a ROM-ba	item
+Allow ~~write in ROM	Írás engedélyezése ~~a ROM-ba	item
 RAM size [%4d KB]	RAM mérete [%4d KB]	item
 RAM size [%d KB]	RAM mérete [%d KB]	item
     ZX80/81 Standard RAM [%d KB]	    ZX80/81 alap RAM [%d KB]	item
@@ -1189,7 +1189,7 @@ Recreated also on menu	Recreated a menüben is	window title
 Original key	Eredeti billentyű	window title
 Destination key	Cél billentyű	window title
 Redefine keys	Billentyűk átdefiniálása	menu title
-Keyboard ~~Issue	Billentyűzet változata (~~Issue)	item
+Keyboard ~~Issue	Billentyűzet ~~változata (Issue)	item
 ~~Azerty keyboard	~~Azerty billentyűzet	item
 ZX Recreated mode	ZX Recreated mód	item
 Also on menu	A menüben is	item
@@ -1197,16 +1197,16 @@ Swap Enter - Return	Enter és Return felcserélése	item
 [%c] SDL Raw keyboard	[%c] SDL nyers billentyűzet	item
 Hungarian keyboard	Magyar billentyűzet	item
 Chloe Keyboard	Chloe billentyűzet	item
-Speccy keyb. ~~ghosting	Spectrum billentyű-szellemképek	item
-K~~eymap [%s]	Bill~~entyűkiosztás [%s]	item
-~~Redefine keys	Billentyűk átdefiniálása	item
+Speccy keyb. ~~ghosting	~~Spectrum billentyű-szellemképek	item
+K~~eymap [%s]	B~~illentyűkiosztás [%s]	item
+~~Redefine keys	~~Billentyűk átdefiniálása	item
 Keyboard Settings	Billentyűzet beállításai	menu title
 Set Z88 clock	Z88 óra beállítása	window title
 Custom	Egyéni	item
 Next machine id	Next gépazonosító	menu title
 ID?	Azonosító?	window title
-~~Interlaced mode	Váltottsoros mód	item
-[%c] S~~canlines	[%c] Képsorok	item
+~~Interlaced mode	~~Váltottsoros mód	item
+[%c] S~~canlines	[%c] ~~Képsorok	item
  [%c] Aggressive	 [%c] Erőteljes	item
 Max Scanlines	Max. képsorok	item
 Max Scanline Period	Max. képsor-periódus	item
@@ -1215,10 +1215,10 @@ Minimum vsync interval	Minimális vsync időköz	item
 Simulate lost VSYNC	Elveszett VSYNC szimulálása	item
 Simulate lost HSYNC	Elveszett HSYNC szimulálása	item
 TV Settings	TV beállításai	menu title
-Emulated ~~Joystick	Emulált ~~joystick	item
+Emulated ~~Joystick	~~Emulált joystick	item
 Fire key	Tűz gomb	item
 SMS swap controls	SMS vezérlők felcserélése	item
-Joystick ~~Autofire	Joystick ~~automata tűz	item
+Joystick ~~Autofire	~~Joystick automata tűz	item
 Autofire frequency	Automata tűz gyakorisága	item
 Joystick AutoLeftRight	Joystick automatikus bal-jobb	item
 Cheap Joystick	Olcsó joystick	item
@@ -1231,9 +1231,9 @@ Next core version [%d.%d.%d]	Next mag változata [%d.%d.%d]	item
 Spectrum Next Settings	Spectrum Next beállításai	menu title
 Anticopy Devices Settings	Másolásvédelmi eszközök beállításai	menu title
 DMA Settings	DMA beállításai	menu title
-[%c] Kempston Mou~~se	[%c] Kemp~~ston egér	item
+[%c] Kempston Mou~~se	[%c] ~~Kempston egér	item
 Mouse Sensitivity	Egér érzékenysége	item
-[%c] QIMI Mou~~se	[%c] QIMI egér	item
+[%c] QIMI Mou~~se	[%c] ~~QIMI egér	item
 Mouse Settings	Egér beállításai	menu title
     Type [%s]	    Típus [%s]	item
 Show scope	Célkereszt mutatása	item
@@ -1249,21 +1249,21 @@ Anticopy Devices	Másolásvédelmi eszközök	item
 ~~CPU	~~CPU	item
 ~~DMA	~~DMA	item
 ~~Joystick	~~Joystick	item
-~~Keyboard	Billentyűzet	item
+~~Keyboard	~~Billentyűzet	item
 ~~Memory	~~Memória	item
-Mou~~se	Egér	item
+Mou~~se	~~Egér	item
 ~~Optical Input	~~Optikai bemenet	item
-~~Printer	Nyomtató	item
-~~Real joystick	Valódi joystick	item
+~~Printer	~~Nyomtató	item
+~~Real joystick	V~~alódi joystick	item
 ~~ULA	~~ULA	item
 ~~Video	~~Videó	item
 Machine refresh rate [%d Hz]	Gép frissítési frekvenciája [%d Hz]	item
 Hardware Settings	Hardverbeállítások	menu title
 ~~Autoload medium	~~Automatikus betöltés	item
-Fast autoloa~~d	Gyors automatikus betöltés	item
-A~~utoselect medium opts	Adathordozó beállításainak a~~utom. választása	item
-Accelerate ~~load	Betö~~ltés gyorsítása	item
-Accelerate ~~save	Menté~~s gyorsítása	item
+Fast autoloa~~d	~~Gyors automatikus betöltés	item
+A~~utoselect medium opts	Adathordozó beállításainak autom. ~~választása	item
+Accelerate ~~load	~~Betöltés gyorsítása	item
+Accelerate ~~save	~~Mentés gyorsítása	item
 Storage Settings	Háttértár beállításai	menu title
 Scanline	Képsor	window title
 Length? (10-100)	Hossz? (10-100)	window title
@@ -1347,30 +1347,30 @@ Text driver settings	Szöveges meghajtó beállításai	item
 Video Settings	Videóbeállítások	menu title
 Timeout (0=never)	Időkorlát (0=soha)	window title
 Line width 0=no limit	Sorhossz (0=nincs korlát)	window title
-~~Speech program [%s]	Be~~szédprogram [%s]	item
+~~Speech program [%s]	~~Beszédprogram [%s]	item
 Stop program [%s]	Leállító program [%s]	item
-[%c] ~~Wait program to exit	[%c] Várjon a program kilépésére	item
+[%c] ~~Wait program to exit	[%c] Várjon ~~a program kilépésére	item
 [%c] Also send ~~menu	[%c] A ~~menü felolvasása is	item
 [%c] Also send debug messages	[%c] Hibakereső üzenetek felolvasása is	item
 --- Trap print to speech ---	--- Nyomtatás felolvasása ---	item
-Line w~~idth [%d]	Sorhossz [%d]	item
-[%c] End line with s~~pace	[%c] Sor végén szóköz	item
-[%c] End line with d~~ot	[%c] S~~or végén pont	item
-~~Timeout no enter [%d]	Időkorlá~~t Enter nélkül [%d]	item
+Line w~~idth [%d]	~~Sorhossz [%d]	item
+[%c] End line with s~~pace	[%c] Sor ~~végén szóköz	item
+[%c] End line with d~~ot	[%c] Sor végén ~~pont	item
+~~Timeout no enter [%d]	~~Időkorlát Enter nélkül [%d]	item
 [%c] Get stdout from script	[%c] Kimenet (stdout) a szkriptből	item
 Text to Speech	Szövegfelolvasás	menu title
 Address (0=none)	Cím (0=nincs)	window title
-[%c] ~~Trap print	[%c] Karak~~terkiírás elfogása	item
+[%c] ~~Trap print	[%c] ~~Karakterkiírás elfogása	item
 [%c] ROM number print compat	[%c] ROM számkiírás kompatibilitás	item
-~~Second trap address [%d]	Má~~sodik elfogási cím [%d]	item
-[%c] Second trap s~~um 32	[%c] Második elfogás +32	item
+~~Second trap address [%d]	~~Második elfogási cím [%d]	item
+[%c] Second trap s~~um 32	[%c] Második elfogás +~~32	item
 T~~hird trap address [%d]	~~Harmadik elfogási cím [%d]	item
-Char ~~filter [%s]	Karakterszűrő [%s]	item
-[%c] ~~Ignore new line character	[%c] Újsor karakter f~~igyelmen kívül	item
-[%c] Enable 2nd trap ~~detection	[%c] Máso~~dik elfogás felismerése	item
+Char ~~filter [%s]	K~~arakterszűrő [%s]	item
+[%c] ~~Ignore new line character	[%c] Újsor karakter ~~figyelmen kívül	item
+[%c] Enable 2nd trap ~~detection	[%c] Második ~~elfogás felismerése	item
 Detect ~~routine [%s]	~~Rutin felismerése [%s]	item
-Mi~~n address [%d]	Mi~~n. cím [%d]	item
-Ma~~x address [%d]	Ma~~x. cím [%d]	item
+Mi~~n address [%d]	M~~in. cím [%d]	item
+Ma~~x address [%d]	Max. ~~cím [%d]	item
 Print char traps	Karakterkiírás elfogása	menu title
 Set high contrast style	Nagy kontrasztú stílus	window title
 Set big font	Nagy betűméret	window title
@@ -1378,18 +1378,18 @@ ZX Desktop clean fill	ZX Desktop egyszínű kitöltés	window title
 ZX Desktop buttons	ZX Desktop gombjai	window title
 Force hotkeys	Gyorsbillentyűk kényszerítése	window title
 Disable background windows	Háttérablakok tiltása	window title
-Set high ~~contrast style	Nagy kontrasztú stílus beállítása	item
-Set big ~~font	Nagy betűméret beállítása	item
-Force ~~hotkeys	Gyorsbillentyűk kényszerítése	item
-Disable background ~~windows	Háttérablakok tiltása	item
-Set ZX Desktop p~~lain background	ZX Desktop egyszínű háttér	item
-Improve ZX Desktop ~~object visibility	ZX Desktop ~~objektumai jobban látsszanak	item
+Set high ~~contrast style	~~Nagy kontrasztú stílus beállítása	item
+Set big ~~font	Nagy ~~betűméret beállítása	item
+Force ~~hotkeys	~~Gyorsbillentyűk kényszerítése	item
+Disable background ~~windows	~~Háttérablakok tiltása	item
+Set ZX Desktop p~~lain background	~~ZX Desktop egyszínű háttér	item
+Improve ZX Desktop ~~object visibility	ZX ~~Desktop objektumai jobban látsszanak	item
 Inverse colours	Fordított színek	item
 Gray mode	Szürke mód	item
 GUI sounds	Felület hangjai	item
 GUI accessibility	Felület akadálymentessége	menu title
-~~Text to speech	Szövegfelolvasás	item
-~~GUI	Felület	item
+~~Text to speech	~~Szövegfelolvasás	item
+~~GUI	~~Felület	item
 Accessibility Settings	Akadálymentesség beállításai	menu title
 Room %d Pass: %s	%d. szoba jelszava: %s	item
 No created rooms	Nincs létrehozott szoba	item
@@ -1397,7 +1397,7 @@ Creator room passwords	Szobák létrehozói jelszavai	menu title
 Max rooms	Szobák max. száma	window title
 Max players per room	Játékosok max. száma szobánként	window title
 Enable ~~Server	~~Szerver bekapcsolása	item
-    View creator room ~~passwords	    Szobák létrehozói jelszavainak megtekintése	item
+    View creator room ~~passwords	    Szobák ~~létrehozói jelszavainak megtekintése	item
 Destroy rooms without players	Játékos nélküli szobák megszüntetése	item
 Allow room creation from any ip	Szoba létrehozása bármely IP-ről	item
 Maximum rooms	Szobák max. száma	item
@@ -1407,7 +1407,7 @@ ZENG Online Server	ZENG Online szerver	menu title
 ZRCP prompt	ZRCP parancssor	window title
 ZRCP Remote protocol	ZRCP távoli protokoll	item
 ZRCP ~~port	ZRCP ~~port	item
-ZRCP pro~~mpt	ZRCP parancssor	item
+ZRCP pro~~mpt	~~ZRCP parancssor	item
 ZRCP Linemode Telnet	ZRCP soronkénti Telnet	item
 Network Settings	Hálózati beállítások	menu title
 Auto	Automatikus	item
@@ -1418,35 +1418,35 @@ Timer priority list:	Időzítők sorrendje:	item
 Current Timer	Jelenlegi időzítő	item
 Danger Zone	Veszélyzóna	menu title
 ~~Accessibility	~~Akadálymentesség	item
-Configu~~ration file	Beállításfájl	item
-E~~xternal tools paths	Külső eszközök helye	item
-~~File Browser	~~Fájlböngésző	item
-Fu~~nction keys	Fu~~nkcióbillentyűk	item
-~~General	Általános	item
+Configu~~ration file	~~Beállításfájl	item
+E~~xternal tools paths	Külső ~~eszközök helye	item
+~~File Browser	Fá~~jlböngésző	item
+Fu~~nction keys	F~~unkcióbillentyűk	item
+~~General	Á~~ltalános	item
 ~~Hardware	~~Hardver	item
-Ma~~in Window	Főablak	item
+Ma~~in Window	~~Főablak	item
 Smart load	Okos betöltés	item
-~~Snapshot	Pillanatkép	item
+~~Snapshot	~~Pillanatkép	item
 ZX Des~~ktop	ZX Des~~ktop	item
 ZX ~~Vision	ZX ~~Vision	item
 Show advanced options	Haladó beállítások mutatása	item
 Settings	Beállítások	menu title
 Seconds: 	Másodperc: 	window title
 Name prefix: 	Név előtagja: 	window title
-~~Compressed ZSF	Tömörített ZSF	item
-ZSF save R~~OM	ZSF mentése R~~OM-mal	item
-Set ~~machine snap load	Gépváltás pillanatkép betöltésekor	item
+~~Compressed ZSF	~~Tömörített ZSF	item
+ZSF save R~~OM	~~ZSF mentése ROM-mal	item
+Set ~~machine snap load	~~Gépváltás pillanatkép betöltésekor	item
 Automount esxdos path on load .nex	esxdos útvonal csatolása .nex betöltésekor	item
 Sync PC->Z88 clock	PC -> Z88 óra szinkronizálása	item
-Auto~~save on exit	Automatiku~~s mentés kilépéskor	item
-Auto~~load on start	Automatikus betö~~ltés induláskor	item
+Auto~~save on exit	~~Automatikus mentés kilépéskor	item
+Auto~~load on start	Automatikus ~~betöltés induláskor	item
 Autosnap ~~path	Automatikus ~~pillanatképek helye	item
-Contsave at ~~interval	Folyamatos mentés ~~időközönként	item
-Contsave S~~econds	Folyamatos m~~entés (másodperc)	item
-QS&CA P~~refix	Gyo~~rsmentés előtagja	item
-QS&CA P~~ath	Gyorsmentés helye	item
+Contsave at ~~interval	Folyamatos ~~mentés időközönként	item
+Contsave S~~econds	~~Folyamatos mentés (másodperc)	item
+QS&CA P~~refix	Gyorsmentés ~~előtagja	item
+QS&CA P~~ath	Gyorsmentés ~~helye	item
 --- Old .ZX format ---	--- Régi .ZX formátum ---	item
-Allow U~~nknown .ZX versions	Ismeretle~~n .ZX változatok engedélyezése	item
+Allow U~~nknown .ZX versions	~~Ismeretlen .ZX változatok engedélyezése	item
 .ZX ~~version on save	.ZX ~~változat mentéskor	item
 Snapshot Settings	Pillanatkép beállításai	menu title
 Close menu after smartload	Menü bezárása okos betöltés után	item
@@ -1478,20 +1478,20 @@ Two memory address	Két memóriacím	item
 16 bit value	16 bites érték	item
 Load game presets	Játék előbeállításainak betöltése	item
 Steering wheel	Kormány	menu title
-Joystick ~~information	Joyst~~ick adatai	item
-Auto~~calibrate value	Automatikus kalibrálás értéke	item
+Joystick ~~information	~~Joystick adatai	item
+Auto~~calibrate value	~~Automatikus kalibrálás értéke	item
 Joystick to ~~events	Joystick ~~eseményekhez	item
-Joystick to ~~actions	Joystick műveletekhez	item
-Joystick to ~~keys	Joystic~~k billentyűkhöz	item
-S~~teering wheel	Kormány	item
+Joystick to ~~actions	Joystick ~~műveletekhez	item
+Joystick to ~~keys	Joystick ~~billentyűkhöz	item
+S~~teering wheel	~~Kormány	item
 Set events&actions&keys to default	Események, műveletek, billentyűk alapra	item
 Real joystick	Valódi joystick	menu title
 Noise reduction	Zajcsökkentés	window title
 Offset	Eltolás	window title
 --- Standard Tape ---	--- Szabványos kazetta ---	item
-Fa~~llback to real tape	Visszavá~~ltás valódi kazettára	item
-~~Any flag loading	Bármely jelzőbájt betöltése	item
-~~Simulate real load	Valódi betöltés ~~szimulálása	item
+Fa~~llback to real tape	~~Visszaváltás valódi kazettára	item
+~~Any flag loading	Bármely ~~jelzőbájt betöltése	item
+~~Simulate real load	Valódi ~~betöltés szimulálása	item
 Fast Simulate real load	Valódi betöltés gyors szimulálása	item
 TZX delete pause	TZX szünetek törlése	item
 Tape traps	Kazetta-elfogások (traps)	item
@@ -1502,7 +1502,7 @@ Invert signal	Jel invertálása	item
 Volume bit 1 range	1-es bit hangerő-tartománya	item
 Level Offset	Szint eltolása	item
 MSX Loading noise reduction	MSX betöltési zajcsökkentés	item
-Autorew~~ind	Automat~~ikus visszatekerés	item
+Autorew~~ind	~~Automatikus visszatekerés	item
 Tape Settings	Kazetta beállításai	menu title
 Set Action	Művelet beállítása	window title
 Select Window	Ablak kiválasztása	window title
@@ -1519,25 +1519,25 @@ Change Bitmap	Kép cseréje	text
 --- Others ---	--- Egyebek ---	item
 Set default bitmap	Alapértelmezett kép beállítása	item
 Help SendKeysMenu	Súgó: billentyűküldő menü	window title
-R~~ename	Átn~~evezés	item
+R~~ename	Át~~nevezés	item
 ~~Parameters	~~Paraméterek	item
-Change ~~Bitmap	Kép cseréje	item
+Change ~~Bitmap	~~Kép cseréje	item
 Close Window	Ablak bezárása	item
 Move to Trash	Áthelyezés a kukába	item
-~~View	Megtekintés	item
-~~Info	Adatok	item
-Select ~~Machine	Gép kiválasztása	item
-~~Keyboard Help	Billentyűzet súgó	item
+~~View	~~Megtekintés	item
+~~Info	~~Adatok	item
+Select ~~Machine	~~Gép kiválasztása	item
+~~Keyboard Help	~~Billentyűzet súgó	item
 ~~Hardware settings	~~Hardverbeállítások	item
-Debug ~~CPU	~~CPU hibakereső	item
-~~Reset CPU	CPU új~~raindítása	item
+Debug ~~CPU	CP~~U hibakereső	item
+~~Reset CPU	~~CPU újraindítása	item
 Create Icon on ZX Desktop	Ikon létrehozása a ZX Desktopon	item
 Properties	Tulajdonságok	menu title
 Add next	Következő hozzáadása	item
 Set Icons	Ikonok beállítása	menu title
-~~Width	Szélesség	item
+~~Width	~~Szélesség	item
 Specify Width	Szélesség megadása	item
-~~Height	Magasság	item
+~~Height	~~Magasság	item
 Specify Height	Magasság megadása	item
 Open Menu on ZX Desktop	Menü megnyitása a ZX Desktopon	item
 Footer +/- buttons	Lábléc +/- gombjai	item
@@ -1547,7 +1547,7 @@ Force background color	Háttérszín kényszerítése	item
 Background color follow GUI style	Háttérszín a felület stílusa szerint	item
 Background color	Háttérszín	item
 Box	Doboz	item
-    Customize ~~buttons	    Gom~~bok testreszabása	item
+    Customize ~~buttons	    ~~Gombok testreszabása	item
 --- Lower Buttons ---	--- Alsó gombok ---	item
 --- Icons on ZX Desktop ---	--- Ikonok a ZX Desktopon ---	item
 Text background	Szöveg háttere	item
@@ -1559,11 +1559,11 @@ Empty trash on exit	Kuka ürítése kilépéskor	item
 Stroke on icons	Ikonok körvonala	item
 Stroke Color	Körvonal színe	item
 --- Background ---	--- Háttér ---	item
-~~Fill type	Kitöltés típusa	item
+~~Fill type	~~Kitöltés típusa	item
 Primary Fill Color	Elsődleges kitöltőszín	item
 Inverted Degraded	Fordított színátmenet	item
 Secondary Fill Color	Másodlagos kitöltőszín	item
-~~SCR file	~~SCR fájl	item
+~~SCR file	SCR ~~fájl	item
 SCR active	SCR bekapcsolva	item
 SCR centered	SCR középre	item
 SCR autoscale	SCR automatikus méretezés	item
@@ -1574,25 +1574,25 @@ ZX Desktop Settings	ZX Desktop beállításai	menu title
 ~~Turbo [%dX %s MHz]	~~Turbó [%dX %s MHz]	item
 Set GMX Turbo CPU speed	GMX turbó CPU-sebesség	item
 Set GMX Normal CPU speed	GMX normál CPU-sebesség	item
-~~Deny turbo on boot	Turbó tiltása in~~duláskor	item
+~~Deny turbo on boot	Turbó tiltása ~~induláskor	item
 Limit turbo on ROM	Turbó korlátozása a ROM-ban	item
 Max turbo allowed on ROM	Max. turbó a ROM-ban	item
 Limit turbo on everywhere	Turbó korlátozása mindenhol	item
 Max turbo allowed everywhere	Max. turbó mindenhol	item
-[%c] T~~op Speed	[%c] Csúcssebesség	item
+[%c] T~~op Speed	[%c] ~~Csúcssebesség	item
 Add CPU_TURBO extension	CPU_TURBO kiterjesztés hozzáadása	item
 Z80 CPU Type	Z80 CPU típusa	item
 Z80 LDIR/LDDR Hack	Z80 LDIR/LDDR trükk	item
-Spectrum ~~core	Spe~~ctrum mag	item
+Spectrum ~~core	~~Spectrum mag	item
 Pause CPU	CPU szüneteltetése	item
 CPU Settings	CPU beállításai	menu title
-Show ~~directories	Mappák mutatása	item
-Show file ~~size	Fájlméret mutatá~~sa	item
-Show file ~~previews	Fájlok előnézete	item
-Red~~uce previews to half size	Előnézetek fele méretben	item
-Show previews also on ~~ZX Desktop	Előnézetek a ~~ZX Desktopon is	item
+Show ~~directories	~~Mappák mutatása	item
+Show file ~~size	~~Fájlméret mutatása	item
+Show file ~~previews	Fá~~jlok előnézete	item
+Red~~uce previews to half size	~~Előnézetek fele méretben	item
+Show previews also on ~~ZX Desktop	Előnézetek ~~a ZX Desktopon is	item
 ~~Hexadecimal file viewer	~~Hexadecimális fájlnézegető	item
-Allow fold~~ers delete	Mappák törlésének ~~engedélyezése	item
+Allow fold~~ers delete	Mappák ~~törlésének engedélyezése	item
 File Browser Settings	Fájlböngésző beállításai	menu title
 Check updates	Frissítések keresése	item
 Check yesterday users	Tegnapi felhasználók ellenőrzése	item
@@ -1611,10 +1611,10 @@ The following data is sent:	A következő adatok kerülnek elküldésre:	item
     Build Number: %s	    Build száma: %s	item
 Statistics Settings	Statisztika beállításai	menu title
 [%c] ~~Kartusho Enabled	[%c] ~~Kartusho bekapcsolva	item
-~~Press button	Gomb megnyomása	item
+~~Press button	~~Gomb megnyomása	item
 ~~Flash File [%s]	~~Flash fájl [%s]	item
 [%c] ~~Superupgrade Enabled	[%c] ~~Superupgrade bekapcsolva	item
-[%c] Show ~~internal ROM	[%c] Belső ROM mutatása	item
+[%c] Show ~~internal ROM	[%c] ~~Belső ROM mutatása	item
 [%c] ~~iFrom Enabled	[%c] ~~iFrom bekapcsolva	item
  [%c] Tape save Traps	 [%c] Kazettás mentés elfogása	item
 Tape copier	Kazettamásoló	menu title
@@ -1623,24 +1623,24 @@ Insert Real Tape	Valódi kazetta behelyezése	window title
 Convert Audio to ZX81	Hang átalakítása ZX81-re	window title
 Position	Pozíció	window title
 Amplitude	Amplitúdó	window title
-~~Input [%s]	Bemenet [%s]	item
+~~Input [%s]	B~~emenet [%s]	item
 [%c] Input tape inserted	[%c] Bemeneti kazetta behelyezve	item
-Tape Vi~~ewer	Kaz~~ettanézegető	item
-~~Output [%s]	Kimenet [%s]	item
+Tape Vi~~ewer	K~~azettanézegető	item
+~~Output [%s]	K~~imenet [%s]	item
 [%c] Output tape inserted	[%c] Kimeneti kazetta behelyezve	item
-Tape Viewe~~r	Kazettanézegető	item
+Tape Viewe~~r	Kaze~~ttanézegető	item
 (Real Tape disabled when	(A valódi kazetta ki van kapcsolva,	item
 external audio source enabled)	ha a külső hangforrás be van kapcsolva)	item
 ~~File	~~Fájl	item
-I~~nserted	Behelyezve	item
-~~Playing	Lejátszás	item
-Tape Vie~~wer	Kazettanézegető	item
+I~~nserted	~~Behelyezve	item
+~~Playing	~~Lejátszás	item
+Tape Vie~~wer	Ka~~zettanézegető	item
 ~~Visual Real Tape	~~Vizuális valódi kazetta	item
-Run Tape ~~Copier	Kazettamásoló futtatása	item
+Run Tape ~~Copier	~~Kazettamásoló futtatása	item
 Software made by me	Saját programjaim	item
 Tape	Kazetta	menu title
 Timex Cartridge	Timex cartridge	menu title
-[%c] Dandanator ~~Enabled	[%c] Dandanator b~~ekapcsolva	item
+[%c] Dandanator ~~Enabled	[%c] ~~Dandanator bekapcsolva	item
 [%c] ~~Samram Enabled	[%c] ~~Samram bekapcsolva	item
 Total sectors	Összes szektor	window title
 Format drive	Meghajtó formázása	window title
@@ -1651,20 +1651,20 @@ HiLow Convert Audio	HiLow hang átalakítása	window title
 Sector?	Szektor?	window title
 Visual Hilow DataDrive	Vizuális Hilow Data Drive	window title
 Visual Hilow Datadrive	Vizuális Hilow Data Drive	menu title
-HiLow ~~File	HiLow ~~fájl	item
+HiLow ~~File	H~~iLow fájl	item
 ~~HiLow Enabled	~~HiLow bekapcsolva	item
-Wr~~ite protect	Írásvédelem	item
-~~Persistent Writes	Tartós írás	item
+Wr~~ite protect	Í~~rásvédelem	item
+~~Persistent Writes	~~Tartós írás	item
 Emulate load sound	Betöltés hangjának emulálása	item
 Emulate save sound	Mentés hangjának emulálása	item
 Differential algorithm	Differenciális algoritmus	item
 Volume range	Hangerő-tartomány	item
 Tape player powered on	Magnó bekapcsolva	item
 Tape inserted	Kazetta behelyezve	item
-Cover has been ~~opened flag	Fedél kinyitva jelző	item
-Fo~~rmat	Fo~~rmázás	item
+Cover has been ~~opened flag	Fedél ~~kinyitva jelző	item
+Fo~~rmat	~~Formázás	item
 ~~Browse	~~Böngészés	item
-~~Chkdsk	Ellenőrzés (~~chkdsk)	item
+~~Chkdsk	~~Ellenőrzés (chkdsk)	item
 Visual Data Drive	Vizuális Data Drive	item
 Convert Audio	Hang átalakítása	item
 HiLow Data Drive	HiLow Data Drive	menu title
@@ -1682,7 +1682,7 @@ Microdrive Map	Microdrive térkép	window title
 Microdrive Chkdsk	Microdrive ellenőrzése	window title
 Sectors info	Szektorok adatai	window title
 Visual Microdrive	Vizuális Microdrive	window title
-~~Looking MDV%d	Keresett: MDV%d	item
+~~Looking MDV%d	~~Keresett: MDV%d	item
 New position	Új pozíció	window title
 Microdrive Raw Map	Microdrive nyers térkép	window title
 Erase	Törlés	question
@@ -1706,19 +1706,19 @@ Microdrive raw map	Microdrive nyers térkép	item
 Full erase	Teljes törlés	item
 Menu IF1/Microdrive	IF1/Microdrive menü	menu title
 Visual Floppy	Vizuális floppy	window title
-[%c] ~~Rotation	[%c] Fo~~rgás	item
-[%c] R~~eal Rotation	[%c] Valódi forgás	item
-~~View: %s	Nézet: %s	item
-[%c] He~~ad	[%c] Fej	item
-[%c] ~~Color effects	[%c] Színeffektek	item
+[%c] ~~Rotation	[%c] F~~orgás	item
+[%c] R~~eal Rotation	[%c] ~~Valódi forgás	item
+~~View: %s	~~Nézet: %s	item
+[%c] He~~ad	[%c] ~~Fej	item
+[%c] ~~Color effects	[%c] ~~Színeffektek	item
 Visual floppy	Vizuális floppy	menu title
-~~TRD File	~~TRD fájl	item
-TRD ~~Emulation	TRD ~~emuláció	item
-Betadis~~k Enabled	Betadis~~k bekapcsolva	item
-Allow ~~Boot	Indítás engedélyezése	item
-TRD ~~Viewer	TRD nézegető	item
-[%c] ZX~~pand emulation	[%c] ZX~~pand emuláció	item
-~~Root dir: %s	Gyöké~~rmappa: %s	item
+~~TRD File	TRD ~~fájl	item
+TRD ~~Emulation	~~TRD emuláció	item
+Betadis~~k Enabled	~~Betadisk bekapcsolva	item
+Allow ~~Boot	~~Indítás engedélyezése	item
+TRD ~~Viewer	TRD ~~nézegető	item
+[%c] ZX~~pand emulation	[%c] ~~ZXpand emuláció	item
+~~Root dir: %s	~~Gyökérmappa: %s	item
 No divide/mmc paging	Nincs divide/mmc lapozás	window title
 [%c] ~~ESXDOS handler	[%c] ~~ESXDOS kezelő	item
 [%c] Read only	[%c] Csak olvasható	item
@@ -1740,22 +1740,22 @@ Disk Info	Lemez adatai	menu title
 ~~DSK File	~~DSK fájl	item
 DSK ~~Emulation	DSK ~~emuláció	item
 Write protect	Írásvédelem	item
-~~Silent protection	C~~sendes védelem	item
+~~Silent protection	~~Csendes védelem	item
     Boot CP/M now	    CP/M indítása most	item
 Reinsert previous dsk after boot	Előző DSK vissza indítás után	item
 Failback to CP/M if no boot	CP/M, ha nincs indítható lemez	item
     Boot LocoScript now	    LocoScript indítása most	item
-+3DOS ~~Traps	+3DOS elfogás (~~traps)	item
-Disk ~~Info	Lemez adata~~i	item
-Tracks ~~list	Sávok ~~listája	item
-Disk ~~Format Viewer	Lemez~~formátum nézegető	item
++3DOS ~~Traps	+~~3DOS elfogás (traps)	item
+Disk ~~Info	~~Lemez adatai	item
+Tracks ~~list	~~Sávok listája	item
+Disk ~~Format Viewer	Lemezformátum ~~nézegető	item
 ~~Visual Floppy	~~Vizuális floppy	item
 3" CF2 Floppy	3" CF2 floppy	menu title
 Default Flash file	Alapértelmezett Flash fájl	window title
 Clear RAM	RAM törlése	question
 ZXMMC+ Enabled	ZXMMC+ bekapcsolva	item
 ~~Flash File	~~Flash fájl	item
-Flash ROM Wr~~ite protect	Flash ROM írásvédelem	item
+Flash ROM Wr~~ite protect	Flash ~~ROM írásvédelem	item
 Clear ZXMMC+ RAM	ZXMMC+ RAM törlése	item
 ZXMMC+ emulation	ZXMMC+ emuláció	menu title
 Reload MMC	MMC újratöltése	window title
@@ -1781,8 +1781,8 @@ BaseConf SD Enabled	BaseConf SD bekapcsolva	item
 Confirm reset	Újraindítás megerősítése	window title
 Reload IDE	IDE újratöltése	window title
 Change DIVIDE ROM	DIVIDE ROM cseréje	window title
-~~IDE File	~~IDE fájl	item
-IDE ~~Emulation	IDE ~~emuláció	item
+~~IDE File	IDE ~~fájl	item
+IDE ~~Emulation	~~IDE emuláció	item
 Reload IDE file	IDE fájl újratöltése	item
 ~~DIVIDE paging	~~DIVIDE lapozás	item
 DIVIDE EPROM File	DIVIDE EPROM fájl	item
@@ -1837,11 +1837,11 @@ Restricted keys	Korlátozott billentyűk	menu title
 Full display interval	Teljes kép időköze	window title
 ZENG Online Status	ZENG Online állapota	window title
 ~~Server	~~Szerver	item
-~~Nickname	Bece~~név	item
+~~Nickname	B~~ecenév	item
 ^^Connected^^ to server	^^Kapcsolódva^^ a szerverhez	item
 List rooms	Szobák listája	item
-Jo~~in to room	Belépés szobába	item
-~~Create room & Join as Master	Szoba létrehozása, belépés fő gépként	item
+Jo~~in to room	~~Belépés szobába	item
+~~Create room & Join as Master	Szoba ~~létrehozása, belépés fő gépként	item
 Rejoin as Master	Újracsatlakozás fő gépként	item
 Rejoin as Manager	Újracsatlakozás kezelőként	item
 --Info--	--Adatok--	item
@@ -1861,7 +1861,7 @@ Kick user	Felhasználó kitiltása	item
 Set max players per room	Max. játékos szobánként	item
 Allow broadcast messages	Körüzenetek engedélyezése	item
 Disallow broadcast messages	Körüzenetek tiltása	item
-~~Destroy room	Szoba megszüntetése	item
+~~Destroy room	Szoba ~~megszüntetése	item
 Status Window	Állapotablak	item
 Zip compress snapshot	Pillanatkép zip-tömörítése	item
 Footer lag/dropout indicator	Késés/kiesés jelzése a láblécen	item
@@ -1883,12 +1883,12 @@ Help	Súgó	window title
 Warning	Figyelmeztetés	window title
 ERROR	HIBA	window title
 Splash	Nyitóüzenet	window title
-~~Yes	Igen	item
+~~Yes	~~Igen	item
 ~~No	~~Nem	item
-~~Cancel	Mégse	item
-~~Append	Hozzáfűzés	item
-~~Truncate	Csonkí~~tás	item
-~~Rotate	Fo~~rgatás	item
+~~Cancel	~~Mégse	item
+~~Append	~~Hozzáfűzés	item
+~~Truncate	~~Csonkítás	item
+~~Rotate	~~Forgatás	item
 Sure?	Biztos?	text
 <OK>	<OK>	item
 <Cancel>	<Mégse>	item

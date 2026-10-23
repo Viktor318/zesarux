@@ -24336,6 +24336,19 @@ void menu_add_item_menu_shortcut(menu_item *m,z80_byte tecla)
                 m=m->siguiente_item;
         }
 
+        //Hungarian: the hotkey is the letter marked with ~~ or ~^ in the translated text
+        if (gui_language==GUI_LANGUAGE_HUNGARIAN) {
+            char *t=m->texto_opcion;
+            for (;*t && t[1];t++) {
+                if (t[0]=='~' && (t[1]=='~' || t[1]=='^')) {
+                    char c=t[2];
+                    if (c>='A' && c<='Z') c+='a'-'A';
+                    if ((c>='a' && c<='z') || (c>='0' && c<='9')) tecla=c;
+                    break;
+                }
+            }
+        }
+
         m->atajo_tecla=tecla;
 }
 
