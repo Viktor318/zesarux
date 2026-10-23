@@ -1376,7 +1376,7 @@ static const struct s_hungarian_string hungarian_strings[]={
     {"Unusual file extension","Szokatlan f\303\241jlkiterjeszt\303\251s"},
     {"Updated version","Friss\303\255tett v\303\241ltozat"},
     {"Use PC real-time clock","A PC val\303\263s idej\305\261 \303\263r\303\241j\303\241nak haszn\303\241lata"},
-    {"Use Windows keyboard layout","Windows billenty\305\261zetkioszt\303\241s haszn\303\241lata"},
+    {"Use Windows keyboard layout","Windowsos billenty\305\261zetkioszt\303\241s"},
     {"Use left Alt as Caps Shift with number keys","Bal Alt = Caps Shift a sz\303\241mokn\303\241l"},
     {"Use mouse in menus","Eg\303\251r haszn\303\241lata a men\303\274kben"},
     {"Use speccy keys","Spectrum billenty\305\261k haszn\303\241lata"},
