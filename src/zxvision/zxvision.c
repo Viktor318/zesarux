@@ -768,6 +768,111 @@ void zxvision_reorder_configurable_icons_if_auto(void)
     }
 }
 
+//Position of the slot number n when the icons are reordered (same layout as zxvision_reorder_configurable_icons)
+void zxvision_reorder_icon_slot_position(int n,int *px,int *py)
+{
+    int xinicial,xfinal,yinicial,yfinal;
+
+    zxvision_get_start_valid_positions_icons(&xinicial,&xfinal,&yinicial,&yfinal);
+
+    int x=xinicial;
+    int y=yinicial;
+
+    int separacion_iconos=ZXVISION_SEPARACION_ICONOS_AL_ORDENAR;
+
+    int i;
+    for (i=0;i<n;i++) {
+        x +=separacion_iconos;
+        if (x>=xfinal) {
+            x=xinicial;
+            y+=separacion_iconos;
+
+            if (y>=yfinal) {
+                xinicial+=ZXVISION_OFFSET_ICONOS_REPETIR_POSICION;
+                x=xinicial;
+
+                yinicial+=ZXVISION_OFFSET_ICONOS_REPETIR_POSICION;
+                y=yinicial;
+            }
+        }
+    }
+
+    *px=x;
+    *py=y;
+}
+
+//With automatic order: a dragged icon takes the place in the order where it was dropped,
+//so the order of the icons can be changed by dragging
+void zxvision_reorder_dragged_icon(int icon)
+{
+    if (!zxdesktop_configurable_icons_enabled_and_visible()) return;
+    if (!zxdesktop_automatic_reorder_icons.v) return;
+    if (icon<0 || icon>=MAX_ZXDESKTOP_CONFIGURABLE_ICONS) return;
+    if (zxdesktop_configurable_icons_list[icon].status!=ZXDESKTOP_CUSTOM_ICON_EXISTS) return;
+
+    //Where the mouse button was released (the icon is moved with the mouse at its top left corner)
+    int drop_x,drop_y;
+    menu_calculate_mouse_xy_absolute_interface_pixel(&drop_x,&drop_y);
+
+    //Existing icons, in their current order
+    int indices[MAX_ZXDESKTOP_CONFIGURABLE_ICONS];
+    int total=0;
+    int i;
+
+    for (i=0;i<MAX_ZXDESKTOP_CONFIGURABLE_ICONS;i++) {
+        if (zxdesktop_configurable_icons_list[i].status==ZXDESKTOP_CUSTOM_ICON_EXISTS) {
+            indices[total++]=i;
+        }
+    }
+
+    if (total<2) return;
+
+    //Find the slot whose centre is nearest. A simple click on an icon is always nearest to its own slot
+    int centro=(ZESARUX_ASCII_LOGO_ANCHO*menu_gui_zoom)/2;
+
+    int destino=0;
+    long distancia_minima=-1;
+
+    for (i=0;i<total;i++) {
+        int slot_x,slot_y;
+        zxvision_reorder_icon_slot_position(i,&slot_x,&slot_y);
+
+        long dx=drop_x-(slot_x+centro);
+        long dy=drop_y-(slot_y+centro);
+        long distancia=dx*dx+dy*dy;
+
+        if (distancia_minima<0 || distancia<distancia_minima) {
+            distancia_minima=distancia;
+            destino=i;
+        }
+    }
+
+    //New order: the other icons in the same order, the dragged one inserted at destino
+    int orden[MAX_ZXDESKTOP_CONFIGURABLE_ICONS];
+    int n=0;
+
+    for (i=0;i<total;i++) {
+        if (indices[i]==icon) continue;
+        if (n==destino) orden[n++]=icon;
+        orden[n++]=indices[i];
+    }
+    if (n<total) orden[n++]=icon;
+
+    zxdesktop_configurable_icon *copia=util_malloc(sizeof(zxdesktop_configurable_icon)*total,"Can not allocate memory for reordering icons");
+
+    for (i=0;i<total;i++) copia[i]=zxdesktop_configurable_icons_list[orden[i]];
+
+    //The existing icons keep using the same entries of the list, only their order changes
+    for (i=0;i<total;i++) zxdesktop_configurable_icons_list[indices[i]]=copia[i];
+
+    free(copia);
+
+    //The dragged icon is now in another entry of the list
+    if (configurable_icon_is_being_moved_which==icon) configurable_icon_is_being_moved_which=indices[destino];
+
+    debug_printf(VERBOSE_DEBUG,"Icon moved to position %d in the order of icons",destino);
+}
+
 //Comprobar y reajustar posiciones (si conviene) en caso de por ejemplo cambios de maquina (de spectrum a tbblue por ejemplo)
 //donde iconos pueden ir a parar a debajo de pantalla emulada
 void zxvision_check_all_configurable_icons_positions(void)
@@ -18569,6 +18674,8 @@ void zxvision_handle_mouse_events_stop_drag_icon(void)
 
         zxvision_mover_icono_papelera_si_conviene();
 
+        zxvision_reorder_dragged_icon(configurable_icon_is_being_moved_which);
+
         zxvision_reorder_configurable_icons_if_auto();
 
     }
@@ -20210,6 +20317,60 @@ void zxvision_simple_progress_window(char *titulo, int (*funcioncond) (zxvision_
 }
 
 
+
+//Move (and if needed reduce) only the windows that do not fit on the screen any more,
+//the other windows stay where they are. Used after changing the emulated machine
+void zxvision_fit_background_windows_in_screen(void)
+{
+    if (!menu_allow_background_windows) return;
+
+    zxvision_window *ventana=zxvision_current_window;
+    if (ventana==NULL) return;
+
+    ventana=zxvision_find_first_window_below_this(ventana);
+
+    int ancho_pantalla=scr_get_menu_width();
+    int alto_pantalla=scr_get_menu_height();
+
+    int ymin=0;
+    if (zxvision_topbar_menu_enabled.v) ymin=1;
+
+    int cambiado=0;
+
+    while (ventana!=NULL) {
+        int x=ventana->x;
+        int y=ventana->y;
+        int ancho=ventana->visible_width;
+        int alto=ventana->visible_height;
+
+        if (ancho>ancho_pantalla) ancho=ancho_pantalla;
+        if (alto>alto_pantalla-ymin) alto=alto_pantalla-ymin;
+
+        if (x+ancho>ancho_pantalla) x=ancho_pantalla-ancho;
+        if (y+alto>alto_pantalla) y=alto_pantalla-alto;
+        if (x<0) x=0;
+        if (y<ymin) y=ymin;
+
+        if (x!=ventana->x || y!=ventana->y || ancho!=ventana->visible_width || alto!=ventana->visible_height) {
+            debug_printf (VERBOSE_DEBUG,"Window %s does not fit on the screen. Moving it to %d,%d size %dX%d",
+                ventana->window_title,x,y,ancho,alto);
+
+            ventana->x=x;
+            ventana->y=y;
+            ventana->visible_width=ancho;
+            ventana->visible_height=alto;
+
+            //Y guardar la geometria
+            util_add_window_geometry_compact(ventana);
+
+            cambiado=1;
+        }
+
+        ventana=ventana->next_window;
+    }
+
+    if (cambiado) cls_menu_overlay();
+}
 
 void zxvision_rearrange_background_windows(int si_cascada,int si_aplicar_a_inmutables)
 {
@@ -28930,6 +29091,9 @@ void menu_inicio_handle_configurable_icon_presses(void)
 
 
             zxvision_mover_icono_papelera_si_conviene();
+
+            //Here configurable_icon_is_being_moved_which is not set, the dragged icon is the pressed one
+            zxvision_reorder_dragged_icon(configurable_icon_is_being_moved_which>=0 ? configurable_icon_is_being_moved_which : pulsado_boton);
 
             zxvision_reorder_configurable_icons_if_auto();
 

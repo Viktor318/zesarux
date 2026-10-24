@@ -4042,3 +4042,5 @@ Virtual keyboard at the original size	Virtuális billentyűzet eredeti méretben
 Virtual keyboard at full size	Virtuális billentyűzet teljes méretben	tooltip
 Displays the virtual keyboard at the original size (half the size of the image). Double click on the window title switches between the two sizes.	Megjeleníti a virtuális billentyűzetet eredeti méretben (a kép felére kicsinyítve). Az ablak címsorára duplán kattintva a két méret között válthatsz.	help
 Displays the virtual keyboard at full size (the image pixel by pixel). Double click on the window title switches between the two sizes.	Megjeleníti a virtuális billentyűzetet teljes méretben (a képet képpontról képpontra). Az ablak címsorára duplán kattintva a két méret között válthatsz.	help
+Place the icons automatically in a grid	Az ikonok automatikus elrendezése rácsba	tooltip
+Places the icons automatically in a grid. Drag an icon to another place in the grid to change the order of the icons	Az ikonokat automatikusan rácsba rendezi. Az ikonok sorrendjét úgy változtathatod meg, hogy egy ikont áthúzol a rács egy másik helyére	help

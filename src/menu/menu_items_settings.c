@@ -16555,6 +16555,9 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
                 menu_add_item_menu_en_es_ca(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_automatic_reorder_icons,NULL,
                     "Automatic order icons","Ordenar iconos automáticamente","Ordenar icones automàticament");
                 menu_add_item_menu_prefijo_format(array_menu_ext_desktop_settings,"[%c] ",(zxdesktop_automatic_reorder_icons.v ? 'X' : ' ' ) );
+                menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Place the icons automatically in a grid");
+                menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Places the icons automatically in a grid. "
+                    "Drag an icon to another place in the grid to change the order of the icons");
                 menu_add_item_menu_es_avanzado(array_menu_ext_desktop_settings);
 
                 menu_add_item_menu_en_es_ca(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_show_app_open,NULL,

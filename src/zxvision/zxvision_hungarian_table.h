@@ -2320,6 +2320,8 @@ static const struct s_hungarian_string hungarian_strings[]={
     {"Pixel Threshold to draw black or white in a 4x4 rectangle, when ZX80/81 Display on Speccy enabled","K\303\251ppont-k\303\274sz\303\266b\303\251rt\303\251k annak eld\303\266nt\303\251s\303\251re, hogy egy 4x4-es t\303\251glalap fekete vagy feh\303\251r legyen, bekapcsolt ZX80/81 kijelz\305\221 Spectrumon eset\303\251n"},
     {"Pixel height","K\303\251ppont magass\303\241ga"},
     {"Pixel threshold","K\303\251ppont k\303\274sz\303\266b\303\251rt\303\251k"},
+    {"Place the icons automatically in a grid","Az ikonok automatikus elrendez\303\251se r\303\241csba"},
+    {"Places the icons automatically in a grid. Drag an icon to another place in the grid to change the order of the icons","Az ikonokat automatikusan r\303\241csba rendezi. Az ikonok sorrendj\303\251t \303\272gy v\303\241ltoztathatod meg, hogy egy ikont \303\241th\303\272zol a r\303\241cs egy m\303\241sik hely\303\251re"},
     {"Play","Lej\303\241tsz\303\241s"},
     {"Play next file","K\303\266vetkez\305\221 f\303\241jl lej\303\241tsz\303\241sa"},
     {"Play previous file","El\305\221z\305\221 f\303\241jl lej\303\241tsz\303\241sa"},

@@ -1275,6 +1275,7 @@ extern int zxvision_menu_generic_message_two_buttons(char *titulo, const char *t
 
 
 extern void zxvision_rearrange_background_windows(int si_cascada,int si_aplicar_a_inmutables);
+extern void zxvision_fit_background_windows_in_screen(void);
 
 extern void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...);
 
