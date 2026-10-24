@@ -1580,7 +1580,7 @@ static const struct s_hungarian_string hungarian_strings[]={
     {"OK. Log truncated","OK. Napl\303\263 csonkolva"},
     {"OK. MMC file reloaded","OK. MMC f\303\241jl \303\272jrat\303\266ltve"},
     {"OK. Microdrive has been erased","OK. A microdrive t\303\266r\303\266lve"},
-    {"OK. Microdrive has been stretched","OK. A microdrive kiny\303\272jtva"},
+    {"OK. Microdrive has been stretched","OK. A microdrive kib\305\221v\303\255tve"},
     {"OK. NVRAM cleared","OK. NVRAM t\303\266r\303\266lve"},
     {"OK. Path changed","OK. El\303\251r\303\251si \303\272t m\303\263dos\303\255tva"},
     {"OK. Playlist has been cleared","OK. Lej\303\241tsz\303\241si lista t\303\266r\303\266lve"},
