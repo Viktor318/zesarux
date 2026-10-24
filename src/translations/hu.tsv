@@ -1905,3 +1905,1033 @@ Updated version	Frissített változat	window title
 New version available	Új változat érhető el	window title
 Use Windows keyboard layout	Windowsos billentyűzetkiosztás	item
 Use left Alt as Caps Shift with number keys	Bal Alt = Caps Shift a számoknál	item
+Sorry, no assembler for that cpu yet	Ehhez a CPU-hoz még nincs assembler	error
+Output file is wav file but sndfile support is not compiled	A kimeneti fájl wav fájl, de a sndfile támogatás nincs befordítva	error
+Unable to create aofile %s	Nem sikerült létrehozni az aofile-t: %s	error
+Unable to write to aofile %s	Nem sikerült írni az aofile-ba: %s	error
+Error using audio output driver. Fallback to null	Hiba a hangkimeneti meghajtó használatakor. Visszaváltás a null meghajtóra	error
+Unable to open Freq file	Nem sikerült megnyitni a Freq fájlt	error
+Error exporting to MID. Memory buffer full. Stopping recording	Hiba a MID exportálásakor. A memóriapuffer megtelt. Felvétel leállítva	error
+Can not write midi file	Nem sikerült írni a MIDI fájlt	error
+Failed with error: %s	Sikertelen, hiba: %s	error
+ZEsarUX is not compiled with libsndfile support	A ZEsarUX libsndfile támogatás nélkül lett lefordítva	error
+Unable to open file output %s	Nem sikerült megnyitni a kimeneti fájlt: %s	error
+Error opening MIDI in raw mode. %s	Hiba a MIDI nyers módú megnyitásakor. %s	error
+Error opening MIDI Output	Hiba a MIDI kimenet megnyitásakor	error
+External Audio Source buffer is full, a fragment of %d ms has been lost	A külső hangforrás puffere megtelt, egy %d ms-os részlet elveszett	error
+Error reading directory contents: %s	Hiba a mappa tartalmának olvasásakor: %s	error
+AY file does not have .ay extension	Az AY fájl kiterjesztése nem .ay	error
+Unable to open ay file	Nem sikerült megnyitni az ay fájlt	error
+Error reading ay file	Hiba az ay fájl olvasásakor	error
+File version>3 not supported yet (file version: %d)	A 3-nál újabb fájlverzió még nem támogatott (fájlverzió: %d)	error
+No song loaded	Nincs betöltött dal	error
+Song number must be >0	A dal sorszámának >0-nak kell lennie	error
+Can not search beyond total items: Position asked: %d	Nem lehet az elemek számán túl keresni. Kért pozíció: %d	error
+Can not delete beyond total items: Position asked: %d	Nem lehet az elemek számán túl törölni. Kért pozíció: %d	error
+audio sdl driver. Error initializing driver	SDL hangmeghajtó. Hiba a meghajtó inicializálásakor	error
+Could not open sdl audio: %s	Nem sikerült megnyitni az SDL hangot: %s	error
+SDL2. We didn't get correct audio freq.	SDL2. Nem a megfelelő hangfrekvenciát kaptuk.	error
+SDL2. We didn't get correct audio format.	SDL2. Nem a megfelelő hangformátumot kaptuk.	error
+SDL2. We didn't get correct audio channels.	SDL2. Nem a megfelelő hangcsatornákat kaptuk.	error
+Unable to get audio capture device! SDL Error: %s	Nem sikerült lekérni a hangrögzítő eszközt! SDL hiba: %s	error
+Failed to open recording device! SDL Error: %s	Nem sikerült megnyitni a felvevő eszközt! SDL hiba: %s	error
+audio sdl2 driver. Error initializing driver	SDL2 hangmeghajtó. Hiba a meghajtó inicializálásakor	error
+Error getting port properties when setting speed	Hiba a port tulajdonságainak lekérésekor a sebesség beállításánál	error
+Error setting input port speed	Hiba a bemeneti port sebességének beállításakor	error
+Error setting output port speed	Hiba a kimeneti port sebességének beállításakor	error
+Error setting port speed	Hiba a port sebességének beállításakor	error
+Error reading Defcon rom file: %s	Hiba a Defcon ROM fájl olvasásakor: %s	error
+Error reading Dinamid3 rom file: %s	Hiba a Dinamid3 ROM fájl olvasásakor: %s	error
+Error reading hilow_bbn rom	Hiba a hilow_bbn ROM olvasásakor	error
+Error reading Interface007 rom file: %s	Hiba az Interface007 ROM fájl olvasásakor: %s	error
+Error reading Microhobby Pokeador Automatico rom file: %s	Hiba a Microhobby Pokeador Automatico ROM fájl olvasásakor: %s	error
+Error reading multiface rom %s	Hiba a Multiface ROM olvasásakor: %s	error
+Trying to enable Multiface but no ROM file selected	A Multiface bekapcsolása sikertelen: nincs kiválasztott ROM fájl	error
+Error reading Phoenix rom file: %s	Hiba a Phoenix ROM fájl olvasásakor: %s	error
+Error reading ramjet rom file: %s	Hiba a Ramjet ROM fájl olvasásakor: %s	error
+Error reading Specmate rom file: %s	Hiba a Specmate ROM fájl olvasásakor: %s	error
+Error reading transtape rom	Hiba a Transtape ROM olvasásakor	error
+Invalid value for cpu speed: %d	Érvénytelen CPU-sebesség érték: %d	error
+Unable to open rom file %s	Nem sikerült megnyitni a ROM fájlt: %s	error
+Error loading ROM. Expected size: %d Loaded: %d	Hiba a ROM betöltésekor. Várt méret: %d Betöltve: %d	error
+Error loading ROM	Hiba a ROM betöltésekor	error
+Error loading ROM. Expected size: 16384 Loaded: %d	Hiba a ROM betöltésekor. Várt méret: 16384 Betöltve: %d	error
+Error loading ROM. Expected size: 8192 Loaded: %d	Hiba a ROM betöltésekor. Várt méret: 8192 Betöltve: %d	error
+Error loading ROM. Minium expected: 16384 Loaded: %d	Hiba a ROM betöltésekor. Várt minimum: 16384 Betöltve: %d	error
+Querying mask name beyond masks limit	Maszknév lekérdezése a maszkkorláton túl	error
+Querying mask value beyond masks limit	Maszkérték lekérdezése a maszkkorláton túl	error
+Unable to open Transaction log	Nem sikerült megnyitni a tranzakciós naplót	error
+Index out of range setting breakpoint	Tartományon kívüli index a töréspont beállításakor	error
+Error adding breakpoint [%s]	Hiba a töréspont hozzáadásakor [%s]	error
+Error adding breakpoint, can not be evaluated [%s]	Hiba a töréspont hozzáadásakor, nem értékelhető ki [%s]	error
+Index out of range setting watch	Tartományon kívüli index a figyelő beállításakor	error
+Error adding watch [%s]	Hiba a figyelő hozzáadásakor [%s]	error
+Index out of range setting breakpoint action	Tartományon kívüli index a töréspont-művelet beállításakor	error
+Too many results to show. Showing only the first ones	Túl sok találat. Csak az elsők láthatók	error
+No free breakpoint entry	Nincs szabad töréspont-bejegyzés	error
+ERROR. File %s not found	HIBA. A fájl nem található: %s	error
+ERROR. Can not allocate memory to load source code file\n	HIBA. Nem sikerült memóriát foglalni a forráskódfájl betöltéséhez\n	error
+ERROR. Can not open source code file\n	HIBA. Nem sikerült megnyitni a forráskódfájlt\n	error
+ERROR reading source code file\n	HIBA a forráskódfájl olvasásakor\n	error
+Error writing to DSK file. Disabling write file operations	Hiba a DSK fájl írásakor. A fájlírási műveletek kikapcsolva	error
+Can not translate sector size to N parameter	A szektorméret nem alakítható N paraméterré	error
+DSK size too big	A DSK mérete túl nagy	error
+Unable to open disk %s	Nem sikerült megnyitni a lemezt: %s	error
+Unknown DSK file format	Ismeretlen DSK fájlformátum	error
+Error. Trying to read beyond dsk. Size: %d Asked: %d	Hiba. Olvasási kísérlet a DSK végén túl. Méret: %d Kért: %d	error
+Error. Trying to write beyond dsk. Size: %d Asked: %d. Disabling DSK	Hiba. Írási kísérlet a DSK végén túl. Méret: %d Kért: %d. DSK kikapcsolva	error
+DSK: Basic DSK, track signature not found on track %XH offset %XH	DSK: Alap DSK, nem található sávaláírás. Sáv: %XH, eltolás: %XH	error
+DSK Basic: Sector size not supported on track %d	Alap DSK: nem támogatott szektorméret. Sáv: %d	error
+DSK: Extended DSK, track signature not found on track %XH size %d offset %XH	DSK: Kiterjesztett DSK, nem található sávaláírás. Sáv: %XH, méret: %d, eltolás: %XH	error
+DSK Extended: Sector size not supported on track %d side %d	Kiterjesztett DSK: nem támogatott szektorméret. Sáv: %d, oldal: %d	error
+dsk_get_sector: Sector size not supported on track %d sector %d	dsk_get_sector: nem támogatott szektorméret. Sáv: %d, szektor: %d	error
+Only 8k, 16k, 24k and 32k rom cartridges are allowed	Csak 8k, 16k, 24k és 32k méretű ROM cartridge-ek engedélyezettek	error
+If rom cartridge is smaller than 64kb, only 8k, 16k, 32k and 48k rom cartridges are allowed	Ha a ROM cartridge 64kb-nál kisebb, csak 8k, 16k, 32k és 48k méretű ROM cartridge-ek engedélyezettek	error
+Unable to open cas input file %s	Nem sikerült megnyitni a cas bemeneti fájlt: %s	error
+Can't find file %s	Nem található a fájl: %s	error
+Unable to load extra rom %s	Nem sikerült betölteni az extra ROM-ot: %s	error
+Calling poke_byte function on a QL machine. TODO fix it!	A poke_byte függvény hívása QL gépen. TODO: javítani!	error
+Calling poke_byte_no_time function on a QL machine. TODO fix it!	A poke_byte_no_time függvény hívása QL gépen. TODO: javítani!	error
+Calling peek_byte function on a QL machine. TODO fix it!	A peek_byte függvény hívása QL gépen. TODO: javítani!	error
+Calling lee_puerto function on a QL machine. TODO fix it!	A lee_puerto függvény hívása QL gépen. TODO: javítani!	error
+Calling out_port function on a QL machine. TODO fix it!	Az out_port függvény hívása QL gépen. TODO: javítani!	error
+Calling fetch_opcode function on a QL machine. TODO fix it!	A fetch_opcode függvény hívása QL gépen. TODO: javítani!	error
+File %s not found	A fájl nem található: %s	error
+Cartridges bigger than 48K are not allowed	48K-nál nagyobb cartridge-ek nem engedélyezettek	error
+Unable to open cartridge file %s	Nem sikerült megnyitni a cartridge fájlt: %s	error
+Cartridges bigger than %d KB are not allowed	%d KB-nál nagyobb cartridge-ek nem engedélyezettek	error
+Only 2k, 4k, 8k, 16k and 32k rom cartridges are allowed	Csak 2k, 4k, 8k, 16k és 32k méretű ROM cartridge-ek engedélyezettek	error
+DCK with id 0x%02X not supported	Nem támogatott DCK, azonosító: 0x%02X	error
+8 KB block with id 0x%02X not supported	Nem támogatott 8 KB-os blokk, azonosító: 0x%02X	error
+Too many files. Exceed 256KB/16 files of 16KB size	Túl sok fájl. Túllépi a 256KB-ot (16 db 16KB-os fájl)	error
+EPROM size not valid. Must be 32 KB, 128 KB or 256 KB	Érvénytelen EPROM méret. 32 KB, 128 KB vagy 256 KB lehet	error
+Error reading file %s. Bytes read: %d	Hiba a fájl olvasásakor: %s. Beolvasott bájtok: %d	error
+Invalid Z88 eprom format file	Érvénytelen Z88 EPROM fájlformátum	error
+Flash file size too big. Maximum 1 MB	A Flash fájl mérete túl nagy. Legfeljebb 1 MB	error
+Intel Flash size not valid. Must be 512 KB or 1MB	Érvénytelen Intel Flash méret. 512 KB vagy 1MB lehet	error
+Eprom file size too big. Maximum 512 KB	Az EPROM fájl mérete túl nagy. Legfeljebb 512 KB	error
+Eprom size not valid. Must be 512 KB	Érvénytelen EPROM méret. 512 KB-nak kell lennie	error
+Empty slot 3	A 3. foglalat üres	error
+Slot 3 is not EPROM or Flash	A 3. foglalatban nem EPROM vagy Flash van	error
+Error writing file %s	Hiba a fájl írásakor: %s	error
+Error creating card file	Hiba a kártyafájl létrehozásakor	error
+Not enough free space on Card: Total Card: %d Used: %d Available: %d File Size: %d	Nincs elég szabad hely a kártyán. Teljes kártya: %d Foglalt: %d Szabad: %d Fájlméret: %d	error
+Name too short	Túl rövid név	error
+Error reading ZX-Uno SPI Flash	Hiba a ZX-Uno SPI Flash olvasásakor	error
+Error writing to SPI Flash file. Disabling write file operations	Hiba az SPI Flash fájl írásakor. A fájlírási műveletek kikapcsolva	error
+Parsed string: %s\nResult: %s	Értelmezett szöveg: %s\nEredmény: %s	message
+Esta ventana es un mapa de la aventura conversacional. Se genera automaticamente sin necesidad de visitar cada posicion (localidad).\nZEsarUX se encarga de visitar el mapeado de localidades entero nada mas cargar el juego, utilizando un algoritmo recursivo, donde se genera un mapa en cuadricula y se van ubicando cada localidad.\n\nEl resultado es este mapa, donde se muestra cada localidad, y en cada una:\n- Salidas de cada localidad, indicando salidas posibles en cada punto cardinal (norte, sur, este y oeste), sus diagonales, y subir y bajar\n- Descripciones de cada localidad, en caso que dicha localidad no tenga dibujo o los hayamos deshabilitado del todo\n- Dibujos de cada localidad\n- Objetos de cada localidad\nDependiendo del zoom aplicado, se ven mas detalles o menos.\n\nDebido al funcionamiento del algoritmo, y que las aventuras realmente no nos indican la posicion en el mapa, es posible que en ocasiones algunas localidades ocupen las mismas posiciones que otras. En este caso, se puede visualizar de la siguiente manera:\n- Localizaciones con ? en el numero son dudosas, indican ubicacion ocupada por mas de una localidad, como bosques...\n- Salidas marcadas en rojo nos llevan a habitaciones dudosas.\n\nLas siguientes teclas actuan sobre el mapa:\nz: Reducir zoom\nx: Aumentar zoom\nu: Subir\nd: Bajar\nt: Teletransporte, permite modificar la habitacion actual del juego\nf1: Esta ayuda\nf: Seguir la posicion actual en el mapa\no: Mostrar objetos. Nota: en GAC, los personajes son objetos de mucho peso, en ese caso en el mapa aparecen con prefijo P?\np: Mostrar dibujos\nv: Mostrar todas las localidades, o solo las localidades que hemos visitado\nc: Mostrar tambien las habitaciones sin conectar (que no tienen salidas)\nAparte de estas teclas, mediante los cursores, PgUp/Down, y el raton, se puede desplazar el mapa convenientemente.\n	Esta ventana es un mapa de la aventura conversacional. Se genera automaticamente sin necesidad de visitar cada posicion (localidad).\nZEsarUX se encarga de visitar el mapeado de localidades entero nada mas cargar el juego, utilizando un algoritmo recursivo, donde se genera un mapa en cuadricula y se van ubicando cada localidad.\n\nEl resultado es este mapa, donde se muestra cada localidad, y en cada una:\n- Salidas de cada localidad, indicando salidas posibles en cada punto cardinal (norte, sur, este y oeste), sus diagonales, y subir y bajar\n- Descripciones de cada localidad, en caso que dicha localidad no tenga dibujo o los hayamos deshabilitado del todo\n- Dibujos de cada localidad\n- Objetos de cada localidad\nDependiendo del zoom aplicado, se ven mas detalles o menos.\n\nDebido al funcionamiento del algoritmo, y que las aventuras realmente no nos indican la posicion en el mapa, es posible que en ocasiones algunas localidades ocupen las mismas posiciones que otras. En este caso, se puede visualizar de la siguiente manera:\n- Localizaciones con ? en el numero son dudosas, indican ubicacion ocupada por mas de una localidad, como bosques...\n- Salidas marcadas en rojo nos llevan a habitaciones dudosas.\n\nLas siguientes teclas actuan sobre el mapa:\nz: Reducir zoom\nx: Aumentar zoom\nu: Subir\nd: Bajar\nt: Teletransporte, permite modificar la habitacion actual del juego\nf1: Esta ayuda\nf: Seguir la posicion actual en el mapa\no: Mostrar objetos. Nota: en GAC, los personajes son objetos de mucho peso, en ese caso en el mapa aparecen con prefijo P?\np: Mostrar dibujos\nv: Mostrar todas las localidades, o solo las localidades que hemos visitado\nc: Mostrar tambien las habitaciones sin conectar (que no tienen salidas)\nAparte de estas teclas, mediante los cursores, PgUp/Down, y el raton, se puede desplazar el mapa convenientemente.\n	message
+Aquesta finestra és un mapa de l'aventura conversacional. Es genera automàticament sense necessitat de visitar cada posició (localitat).\nZEsarUX s'encarrega de visitar el mapejat de localitats sencer tot just carregar el joc, utilitzant un algoritme recursiu,on es genera un mapa en quadrícula i es van ubicant cada localitat.\n\nEl resultat és aquest mapa, on es mostra cada localitat, i a cadascuna:\n- Sortides de cada localitat, indicant sortides possibles a cada punt cardinal (nord, sud, est i oest), les seves diagonals, i pujar i baixar\n- Descripcions de cada localitat, en cas que aquesta localitat no tingui dibuix o els haguem deshabilitat del tot\n- Dibuixos de cada localitat\n- Objectes de cada localitat\nDepenent del zoom aplicat, es veuen més detalls o menys.\n\nA causa del funcionament de l'algoritme, i que les aventures realment no ens indiquen la posició al mapa, és possible que de vegades algunes localitats ocupin les mateixes posicions que altres. En aquest cas, es pot visualitzar de la manera següent:\n- Localitzacions amb ? en el número són dubtoses, indiquen ubicació ocupada per mes d'una localitat, com boscos...\n- Sortides marcades en vermell ens porten a habitacions dubtoses.\n\nLes tecles següents actuen sobre el mapa:\nz: Reduir zoom\nx: Augmentar zoom\nu: Pujar\nd: Baixar\nt: Teletransport, permet modificar l'habitació actual del joc\nf1: Aquesta ajuda\nf: Seguir la posició actual al mapa\no: Mostra objectes. Nota: en GAC, els personatges son objectes de molt pes, en aquest cas en el mapa apareixen amb prefixe P?\np: Mostra dibuixos\nv: Mostra totes les localitats, o només les localitats que hem visitat\nc: Mostra també les habitacions sense connectar (que no tenen sortides)\nA part d'aquestes tecles, mitjançant els cursors, PgUp/Down, i el ratolí, podeu desplaçar el mapa convenientment.\n	Aquesta finestra és un mapa de l'aventura conversacional. Es genera automàticament sense necessitat de visitar cada posició (localitat).\nZEsarUX s'encarrega de visitar el mapejat de localitats sencer tot just carregar el joc, utilitzant un algoritme recursiu,on es genera un mapa en quadrícula i es van ubicant cada localitat.\n\nEl resultat és aquest mapa, on es mostra cada localitat, i a cadascuna:\n- Sortides de cada localitat, indicant sortides possibles a cada punt cardinal (nord, sud, est i oest), les seves diagonals, i pujar i baixar\n- Descripcions de cada localitat, en cas que aquesta localitat no tingui dibuix o els haguem deshabilitat del tot\n- Dibuixos de cada localitat\n- Objectes de cada localitat\nDepenent del zoom aplicat, es veuen més detalls o menys.\n\nA causa del funcionament de l'algoritme, i que les aventures realment no ens indiquen la posició al mapa, és possible que de vegades algunes localitats ocupin les mateixes posicions que altres. En aquest cas, es pot visualitzar de la manera següent:\n- Localitzacions amb ? en el número són dubtoses, indiquen ubicació ocupada per mes d'una localitat, com boscos...\n- Sortides marcades en vermell ens porten a habitacions dubtoses.\n\nLes tecles següents actuen sobre el mapa:\nz: Reduir zoom\nx: Augmentar zoom\nu: Pujar\nd: Baixar\nt: Teletransport, permet modificar l'habitació actual del joc\nf1: Aquesta ajuda\nf: Seguir la posició actual al mapa\no: Mostra objectes. Nota: en GAC, els personatges son objectes de molt pes, en aquest cas en el mapa apareixen amb prefixe P?\np: Mostra dibuixos\nv: Mostra totes les localitats, o només les localitats que hem visitat\nc: Mostra també les habitacions sense connectar (que no tenen sortides)\nA part d'aquestes tecles, mitjançant els cursors, PgUp/Down, i el ratolí, podeu desplaçar el mapa convenientment.\n	message
+This window is a map of the text adventure. It is generated automatically without the need to visit each position (location).\nZEsarUX takes care of visiting the entire location map as soon as the game loads, using a recursive algorithm, where a grid map is generated and each location is located.\n\nThe result is this map, where each location is shown, and in each one:\n- Exits of each location, indicating possible exits in each cardinal point (north, south, east and west), their diagonals, and going up and down\n- Descriptions of each location, in case location does not have a drawing or we have disabled them completely\n- Drawings of each location\n- Items from each location\nDepending on the zoom applied, more or less details are seen.\n\nDue to the way the algorithm works, and that the adventures don't really indicate the position on the map, it is possible that sometimes some localities occupy the same positions as others. In this case, it can be displayed as follows:\n- Locations with ? in the number are doubtful, they indicate location occupied by more than one location, like forests...\n- Exits marked in red lead us to doubtful rooms.\n\nThe following keys act on the map:\nz: Zoom out\nx: Zoom in\nu: Go up\nd: Go down\nt: Teleport, allows you to modify the current room in the game\nf1: This help window\nf: Follow the current position on the map\no: Show objects. Note: on GAC, people are objects very heavy, in this case in the map are shown with prefix P?\np: Show pictures\nv: Show all locations, or just the locations we have visited\nc: Show also unconnected rooms (that have no exits)\nApart from these keys, by using the arrow keys, PgUp/Down, and the mouse, you can scroll the map conveniently.\n	Ez az ablak a szöveges kaland térképe. Automatikusan készül, nem kell hozzá bejárni minden pozíciót (helyszínt).\nA ZEsarUX a játék betöltése után rögtön bejárja a teljes helyszíntérképet egy rekurzív algoritmussal, amely rácsos térképet készít, és elhelyezi rajta az egyes helyszíneket.\n\nAz eredmény ez a térkép, amely minden helyszínt mutat, és mindegyiknél:\n- A helyszín kijáratait: a lehetséges kijáratokat minden égtáj felé (észak, dél, kelet és nyugat), az átlós irányokba, valamint fel és le\n- A helyszínek leírását, ha az adott helyszínnek nincs rajza, vagy a rajzokat teljesen kikapcsoltuk\n- A helyszínek rajzait\n- A helyszíneken lévő tárgyakat\nAz alkalmazott nagyítástól függően több vagy kevesebb részlet látszik.\n\nAz algoritmus működése miatt, és mert a kalandjátékok valójában nem adják meg a térképen elfoglalt pozíciót, előfordulhat, hogy egyes helyszínek ugyanazt a pozíciót foglalják el, mint mások. Ezt a következőképpen jelzi a térkép:\n- A ?-lel jelölt sorszámú helyszínek kétesek: olyan pozíciót jelölnek, amelyen több helyszín is osztozik, például erdőknél...\n- A pirossal jelölt kijáratok kétes helyiségekbe vezetnek.\n\nA térképen a következő billentyűk használhatók:\nz: Kicsinyítés\nx: Nagyítás\nu: Fel\nd: Le\nt: Teleport, a játék aktuális helyiségét változtatja meg\nf1: Ez a súgóablak\nf: Az aktuális pozíció követése a térképen\no: Tárgyak mutatása. Megjegyzés: GAC-ban a szereplők nagyon nehéz tárgyak, ezért a térképen P? előtaggal jelennek meg\np: Képek mutatása\nv: Az összes helyszín mutatása, vagy csak a már meglátogatottaké\nc: A nem összekötött (kijárat nélküli) helyiségek mutatása is\nEzeken a billentyűkön kívül a kurzorbillentyűkkel, a PgUp/Down billentyűkkel és az egérrel kényelmesen görgethető a térkép.\n	message
+Error changing register	Hiba a regiszter módosításakor	error
+Flag	Flag	option
+Object	Tárgy	option
+Out of range	Tartományon kívül	error
+Breakpoint fired: %s	Töréspont aktiválódott: %s	message
+Ret operation only supported on Z80 cpu	A Ret művelet csak Z80 CPU-n támogatott	warning
+Breakpoints were not enabled and there was already a breakpoint on the cursor position, which was hidden because breakpoints were not enabled. Returning enabling breakpoints but without toggling that breakpoint	A töréspontok nem voltak bekapcsolva, és a kurzor pozícióján már volt egy töréspont, amely ezért rejtve volt. A töréspontok újra bekapcsolva, de az a töréspont nem lett átváltva	warning
+Reached maximum text size. Showing only allowed text	Elérted a maximális szövegméretet. Csak a megengedett szöveg látható	warning
+Too many results to show. Showing only the first %d	Túl sok találat. Csak az első %d látható	error
+OK. All memory breakpoints cleared	OK. Minden memória-töréspont törölve	message
+OK. All breakpoints deleted	OK. Minden töréspont törölve	message
+Which picture?	Melyik kép?	question
+Current One	A jelenlegi	option
+OK. Finished process	OK. A folyamat befejeződött	message
+History is empty	Az előzmények listája üres	warning
+You are at the oldest item	Ez a legrégebbi elem	warning
+<GO to PC>	<Ugrás a PC-re>	option
+Come back later after running some cpu opcodes	Gyere vissza később, ha már lefutott néhány CPU utasítás	message
+En esta ventana de Debug CPU se pueden tener diferentes vistas (seleccionables con las teclas 1-8), cada una mostrando diferente información:\n1 - Vista por defecto. Se muestra una zona superior con desensamblado de instrucciones y registros. Esta zona se puede cambiar mediante tecla m, la cual conmuta en vista de desensamblado, vista hexadecimal, vista ascii, y vista de desensamblado sin registros.\nEn esta vista 1, se puede mover el cursor mediante teclado o ratón; también, al pulsar con ratón en una linea de desensamblado, se asigna un breakpoint. \nSi hay un breakpoint en una dirección y está activado, se muestra esa línea en color rojo, y el primer carácter a la izquierda será:\n+: Si el registro PC coincide con esta dirección\n*: Si el registro PC no coincide con esta dirección\nSi hay un breakpoint en una dirección y no está activado, el primer carácter a la izquierda es un guión (-).\nEl primer carácter a la izquierda es (>) si el registro PC coincide con esta dirección y no hay un breakpoint.\n\nEn esta vista también se visualizan, en color invertido, los registros que modificará la instrucción en que está posicionado el cursor, y en color rojo los valores de los registros que se han modificado desde la ejecución de la última instrucción o el último comando run.\nTambién, a la derecha del opcode, se ve si se cumple una condición de salto y/o la anterior dirección en el historial, si el historial de cpu está habilitado.\n\n2 - Vista de una línea de desensamblado, registros y diferentes puertos hardware\n\n3 - Vista de 9 líneas de desensamblado y diferentes puertos hardware\n\n4 - Vista de 19 líneas de desensamblado\n\n5 - Vista de 9 líneas de hexadecimal y ascii y diferentes puertos hardware\n\n6 - Vista de 19 líneas de hexadecimal y ascii\n\n7 - Vista de una línea de desensamblado y el contador de t-estados y scanline actual\n\n8 - Vista de depuración de aventura conversacional, sólo disponible si se carga una aventura hecha con Quill, Paws, Daad o Gac\n\nEn las vistas 5 y 6 se muestran en color rojo las direcciones que se han modificado desde la ejecución de la última instrucción o el último comando run.\nEn la mayoría de las vistas, hay diferentes teclas que realizan acciones. Hay que tener en cuenta que se distingue mayúsculas de minúsculas, por tanto, las teclas en mayúsculas hay que accionarlas junto con la tecla Caps shift:\n\nm: cambiar el puntero donde estamos visualizando el listado; en vistas 5 y 6 se usa un puntero independiente, memptx, en vez del habitual memptr\n\nf: habilita/deshabilita el seguimiento del puntero con la posición del registro PC de la cpu\n\ns: modo paso a paso: Habilita/deshabilita el modo paso a paso. En el modo paso a paso se puede entrar manualmente con dicha tecla o también se entra de manera automática siempre que se tenga deshabilitado el Multitask menu o se tenga habilitada opción de Stop emulation on menu.\nCuando no se está en modo paso a paso, la emulación de la máquina sigue ejecutándose. En cambio, en modo paso a paso, la emulación está detenida, y se ejecuta una instrucción a cada pulsación de la tecla Enter\n\nc: modo continuo: Ejecuta continuamente el modo paso a paso pero sin requerir ninguna pulsación de tecla. Tiene varias velocidades:\n0: pausa de 0.5 segundos entre cada opcode\n1: pausa de 0.1 segundos entre cada opcode\n2: pausa de 0.02 segundos entre cada opcode\n3: sin pausa entre cada opcode\n4: sin pausa entre cada grupo de 10 opcodes\n\nd: desensamblar: Se tiene una ventana adicional de desensamblado y exportación del listado a archivo de texto\n\na: ensamblar: Se puede ensamblar codigo máquina, linea a linea\n\nEnter: ejecutar siguiente instrucción cuando se está en modo paso a paso\n\no: Ejecutar hasta volver de la siguiente instrucción, útil por ejemplo para volver justo después de un CALL\n\ny: Cambiar entre diferentes disposiciones de la vista 1\n\nr: Modificar registros\n\nb: Ir a la ventana de breakpoints\n\nw: Ir a la ventana de watches\n\nl: Poner/Quitar breakpoint en la posición indicada por el puntero\nL: Poner/Desactivar breakpoint en la posición indicada por el puntero\n\nn: Salir de la vista de Debug CPU y seguir ejecutando\n\nu: Ejecutar hasta que se llegue a la posición indicada por el puntero\n\ne: Ejecutar hasta que la cpu encuentra un opcode de retorno (cualquier RET, RETI, RETN o RET with condición verdadera)\n\nE: Ejecutar la instrucción RET, que provocará alterar registros PC y SP\n\np: Resetear contador de t-estados parcial. Dicho contador se encuentra visible en las vistas 2, 3 y 5\n\ni: Escribir un valor en una dirección de memoria\n\nt: Evaluar expresión\n\nz: Seleccionar zona de memoria. Las diferentes zonas de memoria permiten acceder a bloques de memoria mas allá del direccionamiento habitual de la cpu. Por ejemplo, podemos acceder a los 128kb de memoria RAM de un Spectrum 128k, o a la memoria eprom de un divide\n\nP: Modificar el registro PC con el valor del puntero\n\nB: Buscar el siguiente breakpoint asignado de tipo PC=XXXX. Requiere activar breakpoints\n\nk: Ver valores del stack y modificar puntero de memoria al pulsar enter\n\nH: Habilitar y visualizar el historial de ejecución de la cpu\n\nS: Permite ejecutar instrucciones hacia atrás. Requiere tener el historial de la cpu habilitado y sólo está disponible en modo paso a paso\n\nN: Permite ejecutar continuamente hacia atrás. Requiere tener el historial de la cpu habilitado y sólo está disponible en modo paso a paso. Lógicamente esta ejecución hacia atrás tiene un límite, determinado en el menu Settings-> Debug-> Max history items\n\nI: Permitir o denegar el movimiento y tamaño de la ventana Debug CPU mediante teclas OPQA WSKL\n\nshift+cursor up: Ir a la dirección previa en el historial. Requiere tener el historial de la cpu habilitado y sólo está disponible en modo paso a paso\n\ng: Ver los gráficos de una aventura hecha con GAC\n\nTeclas sólo para la vista 8, de debug de aventura conversacional:\n\nEnter: Ejecutar hasta el siguiente condacto\n\nk: Establecer un punto de paro definido por la ejecución de un condacto especial en Daad\n\np: Seguir la ejecución hasta el siguiente comando de Parse de Daad\n\nw: Modificar los watches, que permiten visualizar un listado de 7 objetos/flags\n\ni: Modificar el valor de un flag u objeto\n\ne: Listar los diferente mensajes de la aventura: Objetos, Mensajes de usuario, Localizaciones, etc\n\nv: Listar el vocabulario de la aventura\n\ng: Ver los gráficos de la aventura\n	En esta ventana de Debug CPU se pueden tener diferentes vistas (seleccionables con las teclas 1-8), cada una mostrando diferente información:\n1 - Vista por defecto. Se muestra una zona superior con desensamblado de instrucciones y registros. Esta zona se puede cambiar mediante tecla m, la cual conmuta en vista de desensamblado, vista hexadecimal, vista ascii, y vista de desensamblado sin registros.\nEn esta vista 1, se puede mover el cursor mediante teclado o ratón; también, al pulsar con ratón en una linea de desensamblado, se asigna un breakpoint. \nSi hay un breakpoint en una dirección y está activado, se muestra esa línea en color rojo, y el primer carácter a la izquierda será:\n+: Si el registro PC coincide con esta dirección\n*: Si el registro PC no coincide con esta dirección\nSi hay un breakpoint en una dirección y no está activado, el primer carácter a la izquierda es un guión (-).\nEl primer carácter a la izquierda es (>) si el registro PC coincide con esta dirección y no hay un breakpoint.\n\nEn esta vista también se visualizan, en color invertido, los registros que modificará la instrucción en que está posicionado el cursor, y en color rojo los valores de los registros que se han modificado desde la ejecución de la última instrucción o el último comando run.\nTambién, a la derecha del opcode, se ve si se cumple una condición de salto y/o la anterior dirección en el historial, si el historial de cpu está habilitado.\n\n2 - Vista de una línea de desensamblado, registros y diferentes puertos hardware\n\n3 - Vista de 9 líneas de desensamblado y diferentes puertos hardware\n\n4 - Vista de 19 líneas de desensamblado\n\n5 - Vista de 9 líneas de hexadecimal y ascii y diferentes puertos hardware\n\n6 - Vista de 19 líneas de hexadecimal y ascii\n\n7 - Vista de una línea de desensamblado y el contador de t-estados y scanline actual\n\n8 - Vista de depuración de aventura conversacional, sólo disponible si se carga una aventura hecha con Quill, Paws, Daad o Gac\n\nEn las vistas 5 y 6 se muestran en color rojo las direcciones que se han modificado desde la ejecución de la última instrucción o el último comando run.\nEn la mayoría de las vistas, hay diferentes teclas que realizan acciones. Hay que tener en cuenta que se distingue mayúsculas de minúsculas, por tanto, las teclas en mayúsculas hay que accionarlas junto con la tecla Caps shift:\n\nm: cambiar el puntero donde estamos visualizando el listado; en vistas 5 y 6 se usa un puntero independiente, memptx, en vez del habitual memptr\n\nf: habilita/deshabilita el seguimiento del puntero con la posición del registro PC de la cpu\n\ns: modo paso a paso: Habilita/deshabilita el modo paso a paso. En el modo paso a paso se puede entrar manualmente con dicha tecla o también se entra de manera automática siempre que se tenga deshabilitado el Multitask menu o se tenga habilitada opción de Stop emulation on menu.\nCuando no se está en modo paso a paso, la emulación de la máquina sigue ejecutándose. En cambio, en modo paso a paso, la emulación está detenida, y se ejecuta una instrucción a cada pulsación de la tecla Enter\n\nc: modo continuo: Ejecuta continuamente el modo paso a paso pero sin requerir ninguna pulsación de tecla. Tiene varias velocidades:\n0: pausa de 0.5 segundos entre cada opcode\n1: pausa de 0.1 segundos entre cada opcode\n2: pausa de 0.02 segundos entre cada opcode\n3: sin pausa entre cada opcode\n4: sin pausa entre cada grupo de 10 opcodes\n\nd: desensamblar: Se tiene una ventana adicional de desensamblado y exportación del listado a archivo de texto\n\na: ensamblar: Se puede ensamblar codigo máquina, linea a linea\n\nEnter: ejecutar siguiente instrucción cuando se está en modo paso a paso\n\no: Ejecutar hasta volver de la siguiente instrucción, útil por ejemplo para volver justo después de un CALL\n\ny: Cambiar entre diferentes disposiciones de la vista 1\n\nr: Modificar registros\n\nb: Ir a la ventana de breakpoints\n\nw: Ir a la ventana de watches\n\nl: Poner/Quitar breakpoint en la posición indicada por el puntero\nL: Poner/Desactivar breakpoint en la posición indicada por el puntero\n\nn: Salir de la vista de Debug CPU y seguir ejecutando\n\nu: Ejecutar hasta que se llegue a la posición indicada por el puntero\n\ne: Ejecutar hasta que la cpu encuentra un opcode de retorno (cualquier RET, RETI, RETN o RET with condición verdadera)\n\nE: Ejecutar la instrucción RET, que provocará alterar registros PC y SP\n\np: Resetear contador de t-estados parcial. Dicho contador se encuentra visible en las vistas 2, 3 y 5\n\ni: Escribir un valor en una dirección de memoria\n\nt: Evaluar expresión\n\nz: Seleccionar zona de memoria. Las diferentes zonas de memoria permiten acceder a bloques de memoria mas allá del direccionamiento habitual de la cpu. Por ejemplo, podemos acceder a los 128kb de memoria RAM de un Spectrum 128k, o a la memoria eprom de un divide\n\nP: Modificar el registro PC con el valor del puntero\n\nB: Buscar el siguiente breakpoint asignado de tipo PC=XXXX. Requiere activar breakpoints\n\nk: Ver valores del stack y modificar puntero de memoria al pulsar enter\n\nH: Habilitar y visualizar el historial de ejecución de la cpu\n\nS: Permite ejecutar instrucciones hacia atrás. Requiere tener el historial de la cpu habilitado y sólo está disponible en modo paso a paso\n\nN: Permite ejecutar continuamente hacia atrás. Requiere tener el historial de la cpu habilitado y sólo está disponible en modo paso a paso. Lógicamente esta ejecución hacia atrás tiene un límite, determinado en el menu Settings-> Debug-> Max history items\n\nI: Permitir o denegar el movimiento y tamaño de la ventana Debug CPU mediante teclas OPQA WSKL\n\nshift+cursor up: Ir a la dirección previa en el historial. Requiere tener el historial de la cpu habilitado y sólo está disponible en modo paso a paso\n\ng: Ver los gráficos de una aventura hecha con GAC\n\nTeclas sólo para la vista 8, de debug de aventura conversacional:\n\nEnter: Ejecutar hasta el siguiente condacto\n\nk: Establecer un punto de paro definido por la ejecución de un condacto especial en Daad\n\np: Seguir la ejecución hasta el siguiente comando de Parse de Daad\n\nw: Modificar los watches, que permiten visualizar un listado de 7 objetos/flags\n\ni: Modificar el valor de un flag u objeto\n\ne: Listar los diferente mensajes de la aventura: Objetos, Mensajes de usuario, Localizaciones, etc\n\nv: Listar el vocabulario de la aventura\n\ng: Ver los gráficos de la aventura\n	message
+En aquesta finestra de Debug CPU es poden tenir diferents vistes (seleccionables amb les tecles 1-8), cadascuna mostrant diferent informació:\n1 - Vista per defecte. Es mostra una zona superior amb desensamblat d'instruccions i registres. Aquesta zona es pot canviar mitjançant tecla m, la qual commuta en vista de desassemblat, vista hexadecimal, vista ascii, i vista de desassemblat sense registres.\nEn aquesta vista 1, es pot moure el cursor mitjançant teclat o ratolí; també, en prémer amb ratolí en una línia de desassemblat, s'assigna un breakpoint. \nSi hi ha un breakpoint a una adreça i està activat, es veu aquesta línia en color vermell, i el primer caràcter a l'esquerra serà:\n+: Si el registre PC coincideix amb aquesta adreça\n*: Si el registre PC no coincideix amb aquesta adreça\nSi hi ha un breakpoint a una adreça i no està activat, el primer caràcter a l'esquerra és un guió (-).\nEl primer caràcter a l'esquerra és (>) si el registre PC coincideix amb aquesta adreça i no hi ha un breakpoint.\n\nEn aquesta vista també es visualitzen, en color invertir, els registres que modificarà la instrucció en que està posicionat el cursor, i en color vermell els valors dels registres que s'han modificat des de l'execució de la última instrucció o la última comanda run.\nTambé, a la dreta del opcode, es veu si es compleix una condició de salt i/o l'anterior adreça a l'historial, si l'historial de la cpu està habilitat.\n\n2 - Vista d'una línia de desassemblatge, registres i diferents ports de maquinari\n\n3 - Vista de 9 línies de desassemblatge i diferents ports de maquinari\n\n4 - Vista de 19 línies de desassemblatge\n\n5 - Vista de 9 línies de hexadecimal i ascii i diferents ports de maquinari\n\n6 - Vista de 19 línies de hexadecimal i ascii\n\n7 - Vista d'una línia de desassemblatge i el comptador de t-estats i scanline actual\n\n8 - Vista de depuració d'aventura conversacional, només disponible si es carrega una aventura feta amb Quill, Paws, Daad o Gac\n\nA les vistes 5 i 6 es veuen en color vermell les adreces que s'han modificat des de l'execució de la última instrucció o la última comanda run.\nA la majoria de les vistes, hi ha diferents tecles que realitzen accions. Cal tenir en compte que es distingeix majúsculesde minúscules, per tant, les tecles en majúscules cal accionar-les juntament amb la tecla Caps shift:\n\nm: canviar el punter on estem visualitzant el llistat; en vistes 5 i 6 s'usa un punter independent, memptx, enlloc de l'habitual memptr\n\nf: habilita/deshabilita el seguiment del punter amb la posició del registre PC de la cpu\n\ns: mode pas a pas: Habilita/deshabilita el mode pas a pas. En el mode pas a pas es pot entrar manualment amb aquesta tecla o també s'entra de manera automàtica sempre que es tingui deshabilitat el Multitask menu o es tingui habilitada opció de Stop emulation on menu.\nQuan no s'està en mode pas a pas, l'emulació de la màquina continua executant-se. En canvi, en mode pas a pas,l'emulació està aturada, i s'executa una instrucció a cada clic de la tecla Enter\n\nc: mode continu: Executa continuament el mode pas a pas sense necessitar prémer cap tecla. Té varies velocitats:\n0: pausa de 0.5 segons entre cada instrucció\n1: pausa de 0.1 segons entre cada instrucció\n2: pausa de 0.02 segons entre cada instrucció\n3: sense pausa entre cada instrucció\n4: sense pausa entre cada grup de 10 instruccions\n\nd: desassemblar: Es té una finestra addicional de desassemblat i exportació del llistat a fitxer de text\n\na: assemblar: Es pot assemblar codi màquina, línia a línia\n\nEnter: executar següent instrucció quan s'està en mode pas a pas\n\no: Executar fins a tornar de la següent instrucció, útil per exemple per tornar just després d'un CALL\n\ny: Canviar entre diferents disposicions de la vista 1\n\nr: Modificar registres\n\nb: Anar a la finestra de breakpoints\n\nw: Anar a la finestra de watches\n\nl: Posar/treure breakpoint a la posició indicada pel punter\nL: Posar/desactivar breakpoint a la posició indicada pel punter\n\nn: Sortir de la vista de Debug CPU i continuar executant\n\nu: Executar fins que s'arribi a la posició indicada pel punter\n\ne: Executar fins que la cpu troba una instrucció de retorn (qualsevol RET, RETI, RETN o RET amb condició verdadera)\n\nE: Executar la instrucció RET, que provocarà alterar registres PC i SP\n\np: Resetejar comptador de t-estats parcial. Aquest comptador es troba visible a les vistes 2, 3 i 5\n\ni: Escriure un valor en una adreça de memòria\n\nt: Avaluar expressió\n\nz: Seleccionar zona de memòria. Les diferents zones de memòria permeten accedir a blocs de memòria més enllà del direccionament habitual de la cpu. Per exemple, podem accedir als 128kb de memòria RAM d'un Spectrum 128k, o a la memòria eprom d'un divide\n\nP: Modificar el registre PC amb el valor del punter\n\nB: Cerca el següent breakpoint assignat de tipus PC=XXXX. Requereix activar breakpoints\n\nk: Veure valors del stack i modificar punter de memoria al polsar enter\n\nH: Habilita i visualitza l'historial d'execució de la cpu\n\nS: Permet executar instruccions cap enrere. Requereix tenir l'historial de la cpu habilitat i només està disponible en mode pas a pas\n\nN: Permet executar contínuament cap enrere. Requereix tenir l'historial de la cpu habilitat i només està disponible en mode pas a pas.Lògicament aquesta execució cap enrere té un límit, determinat al menú Settings-> Debug-> Max history items\n\nI: Permetre o denegar el moviment i tamany de la finestra Debug CPU mitjançant tecles OPQA WSKL\n\nshift+cursor up: Anar a l'adreça previa a l'historial. You need cpu execution history enabled and it's only available on step mode\n\ng: Vegeu els gràfics d'una aventura feta amb GAC\n\nTecles només per a la vista 8, de debug d'aventura conversacional:\n\nEnter: Executar fins al següent condacte\n\nk: Establir un punt d'atur definit per l'execució d'un condacte especial a Daad\n\np: Seguir l'execució fins el següent comandament de Parse de Daad\n\nw: Modificar els watches, que permeten visualitzar un llistat de 7 objectes/flags\n\ni: Modificar el valor d'un flag o objecte\n\ne: Llista els diferents missatges de l'aventura: Objectes, Missatges d'usuari, Localitzacions, etc\n\nv: Llistar el vocabulari de l'aventura\n\ng: Veure els gràfics de l'aventura\n	En aquesta finestra de Debug CPU es poden tenir diferents vistes (seleccionables amb les tecles 1-8), cadascuna mostrant diferent informació:\n1 - Vista per defecte. Es mostra una zona superior amb desensamblat d'instruccions i registres. Aquesta zona es pot canviar mitjançant tecla m, la qual commuta en vista de desassemblat, vista hexadecimal, vista ascii, i vista de desassemblat sense registres.\nEn aquesta vista 1, es pot moure el cursor mitjançant teclat o ratolí; també, en prémer amb ratolí en una línia de desassemblat, s'assigna un breakpoint. \nSi hi ha un breakpoint a una adreça i està activat, es veu aquesta línia en color vermell, i el primer caràcter a l'esquerra serà:\n+: Si el registre PC coincideix amb aquesta adreça\n*: Si el registre PC no coincideix amb aquesta adreça\nSi hi ha un breakpoint a una adreça i no està activat, el primer caràcter a l'esquerra és un guió (-).\nEl primer caràcter a l'esquerra és (>) si el registre PC coincideix amb aquesta adreça i no hi ha un breakpoint.\n\nEn aquesta vista també es visualitzen, en color invertir, els registres que modificarà la instrucció en que està posicionat el cursor, i en color vermell els valors dels registres que s'han modificat des de l'execució de la última instrucció o la última comanda run.\nTambé, a la dreta del opcode, es veu si es compleix una condició de salt i/o l'anterior adreça a l'historial, si l'historial de la cpu està habilitat.\n\n2 - Vista d'una línia de desassemblatge, registres i diferents ports de maquinari\n\n3 - Vista de 9 línies de desassemblatge i diferents ports de maquinari\n\n4 - Vista de 19 línies de desassemblatge\n\n5 - Vista de 9 línies de hexadecimal i ascii i diferents ports de maquinari\n\n6 - Vista de 19 línies de hexadecimal i ascii\n\n7 - Vista d'una línia de desassemblatge i el comptador de t-estats i scanline actual\n\n8 - Vista de depuració d'aventura conversacional, només disponible si es carrega una aventura feta amb Quill, Paws, Daad o Gac\n\nA les vistes 5 i 6 es veuen en color vermell les adreces que s'han modificat des de l'execució de la última instrucció o la última comanda run.\nA la majoria de les vistes, hi ha diferents tecles que realitzen accions. Cal tenir en compte que es distingeix majúsculesde minúscules, per tant, les tecles en majúscules cal accionar-les juntament amb la tecla Caps shift:\n\nm: canviar el punter on estem visualitzant el llistat; en vistes 5 i 6 s'usa un punter independent, memptx, enlloc de l'habitual memptr\n\nf: habilita/deshabilita el seguiment del punter amb la posició del registre PC de la cpu\n\ns: mode pas a pas: Habilita/deshabilita el mode pas a pas. En el mode pas a pas es pot entrar manualment amb aquesta tecla o també s'entra de manera automàtica sempre que es tingui deshabilitat el Multitask menu o es tingui habilitada opció de Stop emulation on menu.\nQuan no s'està en mode pas a pas, l'emulació de la màquina continua executant-se. En canvi, en mode pas a pas,l'emulació està aturada, i s'executa una instrucció a cada clic de la tecla Enter\n\nc: mode continu: Executa continuament el mode pas a pas sense necessitar prémer cap tecla. Té varies velocitats:\n0: pausa de 0.5 segons entre cada instrucció\n1: pausa de 0.1 segons entre cada instrucció\n2: pausa de 0.02 segons entre cada instrucció\n3: sense pausa entre cada instrucció\n4: sense pausa entre cada grup de 10 instruccions\n\nd: desassemblar: Es té una finestra addicional de desassemblat i exportació del llistat a fitxer de text\n\na: assemblar: Es pot assemblar codi màquina, línia a línia\n\nEnter: executar següent instrucció quan s'està en mode pas a pas\n\no: Executar fins a tornar de la següent instrucció, útil per exemple per tornar just després d'un CALL\n\ny: Canviar entre diferents disposicions de la vista 1\n\nr: Modificar registres\n\nb: Anar a la finestra de breakpoints\n\nw: Anar a la finestra de watches\n\nl: Posar/treure breakpoint a la posició indicada pel punter\nL: Posar/desactivar breakpoint a la posició indicada pel punter\n\nn: Sortir de la vista de Debug CPU i continuar executant\n\nu: Executar fins que s'arribi a la posició indicada pel punter\n\ne: Executar fins que la cpu troba una instrucció de retorn (qualsevol RET, RETI, RETN o RET amb condició verdadera)\n\nE: Executar la instrucció RET, que provocarà alterar registres PC i SP\n\np: Resetejar comptador de t-estats parcial. Aquest comptador es troba visible a les vistes 2, 3 i 5\n\ni: Escriure un valor en una adreça de memòria\n\nt: Avaluar expressió\n\nz: Seleccionar zona de memòria. Les diferents zones de memòria permeten accedir a blocs de memòria més enllà del direccionament habitual de la cpu. Per exemple, podem accedir als 128kb de memòria RAM d'un Spectrum 128k, o a la memòria eprom d'un divide\n\nP: Modificar el registre PC amb el valor del punter\n\nB: Cerca el següent breakpoint assignat de tipus PC=XXXX. Requereix activar breakpoints\n\nk: Veure valors del stack i modificar punter de memoria al polsar enter\n\nH: Habilita i visualitza l'historial d'execució de la cpu\n\nS: Permet executar instruccions cap enrere. Requereix tenir l'historial de la cpu habilitat i només està disponible en mode pas a pas\n\nN: Permet executar contínuament cap enrere. Requereix tenir l'historial de la cpu habilitat i només està disponible en mode pas a pas.Lògicament aquesta execució cap enrere té un límit, determinat al menú Settings-> Debug-> Max history items\n\nI: Permetre o denegar el moviment i tamany de la finestra Debug CPU mitjançant tecles OPQA WSKL\n\nshift+cursor up: Anar a l'adreça previa a l'historial. You need cpu execution history enabled and it's only available on step mode\n\ng: Vegeu els gràfics d'una aventura feta amb GAC\n\nTecles només per a la vista 8, de debug d'aventura conversacional:\n\nEnter: Executar fins al següent condacte\n\nk: Establir un punt d'atur definit per l'execució d'un condacte especial a Daad\n\np: Seguir l'execució fins el següent comandament de Parse de Daad\n\nw: Modificar els watches, que permeten visualitzar un llistat de 7 objectes/flags\n\ni: Modificar el valor d'un flag o objecte\n\ne: Llista els diferents missatges de l'aventura: Objectes, Missatges d'usuari, Localitzacions, etc\n\nv: Llistar el vocabulari de l'aventura\n\ng: Veure els gràfics de l'aventura\n	message
+This Debug CPU window can show different views (chosen with keys 1-8), each of them showing different information:\n1 - Default view. You see a top section with opcodes disassembly and registers. This section can be changed pressing key m, switching from: disassembly, hexadecimal, ascii, and disassembly without registers.\nOn this view 1, you can move cursor by using keys or mouse; also, pressing mouse on a disassembly line, you set a breakpoint. \nIf there is a breakpoint on an address and it's enabled, the line is shown in red color, and the first left caracter will be:\n+: If PC register matches this address\n*: If PC register doesn't match this address\nIf there is a breakpoint on an address and it's not enabled, the first left character will be a hyphen (-).\nThe first left character is (>) if PC register matches this address and there is no breakpoint.\n\nIn this view you can also see, in inverse color, which registers will be modified by the opcode the cursor is in, and in red color the registers values modified by the last opcode execution or the last run command.\nAlso, right to the opcode, you can see if a jump satisties a condition and/or previous address in history, if cpu execution history is enabled.\n\n2 - View with one disassembly line, registers and different hardware ports\n\n3 - View with 9 disassembly lines and different hardware ports\n\n4 - View with 19 disassembly lines\n\n5 - View with 9 hexadecimal and ascii lines and different hardware ports\n\n6 - View with 19 hexadecimal hexadecimal and ascii lines\n\n7 - View with one disassembly line, t-estates counter and current scanline\n\n8 - View for debugging Text Adventures, only available if the current loaded game is one made with Quill, Paws, Daad or Gac\n\nIn views 5 and 6 you can see in red color adresses modified by the last opcode execution or the last run command.\nIn most of the views, there are some keys which run actions. Capitalisation in keys is taken care so, capital keys must be fired pressing Caps shift too:\n\nm: Change the listing pointer; in views 5 and 6 it's used an independent pointer, memptx, instead of the memptr\n\nf: enable/disable following pointer with the PC cpu register\n\ns: step mode: enable/disable step mode. You can enter step mode manually by pressing that key or also entering this window having Multitasking disabled or enabling setting Stop emulation on menu.\nWhen not in step mode, machine emulated continues running. Besides, on step mode, emulation is stopped, and an opcode is run on every pressing of key Enter\n\nc: continuous mode: Repeated execution of step mode without pressing any key. It has different speeds:\n0: 0.5 pause between every opcode\n1: 0.1 pause between every opcode\n2: 0.02 pause between every opcode\n3: no pause between every opcode\n4: no pause between every group of 10 opcodes\n\nd: disassemble: An additional window for disassembly and exporting listings to text files\n\na: assemble: You can assemble machine code, line by line\n\nEnter: run next opcode when on step mode\n\no: Run until returning from the next opcode, useful, for example, to return after a CALL opcode\n\ny: Switch between different layouts of view 1\n\nr: Modify registers\n\nb: Go to breakpoints window\n\nw: Go to watches window\n\nl: Add/Remove breakpoint on the current pointer position\nL: Add/Disable breakpoint on the current pointer position\n\nn: Exit from Debug CPU window and continue running\n\nu: Run until the cpu reaches the current pointer position\n\ne: Run until the cpu finds a return opcode (any RET, RETI, RETN or RET with true condition)\n\nE: Run a RET opcode, which will alter PC and SP registers\n\np: Reset t-states partial counter. That counter can be seen on views 2, 3 and 5\n\ni: Write a value on a memory address\n\nt: Evaluate expression\n\nz: Select memory zone. You can select different memory zones beyond the normal cpu addressing. For example, you can access to the 128kb RAM memory of a Spectrum 128k, or to the divide eprom memory\n\nP: Set PC register with the pointer value\n\nB: Look for the next breakpoint set of type PC=XXXX. Requires enabling breakpoints\n\nk: View stack values and set memory pointer when pressing enter\n\nH: Enable and view the cpu execution history\n\nS: You can step back opcodes. You need cpu execution history enabled and it's only available on step mode\n\nN: You can run backwards continuously. You need cpu execution history enabled and it's only available on step mode. This backwards execution has a limit defined on menu Settings-> Debug-> Max history items\n\nI: Allow or disallow movement and size of Debug CPU window using keys OPQA WSKL\n\nshift+cursor up: Go to the previous address in history. You need cpu execution history enabled and it's only available on step mode\n\ng: See the graphics of a GAC text adventure\n\nKeys exclusive for view 8, to debug text adventures:\n\nEnter: Run until next condact\n\nk: Set a breakpoint fired with a special Daad condact\n\np: Continue execution until after executing the next Parse command on Daad\n\nw: Modify watches, that lists 7 objects/flags\n\ni: Modify a flag or an object\n\ne: List all the messages of an adventure: Objects, User messages, Localizations, etc\n\nv: List vocabulary of the adventure\n\ng: See the graphics of the adventure\n	Ez a CPU hibakereső ablak különböző nézeteket tud mutatni (az 1-8 billentyűkkel választhatók), mindegyik más-más információt jelenít meg:\n1 - Alapnézet. Felül az utasítások visszafordított listája és a regiszterek láthatók. Ez a rész az m billentyűvel váltható: visszafordítás, hexadecimális, ascii, illetve visszafordítás regiszterek nélkül.\nEbben az 1-es nézetben a kurzort billentyűkkel vagy egérrel mozgathatod; ha pedig egy visszafordított sorra kattintasz, töréspontot állítasz be. \nHa egy címen bekapcsolt töréspont van, a sor piros színnel jelenik meg, és a bal szélső karakter:\n+: ha a PC regiszter megegyezik ezzel a címmel\n*: ha a PC regiszter nem egyezik meg ezzel a címmel\nHa egy címen kikapcsolt töréspont van, a bal szélső karakter egy kötőjel (-).\nA bal szélső karakter (>), ha a PC regiszter megegyezik ezzel a címmel, és nincs töréspont.\n\nEbben a nézetben inverz színnel azt is láthatod, mely regisztereket módosítja a kurzor alatti utasítás, pirossal pedig azokat a regiszterértékeket, amelyeket az utolsó utasítás végrehajtása vagy az utolsó futtatási parancs módosított.\nAz utasítástól jobbra azt is láthatod, hogy egy ugrás feltétele teljesül-e, és/vagy az előzmények előző címét, ha a CPU-előzmények be vannak kapcsolva.\n\n2 - Nézet egy visszafordított sorral, regiszterekkel és különböző hardverportokkal\n\n3 - Nézet 9 visszafordított sorral és különböző hardverportokkal\n\n4 - Nézet 19 visszafordított sorral\n\n5 - Nézet 9 hexadecimális és ascii sorral és különböző hardverportokkal\n\n6 - Nézet 19 hexadecimális és ascii sorral\n\n7 - Nézet egy visszafordított sorral, T-állapot-számlálóval és az aktuális pásztázott sorral\n\n8 - Nézet szöveges kalandjátékok hibakereséséhez, csak akkor érhető el, ha a betöltött játék Quill, Paws, Daad vagy Gac segítségével készült\n\nAz 5-ös és 6-os nézetben pirossal láthatod azokat a címeket, amelyeket az utolsó utasítás végrehajtása vagy az utolsó futtatási parancs módosított.\nA legtöbb nézetben vannak műveleteket indító billentyűk. A kis- és nagybetűk különböznek, a nagybetűs billentyűket a Caps shifttel együtt kell lenyomni:\n\nm: A listázási mutató váltása; az 5-ös és 6-os nézetben egy független mutató, a memptx használatos a memptr helyett\n\nf: a PC regiszter követésének be- és kikapcsolása\n\ns: léptető mód: a léptető mód be- és kikapcsolása. Léptető módba kézzel is beléphetsz ezzel a billentyűvel, vagy úgy, hogy kikapcsolt többfeladatos mód mellett nyitod meg ezt az ablakot, vagy bekapcsolod az emuláció menü alatti leállítását.\nHa nem léptető módban vagy, az emulált gép tovább fut. Léptető módban viszont az emuláció áll, és az Enter billentyű minden lenyomására egy utasítás fut le\n\nc: folyamatos mód: A léptető mód ismételt végrehajtása billentyű lenyomása nélkül. Különböző sebességei vannak:\n0: 0,5 szünet minden utasítás között\n1: 0,1 szünet minden utasítás között\n2: 0,02 szünet minden utasítás között\n3: nincs szünet az utasítások között\n4: nincs szünet a 10 utasításból álló csoportok között\n\nd: visszafordítás: Egy további ablak a visszafordításhoz és a listák szövegfájlba exportálásához\n\na: fordítás: Gépi kódot fordíthatsz soronként\n\nEnter: a következő utasítás futtatása léptető módban\n\no: Futtatás a következő utasításból való visszatérésig, hasznos például egy CALL utasítás utáni visszatéréshez\n\ny: Váltás az 1-es nézet különböző elrendezései között\n\nr: Regiszterek módosítása\n\nb: Ugrás a töréspontok ablakára\n\nw: Ugrás a figyelők ablakára\n\nl: Töréspont hozzáadása/eltávolítása az aktuális mutatópozíción\nL: Töréspont hozzáadása/kikapcsolása az aktuális mutatópozíción\n\nn: Kilépés a CPU hibakereső ablakból és a futás folytatása\n\nu: Futtatás, amíg a CPU el nem éri az aktuális mutatópozíciót\n\ne: Futtatás, amíg a CPU visszatérő utasításhoz nem ér (bármely RET, RETI, RETN vagy teljesülő feltételű RET)\n\nE: Egy RET utasítás végrehajtása, amely módosítja a PC és SP regisztert\n\np: A részleges T-állapot-számláló nullázása. Ez a számláló a 2-es, 3-as és 5-ös nézetben látható\n\ni: Érték írása egy memóriacímre\n\nt: Kifejezés kiértékelése\n\nz: Memóriaterület kiválasztása. A normál CPU-címzésen túli memóriaterületeket is kiválaszthatsz. Például elérheted egy Spectrum 128k 128kb-os RAM memóriáját, vagy a divide EPROM memóriáját\n\nP: A PC regiszter beállítása a mutató értékére\n\nB: A következő PC=XXXX típusú töréspont keresése. Ehhez be kell kapcsolni a töréspontokat\n\nk: A verem értékeinek megtekintése, Enter lenyomásakor a memóriamutató beállítása\n\nH: A CPU-előzmények bekapcsolása és megtekintése\n\nS: Utasításonként visszafelé léphetsz. Ehhez be kell kapcsolni a CPU-előzményeket, és csak léptető módban érhető el\n\nN: Folyamatosan futtathatsz visszafelé. Ehhez be kell kapcsolni a CPU-előzményeket, és csak léptető módban érhető el. A visszafelé futtatás korlátját a Beállítások-> Hibakeresés-> CPU-előzmények max. száma menüpont határozza meg\n\nI: A CPU hibakereső ablak mozgatásának és átméretezésének engedélyezése vagy tiltása az OPQA WSKL billentyűkkel\n\nshift+kurzor fel: Ugrás az előzmények előző címére. Ehhez be kell kapcsolni a CPU-előzményeket, és csak léptető módban érhető el\n\ng: Egy GAC szöveges kalandjáték grafikáinak megtekintése\n\nCsak a 8-as nézetben használható billentyűk, szöveges kalandjátékok hibakereséséhez:\n\nEnter: Futtatás a következő condactig\n\nk: Egy speciális Daad condacttal kiváltott töréspont beállítása\n\np: A végrehajtás folytatása a következő Daad Parse parancs végrehajtása utánig\n\nw: Figyelők módosítása, amelyek 7 objektumot/jelzőt listáznak\n\ni: Egy jelző vagy objektum módosítása\n\ne: A kalandjáték összes üzenetének listázása: objektumok, felhasználói üzenetek, helyszínek stb.\n\nv: A kalandjáték szókincsének listázása\n\ng: A kalandjáték grafikáinak megtekintése\n	message
+Allowed window movement and size keys	Ablakmozgató és -méretező billentyűk engedélyezve	message
+Disallowed window movement and size keys	Ablakmozgató és -méretező billentyűk tiltva	message
+MENU DSK Basic: Sector size not supported on track %d	MENU DSK Basic: Nem támogatott szektorméret ezen a sávon: %d	error
+Too many lines to show. Showing only the first %d	Túl sok megjelenítendő sor. Csak az első %d látható	error
+Error opening cas file %s	Hiba a cas fájl megnyitásakor: %s	error
+Can not allocate memory for pzx browser	Nem sikerült memóriát foglalni a pzx böngészőnek	error
+Can not allocate memory for tzx browser	Nem sikerült memóriát foglalni a tzx böngészőnek	error
+Invalid .TZX file	Érvénytelen .TZX fájl	error
+Tape browser not supported for this tape type	A kazettaböngésző nem támogatja ezt a kazettatípust	error
+Unable to open tape for browsing	Nem sikerült megnyitni a kazettát böngészésre	error
+Too much headers. Showing only the allowed in memory	Túl sok fejléc. Csak a memóriában elférők láthatók	error
+Invalid .SP file	Érvénytelen .SP fájl	error
+Invalid .SNA file	Érvénytelen .SNA fájl	error
+No valid header found	Nem található érvényes fejléc	warning
+Invalid .ZX file	Érvénytelen .ZX fájl	error
+Which algorithm?	Melyik algoritmus?	question
+New	Új	option
+Old	Régi	option
+No conversion valid for this file type	Ehhez a fájltípushoz nincs érvényes konverzió	error
+OK. File converted to %s	OK. A fájl konvertálva ide: %s	message
+Error reading file. Bytes read: %d bytes	Hiba a fájl olvasásakor. Beolvasott bájtok: %d	error
+File too big. Reading first 16 Mb	A fájl túl nagy. Az első 16 Mb beolvasása	warning
+File loaded to File memory zone	Fájl betöltve a fájl memóriaterületére	message
+Can not create menu_copying_recurse_progress_thread thread	Nem sikerült létrehozni a menu_copying_recurse_progress_thread szálat	error
+Copying has not ended yet	A másolás még nem fejeződött be	warning
+OK. Folder copied	OK. Mappa átmásolva	message
+Copying folder may take a while. Press Enter and wait please	A mappa másolása eltarthat egy ideig. Nyomj Entert, és várj	warning
+You must select the directory exiting with ESC key. Aborting!	A mappát az ESC billentyűvel kilépve kell kiválasztanod. Megszakítva!	warning
+Source and target directory are the same (%s). Aborting!	A forrás- és a célmappa ugyanaz (%s). Megszakítva!	error
+Copy recursive?	Rekurzív másolás?	question
+OK. File copied	OK. Fájl átmásolva	message
+OK. File renamed	OK. Fájl átnevezve	message
+Moving folder between diferent source and target type is not allowed. Aborting!	Mappa áthelyezése eltérő típusú forrás és cél között nem engedélyezett. Megszakítva!	error
+OK. Folder moved	OK. Mappa áthelyezve	message
+OK. File moved	OK. Fájl áthelyezve	message
+Deleting directory . or .. is not allowed	A . vagy .. mappa törlése nem engedélyezett	error
+Allow delete folders setting is not enabled. Enable it AT YOUR OWN RISK on Settings-> File Browser	A mappák törlésének engedélyezése beállítás nincs bekapcsolva. SAJÁT FELELŐSSÉGEDRE kapcsold be itt: Beállítások-> Fájlböngésző	error
+Remove folder entirely?	Törlöd a teljes mappát?	question
+OK. Folder has been deleted	OK. A mappa törölve	message
+Error deleting item	Hiba az elem törlésekor	error
+OK. File deleted	OK. Fájl törölve	message
+Clipboard is empty, you can fill it from a text window and press key c	A vágólap üres, egy szövegablakból töltheted fel a c billentyűvel	error
+File saved with ZEsarUX clipboard contents	Fájl elmentve a ZEsarUX vágólap tartalmával	message
+Unknown compressed file	Ismeretlen tömörített fájl	error
+Unable to find uncompress program: %s	Nem található a kibontó program: %s	error
+Full path: %s\n\n%sModified: %02d:%02d:%02d %02d/%02d/%02d	Teljes elérési út: %s\n\n%sMódosítva: %02d:%02d:%02d %02d/%02d/%02d	message
+No available drives	Nincs elérhető meghajtó	error
+OK. List cleared	OK. Lista törölve	message
+Can not create menu_syncing_mmc_progress_thread thread	Nem sikerült létrehozni a menu_syncing_mmc_progress_thread szálat	error
+Syncing has not ended yet	A szinkronizálás még nem fejeződött be	warning
+OK. All changes have been written to the disk image	OK. Minden változás kiírva a lemezképre	message
+Syncing disk image may take a while. Press Enter and wait please	A lemezkép szinkronizálása eltarthat egy ideig. Nyomj Entert, és várj	warning
+Ok image has been unmounted	Ok, a lemezkép leválasztva	message
+Ok image has been mounted on 0:/	Ok, a lemezkép csatolva ide: 0:/	message
+Ok created link on ZX Desktop	Ok, hivatkozás létrehozva a ZX Desktopon	message
+Do you want to use this file?	Ezt a fájlt szeretnéd használni?	question
+End address must be higher or equal than start address	A záró címnek nagyobbnak vagy egyenlőnek kell lennie a kezdő címnél	warning
+Export cancelled	Exportálás megszakítva	warning
+Unable to open asm file	Nem sikerült megnyitni az asm fájlt	error
+Ok process finished	Ok, a folyamat befejeződött	message
+Error. Invalid opcode	Hiba. Érvénytelen utasítás	error
+OK. Log truncated	OK. Napló csonkolva	message
+Append?	Hozzáfűzöd?	question
+Invalid rotation number	Érvénytelen forgatási szám	error
+Invalid rotation size	Érvénytelen forgatási méret	error
+Invalid rotation lines	Érvénytelen forgatási sorok	error
+Hola que tal como estas esto es una prueba de escribir texto. No se que mas poner pero me voy a empezar a repetir, Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore  eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Adios	Hola que tal como estas esto es una prueba de escribir texto. No se que mas poner pero me voy a empezar a repetir, Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore  eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Adios	message
+Error allocating temporary buffer	Hiba az ideiglenes puffer lefoglalásakor	error
+OK File saved	OK, fájl elmentve	message
+OK. Instrument changed	OK. Hangszer megváltoztatva	message
+Invalid client value	Érvénytelen kliensérték	error
+Can not find device list	Nem található az eszközlista	error
+Audio Chip: %s\nFrequency: %d Hz\nMin Tone Frequency: %d Hz\nMax Tone Frequency: %d Hz\n3 Tone Channels, 1 Noise Channel	Hangchip: %s\nFrekvencia: %d Hz\nMin. hangfrekvencia: %d Hz\nMax. hangfrekvencia: %d Hz\n3 hangcsatorna, 1 zajcsatorna	message
+Audio Chip: %s\nFrequency: %d MHz\nMin Tone Frequency: %d Hz\nMax Tone Frequency: %d Hz\n2 PseudoTone Channels, Noise Effects	Hangchip: %s\nFrekvencia: %d MHz\nMin. hangfrekvencia: %d Hz\nMax. hangfrekvencia: %d Hz\n2 álhangcsatorna, zajeffektusok	message
+Audio Chip: %s\nFrequency: 8 MHz\nMin Tone Frequency: 30 Hz\nMax Tone Frequency: 7740 Hz\n6 Tone Channels, 2 Noise Channels	Hangchip: %s\nFrekvencia: 8 MHz\nMin. hangfrekvencia: 30 Hz\nMax. hangfrekvencia: 7740 Hz\n6 hangcsatorna, 2 zajcsatorna	message
+Audio Chip: %s\nFrequency: %d Hz\nMin Tone Frequency: %d Hz\nMax Tone Frequency: %d Hz\n3 Noise/Tone Channels, 1 Envelope Generator	Hangchip: %s\nFrekvencia: %d Hz\nMin. hangfrekvencia: %d Hz\nMax. hangfrekvencia: %d Hz\n3 zaj/hang csatorna, 1 burkológenerátor	message
+Invalid port number	Érvénytelen portszám	error
+Invalid interval	Érvénytelen intervallum	error
+Cancel?	Megszakítod?	question
+No results found	Nincs találat	error
+You need to have networking compiled to browse zx81 speccy games	A zx81 speccy játékok böngészéséhez hálózati támogatással kell fordítani	error
+Error downloading. Return code: %d	Hiba a letöltéskor. Visszatérési kód: %d	error
+Can not create zsock http thread	Nem sikerült létrehozni a zsock http szálat	error
+Download has not ended yet	A letöltés még nem fejeződött be	warning
+Can not create download wos thread	Nem sikerült létrehozni a wos letöltési szálat	error
+You need to have SSL compiled to browse online speccy games	Az online speccy játékok böngészéséhez SSL-támogatással kell fordítani	error
+You need to have networking compiled to browse online speccy games	Az online speccy játékok böngészéséhez hálózati támogatással kell fordítani	error
+Response too long. Showing only the first %d bytes	A válasz túl hosszú. Csak az első %d bájt látható	error
+File has been downloaded and uncompressed to current folder	A fájl letöltve és kibontva az aktuális mappába	message
+File has been downloaded and uncompressed to %s	A fájl letöltve és kibontva ide: %s	message
+Error downloading software. Return code: %d	Hiba a szoftver letöltésekor. Visszatérési kód: %d	error
+OK. Screen saved	OK. Képernyő elmentve	message
+OK. Screen file name: %s	OK. Képernyőfájl neve: %s	message
+PID: %u\nTitle: %s\nName: %s\nPosition: %d,%d\nVisible size: %dX%d\nPosition before max/min ize: %d,%d\nVisible size before max/min ize: %dX%d\nTotal size: %dX%d (%d KiB)\nScroll %d,%d\nMinimized: %s\nMaximized: %s\nAlways visible: %s\nImmutable: %s\nCan be resized: %s\nCan be minimized: %s\nCan receive messages: %s\n	PID: %u\nCím: %s\nNév: %s\nPozíció: %d,%d\nLátható méret: %dX%d\nPozíció ikonra/teljes méretre állítás előtt: %d,%d\nLátható méret ikonra/teljes méretre állítás előtt: %dX%d\nTeljes méret: %dX%d (%d KiB)\nGörgetés: %d,%d\nIkonra állítva: %s\nTeljes méretre állítva: %s\nMindig látható: %s\nVáltoztathatatlan: %s\nÁtméretezhető: %s\nIkonra állítható: %s\nFogadhat üzeneteket: %s\n	message
+Window not opened	Az ablak nincs megnyitva	error
+Window does not accept messages	Az ablak nem fogad üzeneteket	error
+Error sending message, return code: %d	Hiba az üzenet küldésekor, visszatérési kód: %d	error
+Can not find that window	Nem található az ablak	error
+Do you want to	Mit szeretnél tenni?	question
+Switch to	Átváltás rá	option
+Move to top	Előtérbe	option
+Move to bottom	Háttérbe	option
+Switch always visible	Mindig látható váltása	option
+Send message	Üzenet küldése	option
+Information	Információ	option
+Close	Bezárás	option
+Create link on ZX Desktop	Hivatkozás a ZX Desktopon	option
+Copy contents	Tartalom másolása	option
+Can not close ourself	Ez a folyamat nem zárhatja be önmagát	error
+OK. All windows closed	OK. Minden ablak bezárva	message
+OK. All windows rearranged	OK. Minden ablak elrendezve	message
+OK. All windows cascaded	OK. Minden ablak lépcsőzetesen elrendezve	message
+OK. All windows reduced	OK. Minden ablak kicsinyítve	message
+OK. All windows reduced+rearranged	OK. Minden ablak kicsinyítve és elrendezve	message
+OK. All windows minimized	OK. Minden ablak ikonra állítva	message
+OK. All windows minimized+rearranged	OK. Minden ablak ikonra állítva és elrendezve	message
+OK. All windows maximized	OK. Minden ablak teljes méretre állítva	message
+Background windows setting is not enabled. You can enable it on Settings-> ZX Vision-> Background windows	A háttérablakok beállítás nincs bekapcsolva. Itt kapcsolhatod be: Beállítások-> ZX Vision-> Háttérablakok	warning
+Slot: %d Segment: %d Type: %s Uses: %04XH-%04XH	Slot: %d Szegmens: %d Típus: %s Használat: %04XH-%04XH	message
+Unable to find bmp file %s	Nem található a bmp fájl: %s	error
+OK File unloaded	OK, fájl eltávolítva	message
+OK File loaded	OK, fájl betöltve	message
+OK Symbols Unloaded	OK, szimbólumok eltávolítva	message
+OK Snapshot loaded from RAM	OK, pillanatkép betöltve a RAM-ból	message
+Snapshot list has been cleared due to list resize	A pillanatképlista törölve lett a lista átméretezése miatt	warning
+Snapshot saved	Pillanatkép elmentve	message
+Error getting snapshot	Hiba a pillanatkép lekérésekor	error
+OK. Snapshot saved	OK. Pillanatkép elmentve	message
+Snapshot list empty	A pillanatképlista üres	error
+OK. Results cleared	OK. Eredmények törölve	message
+Total addresses found: %d	Talált címek összesen: %d	message
+Sorry, no lives counter found	Sajnos nem található életszámláló	message
+Ok. Continue playing game and come back when you lose a life	Ok. Folytasd a játékot, és gyere vissza, amikor elveszítesz egy életet	message
+Sorry, I haven't found any addresses. The process has been restarted	Sajnos nem találtam egyetlen címet sem. A folyamat újraindult	message
+Sorry, no unique address found. You may want to try again losing another live or maybe manually find it on the Find bytes menu	Sajnos nem található egyedi cím. Próbáld újra egy újabb élet elvesztésével, vagy keresd meg kézzel a Bájtok keresése menüben	message
+Great. Memory pointer found	Remek. Memóriamutató megtalálva	message
+Invalid watch number	Érvénytelen figyelőszám	error
+Write value	Érték írása	option
+Set watch	Figyelő beállítása	option
+Open Hexadecimal Editor	Hexadecimális szerkesztő megnyitása	option
+Remove watch	Figyelő eltávolítása	option
+Too many entries. Showing only what is allowed on memory	Túl sok bejegyzés. Csak a memóriában elférők láthatók	error
+Total results: %d	Összes találat: %d	message
+OK Showing absolute value instead of percentage	OK, abszolút érték látható százalék helyett	message
+OK Showing percentage instead of absolute value	OK, százalék látható abszolút érték helyett	message
+There is no real tape selected	Nincs kiválasztva valódi kazetta	error
+Note that ROM data are the same as the previous machine	Figyelem: a ROM adatai megegyeznek az előző gépével	warning
+Seems you were in SLOW mode. Probably you need to set FAST mode before hotswap to avoid hang	Úgy tűnik, SLOW módban voltál. Valószínűleg FAST módot kell beállítanod a gépcsere előtt, hogy elkerüld a lefagyást	warning
+You probably need to disable realvideo	Valószínűleg ki kell kapcsolnod a realvideo-t	warning
+Note that ROM data are the previous data coming from +2A	Figyelem: a ROM adatai a +2A-ból származó korábbi adatok	warning
+Note that ROM data are the previous data coming from 128K	Figyelem: a ROM adatai a 128K-ból származó korábbi adatok	warning
+Note that ROM data are the previous data coming from ZX-Uno	Figyelem: a ROM adatai a ZX-Uno-ból származó korábbi adatok	warning
+You can't change machine while connected to ZENG online	Nem válthatsz gépet, amíg a ZENG online kapcsolat aktív	error
+Unable to open %s file	Nem sikerült megnyitni a fájlt: %s	error
+Error appending text	Hiba a szöveg hozzáfűzésekor	error
+Source code lines: %d\nCode comments: %d\nTotal .c files: %d\nTotal .h files: %d\nApproximate TODOs: %d\nEstimated time spent developing ZEsarUX: ^^%d^^ hours since 2013, and counting\nZEsarUX yesterday users: %s\n\nEdited with Visual Studio Code and vim\nDeveloped on macOS Tahoe, Debian 13, Raspbian, FreeBSD 14, and MinGW environment on Windows\n	Forráskódsorok: %d\nKódmegjegyzések: %d\n.c fájlok összesen: %d\n.h fájlok összesen: %d\nTODO-k kb. száma: %d\nA ZEsarUX fejlesztésére fordított becsült idő: ^^%d^^ óra 2013 óta, és még nincs vége\nA ZEsarUX tegnapi felhasználói: %s\n\nSzerkesztve Visual Studio Code-dal és vim-mel\nFejlesztve macOS Tahoe, Debian 13, Raspbian, FreeBSD 14 rendszeren és Windowson MinGW környezetben\n	message
+On Menu:\nUse cursor keys to move\nPress F1 (or h on some video drivers) on an option to see its help\nPress Enter or cursor right to select a menu item\nPress Space on some menu items to enable/disable\nPress a key between a and z to select an entry with shortcuts; shortcut clues appear when you wait some seconds or press a key not associated with any shortcut.\nUnavailable options may be hidden, or disabled, which are shown with red colour or with x cursor on some video drivers\nCharacter > on the right of a menu item means the menu has submenus\nESC Key closes all menus, except in the case with aalib driver and pure text console, which is changed to another key (shown on the menu). On curses driver, ESC key is a bit slow, you have to wait one second after pressing it; you can also use key @ to simulate ESC on menu on curses driver.\nCursor left gives you to the previous menu\n\n\nOn File Browser:\n- Use cursors and PgDn/Up\n- Use Enter or left mouse click to select item. Compressed files will be opened like folders\n- Use Space to expand files, currently supported:\nddh, dsk, epr, eprom, flash, hdf, mdv, o, p, pzx, scl, tap, trd, tzx and also all the compressed supported files.\n- When moving the cursor, a small preview of the screen in the file is shown, currently supported files for preview:\nddh, dsk, p, pzx, scr, sna, sp, tap, trd, tzx, z80, zsf\n- Use TAB to change section\n- Use Space/cursor on filter to change filter\n- Press the initial letter \nfor faster searching\n\nWhen using fileselector from file utilities menu:\n- Press shift+key to select functions, like shift+v to view files or shift+d to select Drive\n- Currently supported files on Viewer:\nb, bas, basz88, baszx80, baszx81, cas, cdt, col, ddh, dsk, epr, eprom, flash, ide, mmc, mmcide, nex, o, p, pzx, sna, snx, sp, spg, tap, trd, tzx, z80, zsf, zx and text files.\n\nOn message windows:\n- Use cursors and PgDn/Up\n- Use f and n to find text\n- Use c to copy to ZEsarUX clipboard\n\nOn input fields, press cursor down to delete all input text.\nOn numeric input fields, numbers can be written on decimal, hexadecimal (with suffix H), binary (with suffix %) or as a character (with quotes '' or "")\n\nSymbols on menu must be written according to the Spectrum keyboard mapping, so for example, to write the symbol minus (<), you have to press ctrl(symbol shift)+r. You should use ctrl/alt (no need to Spectrum extended mode) to write any of the following: ~|\\{}[], located on letters asdfgyu\n\n\nOn ZX Vision windows:\n- Use mouse to move windows dragging from the title bar\n- Drag mouse from the bottom-right part of the window to resize it\n- Click on the minimize button (-) to minimize the window\n- Click on the maximize button (+) or double click on the title bar to maximize the window\n- Click on the recover button (=) to recover previous size after a minimize or maximize action\n- Click out of the window to close all menus\n- Click out of the window and press shift key to put the focus on the emulated machine and send there keyboard presses\n- Can also be moved with the keyboard: Shift+QAOP\n- Can also be resized with the keyboard: Shift+WSKL\n- Note: If the resize zone of the window (bottom-right) flashes in red colour and/or window border is in red when mouse over the bottom-right zone, means that the window needs to be enlarged, because there is text or image beyond current size.\n\nOn ZX Desktop:\n- Left mouse button click on an icon to open it or trigger an action\n- Right mouse button click on an icon to get properties or actions of that icon; right click on the ZX Desktop for icon actions or desktop properties\n\nInside a machine, the keys are mapped this way:\nESC: If text to speech is not enabled, sends Shift+Space (break) on Spectrum. If enabled, stops playing text to speech\nCTRL/ALT: Symbol shift\nTAB: Extended mode (symbol shift + caps shift)\n\nF4: When menu is closed, send Spectrum display content to speech program, including only known characters (unknown characters are shown as a space). When menu is opened, it will read the window contents and send it to speech program, even if it has already been read again\nF5: Open menu\nF8: Open On Screen Keyboard (only on Spectrum & ZX80/81)\nF9: Open Smart Load window\n\nOn Z88, the following keys have special meaning:\nF1: Help\nF2: Index\nF3: Menu\nCTRL: Diamond\nALT: Square\n\nNote: Drivers curses, aa, caca do not read CTRL or ALT. Instead, you can use F6 for CTRL and F7 for ALT on these drivers.\n	A menüben:\nA mozgáshoz használd a kurzorbillentyűket\nEgy opción nyomd meg az F1-et (egyes videómeghajtókon a h-t) a súgója megtekintéséhez\nMenüpont kiválasztásához nyomj Entert vagy jobbra kurzort\nEgyes menüpontokat a Space-szel be- és kikapcsolhatsz\nAz a–z billentyűkkel gyorsbillentyűs bejegyzést választhatsz; a gyorsbillentyű-tippek akkor jelennek meg, ha vársz néhány másodpercet, vagy olyan billentyűt nyomsz, amelyhez nem tartozik gyorsbillentyű.\nAz elérhetetlen opciók rejtettek vagy letiltottak lehetnek; a letiltottak piros színnel, egyes videómeghajtókon x kurzorral jelennek meg\nA menüpont jobb oldalán lévő > karakter azt jelenti, hogy a menünek almenüi vannak\nAz ESC billentyű bezárja az összes menüt, kivéve az aalib meghajtót és a tiszta szöveges konzolt, ahol helyette egy másik billentyű működik (a menüben látható). A curses meghajtón az ESC billentyű kicsit lassú, lenyomása után egy másodpercet várnod kell; a curses meghajtón a menüben a @ billentyűvel is helyettesítheted az ESC-et.\nA balra kurzor az előző menübe visz\n\n\nA fájlböngészőben:\n- Használd a kurzorokat és a PgDn/Up billentyűket\n- Elem kiválasztásához használd az Entert vagy a bal egérgombot. A tömörített fájlok mappaként nyílnak meg\n- Fájlok kibontásához használd a Space-t, jelenleg támogatott:\nddh, dsk, epr, eprom, flash, hdf, mdv, o, p, pzx, scl, tap, trd, tzx és az összes támogatott tömörített fájl.\n- A kurzor mozgatásakor a fájlban lévő képernyő kis előnézete látható, az előnézet jelenleg ezeknél a fájloknál támogatott:\nddh, dsk, p, pzx, scr, sna, sp, tap, trd, tzx, z80, zsf\n- Szakaszváltáshoz használd a TAB-ot\n- A szűrőn a Space-szel/kurzorral válthatsz szűrőt\n- Nyomd meg a kezdőbetűt \na gyorsabb kereséshez\n\nA fájlkezelő menüből megnyitott fájlválasztóban:\n- Funkciók kiválasztásához nyomj shift+billentyűt, például shift+v a fájlok megtekintéséhez vagy shift+d a meghajtó kiválasztásához\n- A nézegetőben jelenleg támogatott fájlok:\nb, bas, basz88, baszx80, baszx81, cas, cdt, col, ddh, dsk, epr, eprom, flash, ide, mmc, mmcide, nex, o, p, pzx, sna, snx, sp, spg, tap, trd, tzx, z80, zsf, zx és szövegfájlok.\n\nAz üzenetablakokban:\n- Használd a kurzorokat és a PgDn/Up billentyűket\n- Szöveg kereséséhez használd az f és n billentyűt\n- A ZEsarUX vágólapra másoláshoz használd a c-t\n\nBeviteli mezőkben a lefelé kurzorral törölheted a teljes beírt szöveget.\nSzámbeviteli mezőkben a számok megadhatók decimálisan, hexadecimálisan (utótag: H), binárisan (utótag: %) vagy karakterként ('' vagy "" idézőjelek között)\n\nA menüben a szimbólumokat a Spectrum billentyűzetkiosztása szerint kell beírni, így például a kisebb jelhez (<) a ctrl(symbol shift)+r-t kell lenyomnod. A következők beírásához a ctrl/alt billentyűt használd (nincs szükség a Spectrum kiterjesztett módjára): ~|\\{}[], ezek az asdfgyu betűkön találhatók\n\n\nZX Vision ablakokban:\n- Az ablakokat egérrel, a címsoruknál fogva húzva mozgathatod\n- Átméretezéshez húzd az egeret az ablak jobb alsó részétől\n- Az ablak ikonra állításához kattints az ikon gombra (-)\n- Az ablak teljes méretre állításához kattints a teljes méret gombra (+), vagy kattints duplán a címsorra\n- Ikonra vagy teljes méretre állítás után a visszaállítás gombra (=) kattintva kapod vissza az előző méretet\n- Az ablakon kívül kattintva az összes menü bezárul\n- Az ablakon kívül kattintva és a shift billentyűt lenyomva a fókusz az emulált gépre kerül, és oda mennek a billentyűleütések\n- Billentyűzettel is mozgatható: Shift+QAOP\n- Billentyűzettel is átméretezhető: Shift+WSKL\n- Megjegyzés: Ha az ablak átméretező része (jobb alul) pirosan villog, és/vagy az ablak kerete piros, amikor az egér a jobb alsó részen van, akkor az ablakot nagyobbra kell venni, mert a jelenlegi méreten túl is van szöveg vagy kép.\n\nA ZX Desktopon:\n- Bal egérgombbal egy ikonra kattintva megnyitod azt vagy elindítasz egy műveletet\n- Jobb egérgombbal egy ikonra kattintva az ikon tulajdonságait vagy műveleteit éred el; a ZX Desktopon jobb kattintással az ikonműveletek vagy az asztal tulajdonságai érhetők el\n\nA gépen belül a billentyűk így vannak kiosztva:\nESC: Ha a szövegfelolvasás nincs bekapcsolva, Shift+Space-t (break) küld a Spectrumnak. Ha be van kapcsolva, leállítja a szövegfelolvasást\nCTRL/ALT: Symbol shift\nTAB: Kiterjesztett mód (symbol shift + caps shift)\n\nF4: Zárt menünél a Spectrum képernyőtartalmát a felolvasóprogramnak küldi, csak az ismert karaktereket (az ismeretlenek szóközként jelennek meg). Nyitott menünél beolvassa az ablak tartalmát, és elküldi a felolvasóprogramnak, akkor is, ha az már fel lett olvasva\nF5: Menü megnyitása\nF8: Képernyő-billentyűzet megnyitása (csak Spectrumon és ZX80/81-en)\nF9: Okos betöltés ablak megnyitása\n\nZ88-on a következő billentyűknek különleges jelentésük van:\nF1: Súgó\nF2: Index\nF3: Menü\nCTRL: Diamond\nALT: Square\n\nMegjegyzés: A curses, aa, caca meghajtók nem olvassák a CTRL és ALT billentyűt. Ezeken a meghajtókon a CTRL helyett az F6-ot, az ALT helyett az F7-et használhatod.\n	message
+Press h<num> to see help for <num> option, for example: h3\nPress t<num> to see tooltip for <num> option\nUnavailable options may be hidden, or disabled, which are shown with x cursor\nESC text gives you to the previous menu\nOn fileselector, write the file without spaces\nOn input fields, numbers can be written on decimal or hexadecimal (with suffix H)\n	A h<szám> megnyomásával a <szám>. opció súgóját látod, például: h3\nA t<szám> megnyomásával a <szám>. opció buboréksúgóját látod\nAz elérhetetlen opciók rejtve lehetnek, vagy le vannak tiltva; ezeket x kurzor jelzi\nAz ESC visszavisz az előző menübe\nA fájlválasztóban szóközök nélkül írd be a fájlnevet\nA beviteli mezőkbe a számokat decimálisan vagy hexadecimálisan (H utótaggal) is beírhatod\n	message
+When you enable Background Windows (from Settings-> ZX Vision), some features are added to the ZX Desktop and some behaviour is modified. \n\nFirst, we will refer to 'menu' to all the menu windows and all the windows in background. When we say that the 'menu is open' or the 'menu is closed', we refer to all the menu windows and all the windows in background, that they are visible and can be interacted with them or not (enabling setting background windows+even when menu closed, shows windows in background but you can't interact with them). \n\nWe will refer to 'main menu' to the ZEsarUX main menu window (the one with Smartload, Machine, etc). \n\nWindows that can be sent to background, have a button (exclamation mark !, or a shaded button) in the window title. \nPressing that button (or F6 key) will send the window to the background and then, if background windows setting is enabled even when menu closed, the menu will be closed; otherwise, it will go back to the previous window. \n\nA window in the background is open, doesn't have the focus, and usually is refreshing its contents (we will talk about it later). \nIf you click to another window, the current window will be sent to background, if it allows to do it. If it's not allowed, the current window will be closed. \nSome background windows don't refresh their contents when they are in background, like Debug CPU. \n\nPressing F5 when on menu or pressing the ZEsarUX logo button (on the top left of ZX Desktop) will send you back to the main menu.\nPressing Shift+Cursor Right will switch to another background window.\n\nPressing window close button, ESC or right click on the mouse it always closes the current window (same behaviour with background windows disabled). \n\nWhen menu is open, pressing on the emulated machine section (usually on the left) and shift key, the keyboard focus is lost from the menu and goes to the emulated machine. To return the keyboard focus to the menu, press on any of the background windows, or in the ZEsarUX logo, or press F5. \n\nYou can enable a setting to restore windows when ZEsarUX is opened (from Settings-> ZX Vision-> Reopen windows on start). \n\nYou can enable a setting to view windows in background even when menu closed (but you can't interact with them), from Settings-> ZX Vision-> Background Windows-Even when menu closed\nWhen setting Background Windows-Even is disabled, pressing ESC on the main menu, makes disappear all windows. But pressing F5 again will restore all windows. \nYou can have background windows enabled but multitasking disabled (not recommended, but allowed). 	Ha bekapcsolod a háttérablakokat (Beállítások-> ZX Vision), a ZX Desktop néhány új funkciót kap, és bizonyos viselkedések megváltoznak. \n\nElőször is: 'menü' alatt az összes menüablakot és az összes háttérben lévő ablakot értjük. Amikor azt mondjuk, hogy 'a menü nyitva van' vagy 'a menü zárva van', az összes menüablakra és háttérablakra gondolunk: láthatók-e, és lehet-e velük dolgozni, vagy sem (a háttérablakok + Bezárt menünél is beállítás bekapcsolásával a háttérablakok látszanak, de nem lehet velük dolgozni). \n\n'Főmenü' alatt a ZEsarUX főmenüablakát értjük (amelyben az Okos betöltés, a Gép stb. található). \n\nA háttérbe küldhető ablakok címsorában van egy gomb (felkiáltójel ! vagy egy árnyékolt gomb). \nA gomb (vagy az F6 billentyű) megnyomása háttérbe küldi az ablakot, majd ha a háttérablakok Bezárt menünél is beállítás be van kapcsolva, a menü bezárul; különben visszatérsz az előző ablakhoz. \n\nA háttérben lévő ablak nyitva van, nincs rajta a fókusz, és általában frissíti a tartalmát (erről később lesz szó). \nHa egy másik ablakra kattintasz, az aktuális ablak a háttérbe kerül, ha ezt engedi. Ha nem engedi, az aktuális ablak bezárul. \nNéhány háttérablak nem frissíti a tartalmát, amíg a háttérben van, például a CPU hibakereső. \n\nHa a menüben megnyomod az F5 billentyűt vagy a ZEsarUX logó gombját (a ZX Desktop bal felső sarkában), visszakerülsz a főmenübe.\nA Shift+Jobbra kurzor egy másik háttérablakra vált.\n\nAz ablak bezáró gombja, az ESC vagy a jobb egérgomb mindig bezárja az aktuális ablakot (ugyanúgy, mint kikapcsolt háttérablakoknál). \n\nNyitott menünél, ha az emulált gép területére kattintasz (általában bal oldalt) és megnyomod a Shift billentyűt, a billentyűzetfókusz a menüről az emulált gépre kerül. A billentyűzetfókusz visszaadásához a menünek kattints bármelyik háttérablakra vagy a ZEsarUX logóra, vagy nyomd meg az F5 billentyűt. \n\nBekapcsolhatod, hogy a ZEsarUX indításakor az ablakok visszaálljanak (Beállítások-> ZX Vision-> Ablakok újranyitása induláskor). \n\nBekapcsolhatod, hogy a háttérablakok bezárt menünél is látsszanak (de nem lehet velük dolgozni): Beállítások-> ZX Vision-> Háttérablakok-Bezárt menünél is\nHa a Háttérablakok-Bezárt menünél is beállítás ki van kapcsolva, a főmenüben az ESC megnyomására minden ablak eltűnik. Az F5 újbóli megnyomása azonban visszaállítja az összes ablakot. \nA háttérablakok kikapcsolt többfeladatos működés mellett is bekapcsolhatók (nem ajánlott, de lehetséges). 	message
+Can not find software	Nem található a szoftver	error
+Te estarás preguntando... que es esto? Pues es una manera de homenajear a los que ya no están con nosotros, a personas que han sido importantes en mi vida y han tenido relación con ZEsarUX.\nPuede parecerte algo extraño que un programa contenga esta sección (o no?) pero es una manera que tengo de homenajearlos.\nEspero que esta sección no aumente con los años, cosa que sería buena señal.	Te estarás preguntando... que es esto? Pues es una manera de homenajear a los que ya no están con nosotros, a personas que han sido importantes en mi vida y han tenido relación con ZEsarUX.\nPuede parecerte algo extraño que un programa contenga esta sección (o no?) pero es una manera que tengo de homenajearlos.\nEspero que esta sección no aumente con los años, cosa que sería buena señal.	message
+You might be wondering... what is this? Well, it's a way to honor those who are no longer with us, to people who have been important in my life and have had a relationship with ZEsarUX.\nIt may seem strange to you that a program contains this section (or not?) but it is a way I have to honor them.\nI hope this section does not increase over the years, which would be a good sign.	Talán azon tűnődsz... mi ez? Nos, így tisztelgek azok előtt, akik már nincsenek velünk: olyan emberek előtt, akik fontosak voltak az életemben, és kapcsolatban álltak a ZEsarUX-szal.\nFurcsának tűnhet, hogy egy program ilyen részt tartalmaz (vagy mégsem?), de ez az én módom arra, hogy tisztelegjek előttük.\nRemélem, ez a rész nem bővül az évek során, mert az jó jel lenne.	message
+OK. NVRAM cleared	OK. NVRAM törölve	message
+%s parsed string: %s	%s – feldolgozott karakterlánc: %s	message
+Line not found	A sor nem található	warning
+No text to search	Nincs keresendő szöveg	warning
+Key list is empty	A billentyűlista üres	error
+OK. Snapshot name: %s	OK. Pillanatkép neve: %s	message
+Where do you want to save it?	Hová szeretnéd menteni?	question
+Create .config from snapshot/tape	.config létrehozása pillanatképből/kazettából	option
+Select new/existing .config file	Új/meglévő .config fájl kiválasztása	option
+OK. File saved	OK. Fájl elmentve	message
+OK. Cartridge ejected	OK. Cartridge kiadva	message
+Create?	Létrehozod?	question
+OK. Changes applied	OK. Változtatások alkalmazva	message
+Empty EPROM name	Üres EPROM név	error
+Empty Flash name	Üres Flash név	error
+Invalid value %d	Érvénytelen érték: %d	error
+OK. Card erased	OK. Kártya törölve	message
+OK. %d bytes reclaimed	OK. Visszanyert bájtok: %d	message
+OK. %d files undeleted	OK. Visszaállított fájlok: %d	message
+Can not load more than %d bytes	Legfeljebb ennyi bájt tölthető be: %d	error
+No bytes read	Nem sikerült bájtot olvasni	error
+OK. File copied to Card	OK. Fájl a kártyára másolva	message
+Card is empty	A kártya üres	error
+File not found	A fájl nem található	error
+OK. File copied from Card to Disk	OK. Fájl a kártyáról a lemezre másolva	message
+Invalid quantity %d	Érvénytelen mennyiség: %d	error
+Buffer has been emptied	A puffer kiürítve	message
+Enable?	Bekapcsolod?	question
+Reload SPI Flash from file?	Újratöltöd az SPI Flash-t fájlból?	question
+OK. Reset pressed	OK. Reset gomb megnyomva	message
+ROM file is not expected size	A ROM fájl mérete nem a várt	error
+Unable to open mantransfer binary file %s	Nem sikerült megnyitni a mantransfer bináris fájlt: %s	error
+ROM file must be 8 KB length	A ROM fájlnak 8 KB méretűnek kell lennie	error
+1 FPS	1 FPS	option
+2 FPS	2 FPS	option
+5 FPS	5 FPS	option
+10 FPS	10 FPS	option
+25 FPS	25 FPS	option
+50 FPS	50 FPS	option
+AY Chip Channel A	AY chip A csatorna	option
+AY Chip Channel B	AY chip B csatorna	option
+AY Chip Channel C	AY chip C csatorna	option
+You can't Smartload while connected to ZENG online	Nem használhatsz okos betöltést, amíg a ZENG online-hoz csatlakozol	error
+Error parsing POK file	Hiba a POK fájl feldolgozásakor	error
+Error getting Button parameters	Hiba a gomb paramétereinek lekérésekor	error
+Error getting F-Key info	Hiba az F-billentyű adatainak lekérésekor	error
+You should write a file name on parameters	A paraméterekben meg kell adnod egy fájlnevet	error
+Reinsert tape	Kazetta újra behelyezése	option
+Press Button	Gomb megnyomása	option
+ZX Dandanator not enabled	A ZX Dandanator nincs bekapcsolva	warning
+Switch tape inserted flag	Kazetta behelyezve jelző átváltása	option
+NMI	NMI	option
+Too many pokes to show on Window. Showing only first 20	Túl sok poke a megjelenítéshez. Csak az első 20 látható	warning
+OK. Poke applied	OK. Poke alkalmazva	message
+Invalid length value	Érvénytelen hosszérték	error
+Do you want to:	Mit szeretnél?	question
+Play	Lejátszás	option
+Mark/Unmark	Megjelölés/jelölés törlése	option
+OK. Item marked/unmarked	OK. Elem megjelölve/jelölés törölve	message
+OK. Playlist has been cleared	OK. Lejátszási lista törölve	message
+OK. Playlist saved	OK. Lejátszási lista elmentve	message
+Invalid direction. It can only be left (l) or right (r)	Érvénytelen irány. Csak bal (l) vagy jobb (r) lehet	error
+Memory zone is File zone. Changes won't be saved to the file	A memóriaterület fájlterület. A változtatások nem lesznek a fájlba mentve	warning
+Error adding follow expression	Hiba a követendő kifejezés hozzáadásakor	error
+Bytes not found	A bájtok nem találhatók	warning
+Maximum bytes in list reached	Elérted a listában megengedett bájtok maximumát	error
+Find type	Keresés típusa	question
+Bytes	Bájtok	option
+String	Szöveg	option
+OK. Statistics cleared	OK. Statisztika törölve	message
+Sure you want to edit?	Biztosan szerkeszteni akarod?	question
+Timeout must be 0 minimum	Az időkorlát legalább 0 lehet	error
+Invalid address %d	Érvénytelen cím: %d	error
+You can not set cocoa driver from menu. You must start emulator with cocoa driver (with --vo cocoa or without any --vo setting)	A cocoa meghajtó nem állítható be a menüből. Az emulátort a cocoa meghajtóval kell indítanod (--vo cocoa kapcsolóval vagy --vo beállítás nélkül)	error
+Invalid gui style	Érvénytelen felületstílus	error
+OK. Style applied	OK. Stílus alkalmazva	message
+OK. Big font applied	OK. Nagy betűtípus alkalmazva	message
+OK. Clean ZX Desktop applied	OK. Tiszta ZX Desktop alkalmazva	message
+OK. Enabled boxes and disable transparency on ZX Desktop buttons and icons	OK. Keretek bekapcsolva, átlátszóság kikapcsolva a ZX Desktop gombjain és ikonjain	message
+OK. Forced hotkeys	OK. Gyorsbillentyűk kényszerítve	message
+OK. Disabled background windows	OK. Háttérablakok kikapcsolva	message
+OK. Driver applied	OK. Meghajtó alkalmazva	message
+Can not set video driver. Restoring to previous driver %s	Nem sikerült beállítani a videomeghajtót. Visszaállítás az előző meghajtóra: %s	error
+Limit can't be less than the highest created room	A korlát nem lehet kisebb a legmagasabb létrehozott szobánál	error
+Invalid port %d	Érvénytelen port: %d	error
+Remember that on aa video driver, menu is opened with %s	Ne feledd: az aa videomeghajtónál a menü ezzel nyílik meg: %s	message
+This is DANGER ZONE. Be careful changing these parameters as ZEsarUX could stop working normally!!! You have been warned	Ez a VESZÉLYZÓNA. Óvatosan módosítsd ezeket a paramétereket, mert a ZEsarUX leállhat a normál működéssel!!! Figyelmeztettünk	warning
+What do you want?	Mit szeretnél?	question
+Edit event	Esemény szerkesztése	option
+Unassign event	Esemény hozzárendelésének törlése	option
+Edit key	Billentyű szerkesztése	option
+Unassign key	Billentyű hozzárendelésének törlése	option
+You want to set by	Mi alapján szeretnéd beállítani?	question
+Button	Gomb	option
+Event	Esemény	option
+OK. Index reset	OK. Index alaphelyzetbe állítva	message
+Edit action	Művelet szerkesztése	option
+Unassign action	Művelet hozzárendelésének törlése	option
+Button/Axis %s%d already mapped	A gomb/tengely már hozzá van rendelve: %s%d	error
+Press a key. Then open Main Menu (Z) and enjoy the party...	Nyomj meg egy billentyűt. Aztán nyisd meg a Főmenüt (Z), és jó szórakozást...	message
+Press a key. Then press F5 and enjoy the party...	Nyomj meg egy billentyűt. Aztán nyomd meg az F5 billentyűt, és jó szórakozást...	message
+Some video drivers require that you restart ZEsarUX in order for this setting to take effect, like X11	Egyes videomeghajtóknál, például az X11-nél, újra kell indítanod a ZEsarUX-ot, hogy ez a beállítás érvénybe lépjen	warning
+Value out of range. Minimum: 0 Maximum: 32000	Az érték a tartományon kívül esik. Minimum: 0 Maximum: 32000	error
+OK. Events, actions and keys tables set to default values	OK. Az esemény-, művelet- és billentyűtáblák alapértékre állítva	message
+OK. You must reopen ZEsarUX to apply this setting	OK. A beállítás érvényesítéséhez újra kell nyitnod a ZEsarUX-ot	message
+Presets applied	Előbeállítások alkalmazva	message
+Invalid offset	Érvénytelen eltolás	error
+This icon opens the menu and simulate pressing keys specified on the icon parameters\nYou can, for example, send keys 'la' to open Help Menu-> About\nThere's a special key, @, that simulates pressing ESC to close menus	Ez az ikon megnyitja a menüt, és szimulálja az ikon paramétereiben megadott billentyűk lenyomását\nPéldául a 'la' billentyűk elküldésével megnyithatod a Súgó menü-> Névjegy pontot\nVan egy különleges billentyű, a @, amely az ESC lenyomását szimulálja a menük bezárásához	message
+OK. All windows restored to their default positions and sizes	OK. Minden ablak visszaállítva az alapértelmezett helyére és méretére	message
+OK. Restored all first-use messages	OK. Minden első használati üzenet visszaállítva	message
+Invalid value	Érvénytelen érték	error
+File name is: %s	A fájl neve: %s	message
+OK. Configuration saved	OK. Beállítások elmentve	message
+To disable setting saveconf	A saveconf beállítás kikapcsolása	question
+Unknown configuration file	Ismeretlen konfigurációs fájl	warning
+Need to exit. Sure?	Ki kell lépni. Biztos vagy benne?	question
+Error getting config file path	Hiba a konfigurációs fájl elérési útjának lekérésekor	error
+Configuration file deleted. Press enter to close ZEsarUX. You should start ZEsarUX again to generate default configuration	A konfigurációs fájl törölve. Nyomj Entert a ZEsarUX bezárásához. Indítsd újra a ZEsarUX-ot az alapértelmezett konfiguráció létrehozásához	warning
+OK. Path changed	OK. Elérési út módosítva	message
+Can not set audio driver. Restoring to previous driver %s	Nem sikerült beállítani a hangmeghajtót. Visszaállítás az előző meghajtóra: %s	error
+Select:	Válassz:	question
+128 KB	128 KB	option
+256 KB	256 KB	option
+384 KB	384 KB	option
+512 KB	512 KB	option
+640 KB	640 KB	option
+896 KB	896 KB	option
+OK. COPY executed	OK. COPY végrehajtva	message
+Register PC set to the COPY routine. Return to the emulator to let the COPY routine to be run	A PC regiszter a COPY rutinra állítva. Térj vissza az emulátorhoz, hogy a COPY rutin lefusson	message
+Sure? Your normal keyboard won't work on menu	Biztos vagy benne? A normál billentyűzeted nem fog működni a menüben	question
+OK. Clock synchronized	OK. Óra szinkronizálva	message
+Select one	Válassz egyet	question
+ZXN Issue 2, XC6SLX16-2FTG256	ZXN Issue 2, XC6SLX16-2FTG256	option
+ZXN Issue 3, XC6SLX16-2FTG256	ZXN Issue 3, XC6SLX16-2FTG256	option
+ZXN Issue 4, XC7A15T-1CSG324	ZXN Issue 4, XC7A15T-1CSG324	option
+ZXN Issue 5, XC7A35T-2CSG324	ZXN Issue 5, XC7A35T-2CSG324	option
+Invalid brightness value %d	Érvénytelen fényerőérték: %d	error
+Invalid scale value %d	Érvénytelen méretezési érték: %d	error
+Invalid max width value %d	Érvénytelen maximális szélesség: %d	error
+Invalid X-Offset value %d	Érvénytelen X-eltolás: %d	error
+Invalid max height value %d	Érvénytelen maximális magasság: %d	error
+Invalid Y-Offset value %d	Érvénytelen Y-eltolás: %d	error
+Tape being read...	Kazetta olvasása folyamatban...	message
+Sure enable?	Biztosan bekapcsolod?	question
+Image type?	Képfájl típusa?	question
++3DOS compatible	+3DOS kompatibilis	option
+You can only create disks of 1 sides!	Csak 1 oldalas lemezt hozhatsz létre!	error
+You can only create disks of 1 or 2 sides!	Csak 1 vagy 2 oldalas lemezt hozhatsz létre!	error
+Invalid sectors per track number	Érvénytelen sávonkénti szektorszám	error
+One of:	Válassz:	question
+Can not set memory zone to dsk sector	Nem sikerült a memóriaterületet dsk szektorra állítani	error
+Don't know how to expand that file	Nem tudom, hogyan kell kibontani ezt a fájlt	error
+Reload Flash from file?	Újratöltöd a Flash-t fájlból?	question
+OK. MMC file reloaded	OK. MMC fájl újratöltve	message
+OK. Remember to enable DIVMMC paging to load the firmware	OK. Ne feledd bekapcsolni a DIVMMC lapozást a firmware betöltéséhez	message
+Invalid file size	Érvénytelen fájlméret	error
+Using MMC bigger than 1 GB can be very slow	Az 1 GB-nál nagyobb MMC használata nagyon lassú lehet	warning
+Which size?	Mekkora méret?	question
+2 GB	2 GB	option
+4 GB	4 GB	option
+8 GB	8 GB	option
+tbblue.mmc image not found	A tbblue.mmc képfájl nem található	error
+Included or download?	Beépített vagy letöltött?	question
+Use included in ZEsarUX	A ZEsarUX-ba beépített használata	option
+Download from official repo	Letöltés a hivatalos tárolóból	option
+Using IDE bigger than 1 GB can be very slow	Az 1 GB-nál nagyobb IDE használata nagyon lassú lehet	warning
+Load normal rom and reset?	Betöltöd a normál ROM-ot és újraindítod?	question
+Load atomlite rom and reset?	Betöltöd az atomlite ROM-ot és újraindítod?	question
+OK. IDE file reloaded	OK. IDE fájl újratöltve	message
+OK. Remember to enable DIVIDE paging to load the firmware	OK. Ne feledd bekapcsolni a DIVIDE lapozást a firmware betöltéséhez	message
+No text output to find	Nincs szöveges kimenet a kereséshez	warning
+ROM file must be 512 KB length	A ROM fájlnak 512 KB méretűnek kell lennie	error
+Conversion already running	Az átalakítás már fut	error
+Can not create convert audio thread	Nem sikerült létrehozni a hangátalakító szálat	error
+You need to enable threads support to run this	Ennek futtatásához be kell kapcsolnod a szálkezelés támogatását	error
+This tool reads from a ZX81 audio file and converts it to digital format (.p, .p81).\nThe input audio file can be a .raw file (in this case: any sample frequency, mono, 8 bit, unsigned), a .rwa file (15600 Hz, mono, 8 bit, unsigned) but also a .wav file (you will need sox utility configured to read .wav).\nThis tool uses a new algorithm improving the previous algorithm (whis is also available in other menus in ZEsarUX).\nIt runs an autodetection for the best amplitude values and selects which amplitude gives the biggest output file with less errors. After that, the output file (.p or .p81) is generated. If you don't want to use amplitude autodetect, disable it and set desired amplitude.\n\nThis tool works better with real analog tape signals and not so good with perfect tape signal generated with some emulators and tools.\nNote: The input file should not have noise at the beginning, just the tape silence (or almost silence) previous to ZX81 data.\n\nThe keys used in this window are:\n\nF1: This help\ni: Set the input audio file\no: Set the output file\nr: Run conversion\nt: Stop conversion\np: Pause conversion\nnumbers 1..0: Set speed conversion; 1 is slowest, 5 is real time, 0 is fastest\na: Toggle autodetect best amplitude\nb: Invert signal of input audio file\nd: Toggle more debug info; debug messages will be shown on the window, but with a limit of lines. They are also shown on the system console with no limits\ne: Expand output, only available when finishing conversion\nf: Find text on debug output\nm: Smartload output file\nn: Find next text occurence on debug output\ns: Set amplitude when disabled autodetection\nu: Toggle hear sound while running conversion\nshift+u: Toggle precise simulation speed, using more CPU. Note: it doesn't alter conversion, only how you hear audio while running conversion\nw: Open Waveform window. When this window is opened, the input audio file will be shown there. Also, there are some actions that can be executed when this window is opened, see below\n\nThese keys are used when waveform window is opened:\nc: Move waveform to the left\nshift+c: Locate previous error\ng: Select which element to highlight on waveform window: pulse, bit or byte\nshift+g: Move waveform to an exact position\nl: Toggle waveform view to follow conversion\nv: Move waveform to the right\nshift+v: Locate next error\nx: Zoom in\nz: Zoom out\n	Ez az eszköz egy ZX81 hangfájlt olvas be, és digitális formátumra alakítja (.p, .p81).\nA bemeneti hangfájl lehet .raw fájl (ebben az esetben: tetszőleges mintavételi frekvencia, mono, 8 bit, előjel nélküli), .rwa fájl (15600 Hz, mono, 8 bit, előjel nélküli), de .wav fájl is (ehhez a .wav olvasására beállított sox segédprogram kell).\nAz eszköz új algoritmust használ, amely a korábbit javítja (a korábbi a ZEsarUX más menüiben is elérhető).\nAutomatikusan felismeri a legjobb amplitúdóértékeket, és azt az amplitúdót választja, amely a legnagyobb, legkevesebb hibát tartalmazó kimeneti fájlt adja. Ezután elkészül a kimeneti fájl (.p vagy .p81). Ha nem akarod használni az amplitúdó automatikus felismerését, kapcsold ki, és állítsd be a kívánt amplitúdót.\n\nAz eszköz valódi analóg kazettajelekkel működik jobban, egyes emulátorok és eszközök által előállított tökéletes kazettajelekkel kevésbé jól.\nMegjegyzés: a bemeneti fájl elején ne legyen zaj, csak a ZX81 adatok előtti kazettacsend (vagy majdnem csend).\n\nAz ablakban használt billentyűk:\n\nF1: Ez a súgó\ni: Bemeneti hangfájl megadása\no: Kimeneti fájl megadása\nr: Átalakítás indítása\nt: Átalakítás leállítása\np: Átalakítás szüneteltetése\nszámok 1..0: Átalakítási sebesség; 1 a leglassabb, 5 valós idejű, 0 a leggyorsabb\na: A legjobb amplitúdó automatikus felismerése be/ki\nb: A bemeneti hangfájl jelének invertálása\nd: Több hibakeresési információ be/ki; a hibakeresési üzenetek az ablakban jelennek meg, de korlátozott számú sorban. A rendszerkonzolon korlátozás nélkül is megjelennek\ne: Kimenet kibontása, csak az átalakítás befejezésekor érhető el\nf: Szöveg keresése a hibakeresési kimenetben\nm: A kimeneti fájl okos betöltése\nn: A szöveg következő előfordulásának keresése a hibakeresési kimenetben\ns: Amplitúdó beállítása kikapcsolt automatikus felismerésnél\nu: Hang hallgatása átalakítás közben be/ki\nshift+u: Pontos szimulációs sebesség be/ki, több CPU-t használ. Megjegyzés: az átalakítást nem befolyásolja, csak azt, hogyan hallod a hangot átalakítás közben\nw: A Hullámforma ablak megnyitása. Ha ez az ablak nyitva van, ott látható a bemeneti hangfájl. Nyitott ablaknál néhány művelet is végrehajtható, lásd alább\n\nEzek a billentyűk nyitott hullámforma ablaknál használhatók:\nc: Hullámforma mozgatása balra\nshift+c: Előző hiba megkeresése\ng: A hullámforma ablakban kiemelendő elem kiválasztása: impulzus, bit vagy bájt\nshift+g: Hullámforma mozgatása pontos pozícióra\nl: A hullámforma nézet kövesse-e az átalakítást (be/ki)\nv: Hullámforma mozgatása jobbra\nshift+v: Következő hiba megkeresése\nx: Nagyítás\nz: Kicsinyítés\n	message
+ROM file must be 32 KB length	A ROM fájlnak 32 KB méretűnek kell lennie	error
+Flash file must be 512 KB length	A Flash fájlnak 512 KB méretűnek kell lennie	error
+Clear all data	Minden adat törlése	option
+Only format	Csak formázás	option
+Side A	A oldal	option
+Side A & B	A és B oldal	option
+Really Sure?	Tényleg biztos vagy benne?	question
+Ok. Device has been formatted	Ok. Az eszköz formázva	message
+Too many entries. Showing only the allowed in memory	Túl sok bejegyzés. Csak a memóriában elférők láthatók	error
+Error converting input file. Target file not found	Hiba a bemeneti fájl átalakításakor. A célfájl nem található	error
+Unable to open audio file %s	Nem sikerült megnyitni a hangfájlt: %s	error
+This tool reads from a HiLow Tape Audio file and converts it to Data Drive Hilow image file (.ddh) that can be used on ZEsarUX.\nThe input audio file can be a .raw file (in this case: 44100 Hz, mono, 8 bit, unsigned) but also a .wav file (you will need sox utility configured to read .wav).\nThe input audio file must be divided on two files: one from the side A, and the other one from the side B.\nThe sector being read is enabled as a Memory Zone, that you may see using the Hexadecimal Editor, for example.\n\nThe keys used in this window are:\n\nF1: This help\ni: Set the input audio file\no: Set the output audio file\nr: Run conversion\ns: Stop conversion\np: Pause conversion\nl: Set speed conversion to very slow (1 audio frame every 80ms)\nw: Set speed conversion to slow (1 audio frame every 20ms)\n1: Set speed conversion to realtime (1x)\n2: Set speed conversion to 2x\n4: Set speed conversion to 4x\n8: Set speed conversion to 8x\nb: You must set this for B-side audio files. This setting must be set before start running the conversion. It seems that the B-side will only be correctly read if it was formatted only once; however, I haven't tested it too much so maybe you have luck reading B-side ;)\ng: Invert audio input signal ('mirror' vertically), needed for some tapes\nt: Change noise filter threshold, higher values means increase noise reduction\nd: Enable adaptative algorithm, which adjusts bit width depending on the S_START_BYTE signal.\nc: Autocorrect. Try to fix read errors depending on S_START_BYTE signal, useful for bad quality audio tapes\nu: Enable sound. You may use the Waveform Window to see the signal; the Scroll shape mode from that window shows detailed wave using slow speed or very slow.\na: Automatic mode. Do not ask anything to the user and convert all the sectors; in non-automatic mode, after every sector you will be asked about what you want to do.\nm: Show microseconds instead of audio frames on the Elapsed field.\n\nAfter each sector, and if you don't enable automatic mode, you will be asked about what you want to do:\n\ne: Repeat sector: in case you have changed some settings and want to read the sector again.\nv: Save sector: saves sector to a temporary memory. The final ddh file will be saved after all input data has been read.\nn: Next sector: do not save the current sector\nh: Change sector: the sector number will be read from the sector data itself; you may change it in case the read sector is not right.\n\nNote: in case the sector number is suspected to be wrong (comparing it to the sector marks on an A-side file) you will be warned with a message like: 'Probably sector mismatch!'	Ez az eszköz egy HiLow kazetta hangfájlját olvassa be, és Data Drive Hilow képfájllá (.ddh) alakítja, amely a ZEsarUX-ban használható.\nA bemeneti hangfájl lehet .raw fájl (ebben az esetben: 44100 Hz, mono, 8 bit, előjel nélküli), de .wav fájl is (ehhez a .wav olvasására beállított sox segédprogram kell).\nA bemeneti hangot két fájlra kell bontani: az egyik az A oldalé, a másik a B oldalé.\nAz éppen olvasott szektor memóriaterületként érhető el, amelyet például a Hexadecimális szerkesztővel nézhetsz meg.\n\nAz ablakban használt billentyűk:\n\nF1: Ez a súgó\ni: Bemeneti hangfájl megadása\no: Kimeneti hangfájl megadása\nr: Átalakítás indítása\ns: Átalakítás leállítása\np: Átalakítás szüneteltetése\nl: Nagyon lassú átalakítási sebesség (80 ms-onként 1 hangkeret)\nw: Lassú átalakítási sebesség (20 ms-onként 1 hangkeret)\n1: Valós idejű átalakítási sebesség (1x)\n2: 2x átalakítási sebesség\n4: 4x átalakítási sebesség\n8: 8x átalakítási sebesség\nb: B oldali hangfájloknál ezt be kell állítani, mégpedig az átalakítás indítása előtt. Úgy tűnik, a B oldal csak akkor olvasható be helyesen, ha csak egyszer formázták; ezt viszont nem nagyon teszteltem, úgyhogy lehet, hogy szerencséd lesz a B oldal beolvasásával ;)\ng: A bemeneti hangjel invertálása (függőleges 'tükrözés'), egyes kazettáknál szükséges\nt: A zajszűrő küszöbének módosítása, a nagyobb érték erősebb zajcsökkentést jelent\nd: Adaptív algoritmus bekapcsolása, amely az S_START_BYTE jel alapján igazítja a bitszélességet.\nc: Automatikus javítás. Az S_START_BYTE jel alapján megpróbálja kijavítani az olvasási hibákat, rossz minőségű kazettáknál hasznos\nu: Hang bekapcsolása. A jelet a Hullámforma ablakban nézheted meg; az ablak Scroll alak módja lassú vagy nagyon lassú sebességnél részletes hullámformát mutat.\na: Automatikus mód. Nem kérdez semmit, és az összes szektort átalakítja; nem automatikus módban minden szektor után megkérdezi, mit szeretnél tenni.\nm: Az Eltelt mezőben hangkeretek helyett mikroszekundumok mutatása.\n\nMinden szektor után, ha nem kapcsoltad be az automatikus módot, megkérdezi, mit szeretnél tenni:\n\ne: Szektor ismétlése: ha módosítottál néhány beállítást, és újra be akarod olvasni a szektort.\nv: Szektor mentése: a szektort ideiglenes memóriába menti. A végleges ddh fájl az összes bemeneti adat beolvasása után kerül mentésre.\nn: Következő szektor: az aktuális szektort nem menti\nh: Szektor módosítása: a szektorszám magából a szektoradatból olvasódik ki; módosíthatod, ha a beolvasott szektorszám nem helyes.\n\nMegjegyzés: ha a szektorszám valószínűleg hibás (egy A oldali fájl szektorjelöléseihez képest), erre egy ilyen üzenet figyelmeztet: 'Probably sector mismatch!'	message
+Can not create HiLow convert audio thread	Nem sikerült létrehozni a HiLow hangátalakító szálat	error
+Error canceling thread	Hiba a szál megszakításakor	error
+This window needs pthreads enabled	Ehhez az ablakhoz be kell kapcsolni a pthreads támogatást	warning
+No input file selected	Nincs kiválasztva bemeneti fájl	error
+No output file selected	Nincs kiválasztva kimeneti fájl	error
+Can't find my software	Nem találom a szoftveremet	error
+Remove from list	Eltávolítás a listából	option
+No change	Nincs változás	option
+OK. File has been renamed	OK. A fájl átnevezve	message
+Tape copier %s not found	A kazettamásoló nem található: %s	error
+This window is a raw map of the microdrive. It means that you can see positions on microdrive where data is stored but also zones that don't have any data (gaps, zones when the head has erased the data but not written anything)\n\nThe map is refreshed continuosly, if you write data to the microdrive for example, the changes are shown on this window.\n\nEvery position on the map has different color, depending on the type:\n- Data has blue color. If reading that Data, the color is cyan. If writing, the color is red\n- Gap has white color. If reading that Data, the color is bright white. If writing, the color is red\n- Bad position has magenta color. If reading that Data, the color is bright magenta. If writing, the color is red\n- Head position is shown in black color\n- Sync bytes have yellow color. If reading or writing, change to same color as Data. Sync bytes are this sequence of bytes: 00 00 00 00 00 00 FF FF. They are just like regular data, but they are used by the interface 1 rom to know when a sector begins or when the data in that sector begins\n\nThere are several zoom levels which means:\n1X: Every position on the microdrive (1 byte or 1 gap) is shown by one pixel on the map\n2X: Every position on the microdrive is shown by a square of 2x2 on the map\n4X: Every position on the microdrive is shown by a square of 4x4 on the map\n8X: Every position on the microdrive is shown by a square of 8x8 on the map; this zoom level also allows to 'see' a byte representation: for example if byte at position has value 255 you will see a horizontal line of 8 pixels width, or if byte at position has value 128, you will see a pixel at the left part of the square\n16X: Every position on the microdrive is shown by a square of 16x16 on the map; this zoom level also shows you the byte value at position (hexadecimal or ascii)\n0.5X: Every 2 positions on the microdrive are shown by one pixel on the map\n0.25X: Every 4 positions on the microdrive are shown by one pixel on the map\n0.125X: Every 8 positions on the microdrive are shown by one pixel on the map\n0.0625X: Every 16 positions on the microdrive are shown by one pixel on the map\n\nThe following keys are valid on the map:\nm: Select microdrive\nz: Zoom out\nx: Zoom in\nc: Show ascii character at position instead of hexadecimal (when zoom 16X)\na: Autoscroll. Move map to where the microdrive head position is\nh: Show microdrive head position\ns: Highlight sync bytes\n\nApart from these keys, by using the arrow keys, PgUp/Down, you can scroll the map conveniently.\n	Ez az ablak a microdrive nyers térképe. Láthatod rajta a microdrive azon pozícióit, ahol adat van tárolva, de azokat a zónákat is, ahol nincs adat (rések, illetve olyan zónák, ahol a fej törölte az adatot, de nem írt semmit)\n\nA térkép folyamatosan frissül: ha például adatot írsz a microdrive-ra, a változások megjelennek ebben az ablakban.\n\nA térképen minden pozíció színe a típusától függ:\n- Az adat kék színű. Az adat olvasásakor a szín cián, íráskor piros\n- A rés fehér színű. Olvasásakor a szín élénkfehér, íráskor piros\n- A hibás pozíció bíbor színű. Olvasásakor a szín élénkbíbor, íráskor piros\n- A fej pozíciója fekete színnel látszik\n- A szinkronbájtok sárgák. Olvasáskor vagy íráskor az adatéval megegyező színűre váltanak. A szinkronbájtok a következő bájtsorozat: 00 00 00 00 00 00 FF FF. Ugyanolyanok, mint a normál adatok, de az Interface 1 ROM ezekből tudja, hol kezdődik egy szektor, illetve hol kezdődnek a szektoron belül az adatok\n\nTöbb nagyítási szint van, ezek jelentése:\n1X: A microdrive minden pozíciója (1 bájt vagy 1 rés) egy képpontként jelenik meg a térképen\n2X: A microdrive minden pozíciója egy 2x2-es négyzetként jelenik meg a térképen\n4X: A microdrive minden pozíciója egy 4x4-es négyzetként jelenik meg a térképen\n8X: A microdrive minden pozíciója egy 8x8-as négyzetként jelenik meg a térképen; ezen a nagyítási szinten a bájt ábrázolása is 'látható': például ha a pozíción lévő bájt értéke 255, egy 8 képpont széles vízszintes vonalat látsz, ha pedig 128, egy képpontot látsz a négyzet bal oldalán\n16X: A microdrive minden pozíciója egy 16x16-os négyzetként jelenik meg a térképen; ez a nagyítási szint a pozíción lévő bájt értékét is mutatja (hexadecimálisan vagy ASCII-ként)\n0.5X: A microdrive minden 2 pozíciója egy képpontként jelenik meg a térképen\n0.25X: A microdrive minden 4 pozíciója egy képpontként jelenik meg a térképen\n0.125X: A microdrive minden 8 pozíciója egy képpontként jelenik meg a térképen\n0.0625X: A microdrive minden 16 pozíciója egy képpontként jelenik meg a térképen\n\nA térképen a következő billentyűk használhatók:\nm: Microdrive kiválasztása\nz: Kicsinyítés\nx: Nagyítás\nc: ASCII karakter mutatása a pozíción hexadecimális helyett (16X nagyításnál)\na: Automatikus görgetés. A térképet oda mozgatja, ahol a microdrive feje áll\nh: A microdrive fejpozíciójának mutatása\ns: Szinkronbájtok kiemelése\n\nEzeken a billentyűkön kívül a nyílbillentyűkkel és a PgUp/Down billentyűkkel kényelmesen görgetheted a térképet.\n	message
+Visual Memory window is opened. It may generate bad behaviour on Microdrive Raw Map having that window opened	A Vizuális memória ablak nyitva van. Ha nyitva marad, a Microdrive nyers térkép hibásan működhet	warning
+OK. Microdrive has been erased	OK. A microdrive törölve	message
+OK. Microdrive has been stretched	OK. A microdrive kinyújtva	message
+Left room	Kiléptél a szobából	message
+You don't have permissions to send messages	Nincs jogosultságod üzenetet küldeni	error
+Room joined	Beléptél a szobába	message
+Connection has not finished yet	A kapcsolódás még nem fejeződött be	warning
+Too many selected keys	Túl sok kiválasztott billentyű	error
+Send thread has not finished yet	A küldő szál még nem fejeződött be	error
+Select	Kiválasztás	question
+Latency is: %s	Késleltetés: %s	message
+Kind	Típus	question
+Read only	Csak olvasás	option
+All	Mind	option
+You must set your nickname	Meg kell adnod a beceneved	error
+Room is already created	A szoba már létre van hozva	error
+Created room and joined as master	Szoba létrehozva, mesterként léptél be	message
+Room is not created	A szoba nincs létrehozva	error
+Password can not be blank	A jelszó nem lehet üres	error
+Rejoined as master	Újra beléptél mesterként	message
+Empty response	Üres válasz	error
+Nickname not allowed	A becenév nem engedélyezett	error
+Room destroyed	Szoba megszüntetve	message
+Pthreads unavailable but trying to use TCP/IP sockets	A Pthreads nem érhető el, de TCP/IP socketeket próbálsz használni	error
+Too many ZEsarUX open sockets (%d)	Túl sok nyitott ZEsarUX socket (%d)	error
+Error reading ZXPAND rom. Disabling ZXpand	Hiba a ZXpand ROM olvasásakor. A ZXpand kikapcsolva	error
+Calling lee_puerto function on a MK14 machine. TODO fix it!	A lee_puerto függvény hívása MK14 gépen. TODO: javítani!	error
+Error seeking to the start of file to update header	Hiba a fájl elejére ugráskor a fejléc frissítéséhez	error
+Unable to open zxprinter bitmap file %s	Nem sikerült megnyitni a zxprinter bitkép fájlt: %s	error
+Unable to open zxprinter OCR file %s	Nem sikerült megnyitni a zxprinter OCR fájlt: %s	error
+Invalid action %s	Érvénytelen művelet: %s	error
+Joystick actions list full. Maximum %d	A joystick-műveletek listája megtelt. Maximum: %d	error
+Button %s already mapped	A gomb már hozzá van rendelve: %s	error
+Button already mapped	A gomb már hozzá van rendelve	error
+Invalid joystick type %s	Érvénytelen joysticktípus: %s	error
+Unknown event %s	Ismeretlen esemény: %s	error
+Maximum defined joystick to keys defined (%d)	Elérted a joystick–billentyű hozzárendelések maximumát (%d)	error
+couldn't get flags from joystick device: %s	Nem sikerült lekérni a joystick eszköz jelzőit: %s	error
+couldn't set joystick device non-blocking: %s	Nem sikerült nem blokkolóra állítani a joystick eszközt: %s	error
+Error reading real joystick. Disabling it	Hiba a valódi joystick olvasásakor. Kikapcsolva	error
+Unknown machine type %d	Ismeretlen géptípus: %d	error
+Can not set ZX80/81 standard ram to %d kb	Nem állítható be a ZX80/81 standard RAM %d kb-ra	error
+Stdout char filter out of range: %d	A stdout karakterszűrő tartományon kívül: %d	error
+Joystick type out of range: %d	A joysticktípus tartományon kívül: %d	error
+Snapshot had an EPROM or Flash card on Slot 3. It is NOT loaded. You must insert it manually	A pillanatképben EPROM vagy Flash kártya volt a 3. slotban. Ez NINCS betöltve. Kézzel kell behelyezned	error
+Unknown SP signature: 0x%x 0x%x	Ismeretlen SP aláírás: 0x%x 0x%x	error
+Unable to get status of file %s	Nem sikerült lekérdezni a fájl állapotát: %s	error
+.SNA file corrupt	A .SNA fájl sérült	error
+Saved Amstrad +2A (ROM v4.1) as Z80 snapshot. It will be loaded as Amstrad +2A (ROM v4.0), so it may fail	Az Amstrad +2A (ROM v4.1) Z80 pillanatképként mentve. Amstrad +2A (ROM v4.0) gépként töltődik be, így előfordulhat, hogy nem működik	error
+Saved Amstrad +2A (Spanish ROM) as Z80 snapshot. It will be loaded as Amstrad +2A (ROM v4.0), so it may fail	Az Amstrad +2A (spanyol ROM) Z80 pillanatképként mentve. Amstrad +2A (ROM v4.0) gépként töltődik be, így előfordulhat, hogy nem működik	error
+Saved Amstrad +3 (ROM v4.1) as Z80 snapshot. It will be loaded as Amstrad +3 (ROM v4.0), so it may fail	Az Amstrad +3 (ROM v4.1) Z80 pillanatképként mentve. Amstrad +3 (ROM v4.0) gépként töltődik be, így előfordulhat, hogy nem működik	error
+Saved Amstrad +3 (Spanish ROM) as Z80 snapshot. It will be loaded as Amstrad +3 (ROM v4.0), so it may fail	Az Amstrad +3 (spanyol ROM) Z80 pillanatképként mentve. Amstrad +3 (ROM v4.0) gépként töltődik be, így előfordulhat, hogy nem működik	error
+.Z80 Snapshot not supported on machine %s	A .Z80 pillanatkép nem támogatott ezen a gépen: %s	error
+Error writing snapshot file %s	Hiba a pillanatképfájl írásakor: %s	error
+Header with %d bytes unknown	Ismeretlen fejléc, hossza %d bájt	error
+128k + If.1 is not emulated yet. Setting to Spectrum 128k	A 128k + If.1 még nincs emulálva. Beállítás Spectrum 128k-ra	error
+128k + M.G.T. is not emulated yet. Setting to Spectrum 128k	A 128k + M.G.T. még nincs emulálva. Beállítás Spectrum 128k-ra	error
+Didaktik-Kompakt is not emulated yet. Setting to Spectrum 128k	A Didaktik-Kompakt még nincs emulálva. Beállítás Spectrum 128k-ra	error
+Z80 snapshot page number %d unknown	Ismeretlen Z80 pillanatkép lapszám: %d	error
+Z80 snapshot page number %d unknown. Block length: %d, compressed: %s	Ismeretlen Z80 pillanatkép lapszám: %d. Blokkhossz: %d, tömörített: %s	error
+Page number %d unsupported	Nem támogatott lapszám: %d	error
+Machine %s not supported on ZX snapshot	A gép nem támogatott ZX pillanatképben: %s	error
+Machine %s not supported on ZX snapshot version %d	A gép (%s) nem támogatott ebben a ZX pillanatkép-verzióban: %d	error
+.ZX Snapshot not supported on machine %s	A .ZX pillanatkép nem támogatott ezen a gépen: %s	error
+Error allocating memory buffer on save	Hiba a memóriapuffer lefoglalásakor mentés közben	error
+SP snapshots are only for Spectrum 48k models	Az SP pillanatképek csak Spectrum 48k modellekhez valók	error
+SNA snapshots are only allowed on Spectrum machines	Az SNA pillanatképek csak Spectrum gépeken engedélyezettek	error
+SNA snapshot only work well on 48k and 128k/+2 models	Az SNA pillanatkép csak 48k és 128k/+2 modelleken működik jól	warning
+ACE snapshots are only for Jupiter ace	Az ACE pillanatképek csak Jupiter Ace-hez valók	error
+Snapshot format of file %s not supported	A fájl pillanatkép-formátuma nem támogatott: %s	error
+Error reading %d bytes of header	Hiba a fejléc %d bájtjának olvasásakor	error
+Unknown ZX signature: 0x%x 0x%x	Ismeretlen ZX aláírás: 0x%x 0x%x	error
+Unknown ZX version: %d. Trying to load anyway	Ismeretlen ZX verzió: %d. Megpróbálom így is betölteni	error
+Unknown ZX version: %d	Ismeretlen ZX verzió: %d	error
+Unknown NEX signature: 0x%x 0x%x 0x%x 0x%x	Ismeretlen NEX aláírás: 0x%x 0x%x 0x%x 0x%x	error
+Unsupported snapshot version. Loading it anyway	Nem támogatott pillanatkép-verzió. Betöltés így is	error
+ESXDOS handler: Error running fseek system call	ESXDOS kezelő: hiba az fseek rendszerhívás futtatásakor	error
+Snapshot uses NextOS file handler. You should enable esxdos handler before loading it	A pillanatkép a NextOS fájlkezelőt használja. Betöltés előtt kapcsold be az esxdos kezelőt	error
+Snapshots in RAM are not enabled. Go to menu Snapshot->Snapshots to RAM and enable it	A Pillanatképek a RAM-ban nincs bekapcsolva. Kapcsold be a Pillanatkép->Pillanatképek a RAM-ban menüben	error
+RZX file is empty	Az RZX fájl üres	error
+Unable to open rzx file	Nem sikerült megnyitni az rzx fájlt	error
+Error reading RZX file	Hiba az RZX fájl olvasásakor	error
+RZX header invalid	Érvénytelen RZX fejléc	error
+RZX: Error uncompressing snapshot	RZX: hiba a pillanatkép kitömörítésekor	error
+Unknown snapshot type %s	Ismeretlen pillanatkép-típus: %s	error
+Unknown RZX block type %d	Ismeretlen RZX blokktípus: %d	error
+Trying to read beyond rzx file. Asked: %d Total memory: %d	Olvasási kísérlet az rzx fájl végén túl. Kért: %d Teljes memória: %d	error
+RZX: Can't support reading non 0x80 blocks when the first has appeared	RZX: nem 0x80 típusú blokkok olvasása nem támogatott az első megjelenése után	error
+RZX: Can not read encrypted block	RZX: titkosított blokk nem olvasható	error
+RZX: Error uncompressing data	RZX: hiba az adatok kitömörítésekor	error
+RZX: Can not read uncompressed block	RZX: a kitömörített blokk nem olvasható	error
+Trying to read beyond rzx file. Asked: %d Size rzx: %d	Olvasási kísérlet az rzx fájl végén túl. Kért: %d Rzx mérete: %d	error
+Error creating target file	Hiba a célfájl létrehozásakor	error
+Unknown snapshot type: %02XH	Ismeretlen pillanatkép-típus: %02XH	error
+Unsupported SPG file ver.0.x. TO-DO!	Nem támogatott SPG fájl, 0.x verzió. TO-DO!	error
+Snapshot too big	A pillanatkép túl nagy	error
+Unknown snapshot signature	Ismeretlen pillanatkép-aláírás	error
+Length uncompressed (%d) is not expected length (%d). It should not happen!	A kitömörített hossz (%d) nem a várt hossz (%d). Ennek nem kellene előfordulnia!	error
+Snapshot uses more ay chips than we have (%d), ignoring this ZSF_AYCHIP block	A pillanatkép több AY chipet használ, mint amennyi van (%d), ez a ZSF_AYCHIP blokk kihagyva	error
+Error reading snapshot file %s	Hiba a pillanatképfájl olvasásakor: %s	error
+Invalid ZSF file, small magic header	Érvénytelen ZSF fájl, túl rövid magic fejléc	error
+Invalid ZSF file, invalid magic header	Érvénytelen ZSF fájl, érvénytelen magic fejléc	error
+Error reading snapshot file. Read: %u Expected: 6	Hiba a pillanatképfájl olvasásakor. Olvasva: %u Várt: 6	error
+Error allocation memory reading ZSF file	Memóriafoglalási hiba a ZSF fájl olvasásakor	error
+Error reading snapshot file. Read: %u Expected: %u	Hiba a pillanatképfájl olvasásakor. Olvasva: %u Várt: %u	error
+Unknown ZSF Block ID: %u. Continue anyway	Ismeretlen ZSF blokkazonosító: %u. Folytatás így is	error
+Error allocating memory	Hiba a memória lefoglalásakor	error
+Error allocating Didaktik Gama ZSF RAM block	Hiba a Didaktik Gama ZSF RAM blokk lefoglalásakor	error
+Load error	Betöltési hiba	error
+Unable to open ROM file	Nem sikerült megnyitni a ROM fájlt	error
+Error reading general sound rom	Hiba a General Sound ROM olvasásakor	error
+Unable to load qsound rom	Nem sikerült betölteni a qsound ROM-ot	error
+Error writing dump ram file	Hiba a RAM-dump fájl írásakor	error
+Error using video output driver %s. Fallback to null	Hiba a videokimeneti meghajtó használatakor: %s. Visszaállás null-ra	error
+Invalid value for zoom: %d	Érvénytelen nagyítási érték: %d	error
+Invalid effect %s	Érvénytelen effekt: %s	error
+Invalid effect for follow mouse: %s	Érvénytelen effekt az egérkövetéshez: %s	error
+Effect %s does not have follow mouse setting	Az effektnek nincs egérkövetési beállítása: %s	error
+Invalid effect for intensity setting: %s	Érvénytelen effekt az intenzitás beállításhoz: %s	error
+Effect %s does not have intensity setting	Az effektnek nincs intenzitás beállítása: %s	error
+Intensity for effect %s out of range	Az effekt intenzitása tartományon kívül: %s	error
+Invalid effect for angle setting: %s	Érvénytelen effekt a szög beállításhoz: %s	error
+Angle for effect %s out of range	Az effekt szöge tartományon kívül: %s	error
+Invalid effect for percentage setting: %s	Érvénytelen effekt a százalék beállításhoz: %s	error
+Percentage for effect %s out of range	Az effekt százaléka tartományon kívül: %s	error
+Invalid effect for file setting: %s	Érvénytelen effekt a fájl beállításhoz: %s	error
+Invalid effect for transparent color setting: %s	Érvénytelen effekt az átlátszó szín beállításhoz: %s	error
+Color for effect %s out of range	Az effekt színe tartományon kívül: %s	error
+Invalid effect for transparent rectangle setting: %s	Érvénytelen effekt az átlátszó téglalap beállításhoz: %s	error
+Transparent Rectagle Parameters for effect %s out of range	Az effekt átlátszó téglalap paraméterei tartományon kívül: %s	error
+Invalid effect for channel setting: %s	Érvénytelen effekt a csatorna beállításhoz: %s	error
+Channel for effect %s out of range	Az effekt csatornája tartományon kívül: %s	error
+Invalid effect for frames setting: %s	Érvénytelen effekt a képkockák beállításhoz: %s	error
+Frames for effect %s out of range	Az effekt képkockái tartományon kívül: %s	error
+Invalid effect for speed setting: %s	Érvénytelen effekt a sebesség beállításhoz: %s	error
+Speed for effect %s out of range	Az effekt sebessége tartományon kívül: %s	error
+Invalid effect for rgb setting: %s	Érvénytelen effekt az rgb beállításhoz: %s	error
+Invalid effect for sizes setting: %s	Érvénytelen effekt a méretek beállításhoz: %s	error
+Sizes for effect %s out of range	Az effekt méretei tartományon kívül: %s	error
+Invalid effect for leftright border setting: %s	Érvénytelen effekt a bal-jobb keret beállításhoz: %s	error
+Invalid effect for updown border setting: %s	Érvénytelen effekt a fel-le keret beállításhoz: %s	error
+Invalid effect for leftright zoom setting: %s	Érvénytelen effekt a bal-jobb nagyítás beállításhoz: %s	error
+Left Right Zoom for effect %s out of range	Az effekt bal-jobb nagyítása tartományon kívül: %s	error
+Invalid effect for updown zoom setting: %s	Érvénytelen effekt a fel-le nagyítás beállításhoz: %s	error
+Up Down Zoom for effect %s out of range	Az effekt fel-le nagyítása tartományon kívül: %s	error
+Invalid effect for leftright blur setting: %s	Érvénytelen effekt a bal-jobb elmosás beállításhoz: %s	error
+Left Right Blur for effect %s out of range	Az effekt bal-jobb elmosása tartományon kívül: %s	error
+Invalid effect for updown blur setting: %s	Érvénytelen effekt a fel-le elmosás beállításhoz: %s	error
+Up Down Blur for effect %s out of range	Az effekt fel-le elmosása tartományon kívül: %s	error
+Invalid effect for attraction setting: %s	Érvénytelen effekt a vonzás beállításhoz: %s	error
+Attraction value for effect %s out of range	Az effekt vonzási értéke tartományon kívül: %s	error
+Invalid effect for offset setting: %s	Érvénytelen effekt az eltolás beállításhoz: %s	error
+Offset for effect %s out of range	Az effekt eltolása tartományon kívül: %s	error
+Invalid effect for circular setting: %s	Érvénytelen effekt a körkörös beállításhoz: %s	error
+Invalid effect for incremental setting: %s	Érvénytelen effekt a növekményes beállításhoz: %s	error
+Invalid effect for continuous setting: %s	Érvénytelen effekt a folyamatos beállításhoz: %s	error
+Enabling ZX Desktop is forbidden	A ZX Desktop bekapcsolása tiltott	error
+Invalid value for ZX Desktop width	Érvénytelen érték a ZX Desktop szélességéhez	error
+Invalid value for ZX Desktop height	Érvénytelen érték a ZX Desktop magasságához	error
+Invalid value for ZX Desktop fill type\n	Érvénytelen érték a ZX Desktop kitöltési típusához\n	error
+Invalid value for ZX Desktop primary fill solid color\n	Érvénytelen érték a ZX Desktop elsődleges egyszínű kitöltéséhez\n	error
+Invalid value for ZX Desktop seconday fill solid color\n	Érvénytelen érték a ZX Desktop másodlagos egyszínű kitöltéséhez\n	error
+Invalid value for ZX Desktop upper buttons background color	Érvénytelen érték a ZX Desktop felső gombjainak háttérszínéhez	error
+Invalid value for ZX Desktop lower buttons background color	Érvénytelen érték a ZX Desktop alsó gombjainak háttérszínéhez	error
+Invalid value for ZX Desktop icon background color	Érvénytelen érték a ZX Desktop ikonjainak háttérszínéhez	error
+Invalid value for ZX Desktop SCR scale factor\n	Érvénytelen érték a ZX Desktop SCR méretezési tényezőjéhez\n	error
+Invalid color for stroke: %d	Érvénytelen körvonalszín: %d	error
+Invalid action for icon: %s	Érvénytelen ikonművelet: %s	error
+Invalid icon status %s	Érvénytelen ikonállapot: %s	error
+Can not add more icons, limit reached: %d	Nem adható hozzá több ikon, elérted a korlátot: %d	error
+Invalid value for character width: %d	Érvénytelen karakterszélesség: %d	error
+Invalid value for character height: %d	Érvénytelen karaktermagasság: %d	error
+Invalid Verbose level\n	Érvénytelen részletességi szint\n	error
+Invalid debug filter type	Érvénytelen hibakeresési szűrőtípus	error
+Invalid CPU percentage	Érvénytelen CPU-százalék	error
+Invalid Emulator speed\n	Érvénytelen emulátorsebesség\n	error
+Invalid value for tbblue-max-turbo-rom\n	Érvénytelen érték: tbblue-max-turbo-rom\n	error
+Invalid value for tbblue-max-turbo-everywhere	Érvénytelen érték: tbblue-max-turbo-everywhere	error
+Invalid RAM value\n	Érvénytelen RAM-érték\n	error
+Invalid threshold value\n	Érvénytelen küszöbérték\n	error
+Invalid extension for eprom/flash card\n	Érvénytelen kiterjesztés az EPROM/flash kártyához\n	error
+Invalid slot number	Érvénytelen slotszám	error
+Invalid extension for eprom/flash card	Érvénytelen kiterjesztés az EPROM/flash kártyához	error
+Invalid FPS value\n	Érvénytelen FPS-érték\n	error
+Invalid --top-menu-hide-item item %d\n	Érvénytelen --top-menu-hide-item elem: %d\n	error
+Invalid --allpixeltotext-scale value\n	Érvénytelen --allpixeltotext-scale érték\n	error
+Invalid --allpixeltotext-width value\n	Érvénytelen --allpixeltotext-width érték\n	error
+Invalid --allpixeltotext-x-offset value\n	Érvénytelen --allpixeltotext-x-offset érték\n	error
+Invalid --allpixeltotext-height value\n	Érvénytelen --allpixeltotext-height érték\n	error
+Invalid --allpixeltotext-y-offset value\n	Érvénytelen --allpixeltotext-y-offset érték\n	error
+Invalid --tv-minimum-accepted-vsync-length value	Érvénytelen --tv-minimum-accepted-vsync-length érték	error
+Invalid --tv-minimum-accepted-vsync-interval value	Érvénytelen --tv-minimum-accepted-vsync-interval érték	error
+Invalid --tv-maximum-scanlines value	Érvénytelen --tv-maximum-scanlines érték	error
+Invalid --tv-maximum-scanline-period value	Érvénytelen --tv-maximum-scanline-period érték	error
+Invalid QL RTC timezone	Érvénytelen QL RTC időzóna	error
+Invalid QL QIMI sensitivity value: %d	Érvénytelen QL QIMI érzékenységi érték: %d	error
+Invalid Keymap value	Érvénytelen billentyűkiosztás-érték	error
+Invalid Optical Input Scanline Threshold value	Érvénytelen optikai bemeneti pásztázósor-küszöbérték	error
+Invalid Kempston Mouse Sensitivity value\n	Érvénytelen Kempston egér érzékenységi érték\n	error
+Unknown key for f-function: %s	Ismeretlen billentyű az f-function számára: %s	error
+Invalid key for f-function: %d	Érvénytelen billentyű az f-function számára: %d	error
+Invalid f-function action: %s	Érvénytelen f-function művelet: %s	error
+Unknown key for f-function-parameters: %s	Ismeretlen billentyű az f-function-parameters számára: %s	error
+Invalid key for f-function-parameters: %d	Érvénytelen billentyű az f-function-parameters számára: %d	error
+Invalid f-function action extra info: %s	Érvénytelen f-function művelet kiegészítő információ: %s	error
+Invalid button %d	Érvénytelen gomb: %d	error
+Invalid button action: %s	Érvénytelen gombművelet: %s	error
+Invalid button\n	Érvénytelen gomb\n	error
+Invalid snapram-interval value. Must be between 1 and 99\n	Érvénytelen snapram-interval érték. 1 és 99 között kell lennie\n	error
+Invalid snapram-max value. Must be between 1 and %d\n	Érvénytelen snapram-max érték. 1 és %d között kell lennie\n	error
+Invalid snapram-rewind-timeout value. Must be between 1 and 99\n	Érvénytelen snapram-rewind-timeout érték. 1 és 99 között kell lennie\n	error
+Unknown char filter	Ismeretlen karakterszűrő	error
+Invalid value for textspeechtimeout	Érvénytelen textspeechtimeout érték	error
+Invalid method for detecting location text\n	Érvénytelen módszer a helyszínleíró szöveg felismeréséhez\n	error
+Invalid microdrive number\n	Érvénytelen microdrive-szám\n	error
+Invalid value for diviface ram size\n	Érvénytelen diviface RAM-méret\n	error
+Invalid value for QL data size for headerless exe: %d	Érvénytelen QL adatméret a fejléc nélküli exe-hez: %d	error
+Invalid margin height value\n	Érvénytelen margómagasság-érték\n	error
+Invalid margin width value\n	Érvénytelen margószélesség-érték\n	error
+Invalid language	Érvénytelen nyelv	error
+Invalid menu mix method\n	Érvénytelen menükeverési módszer\n	error
+Invalid menu transparency value\n	Érvénytelen menüátlátszósági érték\n	error
+Invalid QL aspect ratio	Érvénytelen QL képarány	error
+Invalid value for QL border color	Érvénytelen QL keretszín	error
+Invalid beepermicmode	Érvénytelen beepermicmode	error
+Invalid ay chip value	Érvénytelen AY chip érték	error
+Invalid ay stereo mode value	Érvénytelen AY sztereó mód érték	error
+Invalid ay stereo channel\n	Érvénytelen AY sztereó csatorna\n	error
+Invalid ay stereo channel position value\n	Érvénytelen AY sztereó csatorna pozícióérték\n	error
+Invalid audiodactype\n	Érvénytelen audiodactype\n	error
+Invalid volume value\n	Érvénytelen hangerőérték\n	error
+Invalid length value. Must be between 1 and 1310\n	Érvénytelen hosszérték. 1 és 1310 között kell lennie\n	error
+Invalid length value. Must be between 0 and 60\n	Érvénytelen hosszérték. 0 és 60 között kell lennie\n	error
+Invalid audiopiano-zoom value. Must be between 1 and 3\n	Érvénytelen audiopiano-zoom érték. 1 és 3 között kell lennie\n	error
+Invalid client value. Must be between 0 and 255\n	Érvénytelen kliensérték. 0 és 255 között kell lennie\n	error
+Invalid port value. Must be between 0 and 255\n	Érvénytelen portérték. 0 és 255 között kell lennie\n	error
+Invalid value for onebitspeaker-hifreq-filter-divider. Accepted values from 1 to 15\n	Érvénytelen érték: onebitspeaker-hifreq-filter-divider. Elfogadott értékek: 1–15\n	error
+Invalid value for --onebitspeaker-type\n	Érvénytelen érték: --onebitspeaker-type\n	error
+Invalid Alsa Period size\n	Érvénytelen Alsa periódusméret\n	error
+Invalid Alsa Fifo Buffer size\n	Érvénytelen Alsa FIFO pufferméret\n	error
+Invalid Pulse Period size\n	Érvénytelen Pulse periódusméret\n	error
+Invalid Pulse Fifo Buffer size\n	Érvénytelen Pulse FIFO pufferméret\n	error
+Invalid Coreaudio Fifo Buffer size\n	Érvénytelen Coreaudio FIFO pufferméret\n	error
+Invalid SDL audio sample size\n	Érvénytelen SDL hangminta-méret\n	error
+Invalid SDL Fifo Buffer size\n	Érvénytelen SDL FIFO pufferméret\n	error
+Invalid GUI style: %s\n	Érvénytelen GUI-stílus: %s\n	error
+Invalid charset: %s\n	Érvénytelen karakterkészlet: %s\n	error
+Invalid keylength	Érvénytelen kulcshossz	error
+Invalid port value\n	Érvénytelen portérték\n	error
+Invalid max rooms value\n	Érvénytelen max. szobaszám\n	error
+Invalid max players per rooms value\n	Érvénytelen max. játékosszám szobánként\n	error
+Invalid value for --showfiredbreakpoint\n	Érvénytelen érték: --showfiredbreakpoint\n	error
+Invalid value %d for setting --joystickfirekey\n	Érvénytelen érték (%d) a --joystickfirekey beállításhoz\n	error
+Invalid value %d for setting --joystickfirekey2\n	Érvénytelen érték (%d) a --joystickfirekey2 beállításhoz\n	error
+Invalid value %d for setting --joystickfirekey3\n	Érvénytelen érték (%d) a --joystickfirekey3 beállításhoz\n	error
+Invalid value %d for setting --joystickfirekey4\n	Érvénytelen érték (%d) a --joystickfirekey4 beállításhoz\n	error
+Invalid value %d for setting --realjoystick-calibrate\n	Érvénytelen érték (%d) a --realjoystick-calibrate beállításhoz\n	error
+Invalid value %d for setting --exit-after\n	Érvénytelen érték (%d) az --exit-after beállításhoz\n	error
+Invalid value %d for setting --zeng-remote-port\n	Érvénytelen érték (%d) a --zeng-remote-port beállításhoz\n	error
+Invalid value %d for setting --zeng-snapshot-interval\n	Érvénytelen érték (%d) a --zeng-snapshot-interval beállításhoz\n	error
+Invalid value %d for setting --zeng-snapshot-interval-frames\n	Érvénytelen érték (%d) a --zeng-snapshot-interval-frames beállításhoz\n	error
+Invalid window geometry\n	Érvénytelen ablakgeometria\n	error
+Invalid value %d for setting --tonegenerator\n	Érvénytelen érték (%d) a --tonegenerator beállításhoz\n	error
+Invalid value %d for setting --sensor-set\n	Érvénytelen érték (%d) a --sensor-set beállításhoz\n	error
+Invalid sensor type %s for setting --sensor-set	Érvénytelen szenzortípus (%s) a --sensor-set beállításhoz	error
+Invalid value %d for setting --sensor-set-widget\n	Érvénytelen érték (%d) a --sensor-set-widget beállításhoz\n	error
+Invalid sensor widget type %s for setting --sensor-set-widget	Érvénytelen szenzor widgettípus (%s) a --sensor-set-widget beállításhoz	error
+Invalid value %d for setting --sensor-set-abs\n	Érvénytelen érték (%d) a --sensor-set-abs beállításhoz\n	error
+Unknown setting : %s . Stopping parsing the rest of settings	Ismeretlen beállítás: %s . A többi beállítás feldolgozása leáll	error
+Unknown setting : %s	Ismeretlen beállítás: %s	error
+Error loading source code from file %s	Hiba a forráskód betöltésekor a fájlból: %s	error
+Error initializing midi device	Hiba a MIDI eszköz inicializálásakor	error
+Trying to insert a Z88 slot but current machine is not Z88	Z88 slot behelyezési kísérlet, de az aktuális gép nem Z88	error
+Do you want to send anonymous statistics use? The following information is sent to a server, every time ZEsarUX starts:\n-Public IP Address\n-Autogenerated UUID\n-Total usage time\n-Total number of queries to Speccy and ZX81 online browsers\n-Operating system\n-Emulator version\n-Emulator build number\n	Szeretnél névtelen használati statisztikát küldeni? A ZEsarUX minden indításakor a következő adatok kerülnek elküldésre egy szerverre:\n-Nyilvános IP-cím\n-Automatikusan generált UUID\n-Teljes használati idő\n-A Speccy és ZX81 online böngészőkben végzett lekérdezések teljes száma\n-Operációs rendszer\n-Emulátor verziója\n-Emulátor buildszáma\n	message
+Send statistics	Statisztika küldése	option
+Can not create send_stats_server pthread	Nem sikerült létrehozni a send_stats_server pthreadet	error
+Can not create check_updates pthread	Nem sikerült létrehozni a check_updates pthreadet	error
+Can not create check_yesterday_users pthread	Nem sikerült létrehozni a check_yesterday_users pthreadet	error
+Error reading betadisk rom	Hiba a Betadisk ROM olvasásakor	error
+Unable to open trd file	Nem sikerült megnyitni a trd fájlt	error
+Error reading trd file	Hiba a trd fájl olvasásakor	error
+Error. Trying to access beyond trd. Size: %ld Asked: %u. Disabling TRD	Hiba. Hozzáférési kísérlet a trd végén túl. Méret: %ld Kért: %u. A TRD kikapcsolva	error
+Error writing to TRD file. Disabling write file operations	Hiba a TRD fájl írásakor. A fájlírási műveletek kikapcsolva	error
+Trying to press Dandanator button when it is disabled	A Dandanator gomb megnyomása, miközben ki van kapcsolva	error
+Error reading dandanator rom	Hiba a Dandanator ROM olvasásakor	error
+Trying to enable Dandanator but no ROM file selected	A Dandanator bekapcsolási kísérlete, de nincs ROM fájl kiválasztva	error
+Error reading DIVIFACE firmware	Hiba a DIVIFACE firmware olvasásakor	error
+HiLow: Trying to write to invalid sector %02XH	HiLow: írási kísérlet érvénytelen szektorba: %02XH	error
+HiLow: Trying to read from invalid sector %d	HiLow: olvasási kísérlet érvénytelen szektorból: %d	error
+Error reading hilow rom	Hiba a HiLow ROM olvasásakor	error
+HiLow is not enabled	A HiLow nincs bekapcsolva	error
+Error opening HiLow Data Drive file %s	Hiba a HiLow Data Drive fájl megnyitásakor: %s	error
+Error opening HiLow RAW Data Drive file %s	Hiba a HiLow RAW Data Drive fájl megnyitásakor: %s	error
+Error writing to HiLow file. Disabling write file operations	Hiba a HiLow fájl írásakor. A fájlírási műveletek kikapcsolva	error
+Error writing to HiLow file	Hiba a HiLow fájl írásakor	error
+Error writing to IDE file. Disabling write file operations	Hiba az IDE fájl írásakor. A fájlírási műveletek kikapcsolva	error
+IDE is not enabled. You should not get this message	Az IDE nincs bekapcsolva. Ezt az üzenetet nem kellene látnod	error
+Error opening ide file	Hiba az IDE fájl megnyitásakor	error
+Error reading ide. Asked: %ld Read: %d	Hiba az IDE olvasásakor. Kért: %ld Olvasott: %d	error
+Invalid card size. Maximum 1024 MB	Érvénytelen kártyaméret. Legfeljebb 1024 MB	error
+Invalid card size. Must be one of: 8, 16, 32, 64, 128, 256, 512, 1024 MB	Érvénytelen kártyaméret. A következők egyike lehet: 8, 16, 32, 64, 128, 256, 512, 1024 MB	error
+Error. Trying to write beyond card size. Size: %ld Asked: %u. Disabling IDE	Hiba. Írási kísérlet a kártyaméreten túl. Méret: %ld Kért: %u. Az IDE kikapcsolva	error
+Error reading ifrom rom	Hiba az iFrom ROM olvasásakor	error
+Trying to enable iFrom but no ROM file selected	Az iFrom bekapcsolása nem lehetséges, mert nincs kiválasztva ROM fájl	error
+Trying to press iFrom button when it is disabled	Az iFrom gomb megnyomása nem lehetséges, mert ki van kapcsolva	error
+Error reading kartusho rom	Hiba a Kartusho ROM olvasásakor	error
+Trying to enable Kartusho but no ROM file selected	A Kartusho bekapcsolása nem lehetséges, mert nincs kiválasztva ROM fájl	error
+Trying to press Kartusho button when it is disabled	A Kartusho gomb megnyomása nem lehetséges, mert ki van kapcsolva	error
+Error writing to MMC file. Disabling write file operations	Hiba az MMC fájl írásakor. A fájlírási műveletek kikapcsolva	error
+MMC is not enabled	Az MMC nincs bekapcsolva	error
+Error opening mmc file	Hiba az MMC fájl megnyitásakor	error
+Error reading mmc. Asked: %ld Read: %d	Hiba az MMC olvasásakor. Kért: %ld Olvasott: %d	error
+Error reading mmc header. Asked: %ld Read: %d	Hiba az MMC fejléc olvasásakor. Kért: %ld Olvasott: %d	error
+Error. Trying to write beyond mmc. Size: %ld Asked: %u. Disabling MMC	Hiba. Írási kísérlet az MMC méretén túl. Méret: %ld Kért: %u. Az MMC kikapcsolva	error
+Error getting PD765 buffer beyond limit: %d	Hiba: PD765 puffer olvasása a határon túl: %d	error
+Error putting PD765 buffer beyond limit: %d	Hiba: PD765 puffer írása a határon túl: %d	error
+Error reading samram rom	Hiba a Samram ROM olvasásakor	error
+Trying to enable Samram but no ROM file selected	A Samram bekapcsolása nem lehetséges, mert nincs kiválasztva ROM fájl	error
+Error reading superupgrade rom	Hiba a Superupgrade ROM olvasásakor	error
+Superupgrade is not allowed on this machine	A Superupgrade ezen a gépen nem használható	error
+Trying to enable Superupgrade but no ROM file selected	A Superupgrade bekapcsolása nem lehetséges, mert nincs kiválasztva ROM fájl	error
+Error writing to superupgrade file	Hiba a Superupgrade fájl írásakor	error
+No real tape inserted	Nincs behelyezve valódi kazetta	error
+Unable to open realtape file (for Visual Real Tape): %s	Nem sikerült megnyitni a valódi kazetta fájlt (Visual Real Tape-hez): %s	error
+Unknown input tape type	Ismeretlen bemeneti kazettatípus	error
+Error inserting realtape: %s	Hiba a valódi kazetta behelyezésekor: %s	error
+Tape format not supported	A kazettaformátum nem támogatott	error
+Out Tape format only supported on ZX80 models	Ez a kimeneti kazettaformátum csak ZX80 modelleken támogatott	error
+Out Tape format only supported on ZX81 models	Ez a kimeneti kazettaformátum csak ZX81 modelleken támogatott	error
+Out Tape format not supported	A kimeneti kazettaformátum nem támogatott	error
+Error writing length	Hiba a hossz írásakor	error
+Error writing flag	Hiba a jelző (flag) írásakor	error
+Error writing bytes	Hiba a bájtok írásakor	error
+Error writing checksum	Hiba az ellenőrzőösszeg írásakor	error
+Tape functions uninitialized	A kazettafunkciók nincsenek inicializálva	error
+Unable to open pzx input file %s	Nem sikerült megnyitni a pzx bemeneti fájlt: %s	error
+PZX block seek direction %d not supported	A PZX blokk keresési iránya nem támogatott: %d	error
+Trying to read beyond pzx block: %d	Olvasási kísérlet a pzx blokkon túl: %d	error
+Error converting wav to rwa	Hiba a wav rwa formátumba konvertálásakor	error
+Memory buffer full	A memóriapuffer megtelt	error
+Error converting audio block to tape. Invalid end carry	Hiba a hangblokk kazettává konvertálásakor. Érvénytelen záró átvitel	error
+Unable to open smp input file %s	Nem sikerült megnyitni az smp bemeneti fájlt: %s	error
+tape_block_smp_seek. whence invalid : %d	tape_block_smp_seek. Érvénytelen whence: %d	error
+Error: Program length is zero	Hiba: a program hossza nulla	error
+Unable to open smp input file (on zx8081_lee_todos_bytes) %s	Nem sikerült megnyitni az smp bemeneti fájlt (zx8081_lee_todos_bytes): %s	error
+Another conversion from audio tape to ZX81 data is already running (inserted Real Tape and/or open Tape Viewer). Please try it again some seconds later	Már fut egy másik konvertálás hangkazettáról ZX81 adatra (behelyezett valódi kazetta és/vagy nyitott Kazettanézegető). Próbáld újra néhány másodperc múlva	error
+Read bytes (%d) over ramtop (%d)	A beolvasott bájtok (%d) túllépik a ramtopot (%d)	error
+Unable to open output file %s	Nem sikerült megnyitni a kimeneti fájlt: %s	error
+Unable to open tap input file %s	Nem sikerült megnyitni a tap bemeneti fájlt: %s	error
+Tape uninitialized	A kazetta nincs inicializálva	error
+Unknown TZX Signature	Ismeretlen TZX aláírás	error
+TZX ID 0x%x not supported on standard tape	A TZX ID 0x%x nem támogatott normál kazettán	error
+Unable to open tzx input file %s	Nem sikerült megnyitni a tzx bemeneti fájlt: %s	error
+Error writing to zxmmcplus_flashrom file. Disabling write file operations	Hiba a zxmmcplus_flashrom fájl írásakor. A fájlírási műveletek kikapcsolva	error
+Error reading zxmmc+ flash rom	Hiba a ZXMMC+ flash ROM olvasásakor	error
+Can't open directory %s (full: %s)	Nem sikerült megnyitni a mappát: %s (teljes: %s)	error
+Error reading ZXPAND rom %s. Disabling ZXpand	Hiba a ZXPAND ROM olvasásakor: %s. A ZXpand kikapcsolva	error
+Textspeech functions are not available on this system	A szövegfelolvasási funkciók nem érhetők el ezen a rendszeren	error
+Can not run fork to stop program	Nem sikerült fork-ot indítani a program leállításához	error
+Full path to Text to Speech program %s has spaces. It won't work on Windows.	A szövegfelolvasó program teljes elérési útja (%s) szóközt tartalmaz. Windowson nem fog működni.	error
+Full path to Text to Speech Stop program %s has spaces. It won't work on Windows.	A szövegfelolvasást leállító program teljes elérési útja (%s) szóközt tartalmaz. Windowson nem fog működni.	error
+Can not make pipe to speech for sending text	Nem sikerült pipe-ot létrehozni a szöveg felolvasónak küldéséhez	error
+Can not make pipe to speech for receiving text	Nem sikerült pipe-ot létrehozni a szöveg felolvasótól fogadásához	error
+Can not run fork to speech	Nem sikerült fork-ot indítani a felolvasáshoz	error
+Error writing lockfile %s	Hiba a zárolófájl írásakor: %s	error
+Error writing speechfile %s	Hiba a felolvasási fájl írásakor: %s	error
+Error opening uart bridge %s	Hiba az UART híd megnyitásakor: %s	error
+Error closing uart bridge	Hiba az UART híd lezárásakor	error
+HARDWARE_DEBUG_BYTE_FILE unconfigured	A HARDWARE_DEBUG_BYTE_FILE nincs beállítva	error
+Error opening HARDWARE_DEBUG_BYTE_FILE	Hiba a HARDWARE_DEBUG_BYTE_FILE megnyitásakor	error
+This game will probably crash due to the Inves write-on-interrupt bug (ISR=%02X%02XH, I=%02XH, R=%02XH, IM_MODE=2, IFF1=1)	Ez a játék valószínűleg összeomlik az Inves megszakításkori írási hibája miatt (ISR=%02X%02XH, I=%02XH, R=%02XH, IM_MODE=2, IFF1=1)	error
+File %s does not exist	A fájl nem létezik: %s	error
+Error reading source file	Hiba a forrásfájl olvasásakor	error
+Error creating target file: %s	Hiba a célfájl létrehozásakor: %s	error
+Unable to find sox program: %s	Nem található a sox program: %s	error
+PZX: Can not handle this PZX version	PZX: ez a PZX verzió nem kezelhető	error
+PZX: Error reading source file	PZX: hiba a forrásfájl olvasásakor	error
+PZX: Error creating target file: %s	PZX: hiba a célfájl létrehozásakor: %s	error
+Invalid size for RAW microdrive file	Érvénytelen méret a RAW microdrive fájlhoz	error
+Error opening %s	Hiba a megnyitáskor: %s	error
+Invalid size for MDR microdrive file	Érvénytelen méret az MDR microdrive fájlhoz	error
+Can not open %s	Nem sikerült megnyitni: %s	error
+Error getting size for %s	Hiba a méret lekérdezésekor: %s	error
+Error reading %s	Hiba az olvasáskor: %s	error
+Unable to open Binary file %s	Nem sikerült megnyitni a bináris fájlt: %s	error
+Invalid lightgun %s	Érvénytelen fénypisztoly: %s	error
+Invalid text-keyboard-length value\n	Érvénytelen text-keyboard-length érték\n	error
+Invalid RAM value	Érvénytelen RAM érték	error
+Invalid QL RAM Mem value\n	Érvénytelen QL RAM Mem érték\n	error
+Invalid frameskip value	Érvénytelen frameskip érték	error
+Setting %s not allowed on custom config file	A(z) %s beállítás nem engedélyezett egyéni konfigurációs fájlban	error
+Unknown machine %s	Ismeretlen gép: %s	error
+Can't open directory %s	Nem sikerült megnyitni a mappát: %s	error
+Error. Maximum files in directory reached: %d	Hiba. Elérted a mappában lévő fájlok maximális számát: %d	error
+File too large	A fájl túl nagy	error
+Unable to open file %s	Nem sikerült megnyitni a fájlt: %s	error
+This poke is for a 128k machine and we are not in 128k machine (poke bank: %d)	Ez a poke 128k-s géphez készült, de nem 128k-s gépen vagyunk (poke bank: %d)	error
+Can not poke in ZX-Uno mode with BOOTM enabled	ZX-Uno módban bekapcsolt BOOTM mellett nem lehet poke-olni	error
+Error writing pbm file	Hiba a pbm fájl írásakor	error
+Error truncating file	Hiba a fájl csonkolásakor	error
+Error reading data	Hiba az adatok olvasásakor	error
+Error opening input file %s	Hiba a bemeneti fájl megnyitásakor: %s	error
+Error opening output file %s	Hiba a kimeneti fájl megnyitásakor: %s	error
+Final IDE image too big	A végső IDE lemezkép túl nagy	error
+Unable to open tape %s for extracting tap	Nem sikerült megnyitni a kazettát a tap kibontásához: %s	error
+Tape expander not supported for this tape type	A kibontás nem támogatott ennél a kazettatípusnál	error
+Error reading tape	Hiba a kazetta olvasásakor	error
+MDR expander not supported for this microdrive type	Az MDR kibontás nem támogatott ennél a microdrive típusnál	error
+Unable to open tape %s for extracting mdr	Nem sikerült megnyitni a kazettát az mdr kibontásához: %s	error
+DDH expander not supported for this image type	A DDH kibontás nem támogatott ennél a lemezképtípusnál	error
+Unable to open tape for extracting tzx	Nem sikerült megnyitni a kazettát a tzx kibontásához	error
+Unable to open tape for extracting pzx	Nem sikerült megnyitni a kazettát a pzx kibontásához	error
+Unknown input file to extract scr	Ismeretlen bemeneti fájl az scr kibontásához	error
+File has no SCR screen	A fájlban nincs SCR képernyő	error
+Expander not supported for this file type	A kibontás nem támogatott ennél a fájltípusnál	error
+Unable to open file	Nem sikerült megnyitni a fájlt	error
+Unable to assign memory	Nem sikerült memóriát foglalni	error
+Error reading file	Hiba a fájl olvasásakor	error
+Maximum window geometry config reached (%d)	Elérted az ablakgeometria-beállítások maximális számát (%d)	error
+Error writing output file	Hiba a kimeneti fájl írásakor	error
+Unable to open Screen file	Nem sikerült megnyitni a képernyőfájlt	error
+Unable to open bmp file %s	Nem sikerült megnyitni a bmp fájlt: %s	error
+Maximum files reached: (%d)	Elérted a fájlok maximális számát: (%d)	error
+Destination must not include 0:/ prefix	A cél nem tartalmazhat 0:/ előtagot	error
+No mmc file name set using --copy-file-to-mmc	Nincs megadva MMC fájlnév a --copy-file-to-mmc használatához	error
+Error %d mounting image %s: %s	Hiba (%d) a lemezkép csatolásakor: %s: %s	error
+Error desmontando imagen : %d\n	Hiba a lemezkép leválasztásakor: %d\n	error
+Error converting input file	Hiba a bemeneti fájl konvertálásakor	error
+Do not know how to browse this file	Ez a fájl nem tallózható	error
+Error opening file (on util_realtape_browser): %s	Hiba a fájl megnyitásakor (util_realtape_browser): %s	error
+Do not know how to convert this file to P/O	Ez a fájl nem konvertálható P/O formátumba	error
+Unable to open rwa file: %s	Nem sikerült megnyitni az rwa fájlt: %s	error
+Do not know how to convert this file to P/P81	Ez a fájl nem konvertálható P/P81 formátumba	error
+Maximum history lines reached: %d	Elérted az előzménysorok maximális számát: %d	error
+Label [%s] length exceeds limit (%d). Truncating it	A(z) [%s] címke hossza túllépi a korlátot (%d). Csonkolva	error
+Unable to open keyboard input file %s	Nem sikerült megnyitni a billentyűzet bemeneti fájlt: %s	error
+Error loading text file	Hiba a szövegfájl betöltésekor	error
+This video driver doesn't have clipboard	Ennek a videomeghajtónak nincs vágólapja	error
+Error receiving asynchronous clipboard	Hiba az aszinkron vágólap fogadásakor	error
+Did not receive anything from the clipboard	Nem érkezett semmi a vágólapról	error
+Cannot write configuration file	Nem sikerült írni a konfigurációs fájlt	error
+Unable to find $HOME, or HOMEDRIVE or HOMEPATH environment variables to open configuration file	Nem található a $HOME, HOMEDRIVE vagy HOMEPATH környezeti változó a konfigurációs fájl megnyitásához	error
+Cannot write configuration file %s	Nem sikerült írni a konfigurációs fájlt: %s	error
+Maximum redefined keys (%d)	Elérted az átdefiniált billentyűk maximális számát (%d)	error
+No free slots to use. Inserting new card on slot 1	Nincs szabad hely. Az új kártya az 1. helyre kerül	error
+This window needs multitask enabled	Ehhez az ablakhoz be kell kapcsolni a többfeladatos módot	warning
+Graphics not found	A grafika nem található	error
+Graphics attributes not found	A grafikai attribútumok nem találhatók	error
+Maximum keyboard text entries reached	Elérted a billentyűzetes szövegbejegyzések maximális számát	error
+String %s too long to add to the keyboard text entries (max: %d)	A(z) %s szöveg túl hosszú a billentyűzetes szövegbejegyzésekhez (max.: %d)	error
+Text to image functions are not available on this system	A szövegből kép funkciók nem érhetők el ezen a rendszeren	error
+Can not run fork to text to image	Nem sikerült fork-ot indítani a szövegből kép készítéséhez	error
+Full path to Text to Image program %s has spaces. It won't work on Windows.	A szövegből képet készítő program teljes elérési útja (%s) szóközt tartalmaz. Windowson nem fog működni.	error
+Video out to file needs realvideo to work. You can not disable realvideo with video out enabled	A fájlba történő videókimenethez realvideo szükséges. Bekapcsolt videókimenet mellett a realvideo nem kapcsolható ki	error
+Unable to find z88_shortcuts.bmp file	Nem található a z88_shortcuts.bmp fájl	error
+Invalid zoom_x value %d	Érvénytelen zoom_x érték: %d	error
+Invalid zoom_y value %d	Érvénytelen zoom_y érték: %d	error
+Screen loading only allowed on Spectrum or QL models	Képernyő betöltése csak Spectrum vagy QL modelleken lehetséges	error
+Screen .scr saving only allowed on Spectrum or ZX80/81 or QL models	Képernyő .scr mentése csak Spectrum, ZX80/81 vagy QL modelleken lehetséges	error
+Screen .pbm saving only allowed on Spectrum models	Képernyő .pbm mentése csak Spectrum modelleken lehetséges	error
+Screen .stl saving only allowed on Spectrum models	Képernyő .stl mentése csak Spectrum modelleken lehetséges	error
+Include base?	Legyen talapzat?	question
+Yes	Igen	option
+No	Nem	option
+Scale?	Méretarány?	question
+1 pixel=1 mm	1 pixel=1 mm	option
+1 pixel=0.1 mm	1 pixel=0.1 mm	option
+Unsuported file type	Nem támogatott fájltípus	error
+Unable to create vofile %s	Nem sikerült létrehozni a videókimeneti fájlt: %s	error
+Unable to write to vofile %s	Nem sikerült írni a videókimeneti fájlba: %s	error
+Invalid position %d for effect	Érvénytelen pozíció az effekthez: %d	error
+scrsdl_init: Error initializing driver	scrsdl_init: hiba a meghajtó inicializálásakor	error
+scrsdl_init: Could not set video mode	scrsdl_init: nem sikerült beállítani a videómódot	error
+Can not set fullscreen mode: %s	Nem sikerült teljes képernyős módba váltani: %s	error
+Read max text buffer: %d bytes. Showing only these	Elérted a szövegpuffer maximumát: %d bájt. Csak ennyi jelenik meg	error
+Error creating socket TCP for remote command protocol	Hiba a TCP socket létrehozásakor a távoli parancsprotokollhoz	error
+Error allocating socket address for remote command protocol	Hiba a socket cím lefoglalásakor a távoli parancsprotokollhoz	error
+Error running listen for remote command protocol	Hiba a listen futtatásakor a távoli parancsprotokollhoz	error
+Error running handling new ZRCP connection	Hiba az új ZRCP kapcsolat kezelésekor	error
+Can not create remote protocol pthread	Nem sikerült létrehozni a távoli protokoll pthread-et	error
+Error sending to socket. Disabling ZENG	Hiba a socketre küldéskor. A ZENG kikapcsolva	error
+Error sending to socket. Disabling ZENG. Returning from thread after disabling it	Hiba a socketre küldéskor. A ZENG kikapcsolva. Kilépés a szálból a kikapcsolás után	error
+Can not create zeng pthread	Nem sikerült létrehozni a zeng pthread-et	error
+Can not create zeng connect pthread	Nem sikerült létrehozni a zeng connect pthread-et	error
+Can not create sync snapshot pthread	Nem sikerült létrehozni a pillanatkép-szinkronizáló pthread-et	error
+Error connecting to %s:%d. %s	Hiba a csatlakozáskor: %s:%d. %s	error
+ERROR. Can't read remote prompt: %s	HIBA. Nem sikerült olvasni a távoli promptot: %s	error
+ERROR. Can't send get-version: %s	HIBA. Nem sikerült elküldeni a get-version parancsot: %s	error
+ERROR. Can't receive version: %s	HIBA. Nem sikerült fogadni a verziót: %s	error
+Error receiving ZEsarUX remote version	Hiba a távoli ZEsarUX verzió fogadásakor	error
+Local and remote ZEsarUX versions do not match	A helyi és a távoli ZEsarUX verzió nem egyezik	error
+ERROR. Can't send zeng-is-master: %s	HIBA. Nem sikerült elküldeni a zeng-is-master parancsot: %s	error
+ERROR. Can't receive zeng-is-master: %s	HIBA. Nem sikerült fogadni a zeng-is-master választ: %s	error
+Error receiving ZEsarUX zeng-is-master parameter	Hiba a távoli ZEsarUX zeng-is-master paraméterének fogadásakor	error
+There is more than one ZENG master. That is NOT recommended. Use at your own risk ;)	Egynél több ZENG master van. Ez NEM ajánlott. Csak saját felelősségre ;)	error
+No more than %d remote hosts are allowed! Disabling ZENG	Legfeljebb %d távoli gép engedélyezett! A ZENG kikapcsolva	error
+Can not create thread_zeng_send_keys_onehost pthread	Nem sikerült létrehozni a thread_zeng_send_keys_onehost pthread-et	error
+Can not create thread_zeng_send_snapshot_uno_concreto pthread	Nem sikerült létrehozni a thread_zeng_send_snapshot_uno_concreto pthread-et	error
+Error creating %s directory : %s	Hiba a mappa létrehozásakor: %s : %s	error
+zvfs_fseek only allows type SEEK_SET on FatFS volumes	A zvfs_fseek FatFS köteteken csak SEEK_SET típust enged	error
+Unknown window to restore: %s	Ismeretlen visszaállítandó ablak: %s	error
+Edit field size too small. Returning null string	A szerkesztőmező mérete túl kicsi. Üres szöveg lesz visszaadva	error
+Overwrite?	Felülírod?	question
+Can not allocate buffer for initial text	Nem sikerült puffert foglalni a kezdő szövegnek	error
+Text copied to ZEsarUX clipboard. Go to file utils and press P to paste to a file	A szöveg a ZEsarUX vágólapjára került. Menj a Fájlkezelő eszközökbe, és nyomd meg a P-t a fájlba illesztéshez	message
+Text not found	A szöveg nem található	warning
+Can not create menu_uncompress_zip_progress_thread thread	Nem sikerült létrehozni a menu_uncompress_zip_progress_thread szálat	error
+Uncompression has not ended yet	A kitömörítés még nem fejeződött be	warning
+Feature not available on non-pthreads version	A funkció nem érhető el a pthreads nélküli verzióban	error
+Error allocating clipboard memory	Hiba a vágólap memóriájának lefoglalásakor	error
+Out of range. Allowed range: minimum: %d maximum: %d	Tartományon kívül. Megengedett tartomány: minimum: %d maximum: %d	error
+This device has no right-click associated action	Ehhez az eszközhöz nincs jobb kattintásos művelet rendelve	warning
+--Action--	--Művelet--	question
+It seems you have downgraded ZEsarUX from %s to %s.\nIf there is any unknown parameter on the configuration file, from the moment that parameter is detected, the rest of the parameters are tried to be read\n	Úgy tűnik, visszaváltottál egy régebbi ZEsarUX-ra (%s helyett %s).\nHa a konfigurációs fájlban ismeretlen paraméter van, annak észlelésétől kezdve a többi paramétert is megpróbálja beolvasni\n	message
+Keep autosave	Automatikus mentés megtartása	option
+Ok. Current configuration settings will NOT be saved on exit	Rendben. Az aktuális beállítások kilépéskor NEM lesznek mentve	message
+Unknown file format	Ismeretlen fájlformátum	error
+You have updated ZEsarUX :)\nPlease take a look at the changes:	Frissítetted a ZEsarUX-ot :)\nNézd meg a változásokat:	message
+ZEsarUX version %s is available on github	A ZEsarUX %s verziója elérhető a GitHubon	message
+Can not add more first-use messages	Nem adható hozzá több első használati üzenet	error
+Do not show it again	Ne mutasd újra	option
+Unable to find $HOME, or HOMEDRIVE or HOMEPATH environment variables to open index file	Nem található a $HOME, HOMEDRIVE vagy HOMEPATH környezeti változó az indexfájl megnyitásához	error
+Can't change GUI style to id %d	Nem sikerült a GUI stílust erre az azonosítóra váltani: %d	error
+Maximum windows to restore reached (%d)	Elérted a visszaállítható ablakok maximális számát (%d)	error
+Unable to find %s	Nem található: %s	error
+You must set launcher before adding entries	Bejegyzések hozzáadása előtt be kell állítanod az indítót	error
+Setting %s not allowed on zmenu file	A(z) %s beállítás nem engedélyezett zmenu fájlban	error
+You haven't defined a menu type	Nem adtál meg menütípust	error
+Can not load ZX Desktop background SCR file %s	Nem sikerült betölteni a ZX Desktop háttér SCR fájlját: %s	error
+Can not add more icons, probably limit reached: %d	Nem adható hozzá több ikon, valószínűleg elérted a korlátot: %d	error
