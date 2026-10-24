@@ -273,6 +273,10 @@ int zoom_x_original,zoom_y_original;
 //Cambiar zoom a 1 cuando cambio a máquina Next, o QL, o cualquiera con GUI zoom a 2
 z80_bit autochange_zoom_big_display={1};
 
+//Zoom before it was changed to 1 by autochange_zoom_big_display (0: not changed)
+int autochange_zoom_previous_zoom_x=0;
+int autochange_zoom_previous_zoom_y=0;
+
 struct timeval z80_interrupts_timer_antes, z80_interrupts_timer_ahora;
 
 struct timeval zesarux_start_time;
@@ -3309,9 +3313,26 @@ void post_set_machine_no_rom_load_reopen_window(void)
                 if (zoom_x!=1 || zoom_y!=1) {
                     debug_printf (VERBOSE_INFO,"Setting zoom_x and zoom_y to 1 because selected machine has a big display");
                     //printf ("Setting zoom_x and zoom_y to 1\n");
+
+                    //Remember the zoom, to restore it when going back to a machine with a normal display
+                    autochange_zoom_previous_zoom_x=zoom_x;
+                    autochange_zoom_previous_zoom_y=zoom_y;
+
                     zoom_x=zoom_y=1;
                     set_putpixel_zoom();
                 }
+            }
+
+            //Back from a machine with a big display: restore the zoom it had before
+            else if (antes_menu_gui_zoom !=menu_gui_zoom && menu_gui_zoom==1 && autochange_zoom_previous_zoom_x) {
+                if (zoom_x==1 && zoom_y==1) {
+                    debug_printf (VERBOSE_INFO,"Restoring zoom_x and zoom_y to %d,%d after a machine with a big display",
+                        autochange_zoom_previous_zoom_x,autochange_zoom_previous_zoom_y);
+                    zoom_x=autochange_zoom_previous_zoom_x;
+                    zoom_y=autochange_zoom_previous_zoom_y;
+                    set_putpixel_zoom();
+                }
+                autochange_zoom_previous_zoom_x=autochange_zoom_previous_zoom_y=0;
             }
         }
 
