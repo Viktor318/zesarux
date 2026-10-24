@@ -48,7 +48,7 @@ void audiosdl_fifo_sdl_write(char *origen,int longitud);
 void audiosdl_callback(void *udata, Uint8 *stream, int len);
 void audiosdl_callback_hq(void *udata, Uint8 *stream, int len);
 
-//The device is open in high quality mode (48000 Hz 16 bit, sound from audio_hq.c)
+//El dispositivo esta abierto en modo de alta calidad (48000 Hz 16 bits, sonido de audio_hq.c)
 int audiosdl_hq_mode=0;
 
 //En versiones anteriores venia por defecto a 1024
@@ -93,21 +93,23 @@ int audiosdl_init(void)
 	wanted.callback = audiosdl_callback;
 	wanted.userdata = NULL;
 
-	//High quality sound: 48000 Hz, 16 bit (see audio_hq.c)
+	//Sonido de alta calidad: 48000 Hz, 16 bits (ver audio_hq.c)
 	audiosdl_hq_mode=audio_hq_enabled.v;
 	if (audiosdl_hq_mode) {
 		wanted.freq = AUDIO_HQ_SAMPLE_RATE;
 		wanted.format = AUDIO_S16SYS;
-		//Same length in time as the classic buffer
+		//Buffer de la tarjeta de sonido de unos 21 ms
 		wanted.samples = 1024;
 		wanted.callback = audiosdl_callback_hq;
 		audio_hq_fifo_empty();
+		audio_hq_fifo_in_use=1;
 	}
 
 	/* Open the audio device, forcing the desired format */
 	//if ( SDL_OpenAudio(&wanted, NULL) < 0 ) {
 	dispositivo_sdl=SDL_OpenAudioDevice(NULL, 0, &wanted, &have, 0);
 	if (dispositivo_sdl==0) {
+		audio_hq_fifo_in_use=0;
 		debug_printf( VERBOSE_ERR, "Could not open sdl audio: %s", SDL_GetError());
 	        return 1;
 	}
@@ -150,8 +152,8 @@ void audiosdl_send_frame(char *buffer)
 
 	if (audio_playing.v==0) audio_playing.v=1;
 
-	//High quality mode: the sound comes from audio_hq.c. Machines it does not make the sound for:
-	//convert the classic sound
+	//Modo de alta calidad: el sonido llega desde audio_hq.c. En las maquinas que aun no lo generan,
+	//se convierte el sonido clasico
 	if (audiosdl_hq_mode) {
 		if (!audio_hq_running) audio_hq_fifo_put_classic(buffer,AUDIO_BUFFER_SIZE,FRECUENCIA_SONIDO);
 		SDL_PauseAudioDevice(dispositivo_sdl,0);
@@ -176,6 +178,7 @@ int audiosdl_thread_finish(void)
 void audiosdl_end(void)
 {
         debug_printf (VERBOSE_INFO,"Ending SDL2 audio driver");
+	audio_hq_fifo_in_use=0;
 	audiosdl_thread_finish();
 
 	SDL_CloseAudio();
@@ -354,7 +357,7 @@ static void audiosdl_llenar_buffer_salida(char *destino,int len)
     if (i<len) destino[i]=audiosdl_ultimo_valor_izquierdo;
 }
 
-//High quality mode: 16 bit stereo from audio_hq.c
+//Modo de alta calidad: 16 bits estereo desde audio_hq.c
 void audiosdl_callback_hq(void *udata, Uint8 *stream, int len)
 {
 	//para que no se queje el compilador de no usado

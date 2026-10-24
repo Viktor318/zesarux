@@ -5905,7 +5905,7 @@ void menu_audio_hq_sound(MENU_ITEM_PARAMETERS)
 {
     audio_hq_enabled.v ^=1;
 
-    //Open the sound card again, in the new mode
+    //Volver a abrir la tarjeta de sonido en el nuevo modo
     if (audio_end!=NULL) audio_end();
     if (audio_init!=NULL) {
         if (audio_init()) {

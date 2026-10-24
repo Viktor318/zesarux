@@ -28,6 +28,7 @@
 
 extern z80_bit audio_hq_enabled;
 extern int audio_hq_running;
+extern int audio_hq_fifo_in_use;
 
 extern int audio_hq_machine_supported(void);
 extern void audio_hq_init(void);

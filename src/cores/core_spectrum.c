@@ -439,7 +439,7 @@ void core_spectrum_fin_frame_pantalla(void)
     }
 
 
-    //High quality sound output: end of the frame
+    //Salida de sonido de alta calidad: final del frame
     audio_hq_end_frame(screen_testados_total);
 
     t_estados -=screen_testados_total;
@@ -568,7 +568,7 @@ void core_spectrum_fin_scanline(void)
             audio_apply_nagra_effect();
         }
 
-        //Beeper part of this sample, for the high quality output (that puts the beeper in by itself)
+        //Parte del beeper en esta muestra, para la salida de alta calidad (que introduce el beeper por su cuenta)
         int hq_beeper_added=0;
 
         if (beeper_enabled.v) {
@@ -637,7 +637,7 @@ void core_spectrum_fin_scanline(void)
             }
         }
 
-        //High quality output: the other sound sources, without the beeper
+        //Salida de alta calidad: las demas fuentes de sonido, sin el beeper
         if (audio_hq_running) {
             audio_hq_others(t_estados,audio_valor_enviar_sonido_izquierdo-hq_beeper_added,
                             audio_valor_enviar_sonido_derecho-hq_beeper_added);

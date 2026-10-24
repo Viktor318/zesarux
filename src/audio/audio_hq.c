@@ -20,22 +20,22 @@
 */
 
 /*
-   High quality sound output, in the way the Fuse emulator makes it.
+   Salida de sonido de alta calidad, tal como la genera el emulador Fuse.
 
-   The classic ZEsarUX sound is one 8 bit sample per scanline (15600 Hz).
-   Here the sound is made at 48000 Hz, 16 bit, band limited:
-   - Every change of the beeper (port FEh) is put in at its exact time
-     (in t-states) with Blip_Buffer (from Fuse, by Shay Green), so no aliasing.
-   - The other sound sources (AY etc.) still come once per scanline, but are
-     also put in band limited.
-   - The output goes through the same filters as in Fuse: an approximation of
-     the ULA output, and then the built-in speaker of the 16K/48K, or a TV
-     speaker for the other machines.
-   Filters adapted from Fuse (speaker_filter.c, ula_filter.c, tv_filter.c),
-   Copyright (c) 2026 Fredrick Meunier, GPL 2 or later.
+   El sonido clasico de ZEsarUX es una muestra de 8 bits por scanline (15600 Hz).
+   Aqui el sonido se genera a 48000 Hz, 16 bits, con limitacion de banda:
+   - Cada cambio del beeper (puerto FEh) se introduce en su instante exacto
+     (en t-estados) con Blip_Buffer (de Fuse, de Shay Green), sin aliasing.
+   - Las demas fuentes de sonido (AY etc.) siguen llegando una vez por scanline,
+     pero tambien se introducen con limitacion de banda.
+   - La salida pasa por los mismos filtros que en Fuse: una aproximacion de la
+     salida de la ULA y despues el altavoz interno del 16K/48K, o el altavoz de
+     un televisor en las demas maquinas.
+   Filtros adaptados de Fuse (speaker_filter.c, ula_filter.c, tv_filter.c),
+   Copyright (c) 2026 Fredrick Meunier, GPL 2 o posterior.
 
-   The classic 8 bit buffer is still filled as before (audio file output,
-   waveform window, ZENG...), only the sound card gets this output.
+   El buffer clasico de 8 bits se sigue llenando como antes (salida a archivo,
+   ventana de forma de onda, ZENG...); solo la tarjeta de sonido recibe esta salida.
 */
 
 #include <stdio.h>
@@ -50,15 +50,15 @@
 #include "debug.h"
 #include "screen.h"
 
-//Setting: use the high quality sound output
+//Ajuste: usar la salida de sonido de alta calidad
 z80_bit audio_hq_enabled={1};
 
-//The output is being made now (the setting is on and the machine is supported)
+//La salida se esta generando ahora (ajuste activado y maquina soportada)
 int audio_hq_running=0;
 
 #define AUDIO_HQ_PI 3.14159265358979323846
 
-//Multiplier from the 8 bit levels of ZEsarUX to 16 bit
+//Multiplicador de los niveles de 8 bits de ZEsarUX a 16 bits
 #define AUDIO_HQ_SCALE 128
 
 static Blip_Buffer *hq_buf_beeper=NULL;
@@ -70,21 +70,21 @@ static Blip_Synth *hq_synth_right=NULL;
 
 static long hq_clock_rate=0;
 
-//Last levels given, to put them again at the start of every frame
+//Ultimos niveles recibidos
 static int hq_last_beeper=0;
 static int hq_last_left=0;
 static int hq_last_right=0;
 
-//Samples of one frame. 48000 Hz at 2% speed would be 48000 samples per frame
+//Muestras de un frame. A 48000 Hz y velocidad 2% serian 48000 muestras por frame
 #define AUDIO_HQ_MAX_FRAME_SAMPLES 48000
 static blip_sample_t hq_samples_beeper[AUDIO_HQ_MAX_FRAME_SAMPLES];
 static blip_sample_t hq_samples_left[AUDIO_HQ_MAX_FRAME_SAMPLES];
 static blip_sample_t hq_samples_right[AUDIO_HQ_MAX_FRAME_SAMPLES];
 
 
-/* --- Filters, adapted from Fuse --- */
+/* --- Filtros, adaptados de Fuse --- */
 
-//ULA output: asymmetric one pole
+//Salida de la ULA: filtro asimetrico de un polo
 #define ULA_FILTER_RISE_TAU 36.53558495933805e-6
 #define ULA_FILTER_FALL_TAU 68.86073172982108e-6
 
@@ -104,7 +104,7 @@ static double ula_filter_apply(double input)
     return ula_state;
 }
 
-//Built-in speaker of 16K/48K: second order resonant high pass, 750 Hz
+//Altavoz interno del 16K/48K: paso alto resonante de segundo orden, 750 Hz
 #define SPEAKER_FILTER_FREQUENCY 750.0
 #define SPEAKER_FILTER_Q 0.70710678118654752440
 
@@ -132,7 +132,7 @@ static double speaker_filter_apply(double input)
     return output;
 }
 
-//TV speaker: 100 Hz high pass, 10 kHz low pass. One per channel
+//Altavoz de televisor: paso alto 100 Hz, paso bajo 10 kHz. Uno por canal
 #define TV_FILTER_HIGH_PASS_FREQUENCY 100.0
 #define TV_FILTER_LOW_PASS_FREQUENCY 10000.0
 
@@ -189,18 +189,37 @@ static void audio_hq_filters_init(void)
 
 static short audio_hq_clip(double v);
 
-/* --- Output FIFO: 16 bit stereo, read by the sound card driver --- */
+/* --- FIFO de salida: 16 bits estéreo, lo lee el driver de la tarjeta de sonido --- */
 
-//Half a second
+//Medio segundo
 #define AUDIO_HQ_FIFO_FRAMES (AUDIO_HQ_SAMPLE_RATE/2)
+
+//Retardo objetivo del FIFO: absorbe las irregularidades del temporizador del sistema
+//(en Windows los frames llegan a rafagas) y las pausas cortas, por ejemplo al abrir un menu
+#define AUDIO_HQ_FIFO_TARGET (AUDIO_HQ_SAMPLE_RATE*70/1000)
+
+//Por encima de esto se descarta audio antiguo (solo en casos extremos)
+#define AUDIO_HQ_FIFO_MAX (AUDIO_HQ_SAMPLE_RATE*300/1000)
+
+//Muestras para hacer el fundido de entrada/salida al quedarse sin sonido (5 ms)
+#define AUDIO_HQ_FADE_SAMPLES (AUDIO_HQ_SAMPLE_RATE*5/1000)
 
 static short hq_fifo[AUDIO_HQ_FIFO_FRAMES*2];
 static volatile int hq_fifo_write=0;
 static volatile int hq_fifo_read=0;
 
-//Last sample given to the sound card, repeated when there is no more sound
+//Ultima muestra enviada a la tarjeta de sonido
 static short hq_fifo_last_left=0;
 static short hq_fifo_last_right=0;
+
+//Hay un driver leyendo el FIFO (si no, no se llena ni se ajusta la velocidad)
+int audio_hq_fifo_in_use=0;
+
+//Esperando a que el FIFO se llene hasta el retardo objetivo (al principio o tras quedarse vacio)
+static int hq_fifo_buffering=1;
+
+//Ganancia del fundido, de 0 a AUDIO_HQ_FADE_SAMPLES
+static int hq_fifo_fade=0;
 
 int audio_hq_fifo_frames(void)
 {
@@ -217,11 +236,13 @@ void audio_hq_fifo_empty(void)
 
 static void audio_hq_fifo_put(short left,short right)
 {
+    if (!audio_hq_fifo_in_use) return;
+
     int w=hq_fifo_write;
     int next=w+1;
     if (next==AUDIO_HQ_FIFO_FRAMES) next=0;
 
-    //Full: drop the sample
+    //Lleno: descartar la muestra
     if (next==hq_fifo_read) return;
 
     hq_fifo[w*2]=left;
@@ -229,20 +250,19 @@ static void audio_hq_fifo_put(short left,short right)
     hq_fifo_write=next;
 }
 
-//If the emulation runs a bit faster than the sound card, the FIFO grows: keep the delay low
-//by dropping the oldest samples (as the classic driver empties its FIFO when it is full)
+//Si se acumula demasiado retardo, descartar el audio mas antiguo hasta dejar el retardo objetivo
 void audio_hq_fifo_limit_latency(void)
 {
     int frames=audio_hq_fifo_frames();
-    if (frames>AUDIO_HQ_SAMPLE_RATE/6) {
-        int drop=frames-AUDIO_HQ_SAMPLE_RATE/16;
+    if (frames>AUDIO_HQ_FIFO_MAX) {
+        int drop=frames-AUDIO_HQ_FIFO_TARGET;
         int r=hq_fifo_read+drop;
         if (r>=AUDIO_HQ_FIFO_FRAMES) r-=AUDIO_HQ_FIFO_FRAMES;
         hq_fifo_read=r;
     }
 }
 
-//Classic 8 bit sound (machines without the high quality output): resample to the FIFO
+//Sonido clasico de 8 bits (maquinas sin la salida de alta calidad): remuestrear al FIFO
 void audio_hq_fifo_put_classic(char *buffer,int samples,int frequency)
 {
     static double position=0.0;
@@ -266,46 +286,61 @@ void audio_hq_fifo_put_classic(char *buffer,int samples,int frequency)
     audio_hq_fifo_limit_latency();
 }
 
-//Give samples to the sound card. When the FIFO runs out, repeat the last sample
+//Entregar muestras a la tarjeta de sonido (se llama desde el hilo de audio).
+//Si el FIFO se queda vacio no se repite ni se corta el sonido de golpe (eso suena a chasquido):
+//se hace un fundido a silencio y se espera a tener otra vez el retardo objetivo, y entonces fundido de entrada
 void audio_hq_fifo_get(short *destino,int frames)
 {
     int i;
 
     for (i=0;i<frames;i++) {
+        if (hq_fifo_buffering) {
+            if (audio_hq_fifo_frames()>=AUDIO_HQ_FIFO_TARGET) hq_fifo_buffering=0;
+        }
+
         int r=hq_fifo_read;
-        if (r!=hq_fifo_write) {
+
+        if (!hq_fifo_buffering && r!=hq_fifo_write) {
             hq_fifo_last_left=hq_fifo[r*2];
             hq_fifo_last_right=hq_fifo[r*2+1];
             r++;
             if (r==AUDIO_HQ_FIFO_FRAMES) r=0;
             hq_fifo_read=r;
+
+            if (hq_fifo_fade<AUDIO_HQ_FADE_SAMPLES) hq_fifo_fade++;
         }
-        *destino++=hq_fifo_last_left;
-        *destino++=hq_fifo_last_right;
+        else {
+            //Sin sonido: volver a llenar el FIFO y fundido a silencio de la ultima muestra
+            hq_fifo_buffering=1;
+            if (hq_fifo_fade>0) hq_fifo_fade--;
+        }
+
+        *destino++=(short)((int)hq_fifo_last_left*hq_fifo_fade/AUDIO_HQ_FADE_SAMPLES);
+        *destino++=(short)((int)hq_fifo_last_right*hq_fifo_fade/AUDIO_HQ_FADE_SAMPLES);
     }
 }
 
 
-/* --- Optional raw dump of the output, for testing --- */
+/* --- Volcado opcional de la salida en bruto, para pruebas --- */
 
 static FILE *hq_dump_file=NULL;
 
 
-/* --- Machine support --- */
+/* --- Maquinas soportadas --- */
 
 int audio_hq_machine_supported(void)
 {
     return MACHINE_IS_SPECTRUM;
 }
 
-//16K/48K have a built-in speaker. The others go to a TV
+//El 16K/48K tienen altavoz interno. Las demas van a un televisor
 static int audio_hq_machine_has_speaker(void)
 {
     return MACHINE_IS_SPECTRUM_16_48 && !MACHINE_IS_TIMEX_TC2048;
 }
 
 
-/* --- Init / end --- */
+/* --- Inicio / fin --- */
 
 static long audio_hq_get_clock_rate(void)
 {
@@ -322,7 +357,7 @@ static Blip_Buffer *audio_hq_new_buffer(void)
     if (b==NULL) return NULL;
 
     blip_buffer_set_clock_rate(b,hq_clock_rate);
-    //One second of buffer: enough even at 2% emulation speed
+    //Un segundo de buffer: suficiente incluso a velocidad 2%
     if (blip_buffer_set_sample_rate(b,AUDIO_HQ_SAMPLE_RATE,1000)) {
         delete_Blip_Buffer(&b);
         return NULL;
@@ -380,7 +415,7 @@ void audio_hq_init(void)
         return;
     }
 
-    //Start from the current levels, without a jump
+    //Empezar desde los niveles actuales, sin saltos
     blip_synth_set_level(hq_synth_beeper,hq_last_beeper);
     blip_synth_set_level(hq_synth_left,hq_last_left);
     blip_synth_set_level(hq_synth_right,hq_last_right);
@@ -397,7 +432,7 @@ void audio_hq_init(void)
     debug_printf(VERBOSE_INFO,"High quality sound: %d Hz, clock %ld",AUDIO_HQ_SAMPLE_RATE,hq_clock_rate);
 }
 
-//Call when the machine, the emulation speed or the setting changes
+//Llamar cuando cambie la maquina, la velocidad de emulacion o el ajuste
 void audio_hq_reset(void)
 {
     audio_hq_init();
@@ -405,7 +440,7 @@ void audio_hq_reset(void)
 
 static int hq_machine_type=-1;
 
-//Start or stop the output when the setting or the machine changes
+//Iniciar o detener la salida cuando cambie el ajuste o la maquina
 static void audio_hq_check(void)
 {
     if (audio_hq_enabled.v && audio_hq_machine_supported()) {
@@ -420,18 +455,18 @@ static void audio_hq_check(void)
 }
 
 
-/* --- Sound input --- */
+/* --- Entrada de sonido --- */
 
-//Time inside the frame, limited to something the buffer can take
+//Instante dentro del frame, limitado a lo que admite el buffer
 static blip_time_t audio_hq_time(int tstates)
 {
     if (tstates<0) tstates=0;
-    //Up to one frame and a bit later (an instruction can go beyond the end of the frame)
+    //Hasta algo mas de un frame (una instruccion puede pasarse del final del frame)
     if (tstates>screen_testados_total*2) tstates=screen_testados_total*2;
     return tstates;
 }
 
-//Beeper level changed at this t-state of the frame. value: the 8 bit value_beeper
+//Cambio de nivel del beeper en este t-estado del frame. value: el value_beeper de 8 bits
 void audio_hq_beeper(int tstates,int value)
 {
     if (!audio_hq_running) return;
@@ -442,7 +477,7 @@ void audio_hq_beeper(int tstates,int value)
     blip_synth_update(hq_synth_beeper,audio_hq_time(tstates),level);
 }
 
-//The other sound sources, once per scanline. 8 bit values, without the beeper
+//Las demas fuentes de sonido, una vez por scanline. Valores de 8 bits, sin el beeper
 void audio_hq_others(int tstates,int left,int right)
 {
     if (!audio_hq_running) return;
@@ -468,15 +503,26 @@ static short audio_hq_clip(double v)
     return (short)v;
 }
 
-//End of a frame of the emulated machine: frame_tstates t-states long
+//Final de un frame de la maquina emulada, de frame_tstates t-estados
 void audio_hq_end_frame(int frame_tstates)
 {
     audio_hq_check();
 
     if (!audio_hq_running) return;
 
-    //Emulation speed or frame length changed
-    long rate=audio_hq_get_clock_rate();
+    //Ajuste fino de la velocidad: el reloj del emulador y el de la tarjeta de sonido nunca van exactamente
+    //igual. En vez de descartar o repetir audio, se generan un poco mas o menos muestras por frame
+    //(como mucho un 2%, y cambiando muy despacio) para mantener el FIFO cerca del retardo objetivo
+    static double fifo_medio=AUDIO_HQ_FIFO_TARGET;
+    double ajuste=0;
+    if (audio_hq_fifo_in_use) {
+        fifo_medio=fifo_medio*0.98+audio_hq_fifo_frames()*0.02;
+        ajuste=(fifo_medio-AUDIO_HQ_FIFO_TARGET)/AUDIO_HQ_FIFO_TARGET*0.02;
+    }
+    if (ajuste>0.02) ajuste=0.02;
+    if (ajuste<-0.02) ajuste=-0.02;
+
+    long rate=(long)(audio_hq_get_clock_rate()*(1.0+ajuste));
     if (rate!=hq_clock_rate) {
         hq_clock_rate=rate;
         blip_buffer_set_clock_rate(hq_buf_beeper,rate);
@@ -507,7 +553,7 @@ void audio_hq_end_frame(int frame_tstates)
 
         if (speaker) {
             beeper=speaker_filter_apply(beeper);
-            //The other sources (peripherals) do not go through the speaker. Remove their DC with the TV filter
+            //Las demas fuentes (perifericos) no pasan por el altavoz. Quitar su componente continua con el filtro de TV
             out_left=beeper+tv_filter_apply(&tv_filters[0],left);
             out_right=beeper+tv_filter_apply(&tv_filters[1],right);
         }

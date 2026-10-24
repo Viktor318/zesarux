@@ -8759,7 +8759,7 @@ void set_value_beeper(int v)
 
     //printf("%d\n",value_beeper);
 
-    //High quality output: the beeper change at its exact time
+    //Salida de alta calidad: el cambio del beeper en su instante exacto
     if (beeper_enabled.v) audio_hq_beeper(t_estados,value_beeper);
 
     if (audio_nagra_effect.v) {
