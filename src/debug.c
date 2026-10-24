@@ -1236,6 +1236,9 @@ void debug_printf (int debuglevel, const char * format , ...)
     //Y nuestro level realmente son los 8 bits inferiores
     debuglevel &=0xFF;
 
+    //Error messages are shown in a window: translate them
+    if (debuglevel==VERBOSE_ERR && gui_language==GUI_LANGUAGE_HUNGARIAN) format=menu_hungarian(format);
+
     //Validar exclude/include y si hay que mostrar ese mensaje entonces
 
     //Clase de mensaje le llega dentro de debuglevel, si tiene mascara de bits a partir de valores 256

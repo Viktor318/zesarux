@@ -13414,6 +13414,7 @@ void zxvision_generic_message_crea_ventana(zxvision_window *ventana,int disable_
 void zxvision_generic_message_tooltip(char *titulo, int disable_special_chars, int return_after_print_text,int volver_timeout, int tooltip_enabled,
     int mostrar_cursor, generic_message_tooltip_return *retorno, int resizable, int no_trocear_lineas, const char * texto_format , ...)
 {
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) texto_format=menu_hungarian(texto_format);
     //Buffer de entrada
 
     char *texto=util_malloc_max_texto_generic_message("Can not allocate memory for message");
@@ -24226,6 +24227,19 @@ void menu_add_item_menu_common_defaults(menu_item *m,int tipo_opcion,t_menu_func
 }
 
 
+//Copy a menu item text, cutting it (at an UTF-8 character boundary) if it does not fit
+static void menu_copy_text_item(char *destino,const char *texto)
+{
+    size_t l=strlen(texto);
+    if (l>=MAX_TEXTO_OPCION) {
+        l=MAX_TEXTO_OPCION-1;
+        //do not cut an UTF-8 sequence
+        while (l>0 && (((unsigned char)texto[l]) & 0xC0)==0x80) l--;
+    }
+    memcpy(destino,texto,l);
+    destino[l]=0;
+}
+
 //Agregar el item inicial del menu
 //Parametros: puntero al puntero de menu_item inicial. texto
 void menu_add_item_menu_inicial(menu_item **p,char *texto,int tipo_opcion,t_menu_funcion menu_funcion,t_menu_funcion_activo menu_funcion_activo)
@@ -24242,10 +24256,13 @@ void menu_add_item_menu_inicial(menu_item **p,char *texto,int tipo_opcion,t_menu
     //comprobacion de maximo
     if (gui_language==GUI_LANGUAGE_HUNGARIAN) texto=menu_hungarian(texto);
 
-    if (strlen(texto)>MAX_TEXTO_OPCION) cpu_panic ("Text item greater than maximum");
+    if (strlen(texto)>=MAX_TEXTO_OPCION) {
+        //A translated text can be longer: cut it instead of stopping the emulator
+        if (gui_language!=GUI_LANGUAGE_HUNGARIAN) cpu_panic ("Text item greater than maximum");
+    }
 
     //m->texto=texto;
-    strcpy(m->texto_opcion,texto);
+    menu_copy_text_item(m->texto_opcion,texto);
 
     ////
 
@@ -24302,10 +24319,13 @@ void menu_add_item_menu(menu_item *m,char *texto,int tipo_opcion,t_menu_funcion 
     if (gui_language==GUI_LANGUAGE_HUNGARIAN) texto=menu_hungarian(texto);
 
     //comprobacion de maximo
-    if (strlen(texto)>MAX_TEXTO_OPCION) cpu_panic ("Text item greater than maximum");
+    if (strlen(texto)>=MAX_TEXTO_OPCION) {
+        //A translated text can be longer: cut it instead of stopping the emulator
+        if (gui_language!=GUI_LANGUAGE_HUNGARIAN) cpu_panic ("Text item greater than maximum");
+    }
 
     //next->texto=texto;
-    strcpy(next->texto_opcion,texto);
+    menu_copy_text_item(next->texto_opcion,texto);
 
     ////
 
@@ -25011,10 +25031,10 @@ void menu_add_item_menu_format(menu_item *m,int tipo_opcion,t_menu_funcion menu_
 {
     if (gui_language==GUI_LANGUAGE_HUNGARIAN) format=menu_hungarian(format);
 
-    char buffer[100];
+    char buffer[MAX_TEXTO_OPCION];
     va_list args;
     va_start (args, format);
-    vsprintf (buffer,format, args);
+    vsnprintf (buffer,sizeof(buffer),format, args);
     va_end (args);
 
     menu_add_item_menu(m,buffer,tipo_opcion,menu_funcion,menu_funcion_activo);
@@ -25043,10 +25063,10 @@ void menu_add_item_menu_inicial_format(menu_item **p,int tipo_opcion,t_menu_func
 {
     if (gui_language==GUI_LANGUAGE_HUNGARIAN) format=menu_hungarian(format);
 
-        char buffer[100];
+        char buffer[MAX_TEXTO_OPCION];
         va_list args;
         va_start (args, format);
-        vsprintf (buffer,format, args);
+        vsnprintf (buffer,sizeof(buffer),format, args);
     va_end (args);
 
         menu_add_item_menu_inicial(p,buffer,tipo_opcion,menu_funcion,menu_funcion_activo);
@@ -25427,12 +25447,14 @@ void zxvision_dibuja_rectangulo_relleno(zxvision_window *w,int x, int y, int anc
 
 void menu_warn_message(char *texto)
 {
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) texto=menu_hungarian(texto);
     menu_generic_message_warn("Warning",texto);
 
 }
 
 void menu_error_message(char *texto)
 {
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) texto=menu_hungarian(texto);
     zxvision_sound_event_error_menu();
     menu_generic_message_warn("ERROR",texto);
 
@@ -25440,6 +25462,7 @@ void menu_error_message(char *texto)
 
 void menu_error_message_format(const char * format , ...)
 {
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) format=menu_hungarian(format);
 
     char buffer_final[4096];
 
@@ -26110,6 +26133,7 @@ int menu_confirm_yesno_texto_additional_item(char *texto_ventana,char *texto_int
     char *(*texto_adicional2)(void),void (*funcion_trigger_texto_adicional2) (void)
 )
 {
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) texto_interior=menu_hungarian(texto_interior);
 
     //conservar estado de salir todos menus antes de invocar funcion de menu
     //por si esta activo, permitir que se cierren los menus despues de invocar a la funcion de pregunta yes/no
@@ -27000,6 +27024,7 @@ int menu_ask_list_texto(char *texto_ventana,char *texto_interior,char *entradas_
 
 void menu_generic_message_format(char *titulo, const char * texto_format , ...)
 {
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) texto_format=menu_hungarian(texto_format);
 
         //Buffer de entrada
         char *texto;
@@ -27030,6 +27055,7 @@ void menu_generic_message_format(char *titulo, const char * texto_format , ...)
 
 void zxvision_generic_message(char *titulo, const char * texto)
 {
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) texto=menu_hungarian(texto);
 
         //menu_generic_message_tooltip(titulo, 0, 0, 0, NULL, "%s", texto);
         zxvision_generic_message_tooltip(titulo , 0, 0 , 0, 0, 0, NULL, 1, 0, "%s", texto);
@@ -27039,6 +27065,8 @@ void zxvision_generic_message(char *titulo, const char * texto)
 //El contenido de valor_opcion tiene que venir definido en 0/1 según se quiera (habitualmente a 1)
 void zxvision_menu_generic_message_setting(char *titulo, const char *texto, char *texto_opcion, int *valor_opcion)
 {
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) texto=menu_hungarian(texto);
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) texto_opcion=menu_hungarian(texto_opcion);
 
     int lineas_agregar=4;
 
@@ -27144,6 +27172,9 @@ int zxvision_menu_generic_message_two_buttons(char *titulo, const char *texto,
     char *texto_opcion2
     )
 {
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) texto=menu_hungarian(texto);
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) texto_opcion1=menu_hungarian(texto_opcion1);
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) texto_opcion2=menu_hungarian(texto_opcion2);
 
     int lineas_agregar=2;
 
@@ -27232,6 +27263,7 @@ int zxvision_menu_generic_message_two_buttons(char *titulo, const char *texto,
 
 void menu_generic_message_splash(char *titulo, const char * texto)
 {
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) texto=menu_hungarian(texto);
 
         //menu_generic_message_tooltip(titulo, 1, 0, 0, NULL, "%s", texto);
         zxvision_generic_message_tooltip(titulo , 0, 0 , 1, 0, 0, NULL, 0, 0, "%s", texto);
@@ -27240,6 +27272,7 @@ void menu_generic_message_splash(char *titulo, const char * texto)
 
 void menu_generic_message_warn(char *titulo, const char * texto)
 {
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) texto=menu_hungarian(texto);
 
         //menu_generic_message_tooltip(titulo, 1, 0, 0, NULL, "%s", texto);
         zxvision_generic_message_tooltip(titulo , 0, 0 , 2, 0, 0, NULL, 0, 0, "%s", texto);
