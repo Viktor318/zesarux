@@ -181,7 +181,13 @@ void audiosdl_end(void)
 	audio_hq_fifo_in_use=0;
 	audiosdl_thread_finish();
 
-	SDL_CloseAudio();
+	//SDL_CloseAudio solo cierra el dispositivo abierto con SDL_OpenAudio, no el abierto con
+	//SDL_OpenAudioDevice: el dispositivo seguia sonando (y leyendo el FIFO) junto al nuevo
+	//cada vez que se reiniciaba el driver (cambio de velocidad, de modo de sonido...)
+	if (dispositivo_sdl) {
+		SDL_CloseAudioDevice(dispositivo_sdl);
+		dispositivo_sdl=0;
+	}
 
         audiosdl_inicializado.v=0;
         commonsdl_end();
