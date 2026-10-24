@@ -62,6 +62,7 @@
 #include "tape_tzx.h"
 #include "tape_smp.h"
 #include "audio.h"
+#include "audio_hq.h"
 #include "audio_ayplayer.h"
 #include "screen.h"
 #include "screen_fx.h"
@@ -900,6 +901,7 @@ printf (
         "\n"
 
         "--noreset-audiobuffer-full  Do not reset audio buffer when it's full. By default it does reset the buffer when full, it helps reducing latency\n"
+        "--classic-audio             Use the classic sound output (15600 Hz, 8 bit) instead of the high quality one (48000 Hz, 16 bit, band limited, like Fuse)\n"
         "--enable-silencedetector    Enable silence detector. Silence detector is disabled by default\n"
         "--disable-silencedetector   Disable silence detector. Silence detector is disabled by default\n"
 
@@ -6998,6 +7000,10 @@ int parse_cmdline_options(int desde_commandline)
                 audio_midi_raw_mode=0;
             }
 
+
+            else if (!strcmp(argv[puntero_parametro],"--classic-audio")) {
+                audio_hq_enabled.v=0;
+            }
 
             else if (!strcmp(argv[puntero_parametro],"--noreset-audiobuffer-full")) {
                 audio_noreset_audiobuffer_full.v=1;

@@ -37,6 +37,7 @@
 #include "debug.h"
 #include "tape.h"
 #include "audio.h"
+#include "audio_hq.h"
 #include "screen.h"
 #include "ay38912.h"
 #include "operaciones.h"
@@ -438,6 +439,9 @@ void core_spectrum_fin_frame_pantalla(void)
     }
 
 
+    //High quality sound output: end of the frame
+    audio_hq_end_frame(screen_testados_total);
+
     t_estados -=screen_testados_total;
 
     if (MACHINE_IS_BASECONF) baseconf_update_timing(0);
@@ -564,16 +568,21 @@ void core_spectrum_fin_scanline(void)
             audio_apply_nagra_effect();
         }
 
+        //Beeper part of this sample, for the high quality output (that puts the beeper in by itself)
+        int hq_beeper_added=0;
+
         if (beeper_enabled.v) {
             if (beeper_real_enabled==0) {
                 audio_valor_enviar_sonido_izquierdo += value_beeper;
                 audio_valor_enviar_sonido_derecho += value_beeper;
+                hq_beeper_added=value_beeper;
             }
 
             else {
                 char suma_beeper=get_value_beeper_sum_array();
                 audio_valor_enviar_sonido_izquierdo += suma_beeper;
                 audio_valor_enviar_sonido_derecho += suma_beeper;
+                hq_beeper_added=suma_beeper;
                 beeper_new_line();
             }
 
@@ -626,6 +635,12 @@ void core_spectrum_fin_scanline(void)
                     audio_valor_enviar_sonido_derecho=audio_change_top_speed_sound(audio_valor_enviar_sonido_derecho);
                 }
             }
+        }
+
+        //High quality output: the other sound sources, without the beeper
+        if (audio_hq_running) {
+            audio_hq_others(t_estados,audio_valor_enviar_sonido_izquierdo-hq_beeper_added,
+                            audio_valor_enviar_sonido_derecho-hq_beeper_added);
         }
 
         if (audio_nagra_effect.v) {

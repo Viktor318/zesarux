@@ -74,6 +74,7 @@
 #include "menu_debug_cpu.h"
 #include "z88.h"
 #include "audio.h"
+#include "audio_hq.h"
 #include "audio_ayplayer.h"
 #include "playtzx.h"
 #include "tape_tzx.h"
@@ -4904,6 +4905,7 @@ int util_write_configfile(void)
     if (ay_speech_enabled.v==0)                     ADD_STRING_CONFIG,"--disableayspeech");
     if (ay_envelopes_enabled.v==0)                  ADD_STRING_CONFIG,"--disableenvelopes");
     if (audio_noreset_audiobuffer_full.v)           ADD_STRING_CONFIG,"--noreset-audiobuffer-full");
+    if (!audio_hq_enabled.v)                        ADD_STRING_CONFIG,"--classic-audio");
 
 
     if (silence_detector_setting.v)	                ADD_STRING_CONFIG,"--enable-silencedetector");

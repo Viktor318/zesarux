@@ -23,6 +23,7 @@
 #include "operaciones.h"
 #include "debug.h"
 #include "audio.h"
+#include "audio_hq.h"
 #include "tape.h"
 #include "ay38912.h"
 #include "mem128.h"
@@ -8757,6 +8758,9 @@ void set_value_beeper(int v)
 
 
     //printf("%d\n",value_beeper);
+
+    //High quality output: the beeper change at its exact time
+    if (beeper_enabled.v) audio_hq_beeper(t_estados,value_beeper);
 
     if (audio_nagra_effect.v) {
         if (value_beeper<0) value_beeper=0;

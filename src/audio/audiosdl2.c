@@ -19,6 +19,7 @@
 
 */
 
+#include "audio_hq.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -45,6 +46,10 @@
 void audiosdl_fifo_sdl_write(char *origen,int longitud);
 
 void audiosdl_callback(void *udata, Uint8 *stream, int len);
+void audiosdl_callback_hq(void *udata, Uint8 *stream, int len);
+
+//The device is open in high quality mode (48000 Hz 16 bit, sound from audio_hq.c)
+int audiosdl_hq_mode=0;
 
 //En versiones anteriores venia por defecto a 1024
 int audiosdl_samples=DEFAULT_AUDIOSDL_SAMPLES;
@@ -87,6 +92,17 @@ int audiosdl_init(void)
 	wanted.samples = audiosdl_samples;  /* 1024 -> Good low-latency value for callback */
 	wanted.callback = audiosdl_callback;
 	wanted.userdata = NULL;
+
+	//High quality sound: 48000 Hz, 16 bit (see audio_hq.c)
+	audiosdl_hq_mode=audio_hq_enabled.v;
+	if (audiosdl_hq_mode) {
+		wanted.freq = AUDIO_HQ_SAMPLE_RATE;
+		wanted.format = AUDIO_S16SYS;
+		//Same length in time as the classic buffer
+		wanted.samples = 1024;
+		wanted.callback = audiosdl_callback_hq;
+		audio_hq_fifo_empty();
+	}
 
 	/* Open the audio device, forcing the desired format */
 	//if ( SDL_OpenAudio(&wanted, NULL) < 0 ) {
@@ -134,6 +150,14 @@ void audiosdl_send_frame(char *buffer)
 
 	if (audio_playing.v==0) audio_playing.v=1;
 
+	//High quality mode: the sound comes from audio_hq.c. Machines it does not make the sound for:
+	//convert the classic sound
+	if (audiosdl_hq_mode) {
+		if (!audio_hq_running) audio_hq_fifo_put_classic(buffer,AUDIO_BUFFER_SIZE,FRECUENCIA_SONIDO);
+		SDL_PauseAudioDevice(dispositivo_sdl,0);
+		return;
+	}
+
 	//buffer_actual=buffer;
 
 	audiosdl_fifo_sdl_write(buffer,AUDIO_BUFFER_SIZE);
@@ -170,6 +194,7 @@ int audiosdl_fifo_sdl_read_position=0;
 void audiosdl_empty_buffer(void)
 {
   debug_printf(VERBOSE_DEBUG,"Emptying audio buffer");
+  if (audiosdl_hq_mode) audio_hq_fifo_empty();
   //Vaciar de verdad: la escritura se pone donde esta la lectura. Antes solo se ponia la escritura a 0,
   //con lo que la fifo parecia llena de audio antiguo, y se volvia a reproducir (eco con retardo)
   audiosdl_fifo_sdl_write_position=audiosdl_fifo_sdl_read_position;
@@ -206,6 +231,12 @@ int audiosdl_fifo_sdl_return_size(void)
 
 void audiosdl_get_buffer_info (int *buffer_size,int *current_size)
 {
+  if (audiosdl_hq_mode) {
+    *buffer_size=AUDIO_HQ_SAMPLE_RATE/2;
+    *current_size=audio_hq_fifo_frames();
+    return;
+  }
+
   *buffer_size=audiosdl_return_fifo_buffer_size();
   *current_size=audiosdl_fifo_sdl_return_size();
 }
@@ -321,6 +352,15 @@ static void audiosdl_llenar_buffer_salida(char *destino,int len)
     }
 
     if (i<len) destino[i]=audiosdl_ultimo_valor_izquierdo;
+}
+
+//High quality mode: 16 bit stereo from audio_hq.c
+void audiosdl_callback_hq(void *udata, Uint8 *stream, int len)
+{
+	//para que no se queje el compilador de no usado
+	udata++;
+
+	audio_hq_fifo_get((short *)stream,len/4);
 }
 
 void audiosdl_callback(void *udata, Uint8 *stream, int len)
