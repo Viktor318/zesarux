@@ -41,6 +41,7 @@ extern z80_bit hungarian_keyboard;
 extern z80_bit keyboard_alt_caps_shift;
 
 extern int hungarian_keyboard_is_active(void);
+extern int hungarian_keyboard_machine_supported(void);
 extern int hungarian_keyboard_key_is_held(int keyid);
 extern int hungarian_keyboard_press(int keyid,unsigned int codepoint);
 extern int hungarian_keyboard_release(int keyid,int host_mods);

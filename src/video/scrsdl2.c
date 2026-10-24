@@ -1586,12 +1586,21 @@ static void scrsdl_alt_caps_shift_event(SDL_Event *event)
         //Autorepeat
         if (scrsdl_alt_caps_keys[scancode]) return;
 
-        if (!keyboard_alt_caps_shift.v || !MACHINE_IS_SPECTRUM || sdl_raw_keyboard_read.v) return;
+        if (!keyboard_alt_caps_shift.v || sdl_raw_keyboard_read.v) return;
+        if (!MACHINE_IS_SPECTRUM && !MACHINE_IS_ZX8081) return;
 
         //Only left Alt, not AltGr
         if (!(keysym.mod & KMOD_LALT) || (keysym.mod & (KMOD_RALT|KMOD_MODE))) return;
 
-        if (keysym.sym<'0' || keysym.sym>'9') return;
+        int sym=keysym.sym;
+
+        //Spectrum: number keys. ZX80/81: SHIFT with any key (keywords, functions, symbols)
+        if (MACHINE_IS_SPECTRUM) {
+            if (sym<'0' || sym>'9') return;
+        }
+        else {
+            if (!((sym>='0' && sym<='9') || (sym>='a' && sym<='z') || sym==SDLK_SPACE || sym==SDLK_PERIOD || sym==SDLK_RETURN)) return;
+        }
 
         scrsdl_alt_caps_keys[scancode]=1;
         scrsdl_alt_caps_total++;
