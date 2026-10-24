@@ -21959,6 +21959,11 @@ int help_keyboard_last_current_machine=-1;
 
 z80_byte *help_keyboard_text_512_pcw=NULL;
 
+//Defined below, with the scaling of the keyboard image
+extern int menu_help_keyboard_bmp_factor;
+extern int menu_help_keyboard_text_512_factor;
+int menu_help_keyboard_calculate_bmp_factor(char *nombre,z80_byte *bmp);
+
 void menu_help_keyboard_load_bmp(void)
 {
 
@@ -22037,6 +22042,8 @@ void menu_help_keyboard_load_bmp(void)
     //Keyboard help: paleta 1
     help_keyboard_bmp_file_mem=util_load_bmp_file(buffer_nombre,1);
 
+    menu_help_keyboard_bmp_factor=menu_help_keyboard_calculate_bmp_factor(nombrebmp,help_keyboard_bmp_file_mem);
+
 
     //if (help_keyboard_bmp_file_mem==NULL) return;
 
@@ -22052,6 +22059,7 @@ void menu_help_keyboard_load_bmp(void)
             return;
         }
         help_keyboard_text_512_pcw=util_load_bmp_file_no_palette(buffer_nombre);
+        menu_help_keyboard_text_512_factor=menu_help_keyboard_calculate_bmp_factor("keyboard_pcw_8512_only_text.bmp",help_keyboard_text_512_pcw);
     }
 
 
@@ -23258,10 +23266,58 @@ void menu_help_keyboard_show_all_keys(zxvision_window *ventana,int keyboard_map_
 //Scale in 1/256 units (256 = original size). Computed on every redraw from the window size
 int menu_help_keyboard_scale=256;
 
+//Scale of the key coordinate tables (they are in pixels of the original images) to window pixels, in 1/256 units.
+//Equal to menu_help_keyboard_scale when the image has its original size
+int menu_help_keyboard_coord_scale=256;
+
+//Width of the loaded image relative to the original image the key coordinates were made for (256 = same size)
+int menu_help_keyboard_bmp_factor=256;
+
+//Same for the PCW 8512 "512k" text image
+int menu_help_keyboard_text_512_factor=256;
+
+//Original widths of the keyboard images. The key coordinate tables are made for these sizes,
+//so a bigger (for example upscaled) image can be used: the coordinates are scaled to its real size
+struct s_menu_help_keyboard_original_width {
+    char *nombre;
+    int ancho;
+};
+
+static const struct s_menu_help_keyboard_original_width menu_help_keyboard_original_widths[]={
+    {"keyboard_chloe.bmp",648}, {"keyboard_cpc_464.bmp",640}, {"keyboard_cpc_6128.bmp",640}, {"keyboard_cpc_664.bmp",640},
+    {"keyboard_cz1000_plus.bmp",580}, {"keyboard_cz1500_plus.bmp",572}, {"keyboard_mk14.bmp",312},
+    {"keyboard_pcw_8256.bmp",640}, {"keyboard_pcw_8512_only_text.bmp",31}, {"keyboard_sam.bmp",640},
+    {"keyboard_zxuno.bmp",596},
+    //All the other images are 540 pixels wide
+    {NULL,540}
+};
+
+//Factor (1/256 units) between the real width of a loaded image and its original width
+int menu_help_keyboard_calculate_bmp_factor(char *nombre,z80_byte *bmp)
+{
+    if (bmp==NULL) return 256;
+
+    int ancho_bmp=bmp[18] + 256 * bmp[19];
+
+    int i;
+    int ancho_original=540;
+    for (i=0;menu_help_keyboard_original_widths[i].nombre!=NULL;i++) {
+        if (!strcmp(menu_help_keyboard_original_widths[i].nombre,nombre)) {
+            ancho_original=menu_help_keyboard_original_widths[i].ancho;
+            break;
+        }
+    }
+
+    if (ancho_bmp<=0 || ancho_original<=0) return 256;
+
+    return (ancho_bmp*256)/ancho_original;
+}
+
 //Compute the scale so that the bmp fits in the visible area of the window, keeping the aspect ratio
 void menu_help_keyboard_calculate_scale(zxvision_window *ventana,z80_byte *bmp)
 {
     menu_help_keyboard_scale=256;
+    menu_help_keyboard_coord_scale=256;
     if (bmp==NULL || ventana==NULL) return;
 
     int ancho_bmp=bmp[18] + 256 * bmp[19];
@@ -23280,20 +23336,22 @@ void menu_help_keyboard_calculate_scale(zxvision_window *ventana,z80_byte *bmp)
 
     int escala=(escala_x<escala_y ? escala_x : escala_y);
 
-    //Limits: from 1/4 to 8 times the original size
-    if (escala<64) escala=64;
+    //Limits: from 1/8 to 8 times the image size
+    if (escala<32) escala=32;
     if (escala>2048) escala=2048;
 
     menu_help_keyboard_scale=escala;
+
+    //Key coordinates: image scale multiplied by the image factor
+    menu_help_keyboard_coord_scale=(escala*menu_help_keyboard_bmp_factor)/256;
+    if (menu_help_keyboard_coord_scale<1) menu_help_keyboard_coord_scale=1;
 }
 
-//Pixel of the keyboard image (bmp coordinates) drawn as a scaled block
-void menu_help_keyboard_putpixel_scaled(zxvision_window *ventana,int x,int y,int color)
+//Pixel drawn as a scaled block. escala in 1/256 units. Offset (in window pixels) added
+static void menu_help_keyboard_putpixel_escala(zxvision_window *ventana,int x,int y,int color,int escala,int offset_x,int offset_y)
 {
-    int escala=menu_help_keyboard_scale;
-
     if (escala==256) {
-        zxvision_putpixel_no_zoom(ventana,x,y,color);
+        zxvision_putpixel_no_zoom(ventana,x+offset_x,y+offset_y,color);
         return;
     }
 
@@ -23309,17 +23367,42 @@ void menu_help_keyboard_putpixel_scaled(zxvision_window *ventana,int x,int y,int
     int px,py;
     for (py=y0;py<y1;py++) {
         for (px=x0;px<x1;px++) {
-            zxvision_putpixel_no_zoom(ventana,px,py,color);
+            zxvision_putpixel_no_zoom(ventana,px+offset_x,py+offset_y,color);
         }
     }
 }
 
-//Mouse position in the window (in pixels) to keyboard image coordinates
+//Pixel of the keyboard image (image coordinates)
+void menu_help_keyboard_putpixel_scaled(zxvision_window *ventana,int x,int y,int color)
+{
+    menu_help_keyboard_putpixel_escala(ventana,x,y,color,menu_help_keyboard_scale,0,0);
+}
+
+//Pixel in key coordinates (original image coordinates): key highlights
+void menu_help_keyboard_putpixel_coords(zxvision_window *ventana,int x,int y,int color)
+{
+    menu_help_keyboard_putpixel_escala(ventana,x,y,color,menu_help_keyboard_coord_scale,0,0);
+}
+
+//Pixel of the PCW 8512 "512k" text image, placed at x=61, y=10 of the original keyboard image
+void menu_help_keyboard_putpixel_text_512(zxvision_window *ventana,int x,int y,int color)
+{
+    int escala=menu_help_keyboard_coord_scale;
+    if (menu_help_keyboard_text_512_factor>0) escala=(escala*256)/menu_help_keyboard_text_512_factor;
+    if (escala<1) escala=1;
+
+    int offset_x=(61*menu_help_keyboard_coord_scale)>>8;
+    int offset_y=(10*menu_help_keyboard_coord_scale)>>8;
+
+    menu_help_keyboard_putpixel_escala(ventana,x,y,color,escala,offset_x,offset_y);
+}
+
+//Mouse position in the window (in pixels) to key coordinates
 void menu_help_keyboard_mouse_to_bmp(int *x,int *y)
 {
-    if (menu_help_keyboard_scale<=0) return;
-    *x=((*x)*256)/menu_help_keyboard_scale;
-    *y=((*y)*256)/menu_help_keyboard_scale;
+    if (menu_help_keyboard_coord_scale<=0) return;
+    *x=((*x)*256)/menu_help_keyboard_coord_scale;
+    *y=((*y)*256)/menu_help_keyboard_coord_scale;
 }
 
 void menu_help_keyboard_render_bmp_putpixel(zxvision_window *ventana,int x,int y,int color_final,int follow_zoom)
@@ -23331,11 +23414,11 @@ void menu_help_keyboard_render_bmp_putpixel(zxvision_window *ventana,int x,int y
 void menu_help_draw_rectangle_key(zxvision_window *ventana,int x1,int y1,int ancho,int alto,int color)
 {
     //Recuadro del tamanyo y algo mas grande
-    zxvision_draw_rectangle_function(ventana,x1,y1,ancho,alto,color,menu_help_keyboard_putpixel_scaled);
-    zxvision_draw_rectangle_function(ventana,x1-1,y1-1,ancho+2,alto+2,color,menu_help_keyboard_putpixel_scaled);
-    zxvision_draw_rectangle_function(ventana,x1-2,y1-2,ancho+4,alto+4,color,menu_help_keyboard_putpixel_scaled);
+    zxvision_draw_rectangle_function(ventana,x1,y1,ancho,alto,color,menu_help_keyboard_putpixel_coords);
+    zxvision_draw_rectangle_function(ventana,x1-1,y1-1,ancho+2,alto+2,color,menu_help_keyboard_putpixel_coords);
+    zxvision_draw_rectangle_function(ventana,x1-2,y1-2,ancho+4,alto+4,color,menu_help_keyboard_putpixel_coords);
     //Y algo mas pequenyo
-    zxvision_draw_rectangle_function(ventana,x1+1,y1+1,ancho-2,alto-2,color,menu_help_keyboard_putpixel_scaled);
+    zxvision_draw_rectangle_function(ventana,x1+1,y1+1,ancho-2,alto-2,color,menu_help_keyboard_putpixel_coords);
 }
 
 //Dice si bit tecla pulsada, dependiendo si es valor 0 en la mayoria de maquinas, o si no es 0 (como puertos de joystick en master system)
@@ -23636,7 +23719,7 @@ void menu_help_keyboard_overlay_render_512k_pcw_putpixel(zxvision_window *ventan
         //printf("no follow zoom. %d,%d\n",zoom_x,zoom_y);
 
         //El offset x=61, y=10 donde tiene que ir a parar el texto "256k"
-        menu_help_keyboard_putpixel_scaled(ventana,x+61,y+10,color_final);
+        menu_help_keyboard_putpixel_text_512(ventana,x,y,color_final);
     }
     else {
         //Aunque no estoy usando este caso, lo dejo por si en el futuro...
