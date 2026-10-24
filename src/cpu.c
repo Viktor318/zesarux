@@ -1399,6 +1399,26 @@ void random_ram_inves(z80_byte *puntero,int longitud)
 
 //int maquina_anterior_cambio_cpu_speed=-1;
 
+//Duracion real de un frame (en microsegundos) de las maquinas Sinclair/Amstrad, como en el aparato real:
+//48K: 69888 t-estados a 3.5 MHz = 19968 us (50.08 Hz)
+//128K/+2/+2A/+3: 70908 t-estados a 3.5469 MHz = 19992 us (50.02 Hz)
+//Antes se usaban 20000 us exactos para todas: el emulador iba un 0.16% mas lento que un 48K real,
+//y por tanto tambien el sonido sonaba algo mas grave. Las demas maquinas siguen con 20000
+int cpu_get_real_frame_microseconds(void)
+{
+    if (current_machine_type==MACHINE_ID_SPECTRUM_16 || current_machine_type==MACHINE_ID_SPECTRUM_48 ||
+        MACHINE_IS_SPECTRUM_48_PLUS_SPA || MACHINE_IS_SPECTRUM_48_PLUS_ENG) {
+        return 19968;
+    }
+
+    if ( (current_machine_type>=MACHINE_ID_SPECTRUM_128 && current_machine_type<=MACHINE_ID_SPECTRUM_P2A_SPA) ||
+        (current_machine_type>=MACHINE_ID_SPECTRUM_P3_40 && current_machine_type<=MACHINE_ID_SPECTRUM_P3_SPA) ) {
+        return 19992;
+    }
+
+    return 20000;
+}
+
 //ajustar timer de final de cada frame de pantalla. En vez de lanzar un frame cada 20 ms, hacerlo mas o menos rapido
 void set_emulator_speed(void)
 {
@@ -1413,10 +1433,16 @@ void set_emulator_speed(void)
     //o tambien si cpu speed es demasiado alta y tampoco permite algun timer concreto
     timer_restart();
 
+    //Frecuencia del sonido clasico: 312 muestras por frame, segun el ritmo real de frames de la maquina
+    int nueva_frecuencia_sonido=FRECUENCIA_CONSTANTE_NORMAL_SONIDO*porcentaje_velocidad_emulador/100;
+    if (!machine_60hz.v && original_timer_sleep_machine>=19000 && original_timer_sleep_machine<=21000) {
+        nueva_frecuencia_sonido=(int)((long long)nueva_frecuencia_sonido*20000/original_timer_sleep_machine);
+    }
+
     //Si ha cambiado velocidad, reiniciar driver audio con frecuencia adecuada
-    if (anterior_porcentaje_velocidad_emulador!=porcentaje_velocidad_emulador) {
+    if (anterior_porcentaje_velocidad_emulador!=porcentaje_velocidad_emulador || nueva_frecuencia_sonido!=frecuencia_sonido_variable) {
         if (audio_end!=NULL) audio_end();
-        frecuencia_sonido_variable=FRECUENCIA_CONSTANTE_NORMAL_SONIDO*porcentaje_velocidad_emulador/100;
+        frecuencia_sonido_variable=nueva_frecuencia_sonido;
         if (audio_init!=NULL) {
             if (audio_init()) {
                 //Error
@@ -1951,7 +1977,7 @@ void set_machine_params(void)
     i8049_chip_present=0;
 
     if (!MACHINE_IS_Z88) {
-        original_timer_sleep_machine=20000;
+        original_timer_sleep_machine=cpu_get_real_frame_microseconds();
                 set_emulator_speed();
     }
 

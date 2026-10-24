@@ -321,6 +321,7 @@ extern z80_bit temp_zx8081_lineasparimpar;
 extern z80_bit cpu_random_r_register;
 
 extern int porcentaje_velocidad_emulador;
+extern int cpu_get_real_frame_microseconds(void);
 extern void set_emulator_speed(void);
 
 //T-estados totales del frame

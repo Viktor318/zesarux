@@ -344,8 +344,11 @@ static int audio_hq_machine_has_speaker(void)
 
 static long audio_hq_get_clock_rate(void)
 {
-    int frames_per_second=(machine_60hz.v ? 60 : 50);
-    long rate=(long)screen_testados_total*frames_per_second;
+    //T-estados por segundo segun el ritmo real de frames del emulador
+    extern int original_timer_sleep_machine;
+    double frame_us=original_timer_sleep_machine;
+    if (frame_us<=0) frame_us=(machine_60hz.v ? 16666 : 20000);
+    long rate=(long)(screen_testados_total*1000000.0/frame_us);
     rate=rate*porcentaje_velocidad_emulador/100;
     if (rate<1) rate=1;
     return rate;

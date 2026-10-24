@@ -1069,7 +1069,8 @@ void timer_check_interrupt(void)
             if (contador_20ms<16666) return;
         }
         else {
-            if (contador_20ms<20000) return;
+            //Algo menos de 20000: los Spectrum 48K/128K usan frames de 19968/19992 us (ver cpu_get_real_frame_microseconds)
+            if (contador_20ms<19900) return;
         }
 
         //Cosas que suceden cada 20 ms aproximadamente
