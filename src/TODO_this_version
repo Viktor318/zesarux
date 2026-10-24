@@ -24,17 +24,15 @@ que cambie algo mas de filesel, como:
 el minimo para que no corte el titulo. Ver funcion menu_dibuja_ventana
 
 
--teclas F de funcion que se puedan lanzar también cuando está top menu abierto pero sin desplegar menus
+
 
 
 -en stdout no deja ir al menu anterior -> culpa de topbar, al estar activado no se comporta bien
 
 
--cambio de maquina con full screen (16k a 48k) peta: quiza son en Mac?
 
 -rutinas speech y kill speech se llaman aunque no haya nada pendiente. desde timer, llama a scrtextspeech_filter_run_pending
 
--full screen en cpc + real video (y creo que sin real video tambien) se ve mal. Probar por ejemplo con brunilda dandanator
 
 
 
@@ -102,8 +100,6 @@ Pero entonces posiciona submenus tambien cuando no tenemos topbar y no hay zx de
 Hay que revisar todas las condiciones de cuando hay que mostrar menus centrados, o pegados arriba, o pegados a la derecha
 
 
--fullscreen en cpc, sin border, en mac , no se ve bien
-
 
 
 -Mover algunos items del archivo "TODO" a los otros TODO* correspondientes
@@ -134,7 +130,6 @@ ok - probar joystick "nes" en Windows, joystick logic3
 ->lo contrario: multitask sin background windows, pues el menu funciona a la vez que la emulacion, pero solo se tiene una ventana activaa
 
 
--con el raton no puedo pasar a zona central de fileselector si cursor esta en campo File (ejemplo con output file de capture audio to file)
 
 
 -driver audio que sea archivo raw. esto complementaria el output a audio del menu
@@ -165,7 +160,7 @@ QL-Qsound AY
 *Qsound opciones para habilitar en archivos .config
 *Incluir alguna demo de QL en extras?
 
-
+------
 
 ***Baseconf*****
 
@@ -211,6 +206,9 @@ https://zxaaa.net/view_demos.php?t=%2F&s=Base&title=Title&vers=35
 -habilitar covox pentagon?
 
 -*snapshots zsf
+
+
+------
 
 ***Spectrum Next*****
 
@@ -353,8 +351,8 @@ acabar de probarlo **modos de video ampliado
 
 soft? https://zxaaa.net/view_demos.php?t=&s=scorpion&title=Title&vers=35
 
-*probar gmx en otros drivers de video
-ok *soporte ide gmx con smuc
+*probar gmx en otros drivers de video (sdl, x11, etc)
+
 
 
 ------
@@ -372,10 +370,7 @@ ok *soporte ide gmx con smuc
 ---
 
 
--tests de cpu que fallan, revisar
 -timings tsconf
-ok-timings baseconf
 
-echo "Timing_Tests-48k_v1.0.sna. errores normalmente en test 36 in a etc, test 37 in a etc"
-sleep 4
-./zesarux --noconfigfile --advancedmenus ./extras/media/spectrum/tests/Timing_Tests-48k_v1.0.snah
+
+-en teoria en las máquinas que no se puede quitar border, si me voy a fullscreen con opcion de "no border en full screen", se verán mal, ejemplo tbblue
