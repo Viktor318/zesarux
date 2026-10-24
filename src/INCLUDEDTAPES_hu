@@ -1,0 +1,24 @@
+A my_soft/ mappában néhány szoftvert találsz az emulált gépekhez.
+
+Ezek olyan programok, játékok és adatok, amelyeket én és a családom más tagjai készítettünk. Sok közülük egyszerű, BASIC nyelven írt program, amelyeket gyerekkoromban készítettem, mások pedig összetettebbek, például a SPED fordítóprogram, a RealDebug hibakereső vagy a Cursor Draw rajzprogram. Néhány program dokumentációja a my_soft/info_my_soft.odt fájlban található. 
+
+Az általam készített programok egy része "Man Software" márkanéven jelent meg. 
+Apám, Diego és legidősebb bátyám, Oscar programjai "Micro bit" vagy "Micro Byt" néven jelentek meg. 
+Középső bátyám, David programjai "Bit Soft" néven jelentek meg.
+
+Megjegyzés: néhány egyszerű, BASIC nyelven írt játékom támogatja a Kempston joystickot. Ezeket Inves Spectrum+ gépen programoztam, és a Kempston joystick olvasása csak Inves gépen működik, más Spectrum gépeken nem.
+
+Az extracsomagot is letöltheted a tárolóból:
+
+https://github.com/chernandezba/zesarux-extras
+
+A legutóbbi kiadás ZEsarUX-extras csomagjában is megtalálható. 
+
+Itt kazettákat, pillanatképeket, cartridge-eket és EPROM-kártyákat találsz az emulált gépekhez.
+Különböző okokból tettem bele őket:
+
+- Fontos programok vagy játékok egy adott gépen, mint például a Mazogs a ZX81-en
+
+- Nagy felbontású és különleges effektusokat valósítanak meg, mint például az Overscan a Spectrumon vagy a Manic miner a ZX81-en
+
+- Az emulátor viselkedésének tesztelésére szolgáló programok

@@ -1,0 +1,58 @@
+ZEsarUX - ZX Second-Emulator And Released for UniX 
+
+Készítette: Cesar Hernandez Baño
+
+https://github.com/chernandezba/zesarux
+
+
+Ez egy ZX gépeket emuláló program UNIX alapú operációs rendszerekre (és Windowsra), amely az összes Sinclair számítógépet emulálja:
+
+* MK14
+* ZX80
+* ZX81
+* ZX Spectrum
+* QL
+* Z88
+
+Továbbá:
+
+* Microdigital TK80, TK82, TK82C, TK83, TK85, TK90X (portugál és spanyol, Ferranti és Microdigital ULA), TK95 (portugál és spanyol)
+* Czerweny CZ 1000, CZ 1500, CZ 2000, CZ 1000 Plus, CZ 1500 Plus, CZ Spectrum, CZ Spectrum Plus
+* Timex Sinclair 1000, 1500, 2068
+* Timex Computer 2048, 2068
+* Inves Spectrum +
+* Sam Coupe
+* Pentagon 
+* Scorpion ZS-256, Scorpion ZS-256 Turbo+, Scorpion GMX
+* Didaktik Gama
+* Chloe 140 SE, 280 SE
+* Chrome
+* Prism
+* ZX-Uno
+* ZX-Evolution BaseConf
+* ZX-Evolution TS-Conf
+* ZX Spectrum Next
+* Jupiter Ace
+* Amstrad CPC 464, CPC 4128, CPC 664, CPC 6128
+* Amstrad PCW 8256, PCW 8512
+* MSX1 
+* Spectravideo 318/328
+* Colecovision
+* Sega SG1000
+* Sega Master System
+
+A ZEsarUX forráskódja és binárisai a GNU GPL licenc alatt terjeszthetők. 
+A ZEsarUX tartalmaz egy "my_soft" nevű mappát is, amelyben általam és családom más tagjai által készített programok, játékok és adatok találhatók. A teljes mappára szintén a GNU GPL licenc vonatkozik.
+
+A ZEsarUX harmadik féltől származó ROM-okat, médiafájlokat, programokat és játékokat is tartalmaz, amelyekre NEM vonatkozik ez a licenc.
+
+Ez a második ZX Spectrum emulátorom a ZXSpectr után
+https://github.com/chernandezba/zxspectr
+
+Javaslom, hogy olvasd el a FEATURES, INSTALL és HISTORY fájlokat, valamint az emulátor többi dokumentumát is.
+Megnyithatod őket a Súgó menüből vagy egy külső megjelenítővel.
+
+
+A ZEsarUX a GNU GENERAL PUBLIC LICENSE v3 alatt terjeszthető. Elolvashatod a LICENSE fájlban.
+
+Olvasd el a ZEsarUX által használt többi licencet is a Súgó->Licencek menüben, vagy egyszerűen nyisd meg a licenses/ mappa fájljait

@@ -1,0 +1,51 @@
+Az alábbi funkciók kizárólag a ZEsarUX-ban érhetők el, egyetlen hasonló emulátorban sem találhatók meg:
+
+* Ez az egyetlen emulátor a következő gépekhez: Chloe 140/280, Prism és Chrome
+
+* Támogatja a tökéletes ZX Spectrum 16k/48k színpalettát
+
+* Videómeghajtók: ncurses, aalib, cacalib, stdout (konzol), simpletext (konzol)
+
+* Emulálja a Speccy Superupgrade-et
+
+* Emulálja a Kartusho és iFrom interfészeket
+
+* Emulálja a HiLow DataDrive-ot és a Hilow Barbanegrát
+
+* Emulálja a Transtape-et
+
+* Emulálja a Microhobby Pokeador Automaticót
+
+* Emulálja a Dinamic SD1-et
+
+* Valós idejű lejátszás az emulált hangchipekről (AY, SN76489AN, i8049) külső MIDI eszközre
+
+* Szavakat tartalmazó képernyő-billentyűzet, amely hasznos szöveges kalandjátékokhoz. Emellett egy eszköz, amellyel szavakat nyerhetsz ki szöveges kalandjátékokból (Daad, Paws, Quill és Gac), és beállíthatod velük ezt a képernyőn megjelenő szöveges billentyűzetet
+
+* Szöveges kaland térképe a DAAD/PAWS/Quill vagy GAC rendszerrel készült kalandjátékokhoz
+
+* DAAD/PAWS/Quill hibakereső
+
+* Mesterséges intelligenciával valósághű képeket készíthetsz a szöveges kalandjátékok helyszínleírásaihoz
+
+* Spectrumos autóversenyes játékokban kormánykerék-joystickot használhatsz analóg vezérlőként
+
+* A képernyőt .stl fájlba mentheted, ami 3D nyomtatóval való nyomtatáshoz hasznos
+
+* Emulálja a Spectrum billentyűzet szellemleütés-hibáját (ghosting)
+
+* AY lejátszó
+
+* Hangchip-eszközök: kotta, zongora, a chipzene exportálása midi (.mid) fájlba
+
+* Támogatja a ZEsarUX távvezérlő parancsprotokollt (ZRCP). Egy telnet klienssel fejlett hibakeresést és távvezérlést végezhetsz a ZEsarUX-on.
+
+* Támogatja a ZEsarUX hálózati játékprotokollt (ZENG), amellyel bármelyik emulált játékkal játszhatsz többjátékos módban, két vagy több ZEsarUX példányt használva, vagy egy központi szerveren keresztül (ZENG Online)
+
+* Csökkentett Spectrum mag is használható, néhány funkció kikapcsolásával, ami lassú eszközökön hasznos, például Raspberry Pi 1/Zero esetén
+
+* Akadálymentesség támogatása: a karakterkiírás figyelése (Print char traps) lehetővé teszi, hogy szinte bármely program vagy játék által generált szöveget elfogj, akár a szabványos ROM-hívásokon (RST 10H), akár nem szabványos karakterkiíró rutinokon keresztül. A játék által generált szöveget szövegfelolvasó programnak küldheti. Fel van készítve a szövegfelolvasásra vak vagy gyengénlátó felhasználók számára. Az emulátor menüjét is fel tudja olvasni egy szövegfelolvasó program.
+
+* Fordítás támogatása: külső szkriptek segítségével szinte bármely program vagy játék szövegét lefordíthatja
+
+* Szimulálja a felső RAM memóriafrissítését a Spectrum 48Kb-on: a tartalma elvész, ha az R regisztert nagyon gyorsan változtatod

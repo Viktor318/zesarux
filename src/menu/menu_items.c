@@ -31562,9 +31562,17 @@ char *menu_about_read_file_only_read(char *aboutfile,int show_err_if_big)
     char *buffer_memory=util_malloc(MAX_TEXTO_GENERIC_MESSAGE,"Can not allocate memory for reading the file");
 
     debug_printf (VERBOSE_INFO,"Loading %s File",aboutfile);
-    FILE *ptr_aboutfile;
+    FILE *ptr_aboutfile=NULL;
+
+    //Hungarian: use the translated file <name>_hu when it exists
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) {
+        char nombre_hu[PATH_MAX];
+        snprintf(nombre_hu,sizeof(nombre_hu),"%s_hu",aboutfile);
+        open_sharedfile(nombre_hu,&ptr_aboutfile);
+    }
+
     //ptr_aboutfile=fopen(aboutfile,"rb");
-    open_sharedfile(aboutfile,&ptr_aboutfile);
+    if (ptr_aboutfile==NULL) open_sharedfile(aboutfile,&ptr_aboutfile);
 
     if (!ptr_aboutfile)
     {
@@ -31695,6 +31703,8 @@ void menu_about_donate(MENU_ITEM_PARAMETERS)
                         "\n"
                         "\n"
                         "Thanks!";
+
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) string_to_add=menu_hungarian(string_to_add);
 
     if (util_concat_string(buffer_memory,string_to_add,MAX_TEXTO_GENERIC_MESSAGE)) {
         debug_printf(VERBOSE_ERR,"Error appending text");
@@ -32311,14 +32321,18 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 
             "Inside a machine, the keys are mapped this way:\n"
             "ESC: If text to speech is not enabled, sends Shift+Space (break) on Spectrum. If enabled, stops playing text to speech\n"
-            "CTRL/ALT: Symbol shift\n"
+            "CTRL: Symbol shift\n"
+            "Left ALT + number keys: Caps shift + number keys (Spectrum; can be disabled in Settings->Hardware->Keyboard)\n"
             "TAB: Extended mode (symbol shift + caps shift)\n"
             "\n"
             "F4: When menu is closed, send Spectrum display content to speech program, including only known characters (unknown characters are shown as a space). "
             "When menu is opened, it will read the window contents and send it to speech program, even if it has already been read again\n"
             "F5: Open menu\n"
+            "F7: Switch ZX Desktop on/off\n"
             "F8: Open On Screen Keyboard (only on Spectrum & ZX80/81)\n"
             "F9: Open Smart Load window\n"
+            "F11: Decrease window zoom\n"
+            "F12: Increase window zoom\n"
             "\n"
             "On Z88, the following keys have special meaning:\n"
             "F1: Help\n"

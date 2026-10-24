@@ -1,0 +1,1234 @@
+Ez a GYIK több részre oszlik:
+
+
+Akadálymentesség
+----------------
+
+K: Hogyan futtathatom a ZEsarUX-ot szövegfelolvasási funkciókkal?
+V: Indítsd a ZEsarUX emulátort egy szövegfelolvasó program megadásával (útvonallal együtt), például a festival szkriptekkel vagy a Mac OS say szkriptjével, például:
+
+./zesarux BSLEEZE1.TAP --enableprintchartrap --textspeechprogram speech_filters/festival_filter.sh --linewidth 99 --linewidthwaitspace
+
+Vagy Windowson:
+zesarux BSLEEZE1.TAP --enableprintchartrap --textspeechprogram speech_filters\win_balabolka.bat --linewidth 99 --linewidthwaitspace
+
+Megjegyzés: a Windows-verzióban, ha parancssori beállításokat adsz meg, a szöveges konzol nyitva marad. Így a felolvasó programok nagyon gyorsan elindulnak.
+Ha nem adsz meg parancssori beállításokat, a felolvasó programok lassabban indulnak.
+
+Ezeket a beállításokat a menüben is megadhatod, csak menj a Beállítások-> Akadálymentesség menübe
+
+
+A speech_filters mappában többféle felolvasó szkriptet találsz.
+Mac OS X alatt a macos_say_filter.sh az app/Contents/Resources/speech_filters/ mappában található
+
+Érdemes lehet a --textspeechmenu kapcsolót is megadni, hogy a menüben is működjön a felolvasás. A menü megnyitásához nyomd meg az F5 billentyűt (vagy stdout meghajtó esetén írd be a "menu" szót).
+
+
+K: Hogyan állíthatom le az éppen zajló felolvasást?
+V: Nyitott menünél nyomd meg az ESC-et. Zárt menünél bármelyik billentyű leállítja az éppen zajló felolvasást.
+
+
+K: A felolvasás jól működik, de néha, főleg rövid mondatoknál, a szöveg csak néhány másodperc múlva kerül felolvasásra, vagy csak akkor, amikor újabb szöveg jelenik meg a képernyőn.
+V: Az Enter megnyomása kikényszeríti az utolsó szavak elküldését a felolvasó rendszernek. Próbáld meg néhány paraméter beállítását is:
+-Szövegfelolvasás: Időkorlát Enter nélkül (vagy a parancssorban --textspeechtimeout <másodperc>. A <másodperc> alapértéke 0.).
+-Karakterkiírás elfogása: Sorhossz (vagy a parancssorban --linewidth <karakterek>)
+-Karakterkiírás elfogása: Sorhossz, várakozás szóközre (Line width wait space) (vagy a parancssorban --linewidthwaitspace)
+
+
+K: Egyes szöveges kalandjátékok játszhatók a felolvasó szűrőkkel, más szöveges kalandjátékok viszont úgy tűnik, semmit sem küldenek a felolvasásnak.
+V: Alapértelmezés szerint, ha bekapcsolod a ZEsarUX-ban a "Karakterkiírás elfogása" funkciót, az csak a szabványos ROM-hívásokat fogja el. Vagyis ha egy program a szabványos ROM-hívásokkal ír ki szöveget,
+ezt a szöveget a ZEsarUX elkapja. Ha viszont a játék nem szabványos ROM-hívásokat használ, a szöveg nem lesz elkapva, és felolvasásra sem kerül.
+A ZEsarUX-ban van néhány beállítás erre: kézzel is megadhatod azt a memóriacímet, ahol a játék a szövegkiíró rutint hívja (Második elfogási cím paraméter, haladó felhasználóknak); sőt, egyes játékokat a ZEsarUX felismer, és automatikusan kitölti ezt a második elfogási cím paramétert.
+Ha az előzőek nem működnek, vagy nem vagy haladó felhasználó, bekapcsolhatod a "Második elfogás felismerése" funkciót, és a "Rutin felismerése" beállítást "Auto&all" értékre állíthatod (vagy a parancssorban megadhatod a --automaticdetectchar kapcsolót), és az
+emulátor megpróbálja megtalálni a legjobb megoldást.
+
+
+K: Szövegfelolvasást használok. Amikor megnyomok egy billentyűt a menüben (vagy zárt menünél az ESC-et), a következő felolvasandó elemek már nem hallatszanak, de az éppen felolvasott
+elem nem áll le. Hogyan állíthatom le az aktuális elemet is?
+V: Használd a szövegfelolvasás Leállító program (Text Speech Stop program) beállítását (a menüben vagy a parancssorban: --textspeechstopprogram)
+
+
+K: Amikor Windowson beállítom a felolvasó programot, hibaüzenetet kapok: "Full path to Text to Speech program ... has spaces. It won't work on Windows."
+V: Igen, ez a ZEsarUX Windows-verziójának korlátja. A felolvasó program és a felolvasást leállító program nem lehet olyan teljes útvonalon,
+amely szóközt tartalmaz. Relatív útvonal megadásával sem fog működni, mert a ZEsarUX kiegészíti és teljes útvonallá alakítja.
+A megoldás az, hogy a felolvasó programot és a leállító programot szóközt nem tartalmazó útvonalra helyezed át
+
+
+K: A ZEsarUX-ban található felolvasó programok valójában beszédszintetizátorok, nem képernyőolvasók. Használhatok képernyőolvasót a ZEsarUX-szal?
+V: Igen. Van egy szűrő, amely Windowson a vágólapra küldi a szöveget (speech_filters/win_clipboard.bat). Ezt az NVDA-val használhatod, ha telepítve van a megfelelő kiegészítő; az URL-t lásd a szűrőben. Más képernyőolvasókat is használhatsz, ha találsz módot arra, hogy automatikusan felolvassák a vágólap változásait.
+
+Van egy olyan felolvasó szkript is, amely a --textspeechprogram kapcsolóval adható meg, más képernyőolvasókkal működik, és közvetlenül, a vágólap érintése nélkül küldi a szöveget, de elég régi (bár többé-kevésbé működik); lásd: http://github.com/sukiletxe/zesarux-ao2
+
+K: Hogyan készíthetek saját felolvasó szkriptet?
+V: A Windows-szkriptek a %1 paraméterben egy fájlt kapnak, amely a felolvasandó szöveget tartalmazza, a %2 paraméterben pedig egy ideiglenes fájlt, amelyet
+a szkript legvégén törölni kell (ez az ideiglenes fájl jelzi a ZEsarUX-nak, hogy a szkript befejeződött).
+A többi operációs rendszer (GNU/Linux, Mac, Raspberry és egyéb Unix rendszerek) a felolvasandó szöveget a szabványos bemeneten kapja.
+Példákat a speech_filters mappában találsz
+
+
+K: Van hangos útmutató arról, hogyan kapcsolható be az akadálymentesség a ZEsarUX-ban?
+V: Igen. Töltsd le a hangfájlt:
+https://www.dropbox.com/s/0ihotq5f2w3spqb/zesarux%20demo%20en.mp3?dl=1
+
+Vedd figyelembe, hogy a felvétel a "Text Speech Stop program" (leállító program) bekapcsolása nélkül készült
+
+
+K: Van spanyol nyelvű gyors útmutató arról, hogyan kapcsolható be az akadálymentesség a ZEsarUX-ban?
+V: Igen, lásd a docs/accesibilidad_instrucciones.txt fájlt
+
+
+K: Fel tudom olvastatni a Spectrum képernyőjét?
+V: Ha zárt menünél megnyomod az F4 billentyűt, elindul egyfajta OCR funkció, amely megpróbálja kiolvasni a Spectrum képernyőjét. Ez a következő két esetben sikerül:
+1) A szöveg a szabványos ROM-betűkészlettel van kiírva
+2) A szöveg nem a szabványos ROM-betűkészlettel van kiírva, de a Spectrum rendszer-betűkészlet mutatója a használt betűkészletre van állítva
+(ami bizonyos esetekben előfordulhat)
+
+
+K: Felolvastathatok újra egy már felolvasott menüablakot?
+V: Csak nyomd meg az F4-et nyitott menünél. Ilyenkor az ablak újra felolvasásra kerül
+
+
+K: Miért nem olvasódik fel néhány menü?
+V: Vannak menük, például az AY regiszterek (AY Registers), amelyek bizonyos okokból nem olvasódnak fel létrehozáskor (ebben az esetben azért, mert az AY regiszterek ablaka folyamatosan frissül).
+De bármikor felolvastathatod őket az F4 megnyomásával
+
+
+----------------------------------------------------------------------------
+
+
+Háttértár
+---------
+
+K: Hogyan használhatom a ZXMMC emulációt?
+V: Futtasd az alternaterom_plus3e_mmcen3eE.rom alternatív ROM-ot Spectrum +2A géptípussal. Természetesen előbb ki kell választanod az MMC fájlt, be kell kapcsolnod az MMC emulációt,  és a menüben be kell kapcsolnod a ZXMMC-t
+
+
+K: A ZXMMC+-ban található BBC Basicet próbálom futtatni, de nem működik
+V: Spectrum 128k gépet kell választanod, és a Timex videómódoknak kikapcsolva kell lenniük. Ezután csak indítsd újra a gépet (reset), és a ZXMMC+ indítómenüjében nyomd meg a V billentyűt
+
+
+K: Hogyan használhatom a DIVMMC emulációt?
+V: A ZEsarUX alapértelmezésként az esxdos 0.8.5 firmware-t használja (esxmmc085.rom fájl). Szüksége van egy fájlrendszerre is a szokásos esxdos fájlokkal.
+Tehát először válaszd ki az MMC fájlt; a ZEsarUX extras csomagjában két MMC-képfájl található az esxdos-hoz:
+media/disk_images/divmmcesx085.mmc : az esxdos 0.8.5-höz
+media/disk_images/zxuno.mmc : az esxdos 0.8.6 beta-hoz (ZX-Uno-val használd)
+Ezután kapcsold be az MMC emulációt,  és a menüben kapcsold be a DIVMMC-t. Majd indítsd újra a gépet (és ha szükséges, indításkor nyomd meg a szóközt)
+
+
+K: 1 GB-nál nagyobb MMC kártyák használatakor a ZEsarUX lelassul, és szinte lefagy
+V: A ZEsarUX-nak annyi RAM-ot kell lefoglalnia, amekkora az MMC kártya mérete. Így egy 2 GB-os MMC kártyához 2 GB RAM kell
+
+
+K: Hogyan használhatom a ZXpand emulációt?
+V: A ZXpand emuláció nem használ MMC/SD emulációt, mint a ZXMMC/DIVMMC. Ehelyett a számítógépeden tárolt fájlokat és mappákat használja.
+A ZXpand-et ZX-81 gépmódban kell bekapcsolnod, és meg kell adnod az emuláció gyökérkönyvtárát (alapértelmezésként az aktuális könyvtárat használja).
+A ZXpand gyökérkönyvtára lesz a ZXpand interfész gyökérkönyvtára. Csak azok a fájlok és mappák jelennek meg, amelyek neve legfeljebb 8, kiterjesztése legfeljebb 3 karakter. Mindig nagybetűvel jelennek meg. A nem nagybetűs nevű mappák megjelennek, de nem lehet beléjük lépni.
+
+
+K: Hogyan használhatom a DIVIDE emulációt?
+V: A ZEsarUX alapértelmezésként az esxdos 0.8.5 firmware-t használja (esxide085.rom fájl). Szüksége van egy fájlrendszerre is a szokásos esxdos fájlokkal.
+Tehát először válaszd ki az IDE fájlt; a ZEsarUX extras csomagjában egy IDE-képfájl található az esxdos-hoz:
+media/disk_images/divideesx085.ide : az esxdos 0.8.5-höz
+Ezután kapcsold be az IDE emulációt,  és a menüben kapcsold be a DIVIDE-ot. Majd indítsd újra a gépet (és ha szükséges, indításkor nyomd meg a szóközt)
+
+
+K: Milyen fájlformátumok a .mmc és .ide kiterjesztésűek?
+V: Mindkettő ugyanaz: MMC vagy IDE kártyák/merevlemezek másolatai (dumpjai). Azért használok eltérő kiterjesztést, hogy meg lehessen különböztetni az MMC- és az IDE-képfájlokat.
+Az esxdos vagy más DIVIDE/DIVMMC firmware használata mellett ezekben a képfájlokban (és bármely más, FAT fájlrendszerre formázott lemezképben) a Hibakeresés-> Fájlkezelő eszközök menüből is böngészhetsz. Ott válaszd ki a fájlt, és válaszd a "moUnt" (csatolás) műveletet (Shift+u)
+
+Ezeket a kártya-képfájlokat az operációs rendszered segédprogramjaival is elérheted:
+-GNU/Linux: a "mount" paranccsal, a -o loop kapcsolóval csatolhatod ezeket a képfájlokat. Ha a képfájlban partíció van, előbb a losetup segédprogramot kell használnod. Példa a tbblue.mmc képfájllal:
+-- su root (vagy sudo su)
+-- fdisk -l tbblue.mmc
+-- Figyeld meg a szektorméret (512) és a partíció kezdetének (2048) értékét, ezeket fogod használni a mount parancsban
+-- mkdir /mnt/temporary
+-- mount -o offset=$((512*2048)) tbblue.mmc /mnt/temporary
+-- Ezután a tbblue.mmc tartalma a /mnt/temporary alatt lesz
+-- Ha végeztél a kártya használatával, válaszd le: umount /mnt/temporary
+
+-Mac OS X: változtasd a kiterjesztést .img-re, és a Finderrel csatolhatod.
+hogy megjelenjen a fájlválasztóban
+-Windows: a Windows nem támogatja natívan a képfájlok csatolását. Használhatod az ImDisk programot:
+http://www.ltr-data.se/opencode.html/#ImDisk
+Vagy keress egy másik programot a lemezképek eléréséhez
+
+K: Milyen fájlformátum a .mmcide kiterjesztésű?
+V: A .mmcide kiterjesztésű fájl egy hdf fájl kibontásával jön létre, amely MMC vagy IDE nyers képet tartalmazhat. Tehát a .mmcide egy .mmc vagy .ide kiterjesztésű fájl; mindkettő érvényes
+
+
+K: Hol vannak az mmc és ide fájlok? Néhány példa hivatkozik rájuk, de nem találom őket. Ráadásul a ZEsarUX korábbi verziói tartalmazták őket
+V: A media mappa külön vált a ZEsarUX fő terjesztési fájljától. Le kell töltened a ZEsarUX_extras csomagot
+
+
+K: A dandanatort szeretném használni, de a ZEsarUX bezárul, amikor bekapcsolom. Mac OS X-et használok
+V: Úgy tűnik, a Mac OSX egyes verzióin a ZEsarUX bezárul a dandanator bekapcsolásakor. Ez láthatóan a Real Video beállítással függ össze, így a Real Video kikapcsolása (és
+a Real Video automatikus bekapcsolásának kikapcsolása is) megoldja. A dandanator menüjében némi hangzajt is hallhatsz. Erre még nem találtam végleges megoldást
+
+
+K: Mi az az ESXDOS kezelő (esxdos handler)?
+V: Egy kis tájékoztató a DIVMMC-ről, az MMC-ről és az ESXDOS kezelőről a ZEsarUX-ban:
+Valódi SD/MMC kártyát emulálhatsz esxdos-szal, ha a Háttértár menü MMC pontjába mész. Ott kiválaszthatsz egy képfájlt (.mmc vagy .img), és bekapcsolhatod a DIVMMC-t. Így egy valódihoz hasonló esxdos rendszered lesz. Minden lemezművelet ezen a .img/.mmc fájlon történik
+Ha viszont az esxdos-t úgy szeretnéd használni, hogy a merevlemezeden lévő fájlokat éred el, bekapcsolhatod az ESXDOS kezelőt. Az esxdos-t bekapcsolhatod a DIVMMC/MMC beállításokkal együtt is, vagy csak magát az ESXDOS kezelőt
+Ha a DIVMMC-t, az MMC-t és az ESXDOS kezelőt is bekapcsolod, a fájlműveletek a merevlemezeden lévő fájlokat használják. És megkapod a teljes esxdos indítási folyamatot, az NMI-t stb.
+Megjegyzés: ZX Spectrum Next-en nem ajánlott a DIVMMC-t és az ESXDOS kezelőt egyszerre bekapcsolni, mert sok rendszerhívás hibára futhat.
+Ha csak az ESXDOS kezelőt kapcsolod be (a DIVMMC-t nem), akkor bármely esxdos függvény hívásakor (rst 8 -cal) a számítógéped fájljai lesznek használva. De értelemszerűen nem lesz esxdos indítás, NMI stb. Ha fejlesztő vagy, és csak esxdos hívásokat használsz, például egy fájl megnyitására, az ESXDOS kezelő éppen megfelel (nem kell bekapcsolni a DIVMMC-t)
+
+
+----------------------------------------------------------------------------
+
+
+Hangmeghajtók
+-------------
+
+K: Az SDL hangmeghajtó használatakor nagy a hang késleltetése. Ezt a hangmeghajtót GNU/Linux/Unix és Windows alatt használja. Mit tehetek a késleltetés csökkentéséért?
+V: Próbálj kisebb értéket adni a --sdlsamplesize paraméternek
+
+
+K: A hang nem szól jól Raspberry Pi-n.
+V: Próbáld az sdl hangmeghajtót.
+
+
+K: Megpróbáltam a onebitspeaker meghajtót pcspeaker típussal használni, de inicializáláskor hibát ad
+V: A ZEsarUX onebitspeaker meghajtójának PC Speaker típusa csak Linuxon érhető el, és a fordításkor engedélyezni kell a pthreads-et. Ráadásul a használatához rootként kell futtatnod a ZEsarUX-ot, mert privilegizált hozzáférés kell a PC Speaker I/O portjához
+
+
+K: A ZEsarUX 10.1 előtt volt egy pcspeaker meghajtó, amely már nem létezik. Mi történt vele?
+V: A pcspeaker meghajtót a onespeakerdriver váltotta fel. Ez a meghajtó a PC Speaker kimenetet és a Raspberry Pi GPIO hangszórót is kezeli; a típust a menüben vagy a parancssori beállításokkal választhatod ki
+
+
+K: Hogyan használhatom a Raspberry Pi GPIO hangszórót?
+V: Ahogy a neve is mutatja, egy hangszórót kell két GPIO lábra kötnöd: az egyik a GND-re megy, a másik egy tetszőleges lábra. Én egy olcsó piezoelektromos hangszórót használok, közvetlenül ezekre a lábakra dugva.
+Ezután használd a onebitspeaker meghajtót, és a típust állítsd Raspberry Pi GPIO-ra.
+Az alapértelmezett lábszám 22, de bármely másikra módosíthatod.
+
+K: Milyen MIDI/MID funkciók vannak a ZEsarUX-ban?
+V: A ZEsarUX-nak három MIDI-vel kapcsolatos funkciója van:
+
+1) Spectrum 128k/+2/+2A/+3 gépeken és más AY chippel rendelkező Speccy klónokon a 14-es és 15-ös regiszterbe (MIDI regiszterek) küldött értékek a számítógépedhez csatlakoztatott külső MIDI eszközre (vagy szoftveres szintetizátorra) kerülnek
+2) Egy hangchipen (AY chip, SN chip vagy QL chip) keltett hangok lejátszhatók a számítógépedhez csatlakoztatott külső MIDI eszközön (vagy szoftveres szintetizátoron)
+3) Egy hangchipen (AY chip, SN chip vagy QL chip) keltett hangok .mid fájlba exportálhatók
+
+Az 1. és 2. funkció használatához először szükséged van egy külső MIDI eszközre (például egy zongorára), vagy egy szoftveres MIDI szintetizátorra, amely egy MIDI eszközt "emulál":
+
+- Ha külső MIDI eszközt használsz: a Mac és a Windows natívan támogatja, a Linux is natívan támogatja, de az alsa hangmeghajtót kell használnod. Csak dugd be az eszközt egy USB portba.
+
+- Ha szoftveres MIDI szintetizátort használsz, az operációs rendszeredtől függően többet is kipróbálhatsz:
+ - GNU/Linux: Timidity. A legtöbb Linux disztribúció tartalmazza.
+ - Mac: fluidsynth. A csomagkezelődtől függően a 'brew install fluidsynth' vagy a 'sudo port install fluidsynth' paranccsal telepítheted.
+   Szükséged lesz egy soundfontra is, amelyet például innen tölthetsz le: http://www.schristiancollins.com/generaluser.php.
+ - Windows: CoolSoft VirtualMIDISynth (bár úgy gondolom, egyes Windowsokon alapból van szoftveres MIDI, így lehet, hogy nem lesz szükséged másikra).
+
+Ezután kapcsold be a Beállítások-> Hardver-> Hang-> Hangchipből MIDI kimenet beállítást
+
+Az 1. funkció használatához arról is meg kell győződnöd, hogy a Menü-> Hang-> AY keverő-> AY MIDI regiszterek beállítás be van kapcsolva. A ZX-Uno MMC-képfájlon (az extras MMC-képfájlon) van egy MIDI lejátszó, használd a ".playmidi" parancsot,
+és nézz bele a képfájl MID mappájába, ott van néhány lejátszható .mid fájl.
+
+A 3. funkció használatához menj a Menü-> Hang-> Hangchipből .mid pontba
+
+----------------------------------------------------------------------------
+
+
+Videómeghajtók
+--------------
+
+
+K: Rengeteg videómeghajtó van. Mi a különbség köztük?
+V: Háromféle videómeghajtó létezik:
+
+1) Teljes videómeghajtók. Az emulált géphez hasonló grafikus ablakot jelenítenek meg:
+-XWindows: X11 meghajtó. Unix rendszereken fut
+-SDL: SDL meghajtó. Unix rendszereken és Windowson (Mingw) fut
+-Cocoa: Cocoa meghajtó. Mac OS X alatt használatos
+-FBdev: Framebuffer meghajtó. GNU/Linux alatt használatos
+
+2) Vegyes grafikus/szöveges meghajtók. Szöveges meghajtók, de szöveggel szimulálnak grafikus ablakot:
+-AA. Ascii-Art videómeghajtó. Fekete-fehér szöveg. Bármilyen környezetben fut, ahol a könyvtár elérhető
+-Caca: Cacalib videómeghajtó. Mint az AA, de színekkel. Bármilyen környezetben fut, ahol a könyvtár elérhető
+
+3) Csak szöveges meghajtók:
+-Curses: Színes szöveges meghajtó. Tudja olvasni a billentyűzetet. Unix rendszereken fut
+-Stdout: Egyszerű szövegkiírás és szöveggrafikus szimuláció. El tudja fogni a karakterkiíró rutinokat, és van felolvasási képessége. Tudja olvasni a billentyűzetet. Unix rendszereken fut
+-Simpletext: Mint az stdout, de nem tudja olvasni a billentyűzetet, nem tudja elfogni a karakterkiíró rutinokat, és nincs felolvasási képessége. Ez a meghajtó arra készült, hogy bármilyen rendszeren, további könyvtár nélkül működjön.
+
+
+K: Teljes képernyőre állítottam a ZEsarUX-ot, de nem tölti ki a teljes képernyőt, és/vagy nem normálisak az arányok
+V: A teljes képernyős funkció kísérleti, és függ a videómeghajtótól, az operációs rendszertől és az ablakkezelőtől. Így vannak esetek, amikor tökéletesen működik, és vannak, amikor nem. Ha nálad nem működik a teljes képernyő, kérlek, légy türelmes, és várd meg a későbbi javításokat (addig pedig teljes képernyő helyett ablakos módot használj).
+
+
+K: A nagyítás automatikusan 1-re változik QL, TSConf, CPC, PCW, Prism, Sam Coupe vagy Spectrum Next gép kiválasztásakor. Miért?
+V: Ezeknek a gépeknek "nagy" a felbontásuk (egy Speccy 256x192-es felbontásához képest). Így az alapértelmezett 2-es nagyítás túl nagy lehet ahhoz, hogy ezek a gépek elférjenek a kijelződön.
+Ha nem szeretnéd, hogy ez automatikusan megváltozzon, módosítsd a Beállítások-> Általános-> Nagyítás igazítása nagy kijelzőhöz beállítást,
+vagy használd a parancssori beállítást: --no-autochange-zoom-big-display
+
+
+K: Linuxon tisztán szöveges konzolmódban indítottam a ZEsarUX-ot, kipróbáltam az fbdev meghajtót, de hibát ad:
+"fbdev: ioctl VT_GETSTATE: Inappropriate ioctl for device (not a linux console?)"
+V: Egy ál-szöveges konzolmódból kell indítanod, vagyis olyan szöveges konzolból, amely grafikus módban fut. Ehhez a kernel indításakor meg kell adnod egy vga mód paramétert. Próbáld meg hozzáadni ezt a paramétert a Grub indításhoz: "vga=792"
+
+
+K: Tud a ZEsarUX anaglif képeket készíteni 3D szemüveghez? (Piros-kék szemüveg)
+V: Igen, használhatod az emulált kijelző effektjeit a Beállítások-> Főablak-> Emulált kijelző effektjei menüben. Létre kell hoznod egy piros kiinduló képet, el kell tolnod, majd össze kell keverned ugyanezzel a képpel kékben. Ezt a következő effektek alkalmazásával, ebben a sorrendben érheted el:
+
+- Scroll Horizontal (vízszintes görgetés). 20 pixel
+- Red (vörös)
+- Copy to buffer (másolás pufferbe)
+- Restore Original (eredeti visszaállítása)
+- RGB. Csak a kéket (Blue) válaszd ki
+- Mix from buffer (keverés pufferből). 50%. Típus: Average (átlag)
+
+Ezeket az effekteket a következő konfigurációs beállításokkal is bekapcsolhatod:
+
+--video-fx-enable
+--video-fx-set "Scroll Horizontal" 0 1
+--video-fx-set "Red" 1 1
+--video-fx-set "Copy to buffer" 2 1
+--video-fx-set "Restore Original" 3 1
+--video-fx-set "RGB" 4 1
+--video-fx-set "Mix from buffer" 5 1
+--video-fx-mix-type "Mix from buffer" "Average"
+--video-fx-offset "Scroll Horizontal" 20
+--video-fx-rgb RGB 0 0 1
+
+----------------------------------------------------------------------------
+
+
+Hibakeresés
+-----------
+
+K: Mi a ZEsarUX távoli parancsprotokoll?
+V: A ZEsarUX távoli parancsprotokoll (vagy ZRCP) egyfajta API, amelyhez egy hálózati TCP porton keresztül csatlakozhatsz a ZEsarUX-hoz. Csatlakozhatsz hozzá
+telnet klienssel, vagy akár készíthetsz egy külső felületet (például egy IDE-t), amely távolról kapcsolódik a ZEsarUX-hoz, és kommunikál vele.
+Alapértelmezésként ki van kapcsolva; bekapcsolhatod a Beállítások-> Hibakeresés menüből, vagy a parancssorban a --enable-remoteprotocol kapcsolóval. Az alapértelmezett port a 10000.
+Az emulátor minden verziója támogatja, de Windowson csak a ZEsarUX-pthreads verzió
+
+Két jó példa van, amely a ZRCP-t használja:
+1)
+https://github.com/maziac/z80-debug
+Ez a bővítmény lehetővé teszi, hogy a VSCode a ZRCP segítségével hibakeresést végezzen a ZEsarUX-ban
+Kérlek, olvasd el a dokumentációt a webhelyén, hogy megtudd, hogyan működik
+Van egy Cesar Wagener által készített dokumentum is, amely elmagyarázza a beállítását, más hasznos bővítményekkel együtt. Lásd az
+IDE Spectrum v1.3.pdf
+fájlt az extras/docs mappában. Az eredeti fájl spanyol nyelvű, de van egy angolra fordított változata is (köszönet Derek Bollinak a fordításért)
+
+2)
+https://github.com/Tenebrous/vscode-zx-debugger
+Ez a bővítmény lehetővé teszi, hogy a VSCode a ZRCP segítségével hibakeresést végezzen a ZEsarUX-ban
+
+A telepítése:
+Nyisd meg a VSCode-ot, menj az "Extensions" részhez, és keresd meg a Tenebrous felhasználó "ZX Debugger extension" bővítményét
+Telepítsd
+-nyiss meg egy projektet/mappát a VSCode-ban
+-menj a debug -> add configuration pontba. Add hozzá a zx-debuggert
+-majd menj a debug menü start debugging pontjába
+
+Megjegyzés: szükséged lesz a mono/.net könyvtárakra
+
+
+K: Mi az a "memóriaterület" (Memory zone)?
+V: A memóriaterület egy fogalom, amelyet néhány hibakereső menüpont használ, és lehetővé teszi a memória különböző területeinek olvasását, például ROM, RAM, DIVMMC RAM, ZX-Uno flash stb.
+Az aktuális memóriaterületet általában a "Z" megnyomásával váltogathatod egy hibakereső menüben.
+Van egy "Fájl memóriaterülete" (File memory zone) is, amellyel beolvashatsz egy fájlt (legfeljebb 16 MB-ig), és használhatod vele a hibakereső menüket. Egy fájl ebbe a területbe való betöltéséhez nyisd meg a Fájlkezelő eszközök menüt, válassz ki egy fájlt, és nyomd meg az F billentyűt (Shift-f), ami a "File memory zone" (fájl memóriaterülete) műveletet jelenti
+
+
+K: Amikor ZEsarUX kernel panic keletkezik, a konzolon látom a CPU regisztereit, utána pedig mutatóhívások listáját, de hívásnevek nélkül. Hogyan láthatom a ZEsarUX hívásneveit?
+V: Csak állítsd be a következő fordítási beállításokat:
+export CFLAGS="-g -rdynamic"
+export LDFLAGS="-g -rdynamic"
+
+A ./configure előtt, majd ./configure (a kívánt beállításokkal) ; make clean ; make
+Ezután, amikor ZEsarUX kernel panic keletkezik, a backtrace-ben látni fogod a hívásneveket. Ez csak GNU/Linuxon vagy Macen érvényes (és úgy tűnik, Macen ezek a fordítási beállítások alapból be vannak kapcsolva)
+
+
+K: Felvettem egy parancssori töréspontot, például "PC=0", de nem áll meg. Miért?
+V: Ez a töréspont nem fog kiváltódni közvetlenül a ZEsarUX indítása után. Ennek oka, hogy a töréspontok kiértékelése mindig az utasítás (opcode) végrehajtása után történik, így először a 0 címen lévő utasítás hajtódik végre, ami Spectrumon általában egy "DI", tehát mire a töréspont kiértékelődik, PC=1. Ezért például PC=1-re cserélheted a töréspontot
+
+----------------------------------------------------------------------------
+
+
+Hálózati játék (ZENG)
+---------------------
+
+K: Hogyan állíthatom be a ZENG-et kettőnél több ZEsarUX példányhoz?
+V: Minden ZEsarUX példányon meg kell adnod a többi csomópont gépnevét/IP-címét, és ne feledd, hogy csak egyet állíts be fő gépnek (master). Vegyük például ezt a háromcsomópontos elrendezést:
+
+192.168.1.139 A gép (ZENG fő gép, master)
+192.168.1.191 B gép (ZENG mellékgép, slave)
+192.168.1.147 C gép (ZENG mellékgép, slave)
+
+Tehát a ZENG menüben ezt kell beállítanod:
+
+- Az A gépen a távoli gépek: 192.168.1.191,192.168.1.147. Állítsd be fő gépnek
+- A B gépen a távoli gépek: 192.168.1.139,192.168.1.147. Vedd ki a pipát a fő gép elől
+- A C gépen a távoli gépek: 192.168.1.139,192.168.1.191. Vedd ki a pipát a fő gép elől
+
+Ne írj szóközt a gépek közé
+
+
+K: Elindítottam két ZEsarUX ablakot; az egyik szobát hoz létre a ZENG Online szerveren, a másik csatlakozik ehhez a szobához. A második nem tud billentyűleütéseket küldeni
+V: Ha két ZEsarUX ablakot indítottál, mindkettőnek ugyanaz a konfigurációja, viszont van egy paraméter, amelynek egyedinek kell lennie a ZENG Online szerverhez való csatlakozáskor:
+--stats-uuid X
+Ez a paraméter egyedi azonosítót rendel a ZENG Online játékoshoz; ha ez az uuid ismétlődik, a billentyűk nem érkeznek meg rendesen. Az "X" értéket módosíthatod egy másik
+számra, vagy akár el is távolíthatod ezt a paramétert, és a ZEsarUX indításakor új jön létre.
+Van egy másik paraméter is, a --zeng-online-nickname, amely becenevet rendel a ZENG Online játékoshoz. Ezeknek a beceneveknek is különbözniük kellene minden játékosnál; ugyanakkor
+minden rendben működik, csak zavaró lehet, ha ugyanaz a becenév többször szerepel egy szobában
+
+
+----------------------------------------------------------------------------
+
+
+Windows
+-------
+
+K: Minden alkalommal, amikor a felolvasó program fut, új konzolablak nyílik meg. Windowst használok.
+V: Két lehetőséged van a megoldásra:
+1) Nyisd meg a ZEsarUX-ot a Windows konzolból (cmd), és adj meg legalább egy paramétert, vagy a --nodisableconsole paramétert
+2) Ha a ZEsarUX-ot a futtatható fájlra duplán kattintva nyitod meg, állítsd be a --nodisableconsole paramétert a .zesaruxrc konfigurációs fájlban
+
+
+K: Hogyan választhatok ki fájlokat más meghajtókról?
+V: A fájlválasztó ablakban nyomd meg a Shift+D billentyűt egy másik meghajtó kiválasztásához.
+Át is válthatsz a Fájlnév részre (a TAB kétszeri megnyomásával), és beírhatod a meghajtó betűjelét és a ':' karaktert, például: C:
+Ne feledd, hogy a : karaktert a Symbol Shift (Ctrl vagy Alt) + Z billentyűvel kapod
+
+
+K: Bekapcsoltam a ZEsarUX távoli parancsprotokollt, telnet klienssel csatlakoztam, de csak az üdvözlő üzenetet látom, és nem tudok semmit begépelni
+V: Próbáld kikapcsolni a Windows tűzfalat
+
+
+K: Hallok némi "kattogást" a hangban, amikor az emulált gép semmilyen hangot nem ad ki
+V: Ha hallod ezeket a bosszantó hangokat, például a Spectrum 48kb copyright üzeneténél, anélkül hogy bármilyen billentyűt megnyomnál, sajnos erre a problémára még nincs javítás. Ugyanazok a hangkönyvtárak (SDL), amelyeket használok, GNU/Linuxon és Macen tökéletesen működnek, Windowson viszont nem. Úgy tűnik, valamilyen probléma van a Mingw+SDL+Windows kombinációval, és nem mindig jelentkezik; a hangkártyádtól és annak illesztőprogramjától is függ. Ezt a hatást kissé csökkentheted, ha a Hang beállításaiban bekapcsolod a Csendérzékelőt.
+Ez a kattogási probléma nem függ össze az induláskori kattanásokkal vagy a Next böngészőben ismétlődő kattogással. Ez a másik kettő valószínűleg hiba az én kódomban
+
+
+----------------------------------------------------------------------------
+
+
+ZX-Spectrum
+-----------
+
+K: A Spectrum játékom szivárvány/hi-colour effekteket használ, de a ZEsarUX nem jeleníti meg őket.
+V: Kapcsold be a Real Video beállítást. A Real Video egy olyan funkció, amely kicsit több processzoridőt használ a gépedből, de úgy jeleníti meg az emulált gépet, ahogyan annak látszania kell. Ugyanaz az ok, mint ZX-80/ZX-81 esetén
+
+
+----------------------------------------------------------------------------
+
+
+ZX-80 & ZX-81
+-------------
+
+K: A ZX80-as vagy ZX81-es játékom nagy felbontást (hi-res) használ, de a ZEsarUX nem jeleníti meg jól a képet.
+V: Kapcsold be a Real Video beállítást. A Real Video egy olyan funkció, amely kicsit több processzoridőt használ a gépedből, de úgy jeleníti meg az emulált gépet, ahogyan annak látszania kell. Ugyanaz az ok, mint ZX Spectrum esetén. Ha bekapcsoltad a Real Videót, és egyáltalán nem jelenik meg kép, próbáld meg a WRX-et is bekapcsolni.
+
+
+K: Megpróbáltam futtatni a ZX81 Sponzy ROM-ot a ZEsarUX-ban, de nem működik
+V: Valószínűleg az "Egyéni gép" (Custom machine) beállítást választottad a menüben. A Sponzy ROM azonban 16KB hosszú, a ZEsarUX pedig alapértelmezés szerint csak 8KB-os ROM-ot tölt be.
+Ahhoz, hogy ezt a ROM-ot használhasd, be kell kapcsolnod a RAM-ot a 2000h-3fffh címeken. Tehát:
+
+1) Állíts be normál ZX81 gépet. Lépj a Hardver->"ZX80/81 8K RAM a 2000H címen" menüpontra, és kapcsold be
+2) Gép kiválasztása->Egyéni gép. Válaszd ki a Sponzy ROM-ot és a ZX81 géptípust. Ez csak a ROM első 8 KB-ját tölti be. A ZX81 lefagy, és
+a képernyőn "szemét" jelenik meg, továbbá a "Real Video" beállítás automatikusan bekapcsol.
+3) A trükk az, hogy a ROM többi részét a 2000h-3fffh címekre töltöd be. Ehhez lépj a Hibakeresés->Bináris blokk betöltése menüpontra. Válaszd ki ugyanazt a
+Sponzy ROM fájlt, a címet állítsd 0-ra, a hosszt pedig 0-ra (így a teljes fájl betöltődik). A ZEsarUX a teljes fájlt betölti, de a 0000-1fffh címek
+írásvédettek; ez nem gond, mert ezek a címek már a 2. lépésben betöltődtek. A 2000h-3fffh címekre (ahol bekapcsoltuk a RAM-ot) a Sponzy ROM többi része kerül
+4) Lépj a Hibakeresés->Újraindítás menüpontra
+5) A ROM most már működik, de valószínűleg csak fehér képernyőt látsz. Ennek oka, hogy a Sponzy ROM WRX megjelenítési módot használ. Ezt a Beállítások->Kijelző->WRX menüpontban kell bekapcsolnod
+
+
+----------------------------------------------------------------------------
+
+
+ZX-UNO
+------
+
+K: Miért használ a DIVMMC a ZX-Uno-n esxdos 0.8.6 beta 4-et, míg a többi Spectrum modell esxdos 0.8.5-öt?
+V: ZX-Uno emuláció esetén az esxdos firmware a zxuno.flash ZX-Uno Flash képfájl része. A ZX-Uno esxdos 0.8.6 beta 4-gyel érkezik.
+Ha más Spectrum modelleken használod a divmmc-t, a ZEsarUX az esxdos 0.8.5 firmware-t tölti be (esxmmc085.rom fájl).
+
+
+K: Miért változik meg néhány emulátorbeállítás a menüben, amikor a ZX-Uno-t használom?
+V: A ZX-Uno egyes beállításai közösek a menü ugyanilyen beállításaival. Például: DivMMC emuláció, billentyűzet-változat (Keyboard Issue), lassított memória (Contended Memory), időzítés (az időzítés nem módosítható a menüből), ULAPlus stb...
+Ezeket a beállításokat tehát a ZEsarUX-ban a ZX-Uno BIOS is módosíthatja, sőt maga a ZX-Uno indulási folyamata is megváltoztatja őket (különösen a divmmc emulációt)
+
+
+K: Hol találom a ZX-Uno következő billentyűit: Edit, Break, Delete stb..
+V: Ezek nem új billentyűk a ZX-Uno-n, hanem billentyűkombinációk, akárcsak a Spectrum+, +2 stb. gépeken. Az eredeti Speccy-nek csak 40 billentyűje volt; az Edit funkcióhoz például a Shift+1-et kellett lenyomni. A Break billentyű a Shift+Space kombináció. A Spectrum+, +2 és későbbi gépeken ezek a kiegészítő billentyűk valójában billentyűkombinációk. Amikor például az Edit-et nyomod meg, a billentyűzet Shift+1-et küld. A ZEsarUX-ban tehát a Shift+billentyű kombinációkat kell használnod ezekhez.
+Léteznek olyan billentyűzetmatricák a ZX-Uno-hoz, amelyek például a Break funkciót az ESC billentyűre, az Edit funkciót pedig az F2 billentyűre helyezik. Ezek a ZEsarUX-ban nem érvényesek, kivéve az ESC billentyűt,
+amely ZX-Uno-n a Break-re van leképezve. Szinte minden F funkcióbillentyűnek más jelentése van a ZEsarUX-ban. Egyes ZX-Uno matricákon az NMI funkció az F5-re van téve, de az F5 a ZEsarUX menüjét nyitja meg; NMI előidézéséhez a Hibakeresés menübe kell menned
+
+
+K: Hogyan cserélhetem le az FPGA emulációs magot (core)?
+V: Nem cserélheted le. A ZEsarUX nem a ZX-Uno FPGA-t emulálja. ZX-Uno módban a ZEsarUX a következőket emulálja:
+-Z80
+-Egy Spectrum +2A szokásos hardvere: hangchip, beeper, kazetta stb...
+-A ZX-Uno kiegészítő memóriája
+-SPI Flash
+-DivMMC
+-A ZX-Uno 256 belső regisztere: Masterconf, Mastermapper stb.
+-Egyéb kiegészítő funkciók: ULAplus...
+
+Tehát nem cserélheted le az emulációs magot, nem tölthetsz fel például Atari 2600-at emuláló FPGA magot...
+
+
+K: Miért használ a ZX-Uno indulása és BIOS-a sok fizikai CPU-t, és miért csökken az FPS?
+V: A ZX-Uno indulási folyamata alatt és a BIOS-ába lépve a Z80 turbó mód 8X-ra áll, így a ZEsarUX nyolcszor annyi CPU-teljesítményt használ, mint normál 1X módban. Ezért használ több fizikai CPU-t, és ezért csökken az FPS. Nagyon gyors számítógépen ennek nem kellene előfordulnia.
+Bekapcsolhatod a "Turbó tiltása induláskor" beállítást a Beállítások->Hardver menüben, így ebben a 2 esetben nem engedi a turbó mód átállítását
+
+
+----------------------------------------------------------------------------
+
+
+Z88
+---
+
+K: Hogyan írhatok fájlokat a helyi merevlemezemről egy Z88 fájlkártyára (File Card)?
+V: Nézd meg ezt a videót:
+https://www.youtube.com/watch?v=mxaVURSAO3o
+
+
+K: Hogyan használhatom íráshoz a hibrid RAM+EPROM kártyákat?
+V: Bár a ZEsarUX támogatja ezeknek a kártyáknak az írását a 3-as foglalatban, úgy tűnik, az OZ nem ismeri fel őket írhatóként.
+Az EPROM rész mérete 512kb, ami nem szabványos EPROM-méret.
+Olvasásra viszont felismeri ezeket a kártyákat, ha például egy új OZ kiadás van rajtuk (tedd az 1-es foglalatba, hogy arról induljon)
+
+
+K: Nagyon érdekel a Cambridge Z88, de nem tudom, hogyan kell használni. Hol találok hozzá dokumentációt?
+V: Megtalálod itt: https://cambridgez88.jira.com/wiki/display/UG45/
+vagy a ZEsarUX extras csomagjában:
+extras/docs/z88/Z88UGV4.pdf
+
+
+K: Hogyan másolhatok fájlokat a PC-mről a Z88-ra?
+V: A ZEsarUX által emulált Z88 gépre többféleképpen tölthetsz be fájlt:
+
+1) Ha egyszerű szöveges Basic fájlról van szó, két lehetőséged van:
+
+a) Írd a fájl elejére:
+#B
+.J
+NEW
+
+Ezután másold a fájlt egy EPROM-ra (lásd a 4. lépést), majd a Filer-ben egyszerűen válaszd ki a fájlt, és futtasd (Execute). A BBC Basic-be lépve is futtathatod a következő paranccsal:
+*CLI .*FILENAME. Ebben az esetben az elején lévő "#B" nem szükséges
+
+b) Megnyithatod a Z88 Basic-et, majd a ZEsarUX Hibakeresés->Spool (debug-spool) menüjével betöltheted a txt fájlt. A ZEsarUX ezután a fájl minden betűjét billentyűleütésként küldi el
+
+2) Ha tokenizált Basic fájlról van szó, másold a fájlt egy EPROM-ra (lásd a 4. lépést), majd a BBC Basic-ben egyszerűen futtasd ezt: LOAD "FILENAME"
+
+3) Ha EPROM képfájlról van szó (.epr, .eprom vagy .62 kiterjesztés), egyszerűen helyezd be a ZEsarUX Háttértár menüjéből
+
+4) Ha olyan fájlról van szó, amelyet EPROM kártyára kell másolnod, behelyezhetsz egy meglévő EPROM képfájlt, vagy létrehozhatsz egy üreset a Háttértár menüből. Ezután ugyanebben a menüben másolhatsz fájlt a PC-dről erre az EPROM képre. Kövesd ezeket a lépéseket: Lépj a Háttértár->Z88 memóriafoglalatok menüpontra->Válaszd ki a harmadik, üres foglalatot (3-as foglalat). A memória típusát állítsd eprom-ra. Válaszd ki a Név mezőt, Enter. Ezután a fájlböngészőben válaszd ki a meglévő EPROM fájlt, vagy új létrehozásához nyomd meg kétszer a TAB-ot, és a File: mezőbe írj be egy új nevet .eprom kiterjesztéssel. Válaszd az Igen-t az új fájl létrehozásához, és válaszd ki a méretet. Ezután alkalmazd a módosításokat. Térj vissza a Z88-ra, nyisd meg a Filer-t, válaszd a "Create file card" pontot, majd a 3-as foglalatot. Nyisd meg újra a ZEsarUX menüt, Háttértár->Z88 memóriafoglalatok. Most, hogy a kártya formázva van, kiválaszthatod a "Másolás a kártyára" pontot, és átmásolhatod a fájlokat a PC-dről.
+
+
+----------------------------------------------------------------------------
+
+
+Chloe
+-----
+
+
+K: Mi az a Chloe?
+V: A Chloe 280SE egy új 8 bites számítógép.
+
+Operációs rendszer: esxDOS
+CPU: Zilog Z80A @ 3.5MHz
+Memória: 256 kibibájt
+Firmware: SE Basic IV
+Paletta: 256 szín
+Videómódok: 40 oszlopos, 80 oszlopos, Spectrum- és Timex-kompatibilis módok
+Hang: 6 csatornás AY
+
+
+K: Beállítottam a Chloe gépet, de úgy tűnik, nem indul el, csak fekete képernyőt kapok
+V: A Chloe indulásához divmmc lapozás kell. Kapcsold be a Háttértár->MMC menüben
+
+
+K: Van olyan MMC kártya, amelyen mintaprogramok vannak?
+V: Nézd meg az extras csomagot. A zesarux-extras/extras/media/spectrum/chloe/ mappában van egy chloehd.mmc nevű fájl, azt használhatod.
+
+K: Hogyan futtathatom a Chloe-t parancssorból, konfigurációs fájl nélkül?
+V: Futtass egy ilyen parancsot:
+
+./zesarux --noconfigfile --machine chloe280 --mmc-file /zesarux-extras/extras/media/spectrum/chloe/chloehd.mmc --enable-mmc --enable-divmmc --nowelcomemessage
+
+A /zesarux-extras/extras/media/spectrum/chloe/chloehd.mmc az a hely, ahová a chloehd.mmc fájlt letöltötted a zesarux-extras csomagból.
+A --nowelcomemessage csak azért kell, hogy kikapcsolja a ZEsarUX nyitó logóját, amely eltakarná a Chloe "indulási logóját" (a farkast)
+
+ESXDOS kezelőt (ESXDOS handler) is használhatsz (mmc kép nélkül), ha az összes szükséges fájl egy mappában van, egy ilyen paranccsal:
+./zesarux --noconfigfile --machine chloe280 --esxdos-root-dir /path_to_chloe_files/ --enable-esxdos-handler --enable-divmmc --nowelcomemessage
+
+
+K: Hogyan futtathatok programokat az MMC kártyáról?
+V: Erre néhány parancs szolgál:
+
+- files: olyan, mint az "ls" vagy a "dir"
+- run: elindítja a programot az MMC-ről
+
+Például a
+files "programs"
+kilistázza az MMC kártya programs mappáját. Ezután a
+
+run "kayahara"
+elindítja a kayahara demót az MMC-ről
+
+
+
+----------------------------------------------------------------------------
+
+
+SpectraVideo
+------------
+
+K: Hogyan tölthetek be .cas játékokat?
+V: Általában egyszerűen így:
+
+CLOAD
+RUN
+
+
+----------------------------------------------------------------------------
+
+
+Prism
+-----
+
+K: Mi az a Prism?
+V: A Prism Jeff Braine FPGA-alapú, "Spectrum-kompatibilis" számítógépe. Amellett, hogy igyekszik minél több Spectrum szoftverrel kompatibilis maradni, a Prism célja
+az volt, hogy megkapja mindazokat a funkciókat, amelyeket Jeff mindig is remélt a "következő Spectrumtól", valahányszor egy új modellről szóló pletyka felröppent. Több memória, további képernyőmódok, a képernyőadatok
+dekódolásának új módjai, több szín, átdefiniálható színek... Mindez és még sok más került a Prismbe, amelynek fejlesztése még tart.
+
+A Prism néhány funkciója:
+
+* 512K SRAM. Ez többféle lapozási módszerrel címezhető, amelyek különböző modellekkel kompatibilisek
+     * Spectrum 128 (7FFD port),
+     * Spectrum +2A/+3 (7FFD és 1FFD portok)
+     * Chloe 280SE (7FFD, FF és F4 portok)
+     * Pentagon 512 (7FFD port - ugyanaz, mint a Spectrum 128-nál, de a 6. és 7. bitet is használja a további memórialapok belapozására)
+
+* 1MB Flash memória a ROM helyett, amellyel a felhasználó legfeljebb 256 különböző ROM-ot telepíthet és választhat ki közülük (feltéve, hogy a ROM 16K méretű)
+
+* Az "ULA2" legfeljebb 32K videó RAM-ot ér el, 4 darab 8K-s lapra osztva, ami nagyobb felbontású és/vagy több színű új képernyőmódokat, valamint a képernyőadatok dekódolásának új módjait teszi lehetővé:
+    * 128x96, 256x96, 128x192, 256x192, 512x192, 256x384, 512x384 felbontás lehetséges
+    *  8, 16, 32, 64, 256 szín egyszerre a képernyőn szoftveres trükkök nélkül (a képernyőmódtól és a dekódolási beállításoktól függően)
+    * 4096 szín egyszerre a képernyőn a különleges "Brainebow" módban
+    * 8x8, 8x1 és 4x8 méretű attribútumnégyzetek hardveresen, szoftveres trükkök nélkül (a képernyőmódtól és a dekódolási beállításoktól függően)
+    * 4 szín egy 4x8-as attribútumnégyzetben a különleges "chunk-o-vision" módban (a Spectrum egyik elterjedt, túl sok barna színt használó amerikai versenytársának képernyőmódja alapján)
+    * 8 és 16 színű "planáris" módok színütközés nélkül, szoftveres trükkök nélkül (a képernyőmódtól és a dekódolási beállításoktól függően)
+    * Felhasználó által megadható 256 színű paletta egy 4096 színű alappalettából (* a teljes ULA2 specifikáció 24 bites színt tesz lehetővé, de a fejlesztői Prism csak 12 bites színt kezel)
+
+* A kompatibilitási beállításokkal a felhasználó kikapcsolhatja a Prism egyes fejlett funkcióit, hogy bizonyos szoftverek működjenek (pl. a Prism 128K-ra korlátozható, hogy az Out Run,
+a Turbo Out Run és a Carrier Command működjön)
+
+* A különleges "VRAM apertúra" azt jelenti, hogy a VRAM csak ott látható a CPU számára, ahol szükséges, így a felhasználó nagyobb képernyőfelbontásokat stb. használhat anélkül, hogy a képernyőt
+összerondítanák a rendszerváltozók és a BASIC eleje. Ez a beállítás induláskor kikapcsolható, hogy megmaradjon a kompatibilitás azzal a kevés szoftverrel, amely 16K
+elérhető VRAM-ot vár (főleg Timex/Chloe/SpectrumSE szoftverek)
+
+* A különleges "VRAM Write" (más néven "Planar Write") beállításokkal a felhasználó kiválaszthatja, hogy a memória képernyőterületére írva melyik VRAM lapra vagy lapok mely kombinációjára kerüljön az adat. Így
+a felhasználó könnyebben hozzáfér a videómemóriához, amikor nagyobb felbontásokkal vagy planáris videómódokkal dolgozik.
+
+* Felhasználó által választható CPU-sebesség
+
+* Emellett a Prism támogatja az ULAplus-t, a Radastan képernyőmódot, a Zesarux képernyőmódokat, a Multiface 128-at és a DivMMC-t
+
+További információkért és demókért nézd meg a http://zxprism.blogspot.com.es oldalt
+
+
+K: Elakadtam a Prism indulási menüjénél. A "Boot" pontot választom, de újraindul, és visszatér az indulási menübe
+V: Meg kell változtatnod a Flash lapot (Flash Page); az alapértelmezett a 0, az indító ROM. Állítsd 2-re vagy nagyobbra, majd válaszd a "Boot" pontot
+Az extras/docs/prism/ mappában lévő fájlokból megtudhatod, mely ROM-ok vannak a Flash-ben
+
+----------------------------------------------------------------------------
+
+
+Scorpion
+--------
+
+K: Hogyan érhetem el az SD, IDE és TRD fájlokat a Scorpion GMX-en?
+
+V: Válaszd azt a módszert, amely megfelel annak, ahol a fájljaid vannak:
+
+- SD: A Háttértár -> SD/MMC menüben válassz ki egy FAT formátumú kártyaképet, és kapcsold be az MMC emuláció és a Z-Controller bekapcsolva beállítást. Nyisd meg a GMX NMI menüjét (ZEsarUX: Hibakeresés -> NMI előidézése), majd válaszd a B. Save & Load -> ROM disk -> Fatall 0.25 pontot. A jobb oldali panel kiválasztásához nyomd meg a jobbra nyilat, nyomd meg a 2-t (Drive), és válaszd ki az SD kártyát a fájljai böngészéséhez.
+- IDE: A Háttértár -> IDE menüben válassz ki egy FAT formátumú lemezképet, és kapcsold be az IDE emuláció és a SMUC bekapcsolva beállítást. A Fatall az IDE-t is tudja böngészni: nyisd meg a fent leírt módon, a jobbra nyíllal válaszd ki a jobb oldali panelt, nyomd meg a 2-t (Drive), és válaszd ki az IDE lemezt. Az alábbi, HDD-ről indításról szóló külön kérdés elmagyarázza, hogyan indíthatsz programot IDE-ről.
+- TRD fájl SD-n: A GMX a Fatall-lal tudja böngészni az SD kártyát, de az ott tárolt .trd fájlt nem tudja csatolni a TR-DOS számára.
+- TRD fájl IDE-n: Miután a fentiek szerint beállítottad az IDE-t, nyisd meg a GMX NMI menüjét, válaszd a Hard Disk Utility -> Mount on A: pontot, majd válaszd ki a .trd fájlt az IDE lemezen. Az emulált GMX indulási menüjében lépj be a TR-DOS-ba a lemez használatához.
+- TRD fájl a számítógépeden: A ZEsarUX-ban válaszd a Háttértár -> Betadisk -> TRD fájl pontot, és kapcsold be a TRD emulációt. Az emulált GMX indulási menüjében lépj be a TR-DOS-ba a lemez használatához.
+
+K: Milyen indulási képernyői vannak a Scorpion GMX-nek? Nem értek oroszul.
+
+V: Induláskor a GMX rövid ideig egy üzenetet mutat, amely arra kér, hogy nyomd meg a DELETE billentyűt a "GMX Loader Set Up" megnyitásához. Azt is kiírja, mennyi RAM-ot érzékelt. Ha nem csinálsz semmit, továbbindul a szokásos Scorpion menübe.
+
+A DELETE megnyomására megnyílik a GMX Loader menü. A ZEsarUX által jelenleg használt firmware ezeket a pontokat mutatja:
+
+- 0: Újraindítás.
+- 1: Indulási konfiguráció.
+- 2: Scorpion konfiguráció.
+- 3: Üres; ebben a helyen nincs tárolt konfiguráció.
+- 4: Pentagon konfiguráció.
+- 5: Komposit konfiguráció.
+- 6: DK Test (hardverteszt).
+- 7: Pentagon7 konfiguráció.
+- D: Fájl kiválasztása.
+- P: A ROM frissítése.
+
+Az alul látható üzenet jelentése: "Nincs kiválasztva firmware-t tartalmazó lemez". A számozott pontok GMX hardverkonfigurációkat és a hozzájuk tartozó firmware-t választják ki, nem csupán különböző ROM-lapokat. A ZEsarUX még nem emulálja teljesen az összes alternatív GMX konfigurációt.
+
+K: Hogyan próbálhatom ki a Scorpion GMX 640x200-as grafikus módját?
+
+V: A GMX Loader menüben válaszd a 6: DK Test pontot. A hardverteszt menüben nyomd meg az A-t a grafikus képernyőteszt indításához. Ez 25 sor, egyenként 80 karakteres, "SCORPION" szóval kitöltött szöveget jelenít meg. A 80x25-ös elrendezés abból adódik, hogy 8x8-as karakterek rajzolódnak a 640x200-as grafikus képernyőre; ez nem külön videómód. A T vagy G billentyűvel egy szövegsorral felfelé vagy lefelé görgetheted a képet, a Q-val pedig visszatérhetsz a normál videómódba.
+
+K: Mit csinálnak a billentyűk a Scorpion GMX DK Test-ben?
+
+V: A GMX Loader menüben válaszd a 6: DK Test pontot. A fő tesztbillentyűk:
+
+- A: A 640x200-as grafikus teszt megjelenítése 80x25 "SCORPION" karakterrel. Ebben a tesztben a T egy szövegsorral felfelé, a G lefelé görget.
+- Q: Visszatérés a szabványos 256x192-es videómódba.
+- S / W: A CPU átkapcsolása turbó / normál sebességre.
+- 1: A képernyőattribútumok és a grafika tesztje; 2: RAM adat- és címbuszok; 3: RAM lapozás; 4: RAM; 5: ROM.
+- 6: A TR-DOS és a hajlékonylemez-vezérlő tesztje. Az egyik részteszt a behelyezett lemezre ír.
+- 7: A perifériák tesztje, beleértve a kazettát, a hangot, a Kempston joystickot, a nyomtatóportokat, a megszakításokat és az AY-t.
+- 8: Folyamatos RAM-teszt futtatása; 9: Tesztsorozat futtatása, a hajlékonylemez-tesztekkel együtt.
+- P: Egy bájt írása egy kiválasztott I/O portra; a teszt elhagyásához nyomd meg újra a P-t.
+- 0: A konfigurációs port zárolása Reset-ig; R: újraindítás.
+
+Az egyes tesztek alatt az 1-4 billentyűkkel újraindíthatod, folytathatod, megismételheted vagy leállíthatod az aktuális tesztet; a pontos művelet a teszttől függ.
+
+K: Mit csinál a HDD boot menüpont a Scorpion GMX-en?
+
+V: A 128 BASIC menü HDD boot pontja a ProfROM NMI monitorában beállított indítási forrást indítja el. Ha a merevlemezről szeretnél fájlt indítani, nyisd meg az NMI monitort, válaszd a D. Disk utility -> V. from drive pontot, és állítsd az indítás típusát "file"-ra. Ezután a H. HDD file ponttal válassz ki egy .spg, .sna vagy .$C fájlt. Térj vissza a 128 BASIC menübe, és válaszd a HDD boot pontot.
+
+K: Miért mutatja a Scorpion GMX induláskor a CMOS, SMUC és merevlemez tesztet, Reset után viszont miért hagyja ki?
+
+V: Normál Reset után az inicializált állapot megmarad a RAM-ban, így a firmware a gyorsabb indulási utat választja. Ha újra le szeretnéd futtatni a teljes indulási tesztet, tartsd lenyomva a balra nyilat a gép újraindítása közben. Ez visszahozza azt a képernyőt, amely a RAM, a ROM, a CMOS, a SMUC és a merevlemez állapotát mutatja.
+
+K: Miért fut a Scorpion GMX 2x sebességgel, még 128 BASIC-ben vagy 48 BASIC-ben is?
+
+V: A GMX Boot ROM 1.3 V. 5.00 a 7EFDh port 7. bitjének írásával bekapcsolja a turbót. A BASIC-be lépés nem feltétlenül kapcsolja vissza normál sebességre, így a programok továbbra is 2x sebességgel futhatnak. Ez összhangban van a Scorpion ZS-256 Turbo felhasználói kézikönyvével, amely szerint az a modell alapértelmezés szerint turbó módban indul. Ha a ZEsarUX-ban normál sebességgel szeretnél futni, használd a Beállítások -> CPU -> GMX normál CPU-sebesség pontot. A GMX hardveren van egy Normal/Turbo gomb is, amely minden megnyomásra vált a sebességek között.
+
+
+----------------------------------------------------------------------------
+
+
+ZX Spectrum Next
+----------------
+
+
+K: Nem találom a ZX Spectrum Next-et a Gép kiválasztása menüben
+V: Válaszd a Next Team gyártót
+
+
+K: Nem tudom futtatni a Next gépet. A következő hibát kapom: "Error initializing SD card!"
+V: A Next gép indulásához SD/MMC kép kell. A Háttértár->MMC->MMC fájl pontban ki kell választanod a "tbblue.mmc" képfájlt.
+Ezután kapcsold be az MMC emulációt és a DivMMC portokat (de a DivMMC lapozást ne), majd végezz hidegindítást
+Vagy kiválaszthatod parancssorból is ezzel:
+./zesarux --mmc-file tbblue.mmc --enable-mmc --enable-divmmc-ports --machine tbblue --realvideo
+
+1. megjegyzés: a tbblue.mmc az alapcsomag része (és nem az extras csomagé), mert szükséges a gép indításához
+2. megjegyzés: a --realvideo beállításra csak a kezdeti képernyőbeállításnál van szükség. Miután a konfigurációt beírta az mmc fájlba, ez a képernyő többé nem jelenik meg,
+és a Real Video beállításra általában már nincs szükség az induláshoz
+
+K: Bekapcsoltam a divmmc-t a Next BIOS-ban, de úgy tűnik, nem működik (nincs esxdos vagy nextos)
+V: Néha a divmmc bekapcsolása a Next BIOS-ban a ZEsarUX bezárását és újraindítását igényli. A probléma technikai magyarázata az,
+hogy a divmmc be-/kikapcsolása a Next-en nem ugyanúgy történik, mint amikor a ZEsarUX menüjéből kapcsolod be/ki,
+a Next nem kapcsolja ki teljesen a divmmc-t, csak az automatikus memórialapozást
+
+
+
+K: Miért nem kapcsolhatom be a divmmc lapozást (vagy a teljes divmmc emulációt) parancssorból/konfigurációs fájlból a Next-en? Az emulátorból kilépve ezek a beállítások nem mentődnek a konfigurációs fájlba. De... ha parancssorból erőltetem a bekapcsolásukat, a Next nem indul el, hidegindítás után viszont rendben elindul
+V: A Next indulásához a divmmc lapozásnak kikapcsolt állapotban kell lennie, különben a divmmc firmware aktiválódik a Next indulásakor, és a gép lefagy. Hidegindításkor a Next néhány belső regisztere (6-os regiszter, 4. bit) nullázódik. A 6-os regiszter nullázásával a divmmc lapozás kikapcsol, így az indulás rendben lezajlik. A ZEsarUX inicializálásakor azonban a sorrend a következő:
+
+-A parancssori beállítások többségének alkalmazása (a divmmc beállítások itt még nem kerülnek alkalmazásra)
+-A gép, a CPU-regiszterek, az I/O portok és néhány Next regiszter nullázása, beleértve a 6-os regisztert is. Így a divmmc lapozás kikapcsol
+-A többi parancssori beállítás alkalmazása, beleértve a divmmc beállításokat is. Ha itt bekapcsoltad a divmmc lapozást, akkor be lesz kapcsolva
+-A vezérlés átadása a Z80-nak. Bekapcsolt divmmc lapozással a Next nem indul el
+Most megkérdezheted... miért alkalmaz egyes parancssori beállításokat a gép inicializálása előtt, másokat pedig utána? Erre itt nem válaszolok, túl bonyolult ;) Ha
+tudni szeretnéd a választ, írj nekem e-mailt.
+
+
+K: Mi a különbség a TBBlue és a Spectrum Next között?
+V: Dióhéjban: a TBBlue ugyanaz a firmware, amely minden lapkán és emulátoron fut. Egyes lapkákon kevesebb a hely, ezért kevesebb funkciót futtatnak.
+Például néhány eredeti lapka, amelyen a firmware futott:
+
+1- Next
+2- Multicore
+3- WXEDA és DE2
+4- DE1
+5- VTrucco és FBLabs
+
+A Next és a Multicore rendelkezik HDMI kimenettel, a többi nem. A Next-ben van FM hang, a többiben nincs. Az 1., 2. és 3. csoportban 256 szín és sprite-ok vannak, a többiben nincsenek. És mindegyiken ugyanaz a TBBlue firmware fut.
+A ZEsarUX-ban találkozhatsz TBBlue és Spectrum Next hivatkozásokkal is, de a ZEsarUX-ban nyugodtan tekintheted őket ugyanannak
+
+
+K: A Next indulása kicsit lassú. Futtathatok snx/nex pillanatképet anélkül, hogy meg kellene várnom a Next indulási folyamatát?
+V: Igen. Ilyen egyszerűen:
+
+./zesarux game.nex
+
+A hosszabb magyarázat az, hogy a ZEsarUX snx vagy nex pillanatképek betöltésekor az ESXDOS kezelőt is bekapcsolja arra a mappára, ahol a pillanatkép található, így ha a játéknak fájlokat kell használnia a merevlemezedről, azokat az ESXDOS kezelőn keresztül éri el
+
+K: Ugyanaz a kérdés, mint az előző, de sna fájlokra (sna Spectrum Next-hez)
+V: Igen. Néhány további beállítás kell hozzá:
+
+./zesarux --machine tbblue --sna-no-change-machine --joystickemulated "Kempston" game.sna
+
+
+K: A breakout demót kipróbálva ezt a hibát kapom: Nonsense in basic at line 10
+V: Ez egy régi változat, amely a NextOS korábbi basic-jét használja. Írd át a 10. sort erre:
+10 LOAD "breakout.SPR" BANK 10
+
+
+K: Használhatom a CSpect SD kártyaképeket a http://www.zxspectrumnext.online/cspect/ oldalról?
+V: Természetesen. Ahogy a weboldalon is írják: "for use with CSpect and real ZX Spectrum Next board" (CSpecthez és valódi ZX Spectrum Next lapkához), a ZEsarUX szinte úgy viselkedik, mint egy valódi ZX Spectrum Next lapka,
+így használhatod az SD kártyaképeket. Csak néhány dolgot érdemes figyelembe venni:
+-Érdemes az img fájlt .mmc kiterjesztésűre átnevezni. Ha nem teszed meg, nem jelenik meg a fájlböngészőben (hacsak nem állítod a szűrőt az összes fájl mutatására), de .img kiterjesztéssel is használható
+-Ezeknek az img fájloknak a mérete nem 16 kb többszöröse. Hibát fog jelezni, de a fájl használható
+-2 gb-nál nagyobb mmc fájlba történő írás Mac OS-en hibát okozhat. Ilyenkor azt javaslom, kapcsold ki a "Tartós írás" beállítást
+-Úgy tűnik, a CSpect 2 GB-os képfájlja kicsit kisebb 2gb-nál, így Mac-en is használható, és írhatók bele a módosítások.
+-Az 1 gb-nál nagyobb mmc fájlok használata lassú lehet. Légy tehát türelmes a kép megnyitásakor vagy a módosítások írásakor.
+
+
+K: A NexOS indításakor nagyon gyenge a teljesítmény, 2 FPS vagy kevesebb, és a menü akadozik. Van olyan beállítás, amit módosíthatok?
+V: Gondold végig, hogy az emulációnak ára van, főleg CPU-használatban. Ráadásul a NextOS 28 MHz-en fut,
+ami egy normál Speccy-hez képest 8-szor gyorsabb. Tehát legalább 8-szor annyi valódi CPU kell hozzá, mint egy valódi Speccy emulálásához (és itt még nem számoltam az összes extra videómódot, a sprite-okat, a coppert stb.). Így nem hasonlíthatsz össze egy Spectrum emulátort a Spectrum Next-et emuláló ZEsarUX-szal. A teljes Next mag emulálása sok CPU-teljesítményt igényel.
+Van azonban néhány beállítás, amellyel csökkentheted a szükséges CPU-t.
+A következő beállításokat módosíthatod:
+-Beállítások->CPU. Kapcsold be a "Turbó korlátozása a ROM-ban" beállítást, és állítsd a CPU-sebességet x1-re. Ez a maximális CPU-sebességet x1-re állítja, de csak a NexZXOS-ban,
+a NextZXOS-on kívüli játékok és programok módosíthatják a CPU-sebességet.
+-Beállítások->Kijelző. Kapcsold ki a Real Video-t. Ez kikapcsolja a sprite-ok, a layer 2 stb. megjelenítését (mindazt, ami a Next bővítése).
+
+Az első beállítással kevésbé akadozik a nextos. A második szintén javítja a teljesítményt, de Next játékok futtatásakor kapcsold vissza.
+
+
+K: A NextZXOS-ban minden lassabbnak tűnik, mint a valódi gépen
+V: Ellenőrizd a Beállítások->CPU->Turbó korlátozása a ROM-ban beállítást. A ZEsarUX 9.3-tól kezdve ez a beállítás alapértelmezés szerint be van kapcsolva, és korlátozza a NextZXOS által beállítható maximális turbósebességet (a NextZXOS-on kívüli játékokra/programokra nem vonatkozik). Azért van alapértelmezés szerint bekapcsolva, hogy korlátozza a NextZXOS által igényelt teljes valódi CPU-mennyiséget (legalább 8-szor annyi, mint egy átlagos emulált Spectrumé), ami egyes gépeken teljesítményproblémát okozhat. Ha a géped elég gyors, kapcsold ki ezt a beállítást (vagy növeld a Beállítások->CPU->Max. turbó a ROM-ban beállítást), hogy megpróbáld valódi Next sebességgel futtatni.
+
+
+K: Nem tudom futtatni az Atic Atac játékot Spectrum Next-en. Ezt a hibát kapom: "SDHC OR BETTER REQUIRED"
+V: Be kell kapcsolnod a Háttértár->SD/MMC->SDHC címzés bekapcsolása pontot. Ezután okos betöltéssel futtasd az aticatac.nex fájlt
+
+----------------------------------------------------------------------------
+
+
+TSConf
+------
+
+K: Hogyan érhetem el az SD, IDE és TRD fájlokat a TSConf-on?
+V: Az emulált gép indítási beállításainak módosításához tartsd lenyomva a Symbol Shift-et (Ctrl vagy Alt) közvetlenül a hidegindítás után, így megnyílik a TS-BIOS beállítóképernyője:
+
+- SD: A ZEsarUX-ban válassz ki egy FAT formátumú kártyaképet a Háttértár -> SD/MMC menüben, és kapcsold be az MMC emuláció és a Z-Controller bekapcsolva beállítást.
+- IDE: A ZEsarUX-ban válassz ki egy FAT formátumú lemezképet a Háttértár -> IDE menüben, és kapcsold be az IDE emulációt. Kapcsold be a Nemo IDE bekapcsolva vagy a SMUC bekapcsolva beállítást aszerint, hogy a TS-BIOS-ban melyik indítóeszközt (Boot Device) fogod választani.
+- SD vagy IDE böngészése: Tedd a Wild Commandert boot.$c néven a kártya- vagy lemezkép gyökerébe. A TS-BIOS-ban állítsd a Boot Device értékét az adott képnek megfelelően SD Z-Controller, IDE Nemo M vagy IDE Smuc M értékre, a "Reset to" értékét pedig "BD boot.$c"-re. Indítsd újra a gépet; elindul a Wild Commander, és böngészheted a fájlokat.
+- TRD fájl SD-n vagy IDE-n: Válaszd ki az SD vagy IDE képet a ZEsarUX-ban, és indítsd róla a Wild Commandert a fent leírt módon. Válaszd ki a .trd fájlt, nyomj Entert, és válaszd ki azt a TR-DOS meghajtót, amelyre csatolni szeretnéd.
+- TRD fájl a számítógépeden: A ZEsarUX-ban válaszd a Háttértár -> Betadisk -> TRD fájl pontot, és kapcsold be a TRD emulációt. A TS-BIOS-ban állítsd a "Reset to" értékét "ROM #00"-ra, a hozzá tartozó "bank" értékét pedig "TR-DOS"-ra, majd indítsd újra a gépet, hogy belépj a TR-DOS-ba, és elérd a lemezt.
+
+
+K: Hidegindítás után a képernyő elfeketedik, és úgy tűnik, semmi sem fut
+V: Végezz hidegindítást, és közvetlenül utána tartsd lenyomva a Symbol Shiftet (CTRL vagy ALT), így visszajutsz a TSConf Biosba
+
+K: Hogyan lépek ki a TSConf Biosból? Az F12 billentyű látszólag nem csinál semmit
+V: Az F12 egy valódi TSConf gépen a Resetet jelenti. A szimulálásához egyszerűen nyisd meg a ZEsarUX Hibakeresés->Újraindítás menüpontját
+
+K: Mit jelent a "Reset to", a "CS Reset to" és a "bank" a TS-BIOS beállításaiban?
+V: A "Reset to" azt választja ki, mi induljon el normál reset után. A "CS Reset to" azt választja ki, mi induljon el, ha a reset közben a Caps Shift le van nyomva. Mindkettőnél ugyanazok a lehetőségek:
+- ROM #00: indítás az első 64 KiB-os ROM-blokkból (#00-#03 lapok).
+- ROM #04: indítás a második 64 KiB-os ROM-blokkból (#04-#07 lapok). A tartalma a telepített ROM-képtől függ.
+- RAM #F8: indítás a #F8-#FB RAM-lapokról, amelyeknek már futtatható kódot kell tartalmazniuk. A hidegindítás törli ezt a RAM-ot.
+- BD boot.$c: a boot.$c betöltése a kiválasztott rendszerindító eszközről (Boot Device). A "bank" beállítás itt nem érvényes.
+- BD sys.rom: szerepel ebben a TS-BIOS menüben, de az indítórutinja nincs megvalósítva; nem tölti be a sys.rom fájlt.
+
+ROM #00, ROM #04 és RAM #F8 esetén a "bank" az adott négylapos blokkon belüli lapot választja ki:
+                 SYS    TR-DOS    Basic 128    Basic 48
+ROM #00          #00      #01         #02          #03
+ROM #04          #04      #05         #06          #07
+RAM #F8          #F8      #F9         #FA          #FB
+
+A SYS közvetlen lapleképezést használ. A többi bank Spectrum-kompatibilis leképezést használ; a TR-DOS ezenfelül a DOS aktiválási címén keresztül lép be. Ezek a nevek a kiválasztott lapot és módot írják le, nem azt, hogy valójában mi van ott tárolva. Például ha a ROM #04-ben a TR-DOS-t választod, attól a #05-ös lapon még nem lesz TR-DOS ROM.
+
+K: Néhány .spg játék betöltése nem sikerül
+V: Győződj meg róla, hogy nincs bekapcsolva a divmmc vagy a divide lapozás, mert némelyikükkel nem kompatibilis
+
+
+----------------------------------------------------------------------------
+
+
+BaseConf
+------
+
+K: Hogyan érem el az SD-n, IDE-n lévő és a TRD fájlokat BaseConf gépen?
+V: Válaszd azt a módszert, amelyik megfelel annak, hogy hol vannak a fájljaid:
+
+- SD: A Háttértár -> SD/MMC menüben válassz ki egy FAT formátumú kártyaképet, és kapcsold be az MMC emuláció és a BaseConf SD bekapcsolva lehetőséget. Az EVO Reset Service-ben nyisd meg a File Browsert; nyomd meg a D. Drive gombot az SD-kártya kiválasztásához.
+- IDE: A Háttértár -> IDE menüben válassz ki egy FAT formátumú lemezképet, és kapcsold be az IDE emuláció és a Nemo IDE bekapcsolva lehetőséget. Az EVO Reset Service-ben nyisd meg a File Browsert; nyomd meg a D. Drive gombot az IDE-lemez kiválasztásához.
+- SD-n vagy IDE-n lévő TRD fájl: Először válaszd ki az SD- vagy IDE-képet a ZEsarUX-ban, és kapcsold be az interfészét a fent leírt módon. Az EVO Reset Service-ben nyisd meg a File Browsert, és nyomd meg a D. Drive gombot az SD- vagy IDE-lemez kiválasztásához. Jelöld ki a .trd fájlt, nyomj Entert, válaszd a 0. Only load lehetőséget, majd a Z. TR-DOS boot pontot.
+- A számítógépeden lévő TRD fájl: A ZEsarUX-ban válaszd a Háttértár -> Betadisk -> TRD fájl menüpontot, és kapcsold be a TRD emulációt. Az EVO Reset Service-ben válaszd a Z. TR-DOS boot pontot a behelyezett lemez eléréséhez.
+
+K: Mi az a FAT Boot az EVO Reset Service-ben?
+V: Hobeta fájlok betöltésére szolgál; találsz rá egy példát az mmc kártyán "TEST.$C" néven
+
+----------------------------------------------------------------------------
+
+
+Didaktik Gama
+-------------
+
+K: Hogyan válthatok a két RAM-bank között BASIC-ből?
+V: Használd az OUT 127,0 utasítást a 0. bank, vagy az OUT 127,1 utasítást az 1. bank kiválasztásához. A kiválasztott
+   bank a 8000h-FFFFh címtartományt foglalja el; a képernyő-RAM a 4000h-7FFFh tartományban rögzített marad.
+
+
+----------------------------------------------------------------------------
+
+
+CPC
+---
+
+
+K: Miért nem töltődik be sok játék, vagy miért akad meg a menünél, vagy miért torz a kép?
+V: A CPC emuláció jelenleg kísérleti. Sok funkció nem működik jól, vagy hibázhat
+
+K: Mi az a CPC 4128?
+V: Egy kitalált modell kazettás egységgel és 128 kb RAM-mal. Azért hoztam létre, hogy kipróbálhassak néhány olyan játékot, amelyekhez 128 kb kell, de kazettáról is betölthetők (nem csak lemezről, amelyet CPC-n nem emulálok)
+
+K: Hol található a Copy billentyű?
+V: A Copy billentyű funkciója a PC-billentyűzeted End billentyűjére van kiosztva
+
+
+----------------------------------------------------------------------------
+
+
+Sam Coupe
+---------
+
+
+K: Hogyan vannak kiosztva a speciális billentyűk (például az Edit vagy a Symbol)?
+V: A billentyűkiosztás:
+-A CTRL billentyű a Sam Coupe CNTRL billentyűje
+-A bal Alt a Sam Coupe Symbol billentyűje
+-A jobb Alt a Sam Coupe Edit billentyűje
+-A numerikus billentyűzet számai a Sam Coupe F-billentyűire vannak kiosztva
+
+
+K: Hogyan tölthetek be Sam Coupe lemezről?
+V: A lemezemuláció még nincs kész. Csak kazettáról tölthetsz be
+
+K: Miért ilyen csúnya a hang?
+V: Nem a Sam Coupe hangchipjét (SAA1099) emulálom, hanem a Spectrum hangchipjével (AY-3-8912) szimulálom a hangot.
+Ezért nem szól valósághűen. A jövőben tökéletesen emulálni fogom az SAA1099-et ;)
+
+K: Hogyan tölthetek be néhány turbó kazettát (tzx)?
+V: Úgy tűnik, időzítési hiba van a Sam Coupe emulációban, és a ROM nem ismeri fel a helyes betöltési sebességet. De kézzel átállíthatod
+a CPU sebességét (a menü->Beállítások->CPU pontban) 2x-re vagy 4x-re; a legtöbb ilyen demó ezeket a betöltési sebességeket használja. De tartsd észben azt is, hogy egyes kazetták, amelyeket például
+400%-os sebességgel rögzítettek, 2X turbó beállítást igényelnek (nem 4X-et)
+
+----------------------------------------------------------------------------
+
+
+QL
+--
+
+
+K: Működik a billentyűzet?
+V: A QL alacsony szintű billentyűzetkezelő rutinjai még nem működnek teljesen, de igyekeznek a legjobbat kihozni belőle
+
+
+K: A Backspace működik QL-en. De miért nem működik a natív billentyűkombináció (CTRL+Bal)? Mac OS X-et használok
+V: Jobban jársz, ha a Backspace-t használod. De ha a natív kombinációt szeretnéd használni, próbáld így:
+-nyomd le és tartsd lenyomva a bal nyíl billentyűt
+-a kurzor egy pozícióval balra lép
+-mielőtt gyorsan elkezdene balra mozogni, nyomd le a CTRL-t
+
+
+K: Hogyan állíthatok le egy programot?
+V: Próbáld a CTRL+Space kombinációt
+
+
+K: Hogyan tölthetek be programot microdrive-ról vagy floppyról?
+V: A microdrive és a floppy emulációja béta állapotú. Kipróbálhatod úgy, hogy megnyitod a Háttértár menüt, és az mdv1/mdv2/flp1 beállításoknál kiválasztod a játék/program gyökérmappáját (általában ahol a boot fájl található). Néhány játékhoz az flp1 szükséges; az mdv1-et és az flp1-et ugyanarra a mappára is beállíthatod
+
+
+K: Hogyan futtathatok végrehajtható programokat?
+V: Használhatod az EXEC és az EXEC_W parancsot. Az EXEC_W ugyanaz, mint az EXEC, de megvárja (Wait), amíg a program (job) lefut.
+Példa:
+
+EXEC_W mdv1_chess_exe
+
+
+
+----------------------------------------------------------------------------
+
+
+
+Egyéb
+-------------
+
+K: Mac OS X-en, X11 (xquartz) meghajtóval az Alt billentyű nem olvasódik be. Spectrum és ZX80/81 módban az Alt ugyanaz, mint a Ctrl, de Z88-on az Alt a Square billentyű. Ezért Z88-on fontos, hogy ez a billentyű beolvasódjon.
+V: Menj az X11 Preferences > Input pontba, és kapcsold be az "Option keys send Alt_L and Alt_R" beállítást.
+
+
+K: Cacalib vagy curses meghajtót használok, tisztán szöveges konzolon. A ZEsarUX szerint van Kempston egér támogatás, de nem működik. Mit tehetek?
+V: Telepítsd a gpmmouse-t, hogy ezekkel a meghajtókkal is legyen egértámogatás.
+
+
+K: Cacalib vagy curses meghajtót használok, és a Kempston egér pozíciója nem olvasódik be, amikor mozgatom. Csak akkor, amikor megnyomom a bal vagy a jobb gombot.
+V: Szöveges módú meghajtóknál (cacalib és curses) az egér pozíciója csak gombnyomáskor olvasódik be, egérmozgatáskor nem.
+
+
+K: Mac OS X-en a null hangmeghajtó használatakor a ZEsarUX néha lefagy, amikor az ablak nincs fókuszban.
+V: Ez ismert probléma. Ilyenkor véletlenszerűen a ZEsarUX szinkronizálására használt belső késleltetés (a usleep rendszerfüggvény hívása) sokkal tovább tart (1 ezredmásodperc helyett nagyjából 10 másodpercig). Nem fordul elő, ha más hangmeghajtót használsz és/vagy a ZEsarUX ablaka van fókuszban.
+
+
+K: Hogyan használhatom a mesterséges intelligencia funkciót, hogy valósághű képeket kapjak a szöveges kalandjátékok leírásaihoz?
+V: A ZEsarUX kitalálja a szöveges kalandjáték leírószövegét, majd külső szkriptekkel képeket kér egy mesterséges intelligenciától.
+Ehhez bármilyen MI API-t használhatsz, de én az OpenAI-hoz készítettem szkripteket (amely a Dall-E funkciót használja). Ezek a text_image_filters/ mappában találhatók, Windowsra és Linuxra is vannak szkriptek.
+Először regisztrálnod kell az OpenAI weboldalán (nem a Dall-E weboldalán), és meg kell adnod a fizetési adataidat. Igen, ezért az API-ért fizetni kell; mivel 512x512-es képeket használok, az ár $0.018 / kép. Szerezz egy API-kulcsot, majd:
+- Linuxon a ZEsarUX indítása előtt exportálnod kell a kulcsot, így:
+
+export OPENAI_API_KEY="sk-EYH3Nblahblahblahblahblahandmoreblah"
+./zesarux
+
+- Windowson a ZEsarUX indítása előtt exportálnod kell a kulcsot, így:
+
+set OPENAI_API_KEY="sk-EYH3Nblahblahblahblahblahandmoreblah"
+zesarux.exe
+
+Ezután menj a Kijelző-> Szöveges kaland eszközei-> Helyszínleírás feldolgozása menüpontba.
+Az Átalakító pontnál válaszd ki a szkriptet: Windowson a dalle_text_to_image.bat, Linuxon a dalle_text_to_image.sh fájlt. Mindkettő egy külső Python szkriptet hív meg (dalle_aux_text_to_image.py), amelynek vannak függőségei. Nézd meg a dalle_aux_text_to_image.py fájlt, és telepítsd a Pythont és a szükséges modulokat.
+Az Algoritmus pont azt mondja meg a ZEsarUX-nak, hogyan találja ki az egyes helyszínek leírószövegét:
+- Room_Number: Felismeri, amikor helyszínt váltasz (csak Daad, Paws, Quill vagy GAC kalandjátékoknál működik, de a legtöbb ilyen)
+- CLS: Felismeri, amikor a képernyő törlődik. Mindenféle szöveges kalandjátéknál működik, az egyetlen feltétel, hogy a képernyő törlődjön, amikor másik helyszínre lépsz, és ez nem minden kalandjátékban van így.
+Azt javaslom, válaszd mindkét módszert.
+A Kép ablak pont megnyitja azt az ablakot, amely az adott helyszín képét mutatja.
+Ebben a menüben további beállítások is vannak, javaslom, hogy kísérletezz velük egy kicsit.
+Ha minden rendben van, gyönyörű képeket fogsz látni a Kép ablakban.
+
+Még valami... Daad kalandjátékoknál és néhány más kalandjátéknál, amelyek nem a szabványos ROM-rutinokat használják a szöveg kiírására, meg kell nyitnod a Karakterkiírás elfogása almenüt, és be kell állítanod a karakterek felismerésének legjobb módszerét (a "Második elfogás felismerése" és a "Rutin felismerése: Auto&All" beállítást javaslom).
+
+Megnézheted ezt a bemutatóvideót is: https://youtu.be/LrCFvoAQdrk
+
+
+K: Hol található most az extras mappa a forráskódban?
+V: Átkerült egy másik tárolóba. Lásd:
+https://github.com/chernandezba/zesarux-extras
+
+
+K: Hogyan kell kiejteni a ZEsarUX nevet?
+V: Fonetikusan: a ZEsarUX kiejtése: θe.sa.ɾ'uks
+Betűről betűre:
+Z, mint a "th" az angol think szóban
+E, mint az "e" az angol let szóban
+S, mint az "sz" a szép szóban
+A, mint az "a" az angol cat szóban
+R, mint az "r" a róka szóban
+U, mint az "u" az angol put szóban
+X, mint az "x" a Linux szóban
+A hangsúly pedig az utolsó szótagon van
+A zesarux.mp3 fájlt is lejátszhatod, hogy meghalld, hogyan hangzik
+
+
+K: Mi a ZEsarUX név eredete?
+V: A ZEsarUX név ebből származik:
+ZX Second-Emulator And Released for UniX.
+A Second-Emulator kötőjele szándékos. Felcseréltem a szavak sorrendjét, hogy a kezdőbetűk a ZEsarUX szót adják ki. Különben a név "ZsEarUX" lett volna :P
+Second (második), mert ez a második emulátorom. Az első a ZXSpectr volt:
+https://github.com/chernandezba/zxspectr
+Miért a nagybetűk? Mert az egyik első név, amelyen gondolkodtam, a ZEUX volt, de rájöttem, hogy már létezik egy másik emulátor Zeus néven...
+Tetszett az az ötlet is, hogy a név kicsit hasonlítson a saját nevemre, César, és közben tartalmazza a ZX-et (a ZX Spectrum miatt) és az UX-et (a Unix miatt), hiszen a GNU/Linux volt az első platform, amelyet az emulátor támogatott. Végül ezeket az ötleteket mind összekombináltam, és minden betűnek jelentést adtam, így jött ki a kifejezés:
+ZX Second-Emulator And Released for UniX.
+
+A kis- és nagybetűk használata szándékos. A nagybetűk a név legfontosabb részeit jelölik: "ZX", "Emulator", "UniX", a kisbetűk pedig az összekötő szavaknak felelnek meg: "second", "and", "released"
+
+A végleges ZEsarUX név előtt sok más lehetséges néven is gondolkodtam:
+* zx + ....
+* zxsinclair emu
+* zxemu
+* zxclive
+* zspectux
+* zemulatorx
+* zxjump
+* zxnew
+* zxspectrx
+* zxee  -> zx extended emulator
+* zeux
+* zxdh
+* zxgo
+* zxnew : zx nonamed emulator w?
+* zgeckox: Z X, Gnu, Emulator, Computer, K, O
+* ZX Gecko: ZX, X Unix, General / Gnu, Emulator, Computer / Complete, K Known, Overall
+* és még néhány más név, amelyek olyan ötleteket kombináltak, mint: new, second, zx, c, unix, sinclair
+
+
+K: Mit jelent a gekkó a Névjegy ablakban?
+V: A Névjegy ablakban látható gekkó egy valódi gekkó, amelyet néhány éve a szüleim házában láttam. Tisztelgés apám előtt, aki nagyon szerette a gekkókat.
+
+
+K: Futtatható ez az emulátor MS-DOS alatt?
+V: Nem, nem futtatható; csak Windowson, Macen, GNU/Linuxon, Raspberry Pi-n és más Unix-kompatibilis rendszereken futtathatod. De kipróbálhatod a régi ZXSpectr emulátoromat:
+https://github.com/chernandezba/zxspectr
+Az fut MS-DOS alatt. 1996 júniusában készült, tehát több mint 20 éves!
+
+
+K: A "Videó kimenet fájlba" menüpont nyers videófájlt készít. Úgy tűnik, az "mpv" programmal kell lejátszanom, megpróbáltam, de nem sikerült. Macet használok
+V: A nyers videó lejátszása Macen kicsit trükkös, de igen, használhatod a Maces mpv-t.
+Először töltsd le az mpv-t innen:
+https://mpv.io
+
+Ezután, amikor a ZEsarUX-ban bekapcsolod a videókimenetet, megjelenik egy ablak az mpv-hez szükséges paraméterekkel, és ezek a konzolon is megjelennek (ha bekapcsolod a részletes hibakeresési kimenetet). Például:
+mpv --demuxer=rawvideo --demuxer-rawvideo-fps=5 --demuxer-rawvideo-w=720 --demuxer-rawvideo-h=576 --demuxer-rawvideo-mp-format=bgr24 /Users/chernandezba/Documents/video.rwv
+(ez a példa egy TSConf gépen készült videófelvételhez tartozott)
+
+Az mpv-nek tehát van egy parancssoros programja a videó lejátszására; erre van szükséged a ZEsarUX által készített videó lejátszásához
+A parancssoros mpv-t úgy futtasd, hogy megnyitsz egy Terminált, és beírod:
+/Applications/mpv.app/Contents/MacOS/mpv XXXX
+
+Ahol XXXX az összes paraméter, amelyet a ZEsarUX megadott. Ebben a példában a parancssor így néz ki:
+/Applications/mpv.app/Contents/MacOS/mpv --demuxer=rawvideo --demuxer-rawvideo-fps=5 --demuxer-rawvideo-w=720 --demuxer-rawvideo-h=576 --demuxer-rawvideo-mp-format=bgr24 /Users/chernandezba/Documents/video.rwv
+
+
+K: Van valamilyen kézikönyv vagy dokumentáció?
+V: Van egy egyszerű dokumentációs fájl (zesarux.pdf), amely elmagyarázza a felhasználói felületet, de teljes dokumentáció soha nem lesz. Ennek az az oka, hogy régebben rengeteg órát töltöttem az előző emulátorom, a ZXSpectr dokumentációjának elkészítésével, és rengeteg órát elvesztegettem vele, többet, mint a ZXSpectr programozásával. De a következők rendelkezésedre állnak:
+-zesarux.pdf: a felhasználói felület
+-Ez a GYIK fájl
+-Súgóval ellátott menüpontok (a legtöbbnél F1-gyel érhető el), és az elemek eszköztippjei, amikor nincs billentyű lenyomva
+-az extras csomag docs mappája rengeteg információval
+-a fő csomag docs mappája alapvető információkkal
+-youtube-videók, amelyek a ZEsarUX különféle funkcióit mutatják be. https://www.youtube.com/user/chernandezba
+-És a saját segítségem. Kérdezhetsz e-mailben, fórumokon, twitteren és a ZEsarUX Facebook-csoportban
+
+
+K: Használhatom a ZEsarUX-ot önálló AY-lejátszóként?
+V: Igen, futtathatod a ZEsarUX-ot parancssorból, és bekapcsolhatsz egy beállítást, hogy az emulátor kilépjen, amikor befejezte az ay fájl lejátszását.
+Megadhatsz határt a "végtelen" számokhoz is (olyan számokhoz, amelyeknek nincs megadva hossza), például:
+
+./zesarux --noconfigfile extras/media/ay_files/Spectrum/Games/CHASEHQ.AY --ayplayer-inf-length 60 --ayplayer-end-exit --ayplayer-show-info-console --vo null
+
+A véletlen sorrend beállítással a ZEsarUX-ot véletlenszerű ay-fájl-lejátszóként is használhatod, egy mappából töltve be a fájlokat a lejátszási listába:
+
+./zesarux --noconfigfile --ayplayer-add-dir extras/media/ay_files/Spectrum/Games/ --ayplayer-start-playlist  --ayplayer-shuffle --ayplayer-inf-length 60 --ayplayer-show-info-console --vo null
+
+Mielőtt a véletlen sorrend és a lejátszási lista beállítások megjelentek (10.10-es verzió), ezt a véletlenszerű ay-fájl-lejátszót a következő kódrészlettel is szimulálhattad:
+
+while [ 1 == 1 ]; do
+    ARCH=`ls -1 extras/media/ay_files/Spectrum/Games/| python -c "import sys; import random; print(random.choice(sys.stdin.readlines()).rstrip())"`
+    echo $ARCH
+    ./zesarux --noconfigfile extras/media/ay_files/Spectrum/Games/$ARCH --ayplayer-inf-length 60 --ayplayer-end-exit --ayplayer-show-info-console --vo null
+done
+
+
+K: Mi az a Man Software?
+V: Ez annak a szoftvernek a márkaneve, amelyet gyerekkorom óta készítek Spectrumon. A my_soft/ mappában található programok és játékok közül sok ezzel a márkanévvel van jegyezve. Sok másikat a valódi nevemmel jegyeztem, de mindegyiket én készítettem.
+A ZEsarUX menüjében találsz egy "Man Software GUI Style" stílust is, amely egy általam gyerekkoromban kitalált betűtípust használ.
+
+
+K: Mi az a ZX Vision?
+V: A ZX Vision a ZEsarUX új ablakstílusa, amelyet a 7.2-es verzió óta használ. Ezek az ablakok mozgathatók, átméretezhetők, görgethetők, kis méretre állíthatók, és még sok minden más.... A név különböző forrásokból ered:
+- a "Turbo Vision" szöveges ablakkezelő környezetből, amelyet a régi Borland Turbo C és Turbo Pascal fordítóprogramok használtak,
+- a ZX Spectrumból, mert az első ZX Vision menüstílus ugyanolyan volt, mint a Spectrum +2 és +3 gépeken használt menük
+- A ZX Vision "ZX" része a "(Z)EsarU(X)" rövidítése is, így a "ZX Vision" azt is jelenti, hogy "ZEsarUX Vision"
+
+K: Mi az a ZX Desktop?
+V: A ZX Desktop egy jobb oldali és alsó területet biztosít, ahová zxvision ablakokat, gyorselérési gombokat, eszközgombokat, valamint ablakokat megnyitó vagy műveleteket indító ikonokat helyezhetsz el.
+
+
+K: Milyen fájlok kellenek a ZEsarUX futtatásához? Rengeteg fájlt látok, az Extras csomagban pedig még sokkal több van
+V: A ZEsarUX valójában nagyon kicsi. A futtatásához csak a következő fájlok kellenek (ezek a fő csomagban vannak):
+-A futtatható fájl: "zesarux" vagy "zesarux.exe", amely nagyjából 2 MB méretű
+-Néhány dll fájl a Windowsos változatban
+-rom fájlok: Az összes emulált géphez szükségesek. Azoknak a gépeknek a rom fájljait, amelyeket nem fogsz használni, törölheted.
+-keyboard*.bmp: A Súgó-> Billentyűzet súgó ablakhoz kellenek; törölheted őket, ha nem akarod használni azt az ablakot
+-z88_shortcuts.bmp: A Z88 gyorsbillentyűk megjelenítéséhez kell. Törölheted, ha nem használsz Z88-at, vagy nem kapcsolod be a Z88 gyorsbillentyűk mutatása beállítást
+
+Ezenkívül, ha ZX-Uno-t vagy Nextet akarsz futtatni:
+-zxuno.flash, ha ZX-Uno gépet futtatsz
+-tbblue.mmc, ha ZX Spectrum Next gépet futtatsz
+
+
+K: Saját magam szeretném terjeszteni a ZEsarUX-ot. Melyek azok a fájlok, amelyeket legalább mellékelni kell?
+V: Először is tudnod kell, mely fájlok szükségesek a ZEsarUX futtatásához, ezért olvasd el az előző kérdést: "K: Milyen fájlok kellenek a ZEsarUX futtatásához?".
+Ezenkívül vannak más fájlok is, amelyeket KÖTELEZŐ mellékelned:
+- A README, LICENSE, LICENSES_info fájlok.
+- A licenses mappa
+
+A következők nem kötelezőek, de nagyon kedves lenne tőled, ha mellékelnéd őket: az ACKNOWLEDGEMENTS, Changelog, DONATE, DONORS, FAQ, FEATURES, editionnamegame.*, zesarux.ico, zesarux.mp3, zesarux.odt, zesarux.pdf, zesarux.xcf, zesarux_16.png, zesarux_256.png, zesarux_32.png, zesarux_48.png fájlok, valamint a my_soft mappa
+
+A többi fájl mellékelése teljesen tetszőleges.
+
+
+K: Ha bekapcsolom a "Videó kimenet fájlba" beállítást vagy a "Reduce to 0.75" lehetőséget, egy nagy "Z" betű kerül a képre. Eltüntethetem?
+V: Nem, nem tüntetheted el. Azt szeretném, hogy a kész videón ott legyen ez a vízjel, így bárki, aki látja, tudja, melyik emulátorral készült a felvétel ;)
+A betűt viszont áthelyezheted: menj a Beállítások-> OSD-> Vízjel helye (Watermark position) pontba
+
+
+K: Miért nem használ a ZEsarUX szebb menüket, például a Windows/Mac/GNU/Linux stb. megszokott menüit? / Miért korlátozod a grafikus felületet ezekre az egyszerű menükre? / Miért nincs jobb fájlválasztód?
+V: A grafikus felület egyedi; a Spectrum 128k gépek menüinek stílusát lemásolva készítettem. Nem használok natív menüket Macen, Windowson stb., mert a menüim a ZEsarUX ablakába vannak beépítve.
+Ennek az az előnye, hogy a menük (és az egész ZEsarUX) ugyanolyan stílusúak minden operációs rendszeren, amelyen a ZEsarUX-ot futtatod. Mindegyiken ugyanúgy néznek ki.
+Ráadásul egyes grafikus felületek további könyvtárakat igényelnek, én pedig azt szeretném, hogy minél kevesebb függősége legyen.
+A fájlválasztó is egyedi ablak, ezért ne várd, hogy felugrik a megszokott fájlválasztó ablakod.
+Lehet, hogy a felület kicsit nehezen használható, de ha már pár órája használod, nem is akarsz majd mást!
+Azt javaslom, használj gyorsbillentyűket a gyorsabb kiválasztáshoz, definiálj át néhány F-billentyűt, és használd az egeret.
+Valószínűleg ez az egyetlen része a ZEsarUX-nak, amelyen soha nem fogok változtatni. Szeretem ezt a felületet; retrogépek emulátorát használod, úgyhogy.... retrofelületet kell használnod ;)
+
+
+K: Hogyan távolíthatom el a ZEsarUX-ot?
+V: Nagyon egyszerű. A ZEsarUX telepítéskor nem hoz létre további fájlokat, csak a beállításfájlt menti el.
+Az operációs rendszertől függően:
+
+-GNU/Linux:
+--ha forráskódból fordítottad, és "make install"-t futtattál, minden fájl a telepítési előtag alá került, amelyet a configure szkript "--prefix" beállításával lehet megváltoztatni, és alapértelmezés szerint /usr/local. Tegyük fel, hogy a telepítési előtag neve "INSTALLPREFIX"; ezeket kell eltávolítanod:
+
+*a futtatható emulátor: INSTALLPREFIX/bin/zesarux
+*az adatfájlok: az INSTALLPREFIX/share/zesarux/ mappa
+
+--ha a ZEsarUX weboldaláról letöltött bináris változatot telepítettél, ezeket kell eltávolítanod:
+*a futtatható emulátor: /usr/bin/zesarux
+*az adatfájlok: a /usr/share/zesarux/ mappa
+
+--ha bármilyen más, nem a ZEsarUX weboldaláról származó bináris változatot töltöttél le, kérdezd meg a csomag karbantartóját, hogyan kell ezt megtenni ;)
+
+
+-Mac:
+
+--ha forráskódból fordítottad, és "make install"-t futtattál, ugyanúgy járj el, mint GNU/Linuxon
+--ha a ZEsarUX weboldaláról letöltött bináris változatot telepítettél, csak húzd a ZEsarUX alkalmazás ikonját a Kukába
+
+
+-Windows:
+--ha a ZEsarUX weboldaláról letöltött bináris változatot telepítettél, minden a .zip fájlból kibontott fájlok között van. Egyszerűen töröld a kibontott mappát
+
+
+Végül, ha a beállításfájlt is el akarod távolítani:
+-GNU/Linux: helye: $HOME/.zesaruxrc
+-Mac: helye: $HOME/.zesaruxrc
+-Windows: a saját mappádban van, ".zesaruxrc" néven. A saját mappád valami ilyesmi: "c:\users\myusername\"
+
+
+K: A ZEsarUX lassabban fut, mint egy valódi Spectrum. Raspberry Pi One-t (vagy más lassú CPU-t) használok
+V: Használhatod a csökkentett Spectrum magot (Spectrum reduced core), amelyet fordításkor lehet beállítani, de menüből vagy parancssori beállítással is be- és kikapcsolható.
+Ennek a magnak a használatakor a következő funkciók NEM érhetők el, vagy NEM emulálódnak megfelelően:
+Debug t-states, Char detection, +3 Disk, Save to tape, Divide, Divmmc, Multiface, RZX, Raster interrupts, ZX-Uno DMA, ZX Spectrum Next DMA, Datagear DMA, ZX Spectrum Next Copper, Audio DAC, Stereo AY, Video out to file, Last core frame statistics, Tone generator.
+Ezen funkciók némelyike, például a Divide vagy a Raster interrupts, elvileg nem befolyásolja a CPU teljesítményét, ha nem kapcsolod be őket, de ez az állítás csak Intel CPU-kra és
+spekulatív végrehajtásra (Speculative Execution) képes CPU-kra igaz. A Raspberry Pi One (vagy Zero) CPU-ja nem képes spekulatív végrehajtásra, így a csökkentett mag használatával kevesebb valódi CPU-t használ, és a ZEsarUX
+rendesen fog futni.
+Nyersen és röviden a magyarázat az, hogy a Spectrum emulációs magban lévő, nem teljesülő "if" utasítások (például ha a raszter megszakítás ki van kapcsolva) nem befolyásolják a CPU-használatot,
+ha van spekulatív végrehajtás (mint az Intel CPU-knál), de igenis befolyásolják a CPU-használatot azokon a CPU-kon, amelyek nem képesek spekulatív végrehajtásra (mint a Raspberry)
+
+Újrafordíthatod tehát a configure szkript "--spectrum-reduced-core" beállításával, hogy alapértelmezés szerint mindig be legyen kapcsolva, de be is kapcsolhatod
+a ZEsarUX indításakor a "--spectrum-reduced-core" parancssori beállítással, sőt még a menüből is bekapcsolhatod, a Beállítások-> Hardverbeállítások pontban
+
+
+K: Mik azok az RWA fájlok?
+V: Az RWA jelentése Raw Wave Audio file; fejléc nélküli hangfájl, 15600 Hz-es mintavételezéssel, 8 bites előjel nélküli formátumban, 1 csatornával. A ZEsarUX széles körben használja őket
+
+
+K: Milyen szoftververziózást használsz a ZEsarUX-nál?
+V: A 12-es verzió előtt szemantikus verziózást használtam (Major.Minor.Patch), bár a .Patch részt csak egyetlen verziónál használtam. A főverzió akkor változott, amikor úgy ítéltem, hogy olyan fontos változások történtek, amelyek új főverziót indokolnak, de amint láthatod, ez nagyon szubjektív lehet.
+Ezért a 12-es verziótól egyfajta naptáralapú verziózást használok: (aktuális év-2013).(az adott év kiadása 0-tól kezdve: 0, 1, 2 stb.). Mivel a ZEsarUX 2013-ban indult, a verzió megmutatja, hány év telt el az első verzió óta az általad használt verzióig. Például:
+- A 12.0-s verzió 2025 januárjában jelent meg (13 évvel az első után - a hónapot hagyd figyelmen kívül). Ha a kiadás száma 0, egyszerűen elhagyom
+- A 12.1-es verzió 2025 szeptemberében jelent meg (13 évvel az első után, és ez 2025 második kiadása)
+
+Így most már nem az egyes kiadások változásainak jellegétől függ, hanem a kiadás évétől.
+Egyébként lehet, hogy a jövőben ismét megváltoztatom a verziózás módját, és az aktuális évet veszem alapul, például 2027.0, 2027.1 stb. verziók
+
+Ezenkívül minden verziónak van egy "kiadásneve", amely legtöbbször egy általam kedvelt játék, például: ZEsarUX 12.1 - Night Shift edition.
+
+K: Olyan kérdésem van, amely nem szerepel itt. Mit tehetek?
+V: Küldj egy e-mailt a chernandezba (at) hotmail.com címre, és válaszolok.
+
+

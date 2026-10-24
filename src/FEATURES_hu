@@ -1,0 +1,273 @@
+* Bármely UNIX alapú operációs rendszeren és Windowson fut: tesztelve GNU/Linux x86, GNU/Linux x86_64, GNU/Linux Raspbian, GNU/Linux RetroPie, FreeBSD x86_64, Haiku, Mac OS X, natív Windows, Windows + Cygwin rendszeren
+
+* Emulált gépek:
+    * Science of Cambridge MK14
+    * Sinclair ZX80
+    * Sinclair ZX81
+    * Sinclair ZX Spectrum modellek: 16k, 48k (angol és spanyol), 48k+ (angol és spanyol), Spectrum 128k (angol és spanyol), Spectrum +2 (angol, spanyol és francia), Spectrum +2A (angol és spanyol), Spectrum +3 (angol és spanyol)
+    * Sinclair QL
+    * Cambridge Z88
+    * Microdigital TK80, TK82, TK82C, TK83, TK85, TK90X (portugál és spanyol, Ferranti és Microdigital ULA), TK95 (portugál és spanyol)
+    * Czerweny CZ 1000, CZ 1500, CZ 1000 Plus, CZ 1500 Plus, CZ 2000, CZ Spectrum, CZ Spectrum Plus
+    * Timex Sinclair 1000, 1500, 2068
+    * Timex Computer 2048, 2068
+    * Inves Spectrum +
+    * Sam Coupe
+    * Pentagon
+    * Scorpion ZS-256, Scorpion ZS-256 Turbo+, Scorpion GMX
+    * Didaktik Gama
+    * Chloe 140 SE, 280 SE
+    * Chrome
+    * Prism
+    * ZX-Uno
+    * ZX-Evolution BaseConf
+    * ZX-Evolution TS-Conf
+    * ZX Spectrum Next
+    * Jupiter Ace
+    * Amstrad CPC 464, CPC 4128, CPC 664, CPC 6128
+    * Amstrad PCW 8256, PCW 8512
+    * MSX1
+    * Spectravideo 318/328
+    * Colecovision
+    * Sega SG1000
+    * Sega Master System
+
+* Ez az egyetlen emulátor a következő gépekhez: Chloe 140/280, Prism és Chrome
+
+* Szinte tökéletesen emulálja az összes Spectrum gép időzítését
+
+* Támogatja a 60 Hz-es módokat Master System, SG1000, MSX, Colecovision, Spectravideo és Timex Sinclair 2068 gépeken
+
+* Emulálja a Z80 nem dokumentált flagjeit, funkcióit és a MEMPTR regisztert
+
+* Emulálja az üresjárati busz portot (idle bus), a versengő memóriát (contended memory), valamint a korai/késői ULA-időzítést
+
+* Emulálja a Motorola 68008 CPU-t (Sinclair QL)
+
+* Emulálja az SC/MP CPU-t - INS8060 (MK14)
+
+* Emulálja a tökéletes ZX Spectrum 16k/48k színpalettát
+
+* Emulálja az ULAplus-t: szabványos 64 színű paletta, lineáris módok pixelenként 16 színnel: Radastan mód: 128x96, ZEsarUX módok: 256x96, 128x192, 256x192
+
+* Emulálja a Flash Color módot (128 szín)
+
+* Emulálja a Chroma81 ZX81 színes módot
+
+* Emulálja a Spectra videómódjait
+
+* Emulálja az Amstrad PCW színes videómódjait
+
+* Emulálja a Timex videómódjait (Mode 0 szabványos, 1 kettős képernyő, 2 nagy felbontású szín 8x1, 6 512x192 monokróm)
+
+* Emulálja a Pentagon 16C módot
+
+* Emulálja a Prism gép összes videómódját
+
+* Emulálja a ZGX Sprite Chipet
+
+* Emulálja a Spectrum modellek "hó" effektusát
+
+* Emulálja a váltottsoros (interlaced), a scanline és a Gigascreen effektusokat
+
+* Emulálja a nagy felbontású módokat ZX Spectrumon (szivárványeffektusok és mások) és ZX80/ZX81-en (UDG, CHR$128, WRX, HRG és néhány más nagy felbontású mód)
+
+* Rengeteg videóeffektust támogat:
+    - Reduce, Unsteady, Flip Vertical, Flip Horizontal, Rotate, Twirl, Interferences, Sea, Waves, Magnetic Field, Shear, Lens, Radar
+    - Zoom, Zoom Mouse, Pixelate, Blur, Shader Border, LED, LED RGB, Hsync lost, Vsync lost, Scroll Horizontal, Scroll Vertical, Fade In, Fade Out, Fade InOut
+    - Scanlines, Sepia, Red, RGB, Decolorize, Persistence, Contrast, Brightness, Nagravision, Random Lines, Decode Nagravision, Sortalike, Logo Rebound
+    - Restore Original, Copy to buffer, Mix from Buffer, Load BMP
+
+* Anaglif képeket tud előállítani 3D szemüveghez (piros-kék szemüveg)
+
+* Saját, nagy tudású ablakkörnyezetet (ZX Vision) használ a program alkalmazásablakán belül, így minden platformon ugyanolyan a grafikus felület stílusa. Kibővített megjelenítési területet is biztosít a menük és a többfeladatos ablakok elhelyezésére a grafikus felületen (ZX Desktop)
+
+* A menük részben spanyol és katalán nyelven is elérhetők
+
+* Joystickkal és billentyűzet nélküli környezetekben is használható, például Raspiboy / Retropie esetén
+
+* Emulálja az Inves Spectrum + összes furcsaságát: 64 KB RAM, a RAM inicializálása FF00H mintával, OUT ula AND RAM, EAR és MIC XOR, nincs versengő memória, "hó" a keretben, színes ULA-késleltetés, a megszakítás a felső keret végén kezdődik (nem a keret elején), memóriasérülés minden megszakításnál, nincs üresjárati busz (idle bus)
+
+* Videómeghajtók: X-Windows, SDL, Cocoa (Mac OS X), Framebuffer, ncurses, aalib, cacalib, stdout (konzol), simpletext (konzol)
+
+* Hangmeghajtók: PulseAudio, Alsa, SDL, DSP(OSS), One Bit Speaker (PC hangszóró és Raspberry Pi GPIO hangszóró, bármiféle hangkártya nélkül), CoreAudio (Mac OS X).
+
+* A hangot és a képet fájlba mentheted
+
+* A képernyőt a következő formátumokba mentheted: SCR, PBM, BMP, TXT, STL (3D modell)
+
+* Támogatja a valódi kazettáról való betöltést (bármilyen külső hangforrásból, például magnóról, mp3-lejátszóról stb.), olyan eszközökkel, amelyekkel megtekintheted a kazetta hullámformáját és frekvenciaspektrumát, és amelyek segítenek a fejállás (azimut) beállításában
+
+* Valódi kazettás betöltést támogat a következő fájlformátumokból: RWA, SMP, WAV, TZX, PZX, CDT, TAP, P, P81, O. Kezeli a turbó betöltésű kazettákat és bármilyen kazettás betöltést, akár szabványos, akár nem szabványos betöltőrutinokkal
+
+* Kezeli a bináris kazettaformátumú fájlokat (TAP, TZX, PZX, O, P, P81, CDT, CAS) a szabványos ROM-rutinokon keresztül ZX Spectrum, ZX80, ZX81, Amstrad CPC, Jupiter Ace, MSX és Spectravideo gépeken
+
+* Kezeli a valódi hangfelvételről való betöltést (RWA, SMP, WAV) a szabványos ROM-rutinokon keresztül ZX Spectrum, ZX80, ZX81, Amstrad CPC és Jupiter Ace gépeken
+
+* A ZX81 kazettás hangfelvételeit P/P81 fájlokká alakítja, a dekódolt impulzusok, bitek és bájtok hullámforma-nézetével
+
+* Szimulálja a valódi kazettás betöltést a szabványos ROM-rutinokon keresztül ZX Spectrum, ZX80 és ZX81 gépeken
+
+* Támogatja a kazettás mentés elfogását (trap) a Super Tape Copier és a Lao Copy 2 programoknál
+
+* Kezelt pillanatkép-formátumok: ZSF, ZX, Z80, SP, SPG, NEX, SNA, P, P81, O, Z81, ACE
+
+* Kezelt microdrive-formátumok: MDR, RMD és MDV
+
+* Kezelt hajlékonylemez-formátumok: DSK
+
+* Kezelt MMC/SD kártya formátumok: HDF, IMG, RAW (.MMC)
+
+* Kezelt IDE merevlemez-formátumok: RAW (.IDE)
+
+* Kezelt cartridge-formátumok: DCK, ROM, COL, SG
+
+* Támogatja az MSX cartridge-okat ASCII 8 KB és 16 KB, Konami (SCC-vel vagy anélkül) és R-Type memórialeképezőkkel (mapper)
+
+* Kezeli az RZX visszajátszást
+
+* Emulálja a következő másolóinterfészeket: Defcon, Dinamid3, Hilow Barbanegra, Interface007, Microhobby Pokeador Automatico, Multiface (One, 128 és Three), Phoenix, Ramjet, Spec-Mate, Transtape
+
+* Emulálja a Dinamic SD1-et
+
+* Emulálja a Datagear/MB02 DMA-t és a ZX-Uno DMA-t
+
+* Emulálja a Nec PD765 hajlékonylemez-vezérlőt, amelyet a Spectrum +3, a CPC 664, a CPC 6128 és a PCW használ
+
+* Emulálja a ZX Microdrive-ot ZX Spectrumon és QL-en: ZX Spectrumon támogatja az MDR (szabványos fájlrendszer-formátum) és a nyers (RMD kiterjesztésű) formátumot, beleértve a szalaghézagokat, a szinkronbájtokat és a hibás szektorokat. QL-en ROM-elfogással (rom traps) szimulálja, a számítógéped fájljait és MDV (QLAY formátumú) fájlokat is elérve
+
+* Emulálja a Betadisk/TR-DOS rendszert. Közvetlenül támogatja a .trd fájlokat. Az scl fájlok okos betöltéssel betölthetők, vagy a fájlválasztóban a szóköz megnyomásával átalakíthatók
+
+* Emulálja a ZX Spectrum MMC interfészeket: ZXMMC, ZXMMC+, DivMMC
+
+* Emulálja a ZX Spectrum IDE interfészeket: DivIDE, 8-bit simple
+
+* Emulálja a ZX Spectrum ESXDOS fájlelérését a számítógéped fájljainak használatával
+
+* Emulálja a Sam Coupe IDE interfészt: Atom Lite
+
+* Emulálja a ZXPand MMC interfészt ZX80-on és ZX81-en
+
+* Emulálja a ZX Dandanator! Mini és a CPC Dandanator! Mini eszközt
+
+* Emulálja a Speccy Superupgrade-et
+
+* Emulálja Antonio Villena Kartusho és iFrom interfészeit
+
+* Emulálja Gerton Lunter (a híres Z80 emulátor szerzője) SamRam interfészét
+
+* Emulálja a LEC memóriabővítést
+
+* Emulálja a HiLow DataDrive-ot
+
+* Kezeli a RAM, EPROM, Intel Flash és hibrid (RAM+EPROM) kártyákat Z88-on
+
+* Kezeli a QL microdrive/floppy fájlelérést a számítógéped fájljaival, MDV, QDOS QL5A/QL5B IMG és WIN képfájlokkal, valamint egy második hajlékonylemez-meghajtóval. Be tudja olvasni a Q-emuLator fájlfejléceket, fejléc nélküli fájlokat is végre tud hajtani (EXEC), és okos betöltéssel betölti a boot, BASIC és futtatható fájlokat
+
+* Emulálja a QL QIMI egeret, a kiegészítő ROM-okat, a beállítható képarányt és a Vision-QL palettát, valamint választható a valós idejű óra forrása és az időzóna
+
+* Kezeli a tömörített formátumokat: a zip-et (beépített kicsomagolóval), a tar, rar és gz formátumot pedig külső segédprogramokkal
+
+* Emulálja az AY hangchipet, a Turbosoundot (2 AY csatorna), a 3 AY csatornát, a MIDI csatornákat és különféle DAC-okat: Specdrum, Covox, ACB/ABC/BAC/CBA sztereó
+
+* Spectrumon kiválasztható a Beeper és a MIC hang
+
+* Emulálja a General Soundot
+
+* Emulálja az SN76489AN hangchipet
+
+* Emulálja a Quicksilva, a ZON-X81 és a VSYNC-alapú hangot ZX80/81-en
+
+* Emulálja a Speaker és a Soundbox hangot Jupiter Ace-en
+
+* Kísérleti jelleggel szimulálja a Sam Coupe hangchipjét (SAA1099)
+
+* Emulálja az i8049-et és a Qsoundot QL-en
+
+* Szimulálja a Nagravision hangeffektust
+
+* Akár 1024 KB RAM-ot is támogat Spectrumon és Pentagonon
+
+* Akár 56 KB-os RAM-bővítőket támogat ZX80/81-en
+
+* Akár 51 KB-os RAM-bővítőket támogat Jupiter Ace-en
+
+* Joystick-emuláció valódi joystickkal és a billentyűzet kurzorbillentyűivel: Kempston, Sinclair 1&2, Cursor Joystick, Cursor & Shift, OPQA, Fuller, Zebra, Mikro-Gen, ZXPand, SAM Coupe Cursors, CPC, MSX, Spectravideo, Cascade, DKTronics. Automata tüzelés funkcióval is
+
+* A joystick gombjaihoz beállítható F-funkciós műveletek rendelhetők, például CPU reset, NMI vagy egy ablak megnyitása
+
+* Spectrumos autóversenyes játékokban kormánykerék-joystickot használhatsz analóg vezérlőként
+
+* Képernyő-billentyűzet, amely joystickos játéknál hasznos, kétféle változatban: az egyik a billentyűzet betűivel, a másik szavakkal, ami szöveges kalandjátékokhoz hasznos. Emellett egy eszköz, amellyel szavakat nyerhetsz ki szöveges kalandjátékokból (Daad, Paws, Quill és Gac)
+
+* Emulálja a Spectrum billentyűzet szellemleütés-hibáját (ghosting)
+
+* ZX Spectrum Recreated billentyűzet támogatása
+
+* Emulálja a natív turbó módokat ZX-Uno, Chloe, Prism és ZX Spectrum Next gépeken, más gépeken pedig kézi turbó mód érhető el
+
+* ZX Printer emuláció
+
+* Optikai bemenet emulációja: emulálja az MHT Ingenieros S.L Gunstickjét, a Magnum Light Phasert, a Stack Light Rifle-t, a Defender Light Gunt, a Trojan Light Pent, a Datel Lightwritert és a Spectrum Doodler Lightpent
+
+* Kempston egér emulációja
+
+* Támogatja a hálózati játékot saját protokollal (ZEsarUX hálózati játékprotokoll - ZENG), amellyel kétféleképpen játszhatsz: két vagy több (legfeljebb 16) ZEsarUX példánnyal, amelyek a világ bármely pontján vagy egy helyi hálózatban lehetnek, vagy egy központi szerveren keresztül (ZENG Online). A játékokat nem kell módosítani, bármelyik meglévő játékot használhatod
+
+* Uart híd emulációja: lehetővé teszi, hogy a számítógépedhez csatlakoztatott valódi uart-wifi eszközt használj, csak GNU/Linuxon (Windowson és Macen szimulálható)
+
+* Online böngészheted a ZX81-es játékokat
+
+* Online böngészheted a Spectrum játékokat
+
+* Támogatja a szöveg billentyűleütésként való küldését, szövegfájlból vagy a rendszer vágólapjáról olvasva, a következő rendszereken: Mac, Windows, GNU/Linux (SDL2, Xwindow)
+
+* Támogatja a fogd és vidd (drag & drop) műveletet a következő rendszereken: Mac, Windows, GNU/Linux (SDL2, Xwindow)
+
+* Támogatja a POKE-ok beolvasását .POK fájlokból
+
+* Hangchip-eszközök: a 3 emulált hangchiphez (AY-3-8912, SN76489AN, QL i8049): kotta, zongora, regiszterek, a zene exportálása midi (.mid) fájlba
+
+* A hangchip hangjának (AY-3-8912, SN76489AN, QL i8049) valós idejű lejátszása külső MIDI eszközre
+
+* AY lejátszó: .AY fájlokból játszhatsz le zenét
+
+* AY keverő
+
+* Vizuális valódi kazetta: láthatod a kazettád hangképét, a kazetta blokkjait, és visszatekerheted vagy előretekerheted a kazettás lejátszót
+
+* Vizuális kazetta: egy valódi kazettát és annak mozgását láthatod egy játék betöltése közben
+
+* Vizuális floppy: a hajlékonylemez-tevékenységet láthatod: lemezmozgás, olvasás, írás, fejpozicionálás stb.
+
+* Vizuális Microdrive: a microdrive-tevékenységet láthatod
+
+* Támogatja a ZEsarUX távvezérlő parancsprotokollt (ZRCP). Ez egy nagy tudású kommunikációs protokoll egy kliens és a ZEsarUX között, amelyhez egy egyszerű telnet kliens elég. Az egyik dolog, amit vele tehetsz, a ZEsarUX fejlett hibakeresése a Visual Studio Code-ból (lásd https://github.com/maziac/DeZog)
+
+* Csökkentett Spectrum mag is használható, néhány funkció kikapcsolásával, ami lassú eszközökön hasznos, például Raspberry Pi 1/Zero esetén
+
+* Automatikus pillanatképeket tud készíteni a RAM-ba, és visszatekerés (Rewind) műveletet is végre tud hajtani
+
+* Nagy tudású hibakeresési funkciók: visszafelé futó hibakeresés (Reverse Debugging), CPU-előzmények, assembler, regiszterek, visszafordítás, feltételes töréspontok szöveges kifejezésekkel, figyelések, lépésenkénti végrehajtás, átlépés (Step-over), futtatás adott pontig (Runto), a TV-elektronsugár pozíciójának megjelenítése, forráskód betöltése, hexadecimális szerkesztő, sprite-ok megtekintése, csempék (tile-ok) megtekintése, bájtok keresése, végtelen élet kereső, CPU tranzakciónapló, BASIC megtekintése, BASIC változók megtekintése, BASIC GOSUB verem megtekintése, részletes üzenetek a konzolon
+
+* Szöveges kalandjáték-hibakereső: Quill/Paws/Daad/Gac szöveges kalandjátékokban lépésenként hajthatod végre a condactokat, figyelheted a flageket/tárgyakat, listázhatod az üzeneteket (tárgyak, felhasználói/rendszerüzenetek, helyszínek, tömörített tokenek, szókészlet), a kapcsolatokat, és megnézheted a szöveges kaland térképét. A Quill, Paws, Daad vagy Gac kalandjátékok grafikáit is megtekintheted.
+
+* Mesterséges intelligenciával valósághű képeket készíthetsz a szöveges kalandjátékok helyszínleírásaihoz
+
+* Fájlkezelő eszközök menü: néhány gyakori fájlformátum megtekintése, kibontása és átalakítása: tap, tzx, pzx, trd, dsk, mdv, hdf, ddh, Hobeta fájlok stb. A fájlrendszer-képfájlok (.mmc, .img stb.) tartalmát is böngészheted
+
+* Akadálymentesség támogatása: a karakterkiírás figyelése (Print char traps) lehetővé teszi, hogy szinte bármely program vagy játék által generált szöveget elfogj, akár a szabványos ROM-hívásokon (RST 10H), akár nem szabványos karakterkiíró rutinokon keresztül. A játék által generált szöveget szövegfelolvasó programnak küldheti. Fel van készítve a szövegfelolvasásra vak vagy gyengénlátó felhasználók számára. Az emulátor menüjét is fel tudja olvasni egy szövegfelolvasó program.
+
+* Fordítás támogatása: külső szkriptek segítségével szinte bármely program vagy játék szövegét lefordíthatja
+
+* Memória-csalás: hasznos az energia, a bombák, a lőszer számlálóinak vagy bármilyen más csalási lehetőségnek a megtalálásához egy játékban
+
+* Szimulálja a felső RAM memóriafrissítését a Spectrum 48Kb-on: a tartalma elvész, ha az R regisztert nagyon gyorsan változtatod
+
+* Támogatja a parancssori beállításokat, a konfigurációs fájlban megadott beállításokat és a játékonkénti beállításokat
+
+* Futtatható Dockerben, Debian, Ubuntu és Fedora konténereken tesztelve
+
+* Egyéb funkciók: Vizuális memória menü, CPU-statisztika, játékok (Toys): ZXeyes, ZXlife, Clive and Simon, óra, számológép, ASCII táblázat, érzékelők
+
+* Hét easter egget tartalmaz. Megtalálod őket? :)

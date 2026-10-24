@@ -1,0 +1,174 @@
+A ZEsarUX natív Windows futtatást (mingw használatával) és Cygwint is támogat.
+A ZEsarUX futtatásához legalább Windows XP szükséges
+A Mingw egy minimális GNU környezet Windowshoz, a Cygwin pedig egy teljesebb GNU rendszer, amely X-Windowst is tartalmaz.
+A mingw használatát javaslom. Mindkettőt leírom:
+
+
+
+-- Natív Windows (mingw-vel)
+
+Ha a Windows bináris verziót töltötted le, nem kell telepítened a ZEsarUX-ot. A következő futtatható fájllal indíthatod:
+
+zesarux.exe
+
+
+Ha a forráskódot használod, és le szeretnéd fordítani:
+
+-Először telepítsd a mingw-t:
+
+A mingw telepítőprogramjában menj a Basic Setup részhez, és jelöld ki ezeket:
+mingw-developer-toolkit
+mingw32-base
+mingw32-gcc-g++
+msys-base
+mingw-pthreads (minden vonatkozó csomag)
+msys-bash
+
+-Töltsd le az SDL 1.2 könyvtárat a https://www.libsdl.org/download-1.2.php oldalról,
+és válaszd az SDL-devel-1.2.15-mingw32.tar.gz (Mingw32) fájlt. 
+
+Az SDL2 is támogatott, de nem működik jól, ezért az SDL 1.2 használatát javaslom
+
+Csomagold ki, és másold a teljes tartalmát a c:\mingw\sdl\ mappába
+(vagy a c:\mingw\sdl2\ mappába)
+
+Így a c:\mingw\sdl\lib mappában lesz néhány libSDL.dll* fájl, és
+a c:\mingw\sdl\include\ mappában lesz egy SDL almappa, benne néhány .h fájllal
+
+
+(
+-Opcionális:
+Telepítheted az SSL könyvtárat, hogy teljes értékű Spectrum letöltőböngésződ legyen (SSL nélkül csak részleges böngésző érhető el):
+Telepítsd az előre lefordított csomagokat innen:
+https://wiki.openssl.org/index.php/Binaries
+https://bintray.com/vszakats/generic/openssl
+https://bintray.com/vszakats/generic/download_file?file_path=openssl-1.1.1d-win32-mingw.zip
+
+
+
+Csomagold ki, és másold a Mingw include és lib mappáiba, az én példámban:
+c:\openssl-1.1.1d-win32-mingw\include
+c:\openssl-1.1.1d-win32-mingw\lib
+
+Másold a libcrypto-1_1.dll és libssl-1_1.dll fájlokat abba a mappába is, ahová a ZEsarUX-ot letöltötted
+
+A configure parancs futtatása előtt be kell állítanod a következő környezeti változókat:
+
+export CFLAGS "-I/c/openssl-1.1.1d-win32-mingw/include"
+export LDFLAGS "-L/c/openssl-1.1.1d-win32-mingw/lib"
+
+és add hozzá a --enable-ssl beállítást a configure parancshoz
+)
+
+
+
+-Indítsd el a Windows parancssort (cmd.exe):
+
+#a PATH beállítása a gcc és make mingw binárisokhoz:
+set PATH=%PATH%;c:\mingw\bin;c:\mingw\msys\1.0\bin
+
+#lépj a letöltött ZEsarUX forráskódhoz
+cd <ahol található>
+
+
+futtasd a bash-t
+
+./configure --enable-memptr --enable-visualmem --enable-cpustats
+
+Vagy sdl2 használatával:
+
+./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-sdl2
+
+
+Megjegyzés: Windowson a configure szkript néha ehhez hasonló hibával áll le:
+"./configure.compile.c.o: No such file or directory"
+vagy
+"rm: cannot lstat './configure.compile.c.o': Permission denied"
+
+Úgy tűnik, ez valamilyen Windows és bash közötti probléma.... ne aggódj, csak futtasd újra a parancsot, és ezúttal hiba nélkül lefut
+
+
+
+Ezután:
+make
+
+
+
+#másold az SDL.dll fájlt az aktuális könyvtárba
+copy c:\mingw\sdl\bin\SDL.dll .
+vagy sdl2 esetén:
+copy c:\mingw\sdl2\bin\SDL2.dll .
+
+
+#És futtasd a ZEsarUX-ot
+
+zesarux.exe
+
+
+Nem kell sehová telepíteni, innen is futtatható, vagy áthelyezheted az egész könyvtárat, ahová csak szeretnéd
+
+-----------------------------------------------
+
+-- Cygwin
+
+A Cygwin verziót magadnak kell beállítanod, mivel telepítened kell a cygwint, és egy xterminált kell használnod:
+Telepítsd a cygwint a fejlesztői eszközökkel
+Nyisd meg: All programs/Cygwin X/X Win Server. Ez elindítja az X szervert egy xterminállal
+cd /cygdrive/c/... ahol a ZEsarUX forráskódja található
+./configure 
+make
+
+Ezzel elkészül a lefordított zesarux.exe
+
+Most már futtathatod ebben az xterminálban ezzel:
+
+./zesarux.exe
+
+Megjegyzés: ha az xwindows meghajtó nem működik cygwinnel, próbáld helyette az sdl meghajtót:
+
+./zesarux.exe --vo sdl
+
+
+Minden alkalommal, amikor el akarod indítani az emulátort, el kell indítanod az X szervert, és az xterminálban kell futtatnod az emulátort
+
+Ha az emulátort egy "Cygwin Terminal" ablakban futtatod, ne felejtsd el, hogy az X szervernek futnia kell, és a terminálban exportálnod kell a DISPLAY változót:
+
+export DISPLAY=:0.0
+
+
+
+A hangtámogatásról... az én gépemen az sdl hangmeghajtó nem működik, a dsp meghajtó viszont igen, ezért így futtasd:
+
+./zesarux.exe --vo sdl --ao dsp
+
+
+* Futtatás normál Windows parancssori konzolon (cmd.exe):
+
+Megjegyzés: Nem tudom, hogyan lehet az emulátort xwindows vagy sdl meghajtóval futtatni egy normál Windows parancssori konzolon (cmd.exe).
+Sok cyg*.dll fájlra van szüksége az emulátorral azonos helyen (ezeket a c:\cygwin\bin mappából másolhatod át), de nem találja az Xservert.
+Az emulátort viszont futtathatod más videómeghajtóval, például stdout-tal:
+
+zesarux.exe --vo stdout
+
+* További megjegyzések
+
+Valamiért a régi Cygwin telepítésem már nem működik rendesen, ezért néhány dolgot kézzel kell elindítani:
+
+- A Cygwin Terminal parancsikon nem találja a "mintty" futtatható fájlt: ilyenkor indítsd el a C:\cygwin\bin\mintty.exe futtatásával
+
+- Az XServer (XWin.exe) nem frissíti a képernyőt, és a konzolon sok ehhez hasonló hibát látok: 
+
+IDirectDrawSurface4_Blt() failed
+
+Ezért a cygwin terminálból így indítsd el:
+
+Xwin.exe -engine 1 &
+
+Az 1-es engine shadow GDI-t használ; az alapértelmezett a 4-es engine (Shadow directdraw4 non-locking), amely úgy tűnik, bizonyos esetekben hibásan működik
+
+Ne felejtsd el beállítani a DISPLAY változót a zesarux futtatása előtt:
+
+export DISPLAY=:0.0
+
+
+------------------------

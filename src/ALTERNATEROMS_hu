@@ -1,0 +1,109 @@
+Az alternate_roms könyvtárban a következő alternatív ROM-ok találhatók:
+
+
+aszmice07.rom - ASZMIC E07 ROM - ZX80/ZX81 csere-ROM, amely assemblert és hibakeresőt tartalmaz
+Ez a ROM valójában 4K hosszú, de kétszer egymás után van bemásolva, hogy 8k hosszú legyen, és működjön a ZX81-en
+
+sp-rom.rom: A Comprocsys Ltd SP ROM-ja egy ZX81-es bővítőkártya volt, amely 256 x 192-es bitképes grafikát, EPROM-ok olvasását és írását, valamint egy Zilog 8255 PIA chipen keresztül perifériákkal való kommunikációt biztosított. Használható volt a Comprocsys ASZMIC ROM-mal együtt vagy anélkül is (ZX81 BASIC parancsokkal).
+WRX és RAM-bővítés szükséges a 2000H, 8000H és C000H címeken. A ROM-ot a 2000H címre kell betölteni
+Információ: https://derekbolli.wordpress.com/2015/06/05/zx81-sp-rom-disassembly/
+
+ace.rom: "Dutra.Lacerda" javítása (https://t.me/JupiterACE)
+3 szó visszaállítva, CODE szó hozzáadva (Sieve*10=5m W=16.4x) GPL3 DISTRO
+
+opense.rom  OpenSE BASIC 3.1.2-es verzió, Spectrum 48K-hoz
+http://sourceforge.net/projects/sebasic/
+
+
+sebasic4_rom1.rom SEBASIC önálló ROM 1, a normál 32x24-es módot támogatja, 4.1.0-s verzió, Spectrum 48K-hoz
+https://github.com/cheveron/sebasic4/wiki
+
+derby_p_32K.rom, derby_pp_64K.rom: Derby+ és Derby++ ROM-ok, 128KB RAM-mal
+és 32K vagy 64 KB ROM-mal rendelkező Spectrumokhoz
+https://zx.itch.io/derbypro
+
+
+plus3e_mmcen3eE.rom  plus3e_mmces3eE.rom
++3e ROM-ok, v1.38. Spectrum +2A/+3 modellekhez
+http://www.worldofspectrum.org/zxplus3e/p3eroms.html
+Az első angol, a második spanyol nyelvű
+Mindkettő MMC interfészhez készült; a ZEsarUX-ban bekapcsolhatod az MMC és ZXMMC emulációt. 
+
+plus3e_sm8en3eE.rom plus3e_sm8es3eE.rom
++3e ROM-ok, v1.38. Spectrum +2A/+3 modellekhez
+http://www.worldofspectrum.org/zxplus3e/p3eroms.html
+Az első angol, a második spanyol nyelvű
+Mindkettő 8-bit simple IDE interfészhez készült
+
+
+
+plus2c.rom ZX Spectrum Plus 2C, Spectrum 128k/+2-höz
+Andrew Owen nem hivatalos ROM-ja
+
+
+--
+
+plus2b.rom: +2B ROM-készlet. Spectrum +2A/+3 modellekhez
+
+A +2B ROM-készlet a következőket tartalmazza:
+
+ROM 0 - javított UK 128 szerkesztő 
+ROM 1 - eredeti 16K BASIC ROM
+ROM 2 - RT Russell BBC BASIC (Z80) programja, JG Harston portolásában:
+
+        http://mdfs.net/Software/BBCBasic/Spectrum/
+
+ROM 3 - OpenSE BASIC 3.1.1:
+
+        http://sourceforge.net/projects/sebasic/
+
+A menüpontok a következők:
+
+* SE BASIC
+  a Sinclair BASIC teljesen javított, optimalizált és továbbfejlesztett változata
+
+* BBC BASIC
+  vitathatatlanul a klasszikus BASIC legjobb változata, beépített Z80 assemblerrel
+
+* 128 BASIC
+  teljesen javított, új menürendszerrel és virtuális numerikus billentyűzet támogatásával
+
+* 48 BASIC
+  az eredeti 1982-es ROM, kikapcsolt memórialapozással
+
+* USR 0
+  az eredeti 1982-es ROM, bekapcsolt memórialapozással
+
+
+
+
+--
+
+
+Z88UK220.rom  
+Z88UK300.rom 
+Z88UK400.rom
+Z88OZ431.rom  
+Z88OZ441.rom  
+Z88OZ45.rom
+Z88OZ46.rom
+Z88OZ47.rom
+
+Különböző Z88 ROM-verziók. Az alapértelmezett a Z88OZ47.rom.
+
+
+-----
+
+tk90x_v1br.rom: brazil 
+tk90x_v2es.rom: javított tk90x ROM
+
+
+tk95es_modif.rom: Microdigital TK95 spanyol ROM, Rodolfo Edison Guerra módosításaival:
+* Javított üzenetek:
+"Variable inexiste" helyett "Variable incierta"
+"Ok" helyett "OK"
+"TK Color Computer" helyett "TK 95 - Color Computer"
+* A Szigma jel helyett font jel, a Delta jel helyett (c) szerepel 
+
+
+

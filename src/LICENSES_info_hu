@@ -1,0 +1,73 @@
+A ZEsarUX külső modulokat is tartalmaz. Ezek licencei:
+
+-Atomlite emuláció. A Sim Coupe emulátorból átvéve
+Copyright Simon Owen. A GNU GENERAL PUBLIC LICENSE v2 alatt terjesztve, a licencet a LICENSE_simcoupe fájlban olvashatod
+http://www.simcoupe.org
+
+-DOS betűkészlet, néhány felületstílus használja.
+Copyright Neil Roy. A CC BY-SA 3.0 licenc alatt terjesztve, a licencet a LICENSE_DOS_font fájlban olvashatod
+https://opengameart.org/content/dos-8x8-font
+
+-FatFS
+Copyright (C) 20xx, ChaN, minden jog fenntartva
+http://elm-chan.org/fsw/ff/00index_e.html
+
+-Fuse visszafejtő (disassembler)
+Copyright Philip Kendall és más szerzők. A GNU GENERAL PUBLIC LICENSE v2 alatt terjesztve, a licencet a LICENSE_fuse fájlban olvashatod
+http://fuse-emulator.sourceforge.net
+
+-grackle - Graphic Adventure Creator játékok kiíró- és olvasóprogramja
+Copyright 2014 David Lodge. A BSD 3-Clause "New" or "Revised" License alatt terjesztve, a licencet a LICENSE_grackle fájlban olvashatod
+https://github.com/tautology0/grackle
+
+-Hilow
+Copyright 1985 Juan J. Arias, Carlos Galucci, Roberto Eimer, Ramiro Arias, Alfredo Mussio
+
+-mdvtool
+Copyright 2005 Till Harbaum. A GNU GENERAL PUBLIC LICENSE v3 alatt terjesztve, a licencet a LICENSE_mdvtool fájlban olvashatod
+https://github.com/mist-devel/mist-binaries/tree/master/cores/ql/tools/mdvtool
+
+-Musashi 3.4 - Hordozható Motorola M680x0 processzoremulációs motor.
+Copyright 1998-2002 Karl Stenerud. Minden jog fenntartva. Az MIT License alatt terjesztve, a licencet a LICENSE_MOTOROLA_CORE fájlban olvashatod
+https://github.com/kstenerud/Musashi
+
+-National Semiconductor SC/MP CPU emulátor
+Copyright 2017 Miodrag Milanovic. A BSD-3 License alatt terjesztve, a licencet a LICENSE_SCMP_CORE fájlban olvashatod
+https://github.com/mamedev/mame/tree/master/src/mame/drivers/mk14.cpp
+
+-PlayTZX
+Copyright Tero Turtiainen, Tomaz Kac, Philip Kendall. Freeware-ként terjesztve, a licencet a LICENSE_playtzx fájlban olvashatod
+https://github.com/kounch/playtzx
+
+-Qemu Mac OS videómeghajtó
+Copyright Fabrice Bellard és a QEMU csapat. A GNU General Public License version 2 alatt terjesztve.
+https://github.com/aliguori/qemu
+
+-scl2trd
+Copyright 2019 Alexander Sharikhin. Az MIT License alatt terjesztve, a licencet a LICENSE_scl2trd fájlban olvashatod
+https://github.com/nihirash/esxdos-scl2trd
+
+-spg betöltő. Az UnrealSpeccy emulátorból átvéve
+Copyright: különböző szerzők. Freeware-ként terjesztve, a licencet a LICENSE_unrealspeccy fájlban olvashatod
+https://github.com/tslabs/zx-evo/tree/master/pentevo/unreal
+
+-Tom Thumb karakterkészlet
+Copyright Robey Pointer. A CC-BY 3.0 licenc alatt terjesztve, a licencet a LICENSE_tom_thumb_charset fájlban olvashatod
+https://robey.lag.net/2010/01/23/tiny-monospace-font.html
+
+-undaad
+Copyright Morgul és Uto. A GNU GENERAL PUBLIC LICENSE v3 alatt terjesztve, a licencet a LICENSE_undaad fájlban olvashatod
+https://github.com/Utodev/undaad
+
+-ungac
+Copyright 2006, 2020 John Elliott. A GNU General Public License version 2 alatt terjesztve, a licencet a LICENSE_ungac fájlban olvashatod
+https://www.seasip.info/Unix/UnQuill/
+
+-unpaws/unquill
+Copyright: különböző szerzők. Az MIT License alatt terjesztve, a licencet a LICENSE_unpaws fájlban olvashatod
+https://github.com/Utodev/unPAWs
+
+-zip
+Copyright Kuba Podgorski. Az Unlicense licenc (The Unlicense) alatt terjesztve, a licencet a LICENSE_zip fájlban olvashatod
+https://github.com/kuba--/zip 
+

@@ -380,15 +380,16 @@ static int zxvision_f_function_index(enum defined_f_function_ids id)
     return 0;
 }
 
-//Default F keys: F7 zoom out, F8 zoom in, F9 ZX Desktop on/off
+//Default F keys: F7 ZX Desktop on/off, F11 zoom out, F12 zoom in
+//(F8 and F9 keep their own default actions: On Screen Keyboard and Smart Load)
 void zxvision_init_default_f_keys(void)
 {
     int i;
     for (i=0;i<MAX_F_FUNCTIONS_KEYS;i++) defined_f_functions_keys_array_default[i]=0;
 
-    defined_f_functions_keys_array_default[6]=zxvision_f_function_index(F_FUNCION_ZOOM_OUT);
-    defined_f_functions_keys_array_default[7]=zxvision_f_function_index(F_FUNCION_ZOOM_IN);
-    defined_f_functions_keys_array_default[8]=zxvision_f_function_index(F_FUNCION_SWITCH_ZXDESKTOP);
+    defined_f_functions_keys_array_default[6]=zxvision_f_function_index(F_FUNCION_SWITCH_ZXDESKTOP);
+    defined_f_functions_keys_array_default[10]=zxvision_f_function_index(F_FUNCION_ZOOM_OUT);
+    defined_f_functions_keys_array_default[11]=zxvision_f_function_index(F_FUNCION_ZOOM_IN);
 
     for (i=0;i<MAX_F_FUNCTIONS_KEYS;i++) defined_f_functions_keys_array[i]=defined_f_functions_keys_array_default[i];
 }

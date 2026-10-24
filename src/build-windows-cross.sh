@@ -85,7 +85,7 @@ cp "/usr/$HOST/lib/libwinpthread-1.dll" .
 
 rm -rf "$NOMBRE"
 mkdir "$NOMBRE"
-cp -a ACKNOWLEDGEMENTS LICENSE LICENSES_info Changelog Cambios TODO* README HISTORY FEATURES FEATURES_es \
+cp -a ACKNOWLEDGEMENTS LICENSE LICENSES_info Changelog Cambios TODO* README HISTORY FEATURES FEATURES_es *_hu \
     EXCLUSIVEFEATURES INSTALL INSTALLWINDOWS IN_MEMORIAM* ALTERNATEROMS INCLUDEDTAPES DONATE DONORS FAQ \
     *.odt mantransfev3.bin *.rom zxuno.flash zxmmcplus.flash tbblue.mmc pcw_8x_boot*dsk zesarux.mp3 \
     zesarux.xcf editionnamegame.* keyboards alternate_roms z88_shortcuts.bmp zesarux.pdf docs licenses \

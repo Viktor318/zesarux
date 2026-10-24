@@ -1,0 +1,105 @@
+Szeretném megköszönni a következő emberek segítségét és közreműködését (időrendi sorrendben):
+
+-A szüleimnek és a bátyáimnak. Nagy szeretettel emlékszem apám tanácsaira, amelyeket az első programjaimhoz adott. David bátyám segített megtanulni a ZX Spectrumot, felfedezni az Inves sajátosságait és fejleszteni a ZEsarUX-ot. Oscar bátyám szintén segít a ZEsarUX fejlesztésében és tesztelésében, és a ZX Spectrummal kapcsolatban is sokat segített.
+-Aurónak és Guinak a türelmükért és a javaslataikért
+-Ivan Daunis Llobet, a PCGPE-ért és az INTERVUE-ért, amelyek nagyon hasznosak voltak az első emulátorom, a ZXSpectr elkészítésekor
+-Ruben Parra Martinez, a Spectrum +2A-ért
+-A mexikói barátaimnak
+-Az Amstradnak, amiért engedélyezi a ROM-ok használatát azoknak, akik emulátort készítenek
+-Samir Ribic, amiért segített a ZXSpectr feltöltésében, és a Warajevo emulátorában található összes információért.
+-Martijn van der Heide, amiért feltöltötte a ZXSpectr-t a http://worldofspectrum.org/ oldalra
+-Phillip Kendall, amiért szólt a ZXSpectr BIT utasításának egyik hibájáról. A Fuse emulátorából is használok kódot (opkód-időzítések és visszafejtő függvény)
+-Pedro Gimeno, egyes opkódok időzítéséért, a contended memory (versengő memória) információkért, a Jupiter Ace-ről szóló rengeteg információért és az Inves Spectrum+ gépen végzett sok tesztért
+-Rodolfo Edison Guerra, amiért felvette a ZXSpectr-t a SpecBase-ébe, a TK90X-ről és TK95-ről szóló összes információért és még sok minden másért!
+-Paul Farrow, a ZX80-ról és ZX81-ről, valamint a Spectra videómódokról szóló információkért és játékokért. Lásd: http://www.fruitcake.plus.com/
+-Martin Korth, a ZX80 és ZX81 videójeleiről szóló információkért. Lásd: http://nocash.emubase.de/zxdocs.htm
+-Kelly Murta, amiért engedélyezte, hogy a weboldalán található programokat mellékeljem. Lásd: http://zx81.eu5.org/toddysofte.html
+-Joan Sales Roig, amiért engedélyezte a ZX81 Orquesta és a Control de Stocks mellékelését
+-Alfonso Saavedra "Son Link", az emulátorom teszteléséért és a javaslataiért
+-Dave Hughes, amiért engedélyezte az El Stompo, a Sun Bucket és más programok mellékelését
+-Einar Saukas, amiért engedélyezte a KnightsDemonsDX, a NirvanaEngine, a BifrostEngine és más programok mellékelését
+-Miguel Angel Rodriguez Jodar, az összes Spectrum modellről szóló rengeteg információért
+-Marcos Cruz (programandala.net), a spool fájl (Spool File) ötletéért, a rengeteg javaslatért, a TR-DOS-szal kapcsolatos segítségért és a hibajelentésekért
+-Stefano Bodrato, amiért engedélyezte a ZX81-es Wall játék mellékelését
+-Kit O'Saoraidhe, amiért engedélyezte néhány ZX80-as programja mellékelését, amelyek a http://zx80programs.yolasite.com/ oldalon találhatók
+-Bob Smith, amiért engedélyezte a ZX81-es Rebound játéka mellékelését
+-Gunther Strube és Thierry Peycru, a Z88 Wiki összes információjáért (https://cambridgez88.jira.com/wiki/display/welcome/Cambridge+Z88), valamint a rengeteg javaslatért és segítségért
+-The Mojon Twins, minden új játékukért, és amiért engedélyezték a Sgt. Helmet Zero játék mellékelését (ULA Plus funkciókkal)
+-Jim Bagley, amiért engedélyezte a jbracing mellékelését
+-Aleksey Rusakov, amiért engedélyezte néhány általa készített Gigascreen kép mellékelését
+-Sergey Sharov, amiért engedélyezte néhány általa készített Gigascreen kép mellékelését
+-Alexander Filyanov, amiért engedélyezte néhány általa készített Gigascreen kép mellékelését
+-Alexander Solodkov, amiért engedélyezte néhány általa készített Gigascreen kép mellékelését
+-Andrew Owen, amiért engedélyezte néhány általa készített ULAPlus kép (.bmc4 fájlok) mellékelését, a Chloe gépéről szóló információkért, néhány billentyűzetképért és még sok minden másért
+-Jordi Bayo Montielnek, Antonio Villenának, Questnek és Miguel Angel Rodriguez Jodarnak a ZX-Uno csapatból, a gyönyörű gépükről szóló összes információért és a Windows verzió teszteléséért.
+-Fernando Gregoire a CAAD fórumokról, amiért segített javítani az emulátor akadálymentességi támogatását
+-Sukil Etxenike, amiért segített javítani az emulátor akadálymentességi támogatását, a bétatesztelésért és a szöveghibák javításáért
+-Charlie Robson, amiért segített a ZXPand emulációjában
+-Andy Rea, amiért engedélyezte a zxpandhoz készült STC lejátszója mellékelését
+-Henri, az AZERTY támogatást hozzáadó javításért
+-Jeff Braine, a Prism gépéről szóló információkért
+-Juan Carlos Gonzalez Amestoy, a Spectrum időzítéseivel, a Mac-es OpenGL rajzolással kapcsolatos segítségért és még sok MINDEN MÁSÉRT :) Az RVM emulátorát feltétlenül ki kell próbálnod!
+-Simon Owen, a Sam Coupe Atom Lite-járól szóló információkért
+-Uto, amiért segített fejleszteni a Hibakeresés menüt, és a Quill, PAWS és DAAD értelmezőkről szóló információkért
+-Victor Trucco és Fabio Belavenuto, a TBBlue gépükről szóló információkért
+-Daniel Leon, a ZX Dandanator! Mini interfészéről szóló információkért és a hibajelentésekért
+-Alejandro Valero, a Superupgrade interfészéről, a 8-bit simple IDE interfészről és a PD765 emulációról (+3 lemezmeghajtó) szóló információkért
+-Miguel Angel Gomez (haplo), a rengeteg hibajelentésért
+-Karl Stenerud, amiért engedélyezte a Musashi Motorola 680x0 emulátora beépítését
+-Javier R. Santurde (tolkien), a MorhOS javításért
+-Rich Mellor, amiért segített a QL emulációjában
+-Yerzmyey, amiért engedélyezte az Astral Combat demója mellékelését. http://yerzmyey.i-demo.pl/ . http://hooyprogram.republika.pl/
+-JSJ, amiért segített a Windows verzió pthreads-támogatásában
+-Miodrag Milanovic, amiért engedélyezte a National Semiconductor SC/MP CPU emulátora beépítését
+-Tim Gilberts, a hibajelentésekért és a Sped angol fordításáért
+-Gary Lancaster, a hibajelentésekért
+-Mark Hutchings, a hibajelentésekért, az új funkciók javaslásáért és a kódhozzájárulásért
+-g0blinish/Krapivin Dmitry, amiért engedélyezte néhány TSConf demó és játék mellékelését
+-Az "El mundo del Spectrum" podcast/weboldal csapatának, az "El mundo del Spectrum+" című könyvükben megjelent interjúért
+-Bernhard aka Luzie, a Recreated ZX Spectrum billentyűzetért
+-Till Harbaum, amiért segített a QL emulációjában és az mdvtool-lal
+-Simone Voltolini, amiért megmentette a régi QL Microdrive-jaim tartalmát
+-Richard Atkinson, a valódi Speccy 16/48/+ színpalettáért
+-Jordi Bayo Montiel (ismét), az első Windows fordításokért és a további gyönyörű ZEsarUX logókért
+-Roberto (zenvoid), amiért jelezte az IFF2 hibás viselkedését megszakítás kiváltásakor
+-Hacker VBI (Burenko Vladimir, Ukrajna), amiért engedélyezte néhány TSConf demó és játék mellékelését
+-zup, a Mantransfert tartalmazó Spectrum ROM-fájlok elkészítéséért
+-Robin Verhagen-Guest, amiért segített az MB02/Next DMA-val
+-Gari Biasillo, az esxdos kezelő hibáinak jelentéséért
+-Thomas Busse, a hibajelentésekért és a gyors hibakeresési értelmező (fast debug parser) ötletéért
+-Jose Luis Rodriguez Godoy, amiért tesztelte az Inves funkcióit és hibákat jelentett
+-Damien Guard, a ZX Chicago betűkészletért, amelyet a RetroMac felületstílus használ
+-Peter Ped Helcmanovsky, a rengeteg TBBlue kódhozzájárulásért és a hibajelentésekért
+-Derek Bolli, amiért tesztelte a ZEsarUX Hálózati játék (Network Gaming) funkcióját
+-desUBIKado, amiért tesztelte a ZEsarUX Hálózati játék funkcióját
+-ZXwebmaster, amiért engedélyezte, hogy a www.zx81.nl weboldalát használjam a ZX81 online böngészőben
+-Raul Carrillo (metsuke), amiért engedélyezte "The Big Javi's Adventure" című játéka hozzáadását
+-Thomas Kolbeck, amiért a ZEsarUX Spectrum online böngészőjéhez igazította a zxinfo API-t
+-Cesar Wagener, a Windows-os hibajelentésekért
+-Alone Coder, amiért engedélyezte a 16C színmódú Pang és Ball Quest játékok hozzáadását, és az ATM számítógépről szóló információkért
+-Шарихин Александр Сергеевич, amiért engedélyezte "Touhou Zero. Lost Donation Box Incident" című játéka hozzáadását, valamint a segítségéért és a javaslataiért
+-Stefan Bylund, amiért segített a TBBlue layer2 kiterjesztett módjaival
+-Kio, amiért engedélyezte, hogy a zxsp emulátorából átvegyem a gyönyörű billentyűzetképeit
+-Rafa (aka Spirax), a CPC CRTC megszakítások hibájának jelentéséért
+-Simon Berry, a hibajelentésekért és a javaslataiért
+-Gerton Lunter, a SamRam interfészéről szóló információkért, és amiért engedélyezte a ROM-ok mellékelését
+-Aled Griffiths, a Mac retina kijelző támogatásáért
+-Anderson Torres, a shell szkriptek shebang sorainak javításáért
+-Neil Roy, a DOS betűkészletért, amelyet az OS/2 felületstílus használ
+-Ricardo Martínez (Kyp), amiért segített a Transtape emulációjában
+-Álvaro Alea, az Interface007 és Dynamid ROM-okért (valószínűleg ő volt az egyetlen, akinek megvolt az Interface007 ROM)
+-SonicaLabs, a Poke F-funkcióért (Poke F-Function) és sok más kódhozzájárulásért
+-Fran Gallego, amiért segített az Amstrad CPC megjelenítésében
+-Fito, a Memória-csalás ötletéért és teszteléséért
+-Charles Ingley, a microdrive-ról szóló összes információért
+-Jane McKay, a Hilow DataDrive-ról szóló összes információért, a tesztekért stb.
+-Kev Brady, a Spectrum Next funkcióiról szóló rengeteg információért
+-noentiendo, a Spectrum multicolor effektus javításaiért
+
+-Mindenkinek a Spectrum, ZX80, ZX81, Z88, Raspberry Pi stb. témájú fórumokon az emulátoromhoz adott összes javaslatért
+-Mindenkinek, aki teszteli az emulátor béta és stabil verzióit, és hibákat jelent
+-Mindenkinek, aki adományozott a ZEsarUX-nak; a nevük a DONORS fájlban szerepel.
+-Mindenkinek, aki demókat készít Spectrumra; ezek kiváló tesztterepet jelentenek az emulátorom számára.
+
+És mindenekelőtt annak a nagy zseninek, Clive Sinclairnek. Nyugodjék békében
+

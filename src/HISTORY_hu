@@ -1,0 +1,27 @@
+Rövid leírás arról, hogyan kezdődött mindez...
+
+1996-ban kezdtem el első Spectrum emulátoromat, a ZXSpectr-t (https://github.com/chernandezba/zxspectr)
+Teljes egészében assemblyben írtam, PC x86-ra.
+
+Miközben a ZXSpectr-en dolgoztam, sokszor gondoltam arra, hogy átültetem GNU/Linuxra. 
+Nagy rajongója voltam (és vagyok ma is) a GNU/Linuxnak, és szerettem volna, ha az emulátorom azon is fut. 
+Csakhogy nem voltak meg a szükséges ismereteim a Unix alatti fejlesztés bizonyos területeiről, például az XWindows-ról.
+
+Egy nap, 2013 szeptemberében, feltöltöttem a ZXSpectr egy új verzióját; nem volt nagy kiadás, csak néhány apró javítás. 
+Akkor egy olyan átalakító rutinon kezdtem gondolkodni, amely kiírja a Spectrum képernyőfájlban (SCR) található szöveget.
+Ez a fájlkonverterem egy szűrőjeként indult: https://github.com/chernandezba/converter
+Ezzel a szűrővel be lehetett olvasni egy SCR fájlt, és ha normál ASCII Spectrum-szöveg volt rajta, kiírta a kimeneti fájlba.
+
+Aztán arra gondoltam, hogy ez a szűrő lehetne egy emulátorban a Spectrum képernyőjét megjelenítő rutin...
+
+Attól a pillanattól kezdve elkezdtem elkészíteni ezt az új emulátort, a ZEsarUX-ot, a nulláról indulva. 
+A szűrőt átírtam, hogy Unix alatt ncurses meghajtót használjon, és nekiláttam a teljes Z80 CPU emulálásának.
+
+A ZEsarUX nem a ZXSpectr átirata; a ZEsarUX egy új emulátor. Természetesen minden tudásomat, amit a ZXSpectr során szereztem, felhasználtam ebben az új emulátorban.
+
+A többi pedig már történelem....
+
+---
+
+Cesar Hernandez
+chernandezba -at- hotmail.com
