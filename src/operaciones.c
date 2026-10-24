@@ -6134,13 +6134,59 @@ z80_byte lee_puerto_spectrum(z80_byte puerto_h,z80_byte puerto_l)
 
 z80_byte idle_bus_port_atribute_aux(void)
 {
+	// En 16/48K y 128K/+2, la lectura del bus depende del T-estado y de la RAM que lee la ULA.
+	// Los últimos bytes guardados por el renderizado pueden pertenecer a otra celda.
+	int bus_48k=0;
+	int bus_128k=0;
+	if (MACHINE_IS_SPECTRUM_16 || MACHINE_IS_SPECTRUM_48) {
+		if (screen_testados_linea==224) bus_48k=1;
+	}
+	if (MACHINE_IS_SPECTRUM_128_P2 && !MACHINE_IS_PENTAGON) {
+		if (screen_testados_linea==228) bus_128k=1;
+	}
+	if (bus_48k || bus_128k) {
+		// El cuadro se repite cada screen_testados_total T; el área de pantalla
+		// empieza en screen_indice_inicio_pant y ocupa 192 líneas.
+		int tiempo_en_frame=t_estados%screen_testados_total;
+		int linea=tiempo_en_frame/screen_testados_linea-screen_indice_inicio_pant;
+		int posicion=tiempo_en_frame%screen_testados_linea;
+		// La ULA solo lee memoria de vídeo durante los primeros 128 T de cada línea.
+		if (linea<0 || linea>=192 || posicion>=128) return get_ula_databus_value();
 
-	//Retorna el byte que lee la ULA
+		// En cada grupo de 8 T se leen dos columnas contiguas: bitmap y atributo
+		// de la primera, luego bitmap y atributo de la segunda.
+		int columna=(posicion/8)*2;
+		// La primera lectura cae en T=14338 (48K: fase 2) o T=14364
+		// (128K: posición 0, equivalente a fase 2). El resto de fases no lee RAM.
+		int fase=(posicion+(bus_128k ? 2 : 0))%8;
+		// El 128K muestra el banco 5 o el 7 según 7FFD; en 16/48K la
+		// pantalla comienza siempre en 4000H.
+		z80_byte *pantalla=bus_128k ? get_base_mem_pantalla() : &memoria_spectrum[0x4000];
+		switch (fase) {
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+				// Las fases 4 y 5 corresponden a la segunda columna del grupo.
+				if (fase>=4) columna++;
+				// Las fases impares leen atributos: empiezan 1800H bytes después
+				// del bitmap y cada fila de 8 píxeles ocupa 32 atributos.
+				if (fase&1) {
+					return pantalla[0x1800+(linea/8)*32+columna];
+				}
+				// El bitmap entrelaza tercios de 64 líneas, líneas dentro de
+				// cada carácter de 8 píxeles y filas de caracteres de 32 bytes.
+				return pantalla[((linea&0xc0)<<5)+((linea&7)<<8)+((linea&0x38)<<2)+columna];
+		}
+		return get_ula_databus_value();
+	}
+
+	//Retorna el byte que lee la ULA en el resto de casos
 	//de momento solo retornar el ultimo atributo, teniendo en cuenta que el rainbow debe estar habilitado
 	//TODO: retornar tambien byte de pixeles
 	//Si no esta habilitado rainbow, retornara algun valor aleatorio fijo
 
-	//TODO: mirar que usa fuse en funcion spectrum_unattached_port
+	//TODO: revisar el cálculo directo del bus en las demás máquinas
 
 
 	//Si no esta habilitado rainbow y hay que detectar rainbow, habilitar rainbow, siempre que no este en ROM
@@ -6975,14 +7021,14 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
         //Con handler
         else if (plus3dos_traps.v) {
             //Bit Request for Master
-			if (puerto_h==0x2F) return 0x80;
+			if (puerto_h==0x2F && MACHINE_IS_SPECTRUM_P2A_P3) return 0x80;
 
-			if (puerto_h==0x3F) return 255;
+			if (puerto_h==0x3F && MACHINE_IS_SPECTRUM_P2A_P3) return 255;
         }
 
 		else {
-			if (puerto_h==0x2F) return 255;
-			if (puerto_h==0x3F) return 255;
+			if (puerto_h==0x2F && MACHINE_IS_SPECTRUM_P2A_P3) return 255;
+			if (puerto_h==0x3F && MACHINE_IS_SPECTRUM_P2A_P3) return 255;
 		}
 
 	}
