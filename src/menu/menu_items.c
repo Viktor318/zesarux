@@ -23855,12 +23855,118 @@ void menu_help_keyboard_overlay(void)
 }
 
 
+//Virtual keyboard window size presets
+//1: original size (50%: as large as the original small image)
+//2: full size (100%: the image pixel by pixel)
+#define MENU_HELP_KEYBOARD_SIZE_ORIGINAL 1
+#define MENU_HELP_KEYBOARD_SIZE_FULL 2
+
+//Size requested from the menu, applied when the window is opened
+int menu_help_keyboard_pending_size=0;
+
+//Image scale (1/256 units) for a size preset
+int menu_help_keyboard_preset_scale(int preset)
+{
+    if (preset==MENU_HELP_KEYBOARD_SIZE_ORIGINAL) {
+        int factor=menu_help_keyboard_bmp_factor;
+        if (factor<1) factor=256;
+        return (256*256)/factor;
+    }
+    return 256;
+}
+
+void menu_help_keyboard_set_size(zxvision_window *w,int preset)
+{
+    z80_byte *bmp=help_keyboard_bmp_file_mem;
+    if (w==NULL || bmp==NULL) return;
+
+    int ancho_bmp=bmp[18] + 256 * bmp[19];
+    int alto_bmp=bmp[22] + 256 * bmp[23];
+    if (ancho_bmp<=0 || alto_bmp<=0) return;
+
+    int escala=menu_help_keyboard_preset_scale(preset);
+
+    //Pixels needed, with the same margin as in menu_help_keyboard_calculate_scale
+    int pixels_x=(ancho_bmp*escala+255)/256+zoom_x*2;
+    int pixels_y=(alto_bmp*escala+255)/256+zoom_y*2;
+
+    int ancho_caracter=menu_char_width*zoom_x;
+    int alto_caracter=menu_char_height*zoom_y;
+
+    int ancho=(pixels_x+ancho_caracter-1)/ancho_caracter+zxvision_get_minus_width_byscrollvbar(w);
+    int alto=(pixels_y+alto_caracter-1)/alto_caracter+2;
+
+    int max_ancho=scr_get_menu_width();
+    int max_alto=scr_get_menu_height();
+    if (ancho>max_ancho) ancho=max_ancho;
+    if (alto>max_alto) alto=max_alto;
+
+    //Keep the window where it is, move it only if it would not fit
+    int x=w->x;
+    int y=w->y;
+    if (w->is_maximized) {
+        x=w->x_before_max_min_imize;
+        y=w->y_before_max_min_imize;
+    }
+    if (x+ancho>max_ancho) x=max_ancho-ancho;
+    if (y+alto>max_alto) y=max_alto-alto;
+    if (x<0) x=0;
+    if (y<0) y=0;
+
+    w->is_maximized=0;
+    w->is_minimized=0;
+
+    //First make it small, so that moving and resizing are always inside the screen
+    zxvision_set_visible_height(w,2);
+    zxvision_set_visible_width(w,menu_dibuja_ventana_ret_ancho_titulo(w->visible_width,w->window_title));
+
+    zxvision_set_x_position(w,x);
+    zxvision_set_y_position(w,y);
+    zxvision_set_visible_width(w,ancho);
+    zxvision_set_visible_height(w,alto);
+
+    //Contents exactly as large as the visible area, so no scroll bars are shown
+    zxvision_set_total_width(w,ancho-zxvision_get_minus_width_byscrollvbar(w));
+    zxvision_set_total_height(w,alto-2);
+    w->offset_x=0;
+    w->offset_y=0;
+
+    w->width_before_max_min_imize=ancho;
+    w->height_before_max_min_imize=alto;
+    w->x_before_max_min_imize=x;
+    w->y_before_max_min_imize=y;
+
+    zxvision_draw_window(w);
+    zxvision_draw_window_contents(w);
+
+    util_add_window_geometry_compact(w);
+}
+
+//Double click on the title bar: full size, or original size if it is already at full size
+void menu_help_keyboard_title_double_click(zxvision_window *w)
+{
+    int preset=MENU_HELP_KEYBOARD_SIZE_FULL;
+
+    if (!w->is_maximized && !w->is_minimized) {
+        menu_help_keyboard_calculate_scale(w,help_keyboard_bmp_file_mem);
+        int escala_full=menu_help_keyboard_preset_scale(MENU_HELP_KEYBOARD_SIZE_FULL);
+        int escala_original=menu_help_keyboard_preset_scale(MENU_HELP_KEYBOARD_SIZE_ORIGINAL);
+        //Already near full size (or bigger): go to the original size
+        if (menu_help_keyboard_scale>=(escala_full+escala_original)/2) preset=MENU_HELP_KEYBOARD_SIZE_ORIGINAL;
+    }
+
+    menu_help_keyboard_set_size(w,preset);
+}
+
 void menu_help_keyboard_create_window(zxvision_window *ventana,int x,int y,int ancho,int alto,int is_minimized,int is_maximized,
     int ancho_antes_minimize,int alto_antes_minimize)
 {
     zxvision_new_window_gn_cim(ventana,x,y,ancho,alto,ancho-1,alto-2,"Virtual Keyboard","helpshowkeyboard",is_minimized,is_maximized,ancho_antes_minimize,alto_antes_minimize);
 
     ventana->can_be_backgrounded=1;
+
+    //Double click on the title: switch between original size and full size
+    ventana->title_double_click_function=menu_help_keyboard_title_double_click;
 
     //Metemos todo el contenido de la ventana con caracter transparente, para que no haya parpadeo
     //en caso de drivers xwindows por ejemplo, pues continuamente redibuja el texto (espacios) y encima el overlay
@@ -24206,6 +24312,20 @@ void help_keyboard_start_generate_key_mouse_click(zxvision_window *ventana)
 
 }
 
+void menu_help_show_keyboard(MENU_ITEM_PARAMETERS);
+
+void menu_help_show_keyboard_original_size(MENU_ITEM_PARAMETERS)
+{
+    menu_help_keyboard_pending_size=MENU_HELP_KEYBOARD_SIZE_ORIGINAL;
+    menu_help_show_keyboard(valor_opcion);
+}
+
+void menu_help_show_keyboard_full_size(MENU_ITEM_PARAMETERS)
+{
+    menu_help_keyboard_pending_size=MENU_HELP_KEYBOARD_SIZE_FULL;
+    menu_help_show_keyboard(valor_opcion);
+}
+
 void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 {
 
@@ -24298,6 +24418,12 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
     //Al entrar siempre cargar bmp, esto especialmente es importante por si conmutamos a ventana about o cualquier otra que cargue bmp,
     //que luego al entrar aqui recargue la paleta asociada
     menu_help_keyboard_load_bmp();
+
+    //Size requested from the Help menu
+    if (menu_help_keyboard_pending_size) {
+        menu_help_keyboard_set_size(ventana,menu_help_keyboard_pending_size);
+        menu_help_keyboard_pending_size=0;
+    }
 
     z80_byte tecla;
 
@@ -33460,6 +33586,22 @@ void menu_help(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_shortcut(array_menu_common,'v');
             menu_add_item_menu_tooltip(array_menu_common,"Virtual keyboard");
             menu_add_item_menu_ayuda(array_menu_common,"Displays the virtual keyboard of the currently emulated machine.");
+            menu_add_item_menu_se_cerrara(array_menu_common);
+            menu_add_item_menu_genera_ventana(array_menu_common);
+
+            menu_add_item_menu_en_es_ca(array_menu_common,MENU_OPCION_NORMAL,menu_help_show_keyboard_original_size,NULL,
+                "Virtual Keyboard 50%","Teclado Virtual 50%","Teclat Virtual 50%");
+            menu_add_item_menu_tooltip(array_menu_common,"Virtual keyboard at the original size");
+            menu_add_item_menu_ayuda(array_menu_common,"Displays the virtual keyboard at the original size (half the size of the image). "
+                "Double click on the window title switches between the two sizes.");
+            menu_add_item_menu_se_cerrara(array_menu_common);
+            menu_add_item_menu_genera_ventana(array_menu_common);
+
+            menu_add_item_menu_en_es_ca(array_menu_common,MENU_OPCION_NORMAL,menu_help_show_keyboard_full_size,NULL,
+                "Virtual Keyboard 100%","Teclado Virtual 100%","Teclat Virtual 100%");
+            menu_add_item_menu_tooltip(array_menu_common,"Virtual keyboard at full size");
+            menu_add_item_menu_ayuda(array_menu_common,"Displays the virtual keyboard at full size (the image pixel by pixel). "
+                "Double click on the window title switches between the two sizes.");
             menu_add_item_menu_se_cerrara(array_menu_common);
             menu_add_item_menu_genera_ventana(array_menu_common);
 

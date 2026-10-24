@@ -12110,6 +12110,8 @@ void zxvision_new_window_no_check_range(zxvision_window *w,int x,int y,int visib
     //Funcion de overlay inicializada a NULL
     w->overlay_function=NULL;
 
+    w->title_double_click_function=NULL;
+
     w->send_message_function=NULL;
     w->help_send_message=NULL;
 
@@ -19272,7 +19274,8 @@ void zxvision_handle_mouse_events(zxvision_window *w)
                 if (mouse_is_double_clicking) {
                     debug_printf (VERBOSE_DEBUG,"Double clicked on title");
 
-                    zxvision_handle_maximize(w);
+                    if (w->title_double_click_function!=NULL) w->title_double_click_function(w);
+                    else zxvision_handle_maximize(w);
 
 
                 }

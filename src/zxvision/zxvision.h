@@ -238,6 +238,9 @@ struct s_zxvision_window {
     //Puntero a funcion de overlay
     void (*overlay_function) (void);
 
+    //Function called on double click on the title bar (NULL: maximize/restore)
+    void (*title_double_click_function) (struct s_zxvision_window *w);
+
     //Puntero para envio de mensajes a esa ventana
     int (*send_message_function) (ZXVISION_WINDOW_SEND_MESSAGE_FUNCTION_PARAMETERS);
 
@@ -668,6 +671,7 @@ extern void zxvision_widgets_erase_speedometer(zxvision_window *ventana,int xcen
 extern void zxvision_draw_filled_rectangle(zxvision_window *ventana,int xinicio,int yinicio,int ancho,int alto,int color);
 extern void zxvision_draw_rectangle(zxvision_window *ventana,int x1,int y1,int ancho,int alto,int color);
 extern int zxvision_get_minus_width_byscrollvbar(zxvision_window *w);
+extern int menu_dibuja_ventana_ret_ancho_titulo(int ancho,char *titulo);
 extern void zxvision_draw_rectangle_function(zxvision_window *ventana,int x1,int y1,int ancho,int alto,int color,
     void (*fun_putpixel) (zxvision_window *w,int x,int y,int color)  );
 extern void zxvision_widgets_draw_particles_3d_convert(int x,int y,int z,int *xfinal,int *yfinal);
