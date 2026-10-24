@@ -23254,14 +23254,88 @@ void menu_help_keyboard_show_all_keys(zxvision_window *ventana,int keyboard_map_
 }
 */
 
+//Virtual keyboard image scaled to the window size.
+//Scale in 1/256 units (256 = original size). Computed on every redraw from the window size
+int menu_help_keyboard_scale=256;
+
+//Compute the scale so that the bmp fits in the visible area of the window, keeping the aspect ratio
+void menu_help_keyboard_calculate_scale(zxvision_window *ventana,z80_byte *bmp)
+{
+    menu_help_keyboard_scale=256;
+    if (bmp==NULL || ventana==NULL) return;
+
+    int ancho_bmp=bmp[18] + 256 * bmp[19];
+    int alto_bmp=bmp[22] + 256 * bmp[23];
+    if (ancho_bmp<=0 || alto_bmp<=0) return;
+
+    int ancho_ventana=((ventana->visible_width)-zxvision_get_minus_width_byscrollvbar(ventana))*menu_char_width*zoom_x;
+    int alto_ventana=((ventana->visible_height)-2)*menu_char_height*zoom_y;
+
+    //a small margin on the right and bottom
+    ancho_ventana -=zoom_x*2;
+    alto_ventana -=zoom_y*2;
+
+    int escala_x=(ancho_ventana*256)/ancho_bmp;
+    int escala_y=(alto_ventana*256)/alto_bmp;
+
+    int escala=(escala_x<escala_y ? escala_x : escala_y);
+
+    //Limits: from 1/4 to 8 times the original size
+    if (escala<64) escala=64;
+    if (escala>2048) escala=2048;
+
+    menu_help_keyboard_scale=escala;
+}
+
+//Pixel of the keyboard image (bmp coordinates) drawn as a scaled block
+void menu_help_keyboard_putpixel_scaled(zxvision_window *ventana,int x,int y,int color)
+{
+    int escala=menu_help_keyboard_scale;
+
+    if (escala==256) {
+        zxvision_putpixel_no_zoom(ventana,x,y,color);
+        return;
+    }
+
+    int x0=(x*escala)>>8;
+    int x1=((x+1)*escala)>>8;
+    int y0=(y*escala)>>8;
+    int y1=((y+1)*escala)>>8;
+
+    //At least one pixel, also when reducing
+    if (x1<=x0) x1=x0+1;
+    if (y1<=y0) y1=y0+1;
+
+    int px,py;
+    for (py=y0;py<y1;py++) {
+        for (px=x0;px<x1;px++) {
+            zxvision_putpixel_no_zoom(ventana,px,py,color);
+        }
+    }
+}
+
+//Mouse position in the window (in pixels) to keyboard image coordinates
+void menu_help_keyboard_mouse_to_bmp(int *x,int *y)
+{
+    if (menu_help_keyboard_scale<=0) return;
+    *x=((*x)*256)/menu_help_keyboard_scale;
+    *y=((*y)*256)/menu_help_keyboard_scale;
+}
+
+void menu_help_keyboard_render_bmp_putpixel(zxvision_window *ventana,int x,int y,int color_final,int follow_zoom)
+{
+    (void)follow_zoom;
+    menu_help_keyboard_putpixel_scaled(ventana,x,y,color_final);
+}
+
 void menu_help_draw_rectangle_key(zxvision_window *ventana,int x1,int y1,int ancho,int alto,int color)
 {
     //Recuadro del tamanyo y algo mas grande
-    zxvision_draw_rectangle_function(ventana,x1,y1,ancho,alto,color,zxvision_putpixel_no_zoom);
-    zxvision_draw_rectangle_function(ventana,x1-1,y1-1,ancho+2,alto+2,color,zxvision_putpixel_no_zoom);
-    zxvision_draw_rectangle_function(ventana,x1-2,y1-2,ancho+4,alto+4,color,zxvision_putpixel_no_zoom);
+    zxvision_draw_rectangle_function(ventana,x1,y1,ancho,alto,color,menu_help_keyboard_putpixel_scaled);
+    zxvision_draw_rectangle_function(ventana,x1-1,y1-1,ancho+2,alto+2,color,menu_help_keyboard_putpixel_scaled);
+    zxvision_draw_rectangle_function(ventana,x1-2,y1-2,ancho+4,alto+4,color,menu_help_keyboard_putpixel_scaled);
     //Y algo mas pequenyo
-    zxvision_draw_rectangle_function(ventana,x1+1,y1+1,ancho-2,alto-2,color,zxvision_putpixel_no_zoom);
+    zxvision_draw_rectangle_function(ventana,x1+1,y1+1,ancho-2,alto-2,color,menu_help_keyboard_putpixel_scaled);
 }
 
 //Dice si bit tecla pulsada, dependiendo si es valor 0 en la mayoria de maquinas, o si no es 0 (como puertos de joystick en master system)
@@ -23562,7 +23636,7 @@ void menu_help_keyboard_overlay_render_512k_pcw_putpixel(zxvision_window *ventan
         //printf("no follow zoom. %d,%d\n",zoom_x,zoom_y);
 
         //El offset x=61, y=10 donde tiene que ir a parar el texto "256k"
-        zxvision_putpixel_no_zoom(ventana,x+61,y+10,color_final);
+        menu_help_keyboard_putpixel_scaled(ventana,x+61,y+10,color_final);
     }
     else {
         //Aunque no estoy usando este caso, lo dejo por si en el futuro...
@@ -23638,7 +23712,11 @@ void menu_help_keyboard_overlay(void)
 
             //zoom_x de offset para evitar parpadeo con la linea del recuadro por la izquierda
             //El teclado no sigue el zoom de ventana, pero sí que sigue el zoom de gui
-            screen_render_bmpfile(help_keyboard_bmp_file_mem,BMP_SECOND_INDEX_FIRST_COLOR,ventana,zoom_x,0,0,-1,0);
+            //Scale the image to the window size
+            menu_help_keyboard_calculate_scale(ventana,help_keyboard_bmp_file_mem);
+
+            screen_render_bmpfile_function(help_keyboard_bmp_file_mem,BMP_SECOND_INDEX_FIRST_COLOR,ventana,zoom_x,0,0,-1,0,
+                menu_help_keyboard_render_bmp_putpixel);
 
             //Sobreescribimos el texto "512k" encima
             if (MACHINE_IS_PCW_8512) {
@@ -24026,6 +24104,7 @@ void help_keyboard_start_generate_key_mouse_click(zxvision_window *ventana)
 
     pulsado_x *=zoom_x;
     pulsado_y *=zoom_y;
+    menu_help_keyboard_mouse_to_bmp(&pulsado_x,&pulsado_y);
 
     if (menu_help_show_keyboard_debug_ultimo_click_x!=pulsado_x && menu_help_show_keyboard_debug_ultimo_click_y!=pulsado_y) {
         //Debug para mostrar coordenada pulsada
@@ -24226,6 +24305,7 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 
             pulsado_x *=zoom_x;
             pulsado_y *=zoom_y;
+            menu_help_keyboard_mouse_to_bmp(&pulsado_x,&pulsado_y);
 
             menu_help_keyboard_overlay_force_draw=1;
 
@@ -24254,6 +24334,7 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 
             pulsado_x *=zoom_x;
             pulsado_y *=zoom_y;
+            menu_help_keyboard_mouse_to_bmp(&pulsado_x,&pulsado_y);
             menu_help_keyboard_highlight_key_mouse(pulsado_x,pulsado_y);
         }
 

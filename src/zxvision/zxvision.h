@@ -667,6 +667,7 @@ extern void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ve
 extern void zxvision_widgets_erase_speedometer(zxvision_window *ventana,int xcentro_widget,int ycentro_widget);
 extern void zxvision_draw_filled_rectangle(zxvision_window *ventana,int xinicio,int yinicio,int ancho,int alto,int color);
 extern void zxvision_draw_rectangle(zxvision_window *ventana,int x1,int y1,int ancho,int alto,int color);
+extern int zxvision_get_minus_width_byscrollvbar(zxvision_window *w);
 extern void zxvision_draw_rectangle_function(zxvision_window *ventana,int x1,int y1,int ancho,int alto,int color,
     void (*fun_putpixel) (zxvision_window *w,int x,int y,int color)  );
 extern void zxvision_widgets_draw_particles_3d_convert(int x,int y,int z,int *xfinal,int *yfinal);
