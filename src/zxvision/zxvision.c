@@ -8700,6 +8700,22 @@ void tooltips_mouse_timer_event(void)
 
         tooltips_mouse_id_ultimo_tooltip=tooltip.id_tooltip;
         tooltips_mouse_ultimo_texto_tooltip=tooltip.texto_tooltip;
+
+        //Hungarian: translate, and convert UTF-8 accented letters to the charset codes (one byte per letter)
+        if (gui_language==GUI_LANGUAGE_HUNGARIAN && tooltips_mouse_ultimo_texto_tooltip!=NULL) {
+            static char tooltip_hungarian_buffer[256];
+            const unsigned char *t=(const unsigned char *)menu_hungarian(tooltips_mouse_ultimo_texto_tooltip);
+            int d=0;
+            while (*t && d<(int)sizeof(tooltip_hungarian_buffer)-1) {
+                if (menu_es_prefijo_utf(t[0]) && t[1]) {
+                    tooltip_hungarian_buffer[d++]=menu_escribe_texto_convert_utf(t[0],t[1]);
+                    t+=2;
+                }
+                else tooltip_hungarian_buffer[d++]=*t++;
+            }
+            tooltip_hungarian_buffer[d]=0;
+            tooltips_mouse_ultimo_texto_tooltip=tooltip_hungarian_buffer;
+        }
         tooltips_mouse_tipo_ultimo_tooltip=tooltip.tipo_tooltip;
         //tooltips_mouse_ultima_pos_x_tooltip=get_pos_x_pixel_mouse_tooltip_mouse();
 
@@ -24358,6 +24374,8 @@ void menu_add_item_menu_ayuda(menu_item *m,char *texto_ayuda)
                 m=m->siguiente_item;
         }
 
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) texto_ayuda=menu_hungarian(texto_ayuda);
+
     m->texto_ayuda=texto_ayuda;
 }
 
@@ -24370,6 +24388,8 @@ void menu_add_item_menu_tooltip(menu_item *m,char *texto_tooltip)
         {
                 m=m->siguiente_item;
         }
+
+        if (gui_language==GUI_LANGUAGE_HUNGARIAN) texto_tooltip=menu_hungarian(texto_tooltip);
 
         m->texto_tooltip=texto_tooltip;
 }
