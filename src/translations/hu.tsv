@@ -4044,3 +4044,348 @@ Displays the virtual keyboard at the original size (half the size of the image).
 Displays the virtual keyboard at full size (the image pixel by pixel). Double click on the window title switches between the two sizes.	Megjeleníti a virtuális billentyűzetet teljes méretben (a képet képpontról képpontra). Az ablak címsorára duplán kattintva a két méret között válthatsz.	help
 Place the icons automatically in a grid	Az ikonok automatikus elrendezése rácsba	tooltip
 Places the icons automatically in a grid. Drag an icon to another place in the grid to change the order of the icons	Az ikonokat automatikusan rácsba rendezi. Az ikonok sorrendjét úgy változtathatod meg, hogy egy ikont áthúzol a rács egy másik helyére	help
+Permissions	Jogosultságok	window title
+Quality?	Minőség?	window title
+ZENG Online not connected	A ZENG Online nincs csatlakoztatva	window text
+Joined as: %s. Streaming mode: %s	Csatlakozva mint: %s. Közvetítési mód: %s	window text
+Streaming displays sent: %d	Elküldött képkockák: %d	window text
+ Full: %d (%d %%)	 Teljes: %d (%d %%)	window text
+ Differential: %d (%d %%)	 Differenciális: %d (%d %%)	window text
+Streaming audios sent: %d	Elküldött hangcsomagok: %d	window text
+ No Silence: %d (%d %%)	 Nem csend: %d (%d %%)	window text
+ Silence: %d (%d %%)	 Csend: %d (%d %%)	window text
+Snapshots sent: %d	Elküldött pillanatképek: %d	window text
+Pending authorizations received: %d	Fogadott függő engedélyek: %d	window text
+Streaming displays received: %d	Fogadott képkockák: %d	window text
+Display quality: %d (lower=better)	Képminőség: %d (kisebb=jobb)	window text
+Streaming audios received: %d	Fogadott hangcsomagok: %d	window text
+Snapshots received: %d	Fogadott pillanatképek: %d	window text
+Keys sent: %d	Elküldött billentyűk: %d	window text
+Keys received: %d	Fogadott billentyűk: %d	window text
+Alive packets sent: %d	Elküldött életjelek: %d	window text
+Broadcast Messages received: %d	Fogadott körüzenetek: %d	window text
+Flows status:	Adatfolyamok állapota:	window text
+This ZEsarUX          ZENG Online Server	Ez a ZEsarUX          ZENG Online szerver	window text
+Display  %s  |	Kijelző  %s  |	window text
+Audio    %s  |	Hang     %s  |	window text
+Snapshot %s  |	Pill.kép %s  |	window text
+Pnd auth %s  |	Engedély %s  |	window text
+Keyboard %s  |	Billent. %s  |	window text
+Alive    %s  |	Életjel  %s  |	window text
+Messages %s  |	Üzenetek %s  |	window text
+Convert algorithm	Átalakítási algoritmus	window title
+Set target dir & press ESC	Válassz célmappát, majd ESC	window title
+File: 	Fájl: 	window text
+Select POK File	POK fájl kiválasztása	window title
+Most used op. for each preffix	Leggyakoribb op. prefixenként	window text
+ (expected): 20000 us	 (várt): 20000 us	window text
+Menu cache. Total Chars: %d	Menü gyorsítótár. Össz. kar.: %d	window text
+ Drawn: %5d (%3d%%)	 Kirajzolt: %5d (%3d%%)	window text
+Dropped	Eldobott	window text
+~~Chip selected: [%s]	~~Chip kiválasztva: [%s]	window text
+Video mode: %02X. %s	Videómód: %02X. %s	window text
+Video mode: 640x200	Videómód: 640x200	window text
+Video mode: 256x192 standard	Videómód: 256x192 normál	window text
+Vertical Scroll: %d	Függőleges görgetés: %d	window text
+ULA Video mode:	ULA videómód:	window text
+Select AY File	AY fájl kiválasztása	window title
+Track: %03d/%03d  (%02d:%02d.%02d/%02d:%02d.%02d)	Szám: %03d/%03d  (%02d:%02d.%02d/%02d:%02d.%02d)	window text
+No song playing	Nincs lejátszott szám	window text
+File: %s	Fájl: %s	window text
+Player Version: %d Size: %d bytes	Lejátszó verzió: %d Méret: %d bájt	window text
+Playlist: %d/%d	Lejátszási lista: %d/%d	window text
+Author:	Szerző:	window text
+Misc:	Egyéb:	window text
+Playlist item	Lejátszási lista elem	window title
+Select Playlist File	Lejátszási lista fájl kiválasztása	window title
+Playlist: 	Lejátszási lista: 	window text
+Track: 	Szám: 	window text
+--Track settings--	--Szám beállításai--	window text
+Current Transfer: %s	Aktuális átvitel: %s	window text
+Type: %s	Típus: %s	window text
+Border: 	Keret: 	window text
+Pixels:	Pixelek:	window text
+Sprites:	Sprite-ok:	window text
+Tiles Background:	Csempék háttér:	window text
+Tiles Foreground:	Csempék előtér:	window text
+Force show column 0:	0. oszlop mindig látszik:	window text
+Lock scroll horiz.: 	Vízsz. görgetés zárva: 	window text
+Lock scroll vert.:  	Függ. görgetés zárva:  	window text
+~~memptr ~~export	~~memptr ~~exportálás	window text
+~~togglehexa	~~t: hexa be/ki	window text
+Select Log File	Naplófájl kiválasztása	window title
+Select PBM/C File	PBM/C fájl kiválasztása	window title
+Mid file	MID fájl	window title
+MIDI output is not initialized	A MIDI kimenet nincs inicializálva	window text
+Last MIDI raw command: %02XH	Utolsó nyers MIDI parancs: %02XH	window text
+Channel %3d Note: %3d %s	Csatorna %3d Hang: %3d %s	window text
+Select Device File	Eszközfájl kiválasztása	window title
+Last %s	Utolsó %s	window text
+Write. Avg %s	Írás. Átl. %s	window text
+Select Screen File	Képernyőfájl kiválasztása	window title
+Action	Művelet	window title
+Recreating image...	Kép újraépítése...	window text
+Select Image Program	Képprogram kiválasztása	window title
+Real video not enabled	A Real Video nincs bekapcsolva	window text
+Enable it on Setttings->Display	Kapcsold be: Beállítások->Kijelző	window text
+Debug console is not enabled. Enable it on Settings->Debug	A hibakeresési konzol nincs bekapcsolva. Kapcsold be: Beállítások->Hibakeresés	window text
+General sound is not enabled	A General Sound nincs bekapcsolva	window text
+Select Source File	Forrásfájl kiválasztása	window title
+Select Symbol File	Szimbólumfájl kiválasztása	window title
+Total snapshots: %4d Total size: %lld KiB	Össz. pillanatkép: %4d Össz. méret: %lld KiB	window text
+Snapshot file	Pillanatképfájl	window title
+Snapshots in RAM setting is not enabled	A Pillanatképek a RAM-ban nincs bekapcsolva	window text
+~~z:Previous ~~x:Next ~~r:Restore ~~s:Save ~~b:Browse	~~z:Előző ~~x:Köv. ~~r:Visszaállít ~~s:Mentés ~~b:Tallóz	window text
+Id: %4d Time: %02d:%02d:%02d Lenght: %d bytes	Az.: %4d Idő: %02d:%02d:%02d Hossz: %d bájt	window text
+No snapshots in RAM yet	Még nincs pillanatkép a RAM-ban	window text
+Start ~^addr:	Kezdőcím (~^a):	window text
+Condition:	Feltétel:	window text
+and	és	window text
+Only available on Spectrum and ZX80/81	Csak Spectrumon és ZX80/81-en érhető el	window text
+No variables	Nincsenek változók	window text
+Move: Cursors. ~~E~~n~~t~~e~~r: Select Sensor. ~~Type. ~~Abs/Perc	Mozgás: kurzorok. ~~E~~n~~t~~e~~r: Érzékelő választás. ~~Típus. ~~Abs/Száz.	window text
+Error geting file type	Hiba a fájltípus lekérdezésekor	window text
+Select ROM File	ROM-fájl kiválasztása	window title
+Select Spool File	Spool fájl kiválasztása	window title
+Sent: %d/%d (%d %%)	Elküldve: %d/%d (%d %%)	window text
+Select Output File	Kimeneti fájl kiválasztása	window title
+Select File to Load	Betöltendő fájl kiválasztása	window title
+~~Start & Length %s	~~Start és hossz %s	window text
+Current line: %s	Aktuális sor: %s	window text
+[%c] Show ~~address %s[%c] Fo~~llow line	[%c] Cím mut~~atása %s[%c] Sorkövetés (~~l)	window text
+~~e: Find lin~~e ~~f: ~~Find text ~~n: Find ~~next	Keresés: ~~e/~~e sor ~~f/~~F szöveg ~~n/~~n köv.	window text
+Select File to Save	Mentendő fájl kiválasztása	window title
+File utilities	Fájlműveletek	window title
+Keys: %s	Billentyűk: %s	window text
+~~i: Generate icon on desktop	~~i: Ikon létrehozása az asztalon	window text
+~~Orien.: %s ~~Mode: [%s]	~~Orient.: %s ~~Mód: [%s]	window text
+Select Snapshot	Pillanatkép kiválasztása	window title
+Save game config	Játékbeállítás mentése	window title
+Select Cartridge	Cartridge kiválasztása	window title
+Select existing or new	Válassz meglévőt vagy újat	window title
+Select file to copy	Másolandó fájl kiválasztása	window title
+Select Target File	Célfájl kiválasztása	window title
+Unknown signal. Average frequency: %5d Hz	Ismeretlen jel. Átlagos frekvencia: %5d Hz	window text
+Volume: Max %3d Min %4d %s	Hangerő: Max %3d Min %4d %s	window text
+^^Recording to file^^ %02d:%02d	^^Felvétel fájlba^^ %02d:%02d	window text
+Guessed ZX Spectrum loading tone	Valószínű ZX Spectrum betöltési hang	window text
+Signal type: Pilot tone (%d Hz)	Jeltípus: vezérhang (%d Hz)	window text
+Signal type: Most zeroes (%5d Hz) (~%d B)	Jeltípus: főleg nullák (%5d Hz) (~%d B)	window text
+Signal type: Most ones   (%5d Hz) (~%d B)	Jeltípus: főleg egyesek (%5d Hz) (~%d B)	window text
+Signal type: Mixed zeros and ones   (~%d B)	Jeltípus: vegyes nullák és egyesek (~%d B)	window text
+Azimuth Accuracy %3d %% %s	Azimut pontosság %3d %% %s	window text
+[%s] Wave ~~type. %s[%c] f~~reeze. sh+e: empty buffer	[%s] Hullám~~típ. %s[%c] ~~r: fagy. sh+e: puff. ürít.	window text
+You need to have External Audio Source Window open	Nyitva kell lennie a Külső hangforrás ablaknak,	window text
+in order to have Spectrum Analyzer working	hogy a Spektrumanalizátor működjön	window text
+[%s] View ~~type	[%s] Nézet~~típus	window text
+Select Flash File	Flash fájl kiválasztása	window title
+Select multiface File	Multiface fájl kiválasztása	window title
+Ended	Vége	window text
+Edit mode. Use mouse buttons. ESC return	Szerkesztő mód. Egérgombok. ESC: vissza	window text
+Speed FPS	Sebesség FPS	window title
+Score: %d	Pontszám: %d	window text
+Congratulations!	Gratulálok!	window text
+You finished this level!	Teljesítetted ezt a szintet!	window text
+Sorry, you failed	Sajnos nem sikerült	window text
+~~n: new game ~~l: level %d	~~n: új játék ~~l: szint %d	window text
+~~s: sound [%s]	~~s: hang [%s]	window text
+Tape is not inserted	Nincs behelyezve kazetta	window text
+Standard Tape	Szabványos kazetta	window title
+Real Tape	Valódi kazetta	window title
+Label: %s	Címke: %s	window text
+Size: %d sectors (%d KB)	Méret: %d szektor (%d KB)	window text
+Contents	Tartalom	window text
+Total size: %3d KB Label: %s	Össz. méret: %3d KB Címke: %s	window text
+Usage counter: %d	Használatszámláló: %d	window text
+Free sectors: %d (%d KB)	Szabad szektorok: %d (%d KB)	window text
+~~Directory sector: %d	Mappaszektor (~~D): %d	window text
+No files	Nincsenek fájlok	window text
+File: %2d/%2d ~~Next ~~Previous	Fájl: %2d/%2d ~~N: Köv. ~~P: Előző	window text
+Sectors (%2d): 	Szektorok (%2d): 	window text
+Fragmentation: %d%%	Töredezettség: %d%%	window text
+Legend: [D]irec. [u]sed [F]ile [.]free [x]unusable	Jelmagy.: [D]mappa [u]foglalt [F]ájl [.]szabad [x]hibás	window text
+Select config file	Konfigurációs fájl kiválasztása	window title
+Normal Text	Normál szöveg	window text
+Selected Text	Kijelölt szöveg	window text
+Unavailable Text	Nem elérhető szöveg	window text
+Unavailable Selected Text	Nem elérhető kijelölt szöveg	window text
+Marked Text	Megjelölt szöveg	window text
+~~Hotkey	~~H: gyorsbillentyű	window text
+Flashing Text	Villogó szöveg	window text
+Inactive Title Text	Inaktív címszöveg	window text
+Window Box colour (this paper)	Ablakkeret színe (ez a papír)	window text
+Inactive Window Box colour (this paper)	Inaktív ablakkeret színe (ez a papír)	window text
+Waveform colour (this paper)	Hullámforma színe (ez a papír)	window text
+Unused visualmem (this paper)	Nem használt visualmem (ez a papír)	window text
+Visual tape block (this paper)	Kazettablokk-nézet (ez a papír)	window text
+Selectable field	Választható mező	window text
+Ascii table:	ASCII tábla:	window text
+Extra characters:	Extra karakterek:	window text
+Select Debug File	Hibakeresési fájl kiválasztása	window title
+Select Audio File	Hangfájl kiválasztása	window title
+RAM size	RAM mérete	window title
+Select Bitmap File	Bitképfájl kiválasztása	window title
+Select OCR File	OCR fájl kiválasztása	window title
+Select Video File	Videófájl kiválasztása	window title
+Select Speech Program	Felolvasóprogram kiválasztása	window title
+Select Stop Speech Prg	Felolv. leállító prg. kiválasztása	window title
+Select History File	Előzményfájl kiválasztása	window title
+Event is assigned	Az esemény hozzá van rendelve	window title
+Please press the button/axis	Nyomd meg a gombot/tengelyt	window text
+Key is assigned	A billentyű hozzá van rendelve	window title
+Selection type	Kiválasztás típusa	window title
+Action is assigned	A művelet hozzá van rendelve	window title
+Last joystick button/axis/dpad:	Utolsó joystick gomb/tengely/dpad:	window text
+Name:	Név:	window text
+Select Config File	Konfigurációs fájl kiválasztása	window title
+~^Condition:	Feltétel (~^C):	window text
+~^Pass count:	Áthaladások (~^P):	window text
+~^Action:	Művelet (~^A):	window text
+Breakpoint enabled	Töréspont bekapcsolva	window text
+Breakpoint disabled	Töréspont kikapcsolva	window text
+                    Watches	                    Figyelések	window text
+Watch type	Figyelő típusa	window title
+Select File	Fájl kiválasztása	window title
+Any other key: Stop cont step	Más billentyű: foly. léptetés vége	window text
+Note: Make long key presses	Megjegyzés: nyomd hosszan a billentyűket	window text
+Zoom: %d Current location: %d Coords: %d,%d Z: %d	Nagyítás: %d Aktuális hely: %d Koord.: %d,%d Z: %d	window text
+~~Z: -zoom ~~X: +zoom ~~up ~~down ~~Teleport ~~f~~1: help	~~Z: kicsinyít ~~X: nagyít ~~u: fel ~~d: le ~~Teleport ~~f~~1: súgó	window text
+[%c] ~~Follow [%c] ~~Objects [%c] ~~Pictures	[%c] ~~F: Követés [%c] ~~Objektumok [%c] ~~P: Képek	window text
+[%c] Also un~~visited [%c] Also un~~connected	[%c] ~~v: Bejáratlan is [%c] Kap~~csolatlan is	window text
+No DAAD/PAWS/Quill/GAC game loaded	Nincs betöltve DAAD/PAWS/Quill/GAC játék	window text
+Select kartusho File	Kartusho fájl kiválasztása	window title
+Select Superupgrade File	Superupgrade fájl kiválasztása	window title
+Select ifrom File	ifrom fájl kiválasztása	window title
+Select Input Tape	Bemeneti kazetta kiválasztása	window title
+Select Output Tape	Kimeneti kazetta kiválasztása	window title
+View expanded	Kibontott nézet	window title
+Debug output: (~~f: find ~~n: next)	Hibakeresési kimenet: (~~f: keres ~~n: köv.)	window text
+~~input ~~f~~1: help	~~i: bemenet ~~f~~1: súgó	window text
+~~input ~~output ~~f~~1: help	~~i: bemenet ~~o: kimenet ~~f~~1: súgó	window text
+s~~top conversion ~~f~~1: help	~~t: konverzió leállítása ~~f~~1: súgó	window text
+~~input ~~output ~~run conversion ~~f~~1: help	~~i: be ~~o: ki ~~r: konvertálás ~~f~~1: súgó	window text
+%s [%c] ~~b: invert [%c] ~~debug [%c] so~~und	%s [%c] ~~b: invert. [%c] ~~d: hibakeres. [%c] hang (~~u)	window text
+[%c] ~~pause. speed %s%s [%c] Acc~^Urate	[%c] ~~p: szünet. sebesség %s%s [%c] Pontosság (~^U)	window text
+--- Waveform window ---	--- Hullámforma ablak ---	window text
+[%s] hi~~ghlight.  zoom ~~z~~x: 1:%-3d	[%s] ki~~ghangsúly.  nagyítás ~~z~~x: 1:%-3d	window text
+[%c] fo~~llow pos. [%d] %s	[%c] pozíció követése (~~l) [%d] %s	window text
+Open ~~waveform window to see input audio	Bemeneti hang: nyisd meg a hullámforma ablakot (~~w)	window text
+Guessed input frequency: %d Hz	Becsült bemeneti frekvencia: %d Hz	window text
+^^Cancelling conversion^^ 	^^Konverzió megszakítása^^ 	window text
+^^Conversion running^^ 	^^Konverzió folyamatban^^ 	window text
+Input Position %10d %s (%3d%%)	Bemeneti pozíció %10d %s (%3d%%)	window text
+Output File Size: %6d bytes	Kimeneti fájl mérete: %6d bájt	window text
+Bits read:  %s Bit Pos: %d Bit Pulses: %d  %s	Olvasott bitek: %s Bitpoz.: %d Bitimpulzus: %d  %s	window text
+Bytes read: %s%02X %s	Olvasott bájtok: %s%02X %s	window text
+Chars read: %s%c	Olvasott kar.: %s%c	window text
+Conversion finished. Possible Errors: %d. Name: [%s]	Konverzió kész. Lehetséges hibák: %d. Név: [%s]	window text
+Last byte mismatch: %02X	Utolsó bájt eltér: %02X	window text
+Last byte matches expected: %02X	Utolsó bájt egyezik a várttal: %02X	window text
+File %s Size %d bytes ~~e: view ~~m: Smartload	Fájl: %s Méret: %d bájt ~~e: nézet ~~m: Okos betöltés	window text
+Conversion finished. File %s does not exist	Konverzió kész. A fájl nem létezik: %s	window text
+Select Input Audio File	Bemeneti hangfájl kiválasztása	window title
+Select Output P/P81 File	Kimeneti P/P81 fájl kiválasztása	window title
+Select dandanator File	Dandanator fájl kiválasztása	window title
+Select Data Drive File	Data Drive fájl kiválasztása	window title
+Capacity	Kapacitás	window title
+Full clear	Teljes törlés	window title
+Two or One sides	Egy vagy két oldal	window title
+~~input ~~output ~~f~~1:help	~~i: bemenet ~~o: kimenet ~~f~~1:súgó	window text
+~~run conversion - STOPPED	~~r: konverzió indítása - LEÁLLÍTVA	window text
+~~stop conversion - RUNNING	~~s: konverzió leállítása - FUT	window text
+Elapsed: End of file	Eltelt: fájl vége	window text
+Elapsed: %02d:%02d:%s - %d %%	Eltelt: %02d:%02d:%s - %d %%	window text
+Read position: %d bytes (%d KBytes)	Olvasási pozíció: %d bájt (%d KB)	window text
+Phase: %s	Fázis: %s	window text
+Probably read error, you should enable autocorrect	Valószínű olvasási hiba, kapcsold be az autokorrekciót	window text
+Bits read: %s  Last bit: %d  %s	Olvasott bitek: %s  Utolsó bit: %d  %s	window text
+Bytes read: %s %s	Olvasott bájtok: %s %s	window text
+Ascii read: %s	Olvasott ASCII: %s	window text
+Sector number read: %d (%02XH)	Olvasott szektorszám: %d (%02XH)	window text
+Sector label: %s	Szektorcímke: %s	window text
+Begin Sector id mark: %02X %02X %02X %02X %02X	Szektorazonosító eleje: %02X %02X %02X %02X %02X	window text
+End Sector id mark:	Szektorazonosító vége:	window text
+Total sector bytes read: %d (%XH)	Össz. olvasott szektorbájt: %d (%XH)	window text
+Probably sector mismatch! Maybe %d. Do you want to:	Valószínű szektoreltérés! Talán %d. Mit szeretnél:	window text
+End read sector, seems ok. Do you want to:	Szektor olvasása kész, rendben van. Mit szeretnél:	window text
+End read sector. Do you want to:	Szektor olvasása kész. Mit szeretnél:	window text
+r~~epeat sa~~ve ~~next sector c~~hange sector	~~e: újra ~~v: mentés ~~n: köv. szektor ~~h: szektorváltás	window text
+Select Input raw File	Bemeneti nyers fájl kiválasztása	window title
+Select Output ddh File	Kimeneti ddh fájl kiválasztása	window title
+speed: 	sebesség: 	window text
+[%c] ~~b-side [%c] invert si~~gnal [%d] fil~~ter	[%c] ~~b-oldal [%c] jel invertálása (~~g) [%d] szűrő (~~t)	window text
+[%c] a~~daptative algorithm [%c] auto~~correct	[%c] a~~daptív algoritmus [%c] autokorrekció (~~c)	window text
+[%c] ~~automatic [%c] ~~microseconds [%c] so~~und	[%c] ~~automatikus [%c] ~~mikroszekundum [%c] hang (~~u)	window text
+~~F~~1:help	~~F~~1:súgó	window text
+Hilow is not enabled	A HiLow nincs bekapcsolva	window text
+You must insert a raw file	Be kell helyezned egy nyers (raw) fájlt	window text
+Select Microdrive File	Microdrive fájl kiválasztása	window title
+Bad Sector	Hibás szektor	window title
+Bad Position	Hibás pozíció	window title
+Legend:	Jelmagyarázat:	window text
+U: Used sector	U: foglalt szektor	window text
+u: Used sector and final of a file	u: foglalt szektor, egy fájl vége	window text
+X: Bad sector	X: hibás szektor	window text
+.: Unused sector	.: nem használt szektor	window text
+-: Unused sector & possible deleted	-: nem használt szektor, talán törölt	window text
+Coloured Letter: Bad checksum on sector	Színes betű: hibás ellenőrzőösszeg a szektorban	window text
+Microdrive Info:	Microdrive adatai:	window text
+Total %d KB (%d sectors)	Összesen %d KB (%d szektor)	window text
+File Info:	Fájl adatai:	window text
+File %3d/%3d Name: %s%s	Fájl %3d/%3d Név: %s%s	window text
+Size: %5d B Used %d%s KB First sect: %d	Méret: %5d B Foglalt %d%s KB Első szekt.: %d	window text
+Used %d%s KB	Foglalt %d%s KB	window text
+Fragmentation: %d %%	Töredezettség: %d %%	window text
+Use cursors ~~< ~~> to show files info	Kurzorok ~~< ~~>: fájladatok mutatása	window text
+~~r: Rename file	~~r: Fájl átnevezése	window text
+Total sectors:                           %3d	Összes szektor:                          %3d	window text
+Used sectors:                            %3d	Foglalt szektorok:                       %3d	window text
+Unique files with more than 1 copy:      %3d	Egyedi fájlok több másolattal:           %3d	window text
+Total extra file copies:                 %3d	Össz. extra fájlmásolat:                 %3d	window text
+Problems:	Problémák:	window text
+Files with missing blocks:               %3d	Hiányzó blokkos fájlok:                  %3d	window text
+ Files: %s	 Fájlok: %s	window text
+Lost blocks missing block zero:          %3d	Elveszett blokkok 0. blokk nélkül:       %3d	window text
+ Sectors: 	 Szektorok: 	window text
+Invalid header checksums	Hibás fejléc-ellenőrzőösszegek	window text
+ Sectors: %s	 Szektorok: %s	window text
+Invalid descriptor checksums	Hibás leíró-ellenőrzőösszegek	window text
+Invalid data checksums	Hibás adat-ellenőrzőösszegek	window text
+No problems detected	Nem található probléma	window text
+Note: problems are only shown, but not fixed	Megj.: a problémák csak megjelennek, javítás nincs	window text
+Physical Sector %3d/%3d Offset: %05XH	Fizikai szektor %3d/%3d Eltolás: %05XH	window text
+Sector	Szektor	window text
+Used	Foglalt	window text
+Unused	Szabad	window text
+Use cursors ~~< ~~> to change sector	Kurzorok ~~< ~~>: szektorváltás	window text
+~~s: jump to sector  ~~x: open hex editor	~~s: ugrás szektorra  ~~x: hexaszerkesztő	window text
+Zoom: %s Curr. ~~pos: %7d/%7d (%3d %%)	Nagyítás: %s Akt. ~~poz.: %7d/%7d (%3d %%)	window text
+~~f~~1: help [%d] ~~mdv ~~z: -zoom ~~x: +zoom %s	~~f~~1: súgó [%d] ~~mdv ~~z: kicsinyít ~~x: nagyít %s	window text
+[%c] ~~Autoscroll [%c] show ~~Head [%c] show ~~Sync	[%c] ~~Autogörgetés [%c] ~~H: fejek [%c] ~~S: szinkron	window text
+Selected MDV is not enabled	A kiválasztott MDV nincs bekapcsolva	window text
+Selected MDV is not raw	A kiválasztott MDV nem nyers (raw)	window text
+Bytes shown: %d	Megjelenített bájtok: %d	window text
+Select TRD File	TRD fájl kiválasztása	window title
+Select DSK File	DSK fájl kiválasztása	window title
+DSK type	DSK típus	window title
+Sector size?	Szektorméret?	window title
+Select Flash File. ESC default	Flash fájl kiválasztása. ESC: alapért.	window title
+Select MMC File	MMC fájl kiválasztása	window title
+Image type	Képfájl típusa	window title
+SD Image type	SD képfájl típusa	window title
+Select IDE File	IDE fájl kiválasztása	window title
+Solid base	Tömör talp	window title
+Export size	Exportálási méret	window title
+Filter: 	Szűrő: 	window text
+ ~^S~^P~^C: Expand	 ~^S~^P~^C: Kibontás	window text
+~^T~^A~^B:Section ~^Recent ~^Drives%s	~^T~^A~^B:Rész ~^R:Előzm. ~^D:Megh.%s	window text
+Current directory: %s	Aktuális mappa: %s	window text
+Directory Contents: (Image total %d MB Free %d MB)	Mappa tartalma: (Kép összesen %d MB, szabad %d MB)	window text
+Directory Contents:	Mappa tartalma:	window text
+Current dir: %s	Mappa: %s	window text
+Current dir: 	Mappa: 	window text
+Recent files (SPC switch)	Legutóbbi fájlok (SPC: váltás)	window text
+Recent folders (SPC switch)	Legutóbbi mappák (SPC: váltás)	window text
+%s Menu	%s: menü	text
+ Press %s for menu 	 Menü: %s 	text
+F5/Button	F5/gomb	text

@@ -3664,7 +3664,7 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
 
                 menu_tape_settings_trunc_name(filesel_nombre_archivo_seleccionado,buffer,tamanyo_mostrar);
 
-                sprintf (buffer2,"File: %s",buffer);
+                sprintf (buffer2,menu_tr("File: %s"),buffer);
 
                 zxvision_print_string_defaults_fillspc(ventana,1,1,buffer2);
 
