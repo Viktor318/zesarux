@@ -24160,9 +24160,13 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 
             //540x201 es lo que ocupa el bmp de spectrum 48k
 
-            ancho=1+1+540/menu_char_width/zoom_x;
+            ancho=1+1+(540*2)/menu_char_width/zoom_x;
 
-            alto=1+2+201/8/zoom_y;
+            alto=1+2+(201*2)/8/zoom_y;
+
+            //Default size: twice the image size (the image is scaled to the window), limited to the screen
+            if (ancho>scr_get_menu_width()) ancho=scr_get_menu_width();
+            if (alto>scr_get_menu_height()) alto=scr_get_menu_height();
 
             //printf ("ancho %d alto %d\n",ancho,alto);
 

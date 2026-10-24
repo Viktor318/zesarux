@@ -1,0 +1,2692 @@
+ZEsarUX 13.1 - Zorro edition. 2026. október 6.
+
+* Új funkciók:
+
+Új gép: ZX Evo Baseconf (valójában javítva)
+Új gépek: Scorpion ZS-256, Scorpion ZS-256 Turbo+, Scorpion GMX
+Új gép: Didaktik Gama
+Új gépek: Microdigital TK90X ULA Ferranti (spanyol és portugál)
+Új konfigurációs fájl beállítás, amellyel Azerty billentyűzeten a számbillentyűk Shift lenyomása nélkül is használhatók
+További joystick-típusok támogatása Macen (Dpad, eltérő tengelyek)
+60 Hz-es támogatás a következő gépeken: Master System, SG1000, MSX, Colecovision, Spectravideo, Timex Sinclair 2068
+Privát üzenetek küldhetők a felhasználóknak a ZENG Online-on
+SCL fájlok okos betöltése
+Új eszközikonok: esxdos kezelő, kartusho, iFrom, LEC memória, superupgrade
+Az F-funkcióbillentyűk műveletei (CPU újraindítása, ablak megnyitása, NMI stb.) joystickról is kiválthatók. A "Quicksave", "Rewind" és "FForward" joystick-események megszűntek, ezek mostantól műveletként válthatók ki
+A kimeneti fájl kiválasztható a Külső hangforrás ablakból
+Két új játékszer, "Clive" és "Simon" a Halogatás (Procrastinate) menüben
+A hexadecimális értékek elé $ és 0x előtag is írható
+Az esxdos hívások hibakeresése a hibakereső konzolon
+Hobeta fájlok (.$C stb.) megtekintése és kibontása
+Nem szabványos méretű IDE képfájlok is használhatók
+Kazettás mentés elfogása (tape traps) a Super Tape Copier és a Lao Copy 2 programokból
+Beeper és MIC hangmód választható Spectrumon (például a betöltési hang mentéséhez)
+A CPU szüneteltethető
+Bájtok keresése a Hexadecimális szerkesztőből
+
+* Fejlesztések:
+
+Továbbfejlesztett Sinclair QL emuláció:
+- Qsound emuláció
+- Javított Intel 8049 hang
+- A QL keretszíne módosítható
+- Javított képarány. A grafika most megfelel az eredeti hardver geometriájának (1.476:1). 4:3 és 1:1 is választható
+- Új Vision-QL színpaletta
+- QL QIMI egér emuláció
+- Új CPU_TURBO bővítmény a Super Basichez a CPU sebességének módosításához
+- Új flp2 meghajtó
+- boot, basic és futtatható típusú fájlok okos betöltése, az lrun_ vagy exec_ utasítás automatikus futtatásával
+- .mdv képfájlok okos betöltése
+- Mindenféle .mdv fájl támogatása
+- .img (QDOS QL5A / QL5B) képfájlok támogatása
+- .win képfájlok támogatása
+- További ROM-ok tölthetők be (például tkii220.rom)
+- Billentyűleütések küldhetők a QL-nek (vágólapról vagy szövegfájlból)
+- A PC valós idejű órája vagy a QL belső órája is használható
+- Az RTC időzónája módosítható
+- A QL belső valós idejű órája a ZSF pillanatképekbe is mentődik
+- Szöveges módú videómeghajtók támogatása (stdout, simpletext)
+
+Továbbfejlesztett ZX Vision:
+- Új Óra ablak
+- Új Számológép ablak
+- Javított menüszerkezet, megfogalmazás és egységesség a teljes felhasználói felületen
+- Javított ablakmozgatás egérrel
+- Funkcióbillentyűk kezelése, amíg a felső menü nyitva van
+- A Folyamatváltó alapértelmezés szerint egy sorban mutatja a folyamatokat
+- Az ablakkeret a háttérablakokon is megjelenik
+- Bekapcsolt felső menü esetén a főmenüknek nincs ablakcímük
+- Menük elrejthetők a felső menüből
+- Bekapcsolható a "Rövid menünevek a felső menüben" beállítás
+- Mappa kiválasztásakor az bekerül a legutóbbi fájlok/mappák listájába (például az esxdos kezelő könyvtára vagy a QL mdv)
+- Rákattinthatsz egy korábbi almenüre
+
+Továbbfejlesztett ZX Desktop:
+- Az ikonok ábécérendbe rendezhetők
+- Egy ikon bitképe módosítható
+- Egy nyitott ablak bezárható a hozzá tartozó ZX Desktop ikonra jobb gombbal kattintva
+- Ellenőrzés, hogy az elem érvénytelen helyen van-e, amikor visszaállítod a Kukából
+
+Burkolatnézetek a Vizuális floppyhoz (lemez, átlátszó tok, átlátszatlan tok)
+A videókimenet speciális effektjei a kurzor mozgatásakor dinamikusan érvényesülnek
+A keresési indexfájl (zesarux_index_menu.idx) átkerült a felhasználó saját (home) könyvtárába
+General Sound regiszterek az Érzékelők megtekintése ablakban
+Hangchip regiszterei: ha egy csatornán be van kapcsolva a burkológörbe, megjelenik az aktuális hangerő és a burkológörbe alakja
+
+* Javítások:
+
+ZX Vision javítások:
+- Javítva a kis méretű ablakok visszaállítása indításkor, ha a "Kis méretű ablakok elrejtése" beállítás be van kapcsolva
+- Javítva: korábbi menüre kattintáskor a menü véletlenszerűen bezárult
+- Javítva az egérkattintás a fájlválasztóban, amikor a kurzor a Név mezőn áll
+
+ZX Evo TSConf javítások:
+- SD/MMC kártya (SD Z-Controller) emuláció
+- IDE Nemo emuláció
+- IDE Smuc emuláció
+- Frissítve a legújabb ROM-ra
+- Javítva a görgetésszámláló és a raszter megszakítás
+- Javítva a DMA burst igazítás és a burst körbefordulás
+- Javítva a nulladik csempe átlátszósága
+- Javítva a keretszín az átlátszó rétegek mögött
+- Javítva a világos fekete palettabejegyzés
+- Javítva a CRAM színpaletta visszaállítása SPG pillanatképek betöltésekor
+- Javítva a TR-DOS és a .trd fájlok elérése
+- Javítva a gépről kiválasztott .trd, .scl és .tap fájlok elérése (például a Wild Commanderben)
+- Javítva a különböző boot ROM-ok kiválasztása a TS Biosban
+- Javítva a billentyűzet olvasása PS/2 módban (például a Wild Commanderhez)
+
+Javítva a TK90X és TK95 időzítése az 50 Hz-es és 60 Hz-es modelleknél
+Javítva a MEMPTR a Z80 visszatérő utasításai után
+Javítva a Spectrum lebegő busz olvasása 48K-n és 128K-n
+Javítva a no-MREQ contention (várakoztatás) Spectrum +2A-n és +3-on
+Javítva a CPC megjelenítése keret nélkül
+Javítva a gépváltás teljes képernyős módban Cocoa (macOS) alatt
+Javítva a Spectrum online böngésző lekérdezései
+Javítva a NextZXOS 2.09 indítása Spectrum Nexten
+Javítva a Spectrum multicolor effektek (Nirvana stb.). Köszönet: noentiendo
+Javítva a Keresés menü kikapcsolása
+Javítva a BMP mentés 4-gyel nem osztható szélességeknél
+Javítva a pzx fájlok létrehozása: a blokkok közé egy másodperces szünet kerül
+Javítva a kazetta hullámformájának megjelenítése a Vizuális valódi kazetta ablakban
+Javítva a Fade Out videóeffekt
+Javítva a ZEsarUX extrák letöltése a Hálózat menüből
+Javítva a joystick gombértékeinek megjelenítése a valódi joystick Joystick adatai ablakában SDL használatakor
+Javítva a hullámforma utolsó sorának kirajzolása a Hullámforma ablakban
+Javítva az extra paraméterekkel újradefiniált felső gomb megnyomása
+Javítva az ULA+ paletta dekódolása TBBlue-n. Köszönet: Ignacio Monge
+Javítva a másolás-beillesztés és a ZRCP send-ascii* parancsai Amstrad CPC-n
+
+----
+
+
+ZEsarUX 13 - The Way of the Exploding Fist edition. 2026. június 9.
+
+* Új funkciók:
+
+Új macOS Silicon változat
+Fogd és vidd (drag&drop) támogatás Windowson és Linuxon (Xwindow) - Macen és SDL2 alatt már eddig is működött
+Tömörített fájlok is behúzhatók fogd és vidd módszerrel
+A vágólap tartalma beolvasható és billentyűleütésként elküldhető a következő rendszereken: Mac, Windows, GNU/Linux (SDL2, Xwindow)
+Az "Input File Spooling" funkció új neve: "Szöveg küldése billentyűként" (Send Text as Keystrokes)
+Rengeteg új speciális effekt a videókimenethez:
+- Reduce, Unsteady, Flip Vertical, Flip Horizontal, Rotate, Twirl, Interferences, Sea, Waves, Magnetic Field, Shear, Lens, Radar
+- Zoom, Zoom Mouse, Pixelate, Blur, Shader Border, LED, LED RGB, Hsync lost, Vsync lost, Vsync, Scroll Horizontal, Scroll Vertical, Fade In, Fade Out, Fade InOut
+- Scanlines, Sepia, Red, RGB, Decolorize, Persistence, Contrast, Brightness, Nagravision, Random Lines, Decode Nagravision, Sortalike, Logo Rebound
+- Restore Original, Copy to buffer, Mix from Buffer, Load BMP
+
+A kijelző felére (1/2) és negyedére (1/4) kicsinyíthető
+Kijelző kicsinyítése a következő gépeken: Colecovision, CPC, Master System, MSX, Prism, SG1000, Spectravideo, Spectrum, TSConf, ZX80, ZX81, Z88
+Új agresszív képsoreffekt (scanline)
+Új fekete-fehér videó árnyalási (dither) mód
+Új RGB 8 bites színmód
+Attribútumrács megjelenítése Spectrumon
+Új Nagravision hangeffekt
+Az SDL meghajtó 8 bites színpalettát is használhat
+Az SDL meghajtó ablakmérete kényszeríthető
+Új MIDI kimenet állapota ablak
+Új F-billentyű/ikon művelet ("SendKeysMenu"), amely billentyűket küld a menünek, például a "tti" billentyűk elküldésével megnyílik a bemeneti kazetta
+DESTDIR környezeti változó támogatása a make install lépésnél
+A lemez, a microdrive stb. betöltése és mentése felgyorsítható
+Szabványos kazetta is behelyezhető ZX Spectrumon, amikor a CPU már a ROM betöltő rutinját futtatja
+Az okos betöltés előzményei fájlba menthetők
+Új konfigurációs beállítás az AY chip automatikus bekapcsolásához AY chip nélküli Spectrum modelleken
+ZSF pillanatkép-előnézetek QL, ZX80 és ZX81 gépekhez
+A ZX80 és ZX81 GO SUB verme megtekinthető
+UTF-8 karakterek a láblécben
+Új hatókör: optikai eszközök (Optical Devices)
+Optikai eszközök emulációja:
+- Datel Lightwriter
+- Defender Light Gun
+- Spectrum Doodler Lightpen
+- Stack Light Rifle
+- Trojan Light Pen
+
+* Fejlesztések:
+
+Továbbfejlesztett ZX80 és ZX81 emuláció:
+- Az összes időzítési és videókód újraírva és javítva, közel 100%-ban tökéletes
+- Megszűnt konfigurációs beállítások: --vsync-minimum-length, --no-horiz-stabilization, --enablezx8081lnctradjust, --disablezx8081lnctradjust
+- Megszűnt menübeállítások: Horizontal Stabilization, lnctr video adjust, Video x_offset
+- Javított vsync hangérzékelés
+
+Továbbfejlesztett CPU hibakereső:
+- Az utasítások időzítése megjeleníthető (alapértelmezés szerint kikapcsolt beállítás)
+- Új funkció: futtatás addig, amíg a CPU visszatérő utasításhoz nem ér (bármely RET, RETI, RETN, vagy teljesülő feltételű RET)
+- Látszik, ha a regiszterek értékét az utoljára végrehajtott utasítás módosította
+- Az 5. és 6. nézet külön memptr-t használ ("memptx")
+- Az 5. és 6. nézetben látszik, ha a memóriát az utoljára végrehajtott utasítás módosította
+- Közvetlen billentyű (t) kifejezések kiértékeléséhez
+- Új beállítás: megállás PC+2-n az RST 8 átlépésekor (step over), hasznos az esxdos hívások hibakereséséhez
+- Új felhasználói változók: VAR0, VAR1, ... VAR9
+- Új videóképkocka-számláló
+- Töréspont törölhető a Töréspont szerkesztése ablakból
+- Az 'x' opcióbillentyű ("switch view mode", nézetmód váltása) helyett mostantól 'y' ("change layout", elrendezés váltása)
+- Az 'e' opcióbillentyű (RET) helyett mostantól 'E'
+
+Továbbfejlesztett Pillanatképek a RAM-ban:
+- A RAM-ban tárolt összes pillanatkép vizuálisan böngészhető, akár egy "Időgépen"
+- Pillanatképek menthetők a RAM-ba; korábban ez csak automatikusan, rögzített időközönként történhetett, most bármikor mentheted
+
+Továbbfejlesztett ZX Vision:
+- Új felső menü (alapértelmezés szerint kikapcsolva)
+- Eszköztippek a felső gombokhoz (menügombok), az alsó gombokhoz (eszközgombok) és az ikonokhoz
+- 4 pixel széles karakterkészletek támogatása
+- 8-nál nagyobb karakterkészlet-méret is beállítható
+- Új "ZEsarUXtiny" karakterkészlet a 4x6-os karakterkészlet-beállításhoz (ugyanaz, amelyet az ikonok már használnak)
+- Új felületstílusok: "ZEsarUX Tiny" és "Pico-8"
+- Az F-funkcióbillentyűk a menüből is lenyomhatók
+- A menü számára elérhető méret a főablak felére csökkenthető
+- Fájlelőnézetek a fájlválasztóból a ZX Desktop hátterén
+- A legtöbb ablak mostantól mozgatható/átméretezhető a Shift+OPQAWSKL billentyűkkel
+- Átrendezett beállítások és új menü: lásd Beállítások -> Emulált kijelző, Általános, Főablak, ZX Vision, TV
+- Néhány beállítás átkerült a Beállítások -> Hardver menübe
+- Új gyorsbillentyű-segéd művelet: ikon létrehozása a rögzített billentyűk kiváltásához
+- Egyes beállítási párbeszédablakokban az érték visszaállítható az alapértelmezettre
+- Csúszka a számbeviteli párbeszédablakokban
+- Az indításkor visszaállított teljes méretű ablakok a legnagyobb elérhető méretben állnak vissza
+- Üzenetek küldhetők az ablakoknak műveletek kiváltására. Az üzenetek az Ablakok menüből vagy a Folyamatkezelés ablakból küldhetők
+- Sötét vagy világos felületstílus választható az aktuális órától függően
+- Új karakterkészlet a Solarized Dark és Light stílusokhoz: mostantól ugyanazt használják, mint az AtariTOS
+- Átméretezéskor látszik az ablak mérete
+- Mozgatáskor látszik az ablak pozíciója
+- Átméretezéshez húzáskor megváltozik az ablakkeret színe: Figyelmeztetés színű, ha az ablakot nagyobbra kell venni (mert a jelenlegi méreten túl is van szöveg), egyébként Kijelölt színű
+- Új Háromszög widgettípus az Érzékelők megtekintése ablakban
+
+Továbbfejlesztett ZX Desktop:
+- A ZX Desktop szélessége kis értékre is állítható
+- Új beállítás a ZX Desktop bekapcsolásának letiltásához
+- Módosítható az ikonok, az alsó és a felső gombok háttérszíne
+- Új beállítás az ikonok automatikus rendezéséhez a ZX Desktopon
+- Új beállítás körvonal rajzolásához az ikonok köré
+- Új SamRam eszközikon
+- A ZX Desktop bekapcsolásakor nem záródnak be az ablakok
+- Javított Kuka ikon
+
+Továbbfejlesztett ZX Life:
+- A játék generációi az AY chip zenéjének ritmusára is léptethetők
+- A játék felgyorsítható
+- Javított viselkedés a tábla szélein
+
+A Sprite-ok megtekintése ablakban az összes hardveres sprite egyszerre is látható
+Javított joystick-esemény/billentyű hozzárendelés (a hozzárendelés könnyen megszüntethető)
+Pontosabb tizedes értékek a BASIC változók ablakban
+Javított kód más Unix rendszereken való fordításhoz, mint például az AROS, FiwixOS, Sortix, Minix3
+Javított ZENG Online protokoll: eltérő ZEsarUX kliens- és szerverváltozatok is csatlakozhatnak egymáshoz (ha kompatibilisek), a szobáknál az üzemidő is látszik
+Javított eszközfájl-behelyezés (mmc fájlok, ide fájlok stb.): behelyezés után mostantól automatikusan bekapcsolódnak
+Javított ZEsarUX ablakcím: egységes cím az összes meghajtón: SDL, X11 stb. ...
+Javított stdout menük: "..." és ">" jelzi, ha a menü ablakot nyit, illetve ha almenüje van
+Javított QL emuláció: eszköz-előtag nélküli fájlműveleteknél az mdv1_ feltételezhető
+
+* Javítások:
+
+Javítva a teljes képernyős mód hibái macOS-en, Linuxon és Windowson (cocoa, xwindow, sdl, sdl2 meghajtók)
+Javítva a Magnum Light Phaser emulációja
+Javítva a BFFD port olvasása Spectrum +2A/+3-on
+Javítva a DD/FD+EB utasítás emulációja: EX DE,HL az EX DE,IX/IY helyett
+Javítva a nem létező DD/FD utasítások időzítése
+Javítva a nem dokumentált DD/FD + CB + res/set (ix+d) utasítások visszafejtése, amikor az eredmény egy regiszterbe is tárolódik
+Javítva a kazetta betöltése --tape és --realtape esetén, ha indításkor automatikus pillanatkép-betöltés is be van kapcsolva
+Javítva a C regiszter szabványos kazetta betöltése után (nem dokumentált funkció) - ezzel javul a Sweet Fightin' +2 játék betöltése
+Javítva az SDL --sdl-force-win-size paramétere 24 bites RGB színmód használatakor SDL1 alatt
+Javítva az SDL --sdl-force-win-size és --sdl-8bit-color paraméterei SDL2 alatt
+Javítva a szóközt tartalmazó nevű tar és rar fájlok kibontása
+Javítva az alapértelmezett időzítő Mac OS X-en, ha nem a cocoa meghajtót használod
+Javítva a pthreads nélküli fordítás
+Javítva egy lehetséges 0-val osztás hibás CPU-használat lekérdezésekor Linuxon
+Javítva egy lehetséges szegmentálási hiba (segfault) a macOS cocoa meghajtóban
+Javítva a keret hibája Spectrum Nexten a turbósebesség váltásakor
+Javítva az almenü-jelző (>) megjelenítése, ha a menünek függőleges görgetősávja van
+Javítva a bezárt és kis méretre állított ablakok újranyitása (ha a "Kis méretű ablakok elrejtése" beállítás be van kapcsolva)
+Javítva az Amstrad PCW paletta színváltása
+Javítva a QL .mdv fájlok tartalmának kibontása
+Javítva néhány lehetséges szegmentálási hiba a kód több részén
+Javítva a cpu-step módba lépés ZRCP-ből
+Eltávolítva néhány régi/nem létező Z80N Next utasítás
+
+----
+
+
+ZEsarUX 12.1 - Night Shift edition. 2025. szeptember 25.
+
+* Új funkciók:
+
+Streaming mód a ZENG Online-hoz ZX Spectrumon. Javítja a játékélményt: csökkenti a késleltetést, és megszünteti a játékállapot-eltéréseket a játékosok között
+Kormány (és más analóg joystick-vezérlők) támogatása autóversenyes játékokhoz (adott játékokhoz előre definiált vagy egyéni módosítással)
+Valódi joystick támogatás SDL2 alatt
+Legfeljebb 4 joystick tűzgomb támogatása:
+- Kempston joystick (Spectrum): 4 gomb
+- Amstrad CPC: 3 gomb
+- Master System, SG1000, Colecovision: 2 gomb
+Új beállítás egy olcsó joystick eszköz emulálásához, amely értékeket tesz a buszra, és ezzel befolyásolja a megszakításokat
+ZXMMC+ emuláció
+Második MMC/SD kártya emulációja
+A Külső hangforrásból rögzített hang lemezre menthető
+A ZX80/81 képernyő .scr fájlba menthető
+ZX81 .P81 fájl betölthető LOAD "name" paranccsal
+Közvetlen funkciók a hangerő növeléséhez/csökkentéséhez/némításához
+Rengeteg saját kazettám a 80-as és 90-es évekből, amelyeket sikerült megmenteni:
+- Összesen 264 további fájl a my_soft mappában
+- Segédprogramok és játékok
+- Némelyik új, mások meglévő programok eltérő változatai
+- Többnyire Spectrum, de néhány ZX81 program is (apám és a testvéreim készítették)
+A ROM fájlok akkor is megtalálhatók, ha a ZEsarUX-ot a ROM útvonalától eltérő aktuális mappából futtatod
+Gépválasztás családtípus szerint (Spectrum, ZX80, ZX81, CPC stb.)
+A konfigurációs fájl útvonala a menüből is módosítható
+A kibontott fájl megtekinthető a Háttértár almenüiből (kazetta, dsk stb.)
+Beállítási varázsló a ZEsarUX első indításakor
+Szöveges jegyzet menthető ZSF pillanatképbe
+
+* Fejlesztések:
+
+Továbbfejlesztett AY lejátszó:
+- Lejátszási lista betöltése és mentése (a teljes lista vagy csak a megjelölt fájlok mentése)
+- A szám hossza megnövelhető (néhány hibás hosszúságú számhoz)
+- Közvetlen funkciók a következő/előző számhoz/fájlhoz
+- A dal hosszánál és az eltelt időnél tizedmásodpercek is látszanak
+- Jobb keverési algoritmus
+- Javítva a csendérzékelés szüneteltetett lejátszáskor
+- Jelzi, ha nem szól dal
+
+Továbbfejlesztett Sinclair QL emuláció:
+- A RAM mérete növelhető
+- QL képernyőfájlok betöltése és mentése
+- QL képernyőfájl-előnézetek a fájlválasztóban
+- A win1_ eszköz az mdv1_ álneveként is használható (hasznos QL-SD útvonalakhoz)
+- Javítva a Sinclair QL billentyűzet: gyors szövegbevitel
+- Kijelző kioltás (display blanking)
+
+Továbbfejlesztett hangátalakítás ZX81 valódi kazettákról P/P81 fájlokba:
+- Új alternatív, továbbfejlesztett algoritmus
+- Új eszköz a Háttértár-> Kazetta menüben
+- A hullámforma látható átalakítás közben, az impulzusok, bitek és bájtok leírásával
+- A hullámforma meghallgatható átalakítás közben
+- A bitek, bájtok és karakterek láthatók átalakítás közben
+- Ez egy oktató és megőrző eszköz, amely bemutatja, hogyan működik a ZX81 kazettajele
+
+Továbbfejlesztett Külső hangforrás ablak:
+- Frekvencia megjelenítése, ha vezetőhangot vagy 0/1 biteket érzékel
+- A beolvasott bájtok hozzávetőleges száma
+- Átlagfrekvencia megjelenítése ismeretlen jel esetén
+- A bemenet ebből az ablakból is bekapcsolható
+
+Továbbfejlesztett CPU hibakereső:
+- A CPU előzményekben megtekinthető egy utasítás előző címe, és oda is ugorhatsz
+- Port olvasó utasításnál (IN, INI stb.) a port száma is látszik. Spectrumon XXFEH port esetén a billentyűzetsor is látszik
+- A nézet száma az ablakon belül látszik, nem az ablakcímben
+- Áthaladásszámláló a töréspontokhoz (a töréspont akkor aktiválódik, ha a feltétel bizonyos számú alkalommal teljesül)
+- Javított Töréspont szerkesztése ablak
+- Új lehetőség az összes töréspont be-/kikapcsolására
+- Javítva a kurzor felfelé mozgatása 0 közeli címeknél
+- A Figyelések hexadecimálisan vagy decimálisan is mutathatják az eredményt
+- Címkék adhatók a Figyelésekhez
+
+Továbbfejlesztett Memória-csalás:
+- Kezdőcím adható meg
+- A figyelések törölhetők
+- Javított ablakelrendezés
+
+Továbbfejlesztett ZRCP:
+- Beállítható a Linemode Telnet (karakter mód): kurzor fel, backspace, tab, ctrl-c, ctrl-d
+- Jobb CR+LF kezelés
+- Új parancsok: cd, pwd
+
+Továbbfejlesztett ZX Vision:
+- A kis méretű ablakok elrejthetők
+- Az ablakok a ZEsarUX főablak határain túl is elhelyezhetők
+- Ablak bezárásakor a menü nem nyílik meg újra
+- Gyors szövegbevitel a beviteli mezőkben
+- Egy pont jelzi, ha az ikonhoz tartozó ablak nyitva van, de kis méretre van állítva
+- A ZEsarUX ablakméret arányai alapértelmezés szerint megmaradnak (eltérő x/y nagyítás nem engedélyezett)
+- A kurzor elrejtése, ha egy ablak a háttérbe kerül
+- Rövid szöveg jeleníthető meg az ikonokhoz a ZX Desktopon
+- Az ikon neve megmarad a típusa megváltoztatásakor
+- Új karakterkészlet a ZEsarUX Plus stílushoz: mostantól ugyanazt használja, mint az AtariTOS, ez egy jobban olvasható karakterkészlet
+- rzx fájlok támogatása a fájlválasztóban: kibonthatók (z80 pillanatképfájlba), van fájlelőnézetük, SCR-be és Z80-ba konvertálhatók, ZX Desktop háttérként használhatók
+- Javítva a Főmenü megkettőződése, amikor a Főmenüben F6-ot nyomsz
+
+Továbbfejlesztett fájlválasztó:
+- .O (ZX80), .P/.81/.P81 (ZX81) fájlelőnézetek, ha nincs képernyő a fájlban: BASIC programlista jelenik meg
+- .bas (ZX Spectrum), .baszx80 (ZX80), .baszx81 (ZX81) BASIC lista előnézet
+- .txt fájlelőnézetek
+- .tap/.tzx/.pzx fájlelőnézet, ha a kazettán nincs képernyő: BASIC programlista jelenik meg
+- ZX81 fájlok konvertálása P-ből P81-be és P81-ből P-be
+- Néhány fájlművelet .81 fájlokhoz a fájlválasztóban
+- A Fájlkezelő eszközökből fájlra mutató hivatkozás hozható létre a ZX Desktopon
+- .ay fájlok támogatása a fájlnézegetőben
+- GENS fájlok támogatása a fájlnézegetőben
+- FAT csatolt képfájlra mutató útvonal minden esetben használható
+
+Továbbfejlesztett BASIC lista megtekintése:
+- Az ablak háttérbe tehető
+- Automatikusan frissül, ha a lista megváltozik
+- BetaBasic tokenek megjelenítése
+- Egyéni kezdőcím és programhossz állítható be
+- A végrehajtott sor követhető
+- 9999-nél nagyobb sorszámok is, hasznos védett programokhoz
+
+Továbbfejlesztett BASIC változók megtekintése:
+- Az ablak háttérbe tehető
+- Automatikusan frissül, ha a változók megváltoznak
+
+Új ablak: GO SUB verem megtekintése (BASIC)
+Javított Hexadecimális szerkesztő: a követett kifejezés a konfigurációba mentődik
+Megnövelt maximális billentyűszám a ZENG/ZENG Online-nak küldött billentyűkhöz
+Javított időzítés Windowson és minden más, SDL videómeghajtót használó rendszeren. Mostantól SDL időzítést használ
+Javított Mac időzítés natív időzítő használatával
+Javított vízjel logó: csak betöltés/mentés közben is megjeleníthető, és betöltéskor/mentéskor színt válthat
+Javított Szöveges kaland térképe: be- és kijárati irányok
+Javított Vizuális kazetta ablak: a szabványos kazettát is támogatja
+Javított Egyéni ROM beállítás: új "Gép újraindítása" lehetőség
+Javított DivMMC, DivIDE és ZXMMC emuláció: akkor is bekapcsolhatók, ha nincs behelyezve MMC/SD kártya vagy IDE
+
+* Javítások:
+
+Javítva a szemaforzárolás Windowson
+Javítva a CPU-használat számítása kikapcsolt lábléc esetén
+Javítva az esxdos kezelő gyökérkönyvtárának beállítása, ha .nex fájlt útvonal nélkül töltesz be a parancssorból
+Javítva egy hiba ZSF pillanatkép visszaállításakor bekapcsolt DivIDE esetén
+Javítva a menühangok a menü bezárásakor, hibaüzenet megjelenítésekor és bekapcsolt csendérzékelés esetén
+Javítva a szegmentálási hiba CTRL-C lenyomásakor a konzolon
+Javítva a PCW paletta színváltásai
+Javítva a Chloe billentyűzet: gyors szövegbevitel
+Javítva a töréspont be-/kikapcsolása olyan pozíción, ahol már volt töréspont, amikor a töréspontok ki voltak kapcsolva
+Javítva a kazettafájl okos betöltése, ha dsk van behelyezve
+Javítva a vizuális kazetta nem támogatott kazetta behelyezésekor
+Javítva az írásvédelmi fül a Vizuális Hilow Data Drive ablakban
+Javítva a fájlválasztó "<dir>" szövegének oszlopa UTF-8 karaktereket tartalmazó mappáknál
+Javítva az elválasztó menüelem az stdout videómeghajtón
+Javítva a minimális hangerő megjelenítése a Külső hangforrás ablakban
+Javítva a szegmentálási hiba szövegfelolvasás használatakor stdout menüknél és nagyon hosszú szöveges üzeneteknél
+
+----
+
+
+ZEsarUX 12 - Bubble Bobble edition. 2025. január 16.
+
+* Új funkciók:
+
+ZX Microdrive emuláció ZX Spectrumon, amely a következőket tartalmazza:
+- Szabványos MDR emuláció. Az MDR fájlok tartalma böngészhető, megtekinthető a fájltérkép és a töredezettség, a fájlok átnevezhetők, elérhetők a szektoradatok, a chkdsk és a hibás szektorok emulálása
+- Nyers (raw) microdrive emuláció. Más, nem Interface 1-es ROM fájlformátumokat is támogat, például a microdrive tárhelyének bővítését Multiface 128-cal vagy a CP/M-et LEC memóriához. Megtekinthető a microdrive nyers térképe (réses zónák, szinkronbájtok, adatok), és "valódi hibák" is előfordulhatnak, például automatikusan keletkező hibás szektorok, vagy a microdrive szalagjának megnyúlása, amikor még új.
+- Adathang szimulálása olvasáskor és íráskor
+- Vizuális Microdrive: egy microdrive kazetta működés közben is megtekinthető
+
+Új Vizuális kazetta ablak
+LEC memóriabővítés emulációja
+Új gépek: Czerweny CZ 1000, CZ 1500, CZ 1000 Plus, CZ 1500 Plus, CZ 2000, CZ Spectrum, CZ Spectrum Plus
+Új Memória-csalás funkció: hasznos egy játékban az energia, a bombák, a lőszer számlálóinak vagy bármilyen más csalásnak a megtalálásához
+Új Szöveg keresése funkció a memória menüben
+Új Képernyő gyorsmentése funkció
+Új beállítás a Z88 kártyák tartós írásának letiltásához
+CPC kiegészítő ROM-ok emulációja
+Új "--simplemenus" beállítás, amellyel nagyon egyszerű főmenüt kapsz
+
+* Fejlesztések:
+
+Képernyő mentése BMP-be a legtöbb gépen
+Gépcsere futás közben Pentagonra és Spectrum +3-ra
+Gépcsere futás közben Spectrum 128-ról Spectrum +3-ra
+64 KB-os .SP pillanatképek betöltése (például Shadow of Unicorn)
+Javított azimut-figyelmeztetés a Külső hangforrás ablakban
+SDHC kártyák címzésének támogatása
+Új Flash Color mód (128 szín)
+Beállítható, hogy a ZEsarUX ne mentsen pillanatképet kilépéskor
+Betölthető egy további beállításfájl: .zesaruxdevrc
+A bal Alt, bal Ctrl, bal Shift vagy TAB is beállítható joystick tűz gombként
+A Bemeneti kazetta nézegetőben (Input Tape Viewer) módosítható az aktuális olvasási pozíció .tap fájloknál
+8 KB-os ROM betöltése ZX80-on (például a ZX81 ROM, mintha a ZX80-at ZX81-re bővítették volna)
+A Sprite-ok megtekintése ablakban nagyíthatók a sprite-ok
+Új Gömb (Sphere) mérőtípus az Érzékelők megtekintése ablakban
+Javított fordítás: a --enable-memptr --enable-visualmem --enable-cpustats beállítások alapértelmezetten engedélyezve vannak a ./configure futtatásakor
+Javított Inves Spectrum+ emuláció: figyelmeztetés, ha egy játék lefagyhat az Inves write-on-interrupt hibája miatt
+Javított Spectrum Z80 CPU emulációs mag: várakozási állapot (wait state) hozzáadva (a microdrive emulációjához szükséges)
+Javított PCW emuláció: 3-as mód (360x256x16), a videómód I/O porton keresztül is váltható
+Javított Sega Master System emuláció: felcserélhetők az 1. és a 2. játékos vezérlői
+Javított ZSF pillanatkép: a Datagear DMA állapotát is menti
+Javított ZX Recreated billentyűzet-támogatás: a menüben is használható
+.Z80 TC2048, TC2068, TS2068 pillanatképek mentése. .Z80 TC2048, TC2068 pillanatképek betöltése
+
+Javított Spectrum Next emuláció (ennek köszönhetően például a Next-es Atic Atac is fut):
+- Hozzáadva a 6-os és 7-es rétegmód (keverési módok)
+- Verem nélküli NMI (stackless NMI) hozzáadva
+- A, B, C, D DAC-csatornák hozzáadva
+- Tile-ok a RAM 7-ben is lehetnek
+- Javított képmegjelenítés, ha csak az ULA van engedélyezve (6%-kal kevesebb CPU a gépemen)
+- Javítva a 128k/+2a/Pentagon időzítés
+- Javítva a DIVMMC leképezés RETN után
+- Javítva a Copper időzítése
+- Javítva az esxdos kezelő DISK_FILEMAP hívása
+- Javítva: az esxdos kezelő megváltoztatta a helyi könyvtárat .nex pillanatkép betöltésekor
+- Javítva a palettaeltolás a 2-es rétegnél (layer 2)
+- Javítva az ULA réteg vízszintes görgetése
+- Javítva a sprite-ok levágása a bal és a felső keretnél
+- Javítva a tile-ok körbefordulása 16k/8k-nál
+- Javítva a DMA burst mód, ha prescaler=0
+- Javítva: a DMA átvitel az átvitel végén újraindította a bájtszámlálót
+- Javítva a CPU sebessége kazettafájl megnyitásakor
+
+Javított Hilow Datadrive emuláció:
+- Nyers (raw) emuláció hozzáadva, ugyanúgy, mint a valódi eszköz
+- Változó ddh méret (3-tól 256 szektorig)
+- ddh fájloknál csak az egyik oldal is formázható
+- ddh fájloknál formázáskor a tartalom törölhető ("c/borrado" vagy "s/borrado")
+
+Javított hibakeresés:
+- CPU előzmények: a memóriamutató az előzményekben látható PC regiszterre állítható
+- CPU előzmények: a teljes előzmény megtekinthető
+- Látszik, ha a CPU várakozási állapotban van
+- A Z80N (Z80 Spectrum Next) utasítások numerikus paramétereinek visszafejtése (NEXTREG NN,A, TEST N stb.)
+- Új töréspont-művelet: save-binary
+- Egy címen lévő töréspont engedélyezhető/letiltható (nem csak engedélyezhető/eltávolítható) a nagy 'L' billentyűvel. A letiltott állapot a beállításokban mentődik
+- Szimbólumtábla betöltése hozzáadva
+
+Javított Hexadecimális szerkesztő:
+- Mostantól az adatok akkor is frissülnek, ha az ablakon van a fókusz
+- Mostantól a memóriamutató követhet egy kifejezést (például egy CPU regisztert)
+
+Javított ZX Vision:
+- További grafikus felület-fejlesztések az IBM CUA (retro)specifikáció további irányelvei szerint
+- Almenük kiválasztásakor a menük az előző menüket is mutatják
+- A ZX Vision stílus kiválasztásakor a stílus már a kurzor mozgatásakor érvénybe lép
+- Javított kurzormozgás a menükben PgDn/PgUp lenyomásakor
+- A Home/End billentyűk használhatók az ablakokban
+- Új beállítás a Spectrum billentyűk használatára a menükezeléshez: az 5678 billentyűk kurzorként, Caps Shift+Space az ESC, Caps Shift+Ctrl a TAB, Caps Shift+Ctrl+M a Menü megnyitása (F5)
+- A Videórétegek ablak mostantól háttérbe tehető
+- A DMA hibakeresés ablak mostantól háttérbe tehető
+- Figyelmeztetés az átméretezési jelen, ha egy ablakot nagyobbra kell venni (mert az aktuális méreten túl is van szöveg)
+- Egy ablak letilthatja a görgetési műveleteket
+- A Folyamatváltó alapértelmezetten a képernyő bal alsó részén helyezkedik el
+- Mostantól hiba- vagy splash-üzenet megjelenésekor minden grafikus stílusban látszanak a szivárványcsíkok az ablakok címsorában
+- Közvetlen funkció a Töréspontok ablak megnyitásához
+
+Javított ZX Desktop:
+- A felső és az alsó gombok egymástól függetlenül engedélyezhetők/letilthatók
+- Jobb kattintás a ZX Desktop alsó részén lévő eszközikonokon
+
+* Javítások:
+
+Javított ZX Vision:
+- Javítva a jobb kattintás a felső gombokon, ha a menü zárva van, és nincs nyitott ablak
+- Javítva: lenyomva maradt az Alt billentyű, amikor alt-tab-bal másik ablakra váltottál a xwindow, cocoa, sdl1 és sdl2 meghajtókkal
+- Javítva az ablak pozíciójának visszaállítása visszaállítás/kis méretből való visszahozás után
+- Javítva: a menü újra megnyílt, ha a CPU hibakeresőben run parancsot futtattál, és a --allow-background-windows beállítás ki volt kapcsolva
+- Javítva a szövegfelolvasás a menüben (hibák az almenük és az ablakok szövegének felolvasásakor)
+- Javítva a bal kattintás egy ikonon, amikor a menü nyitva volt
+
+Javítva a CPU- és memóriaszivárgási hiba Linux és Xwindow meghajtó használatakor. Ez a hiba mindig is létezett (egy "hosszú életű hiba" XD)
+Javítva a ZX81 online böngésző
+Eltávolítva a puffer megtelt jelzés shift+e lenyomásakor a Külső hangforrás ablakban
+Javítva a TZX automatikus betöltése valódi kazettaként Spectrum +3-on
+Javítva az érvénytelen fejléctípusú TZX fájl behelyezése
+Javítva a .scr képernyő mentése, ha a RAM 7-ben található
+Javítva az esxdos kezelő F_GETCWD hívása a gyökérkönyvtárban (/)
+Javítva az esxdos kezelő F_GETCWD hívása, ha a könyvtár nem létezik
+Javítva a futás közbeni gépcsere ZX80-ról ZX81-re és ZX81-ről ZX80-ra
+Javítva az Amstrad CPC görgetése
+Javítva a kazettakimenet (Cassette out) hangja: mostantól hallható ezeken a gépeken: Jupiter Ace, CPC, MSX, Spectravideo
+Javítva a memóriatérkép és a működés Jupiter Ace-en: mostantól tökéletes, és jobb, mint bármely más emulátorban
+Javítva: .nex pillanatképek betöltésekor a 2-es réteg nem inicializálódott (ez javítja például a Next-es Head Over Heels hibáit)
+Javítva: .nex pillanatképek betöltésekor az MMU kezelése nem volt helyes
+Javítva a menükeresés funkció. Mostantól alapértelmezetten engedélyezve van
+Javítva a hiba .ZSF Z88 pillanatkép mentésekor, ha a RAM vagy a memóriakártya blokk nincs tömörítve
+Javítva az F5/Gomb menü lábléc-üzenet megjelenítése
+Javítva az MSX billentyűkattanás hangja
+Javítva a ZX-Uno írás a 0000h-3fffh címekre Chloe MMU használatakor, ha a szegmens nem ROM
+
+
+* Mint mindig, van még néhány kisebb hibajavítás és fejlesztés
+
+----
+
+
+ZEsarUX 11.0 - David edition. 2024. június 6.
+
+Ezt a verziót a bátyámnak, Davidnek ajánlom. Nyugodjék békében.
+
+* Új funkciók:
+
+Hangbetöltés külső hangforrásról, például kazettás magnóról. Ez a következőket is tartalmazza:
+- Külső hangforrás ablak: láthatod a hanghullámot, a jel típusát, és egy azimut-segédet, amely megmondja, mikor kell elővenni a csavarhúzót ;)
+- Spektrumanalizátor (mármint hangspektrum): láthatod a hanghullám teljes frekvenciatartományát
+
+Új ZENG Online funkció, amellyel bármelyik emulált játékkal játszhatsz többjátékos módban egy központi szerver segítségével
+ZENG támogatás minden emulált gépen
+ZENG támogatás a curses meghajtóban
+Képernyő mentése .txt fájlba
+Képernyő mentése .stl fájlba, 3D nyomtatóval való nyomtatáshoz
+ZX81 .P81 fájlok támogatása
+ZX80 és ZX81 .Z81 pillanatképek mentésének támogatása
+Bitek eltolása funkció a Hexadecimális szerkesztőben
+Új lefordított változat: Haiku OS
+Új TempleOS grafikus stílus
+Új QNX grafikus stílus
+Új beállítás a CHR$ 128 mód kényszerítésére ZX81-en
+Keresés funkció a menüpontok megtalálásához
+.zmenu típusú fájlok indítómenük létrehozásához
+További régi Spectrum programjaim/játékaim
+Új hibakeresési érzékelők: az FEH port SPK és MIC bitje
+Néhány kazettamásoló a Háttértár-> Kazetta menüben
+Új beállítás a gyors üdvözlőüzenethez
+PCW 1-es videómód palettaválasztó
+
+* Fejlesztések:
+
+A Next .nex/.snx/.sna pillanatképei a kiegészítő fájlokkal együtt betölthetők anélkül, hogy azokat az mmc fájlba kellene másolni (automatikusan csatolja az esxdos kezelőt)
+Korlátozható a maximális CPU turbó Nexten
+Szüneteltethető a lejátszás az AY lejátszóban
+Javított Billentyűzet súgó: mostantól egérkattintással is lenyomhatók a billentyűk
+Beállítható, hogy a ZEsarUX ne mentse a beállításokat kilépéskor
+Választható a normál ZEsarUX logó vagy az X Anniversary logó
+A ZENG pillanatképek gyakrabban is küldhetők (akár 20 ms-onként)
+Automatikus visszatekerés beállítás valódi kazettához is
+A Spectrum színek valódi videómódban is letilthatók
+Gyorsbillentyűk is lenyomhatók a Képernyő-billentyűzeten
+A kimeneti kazettánál megjegyzi az utoljára használt útvonalat
+48 KB-os MSX cartridge-ek betöltése
+MSX cartridge-ek betöltése a következő memory mapperekkel: Ascii 8kb, Ascii 16kb, Konami SCC nélkül, Konami SCC-vel, R-Type
+A +2e/+3e ROM beállítható az Egyéni ROM menüpontból
+Egyszerűbb fordítás Haiku OS-en
+Új beállítás a karácsonyi mód elkerülésére
+Javított Hexadecimális szerkesztő ZX80-on és ZX81-en: az inverz karaktereket is mutatja
+
+Javított ZRCP:
+- Új menüfunkció a helyi pillanatkép szinkronizálására a távoli gépre ZRCP-n keresztül
+- Új ZRCP parancsok: open-menu, print-error, get-text-overlay, kibővített cpu-history get
+- A cpu-step-mode használható ZRCP-ből a stdout és simpletext meghajtókkal
+- Az MMU állapotának visszaállítása a "cpu-history restore" ZRCP parancsnál Spectrum 128k/+2/+2a/+3 esetén
+
+Javított QL emuláció:
+- Automatikus betöltés QL mdv/flp behelyezésekor
+- 2 microdrive és 1 floppy ikon QL-en, egyetlen ikon helyett
+- Minden meghajtó külön engedélyezhető/letiltható
+
+Javított fájlválasztó:
+- Az aktuális könyvtár mező görgetése, ha nem fér el az ablakban
+- Módosítható a kiterjesztésszűrő
+- Fájlok mentésekor a kurzor a fájlnév mezőn áll, és a program fájlnevet javasol
+- A fájlkiválasztó terület más színű
+- A bal kurzorbillentyű lenyomásakor egy könyvtárral feljebb lép
+
+Javított ZX Vision:
+- Megváltozott a bal egérkattintás működése: ha egy ablakon kívül nyomod le a bal egérgombot, az összes menü bezárul.
+  Ha nyitva szeretnéd tartani a menüt, és az emulált gépre szeretnéd tenni a fókuszt, bal kattintás közben nyomd le a Shift billentyűt is.
+- Javított ablakcím-háttér, ha nem minden gomb látható
+- Javított kattintás és rajzolás mindig látható ablaknál
+- A menük már nem minimalizálhatók és nem méretezhetők át (ennek nem volt értelme)
+- Folyamatváltó: a minimalizált ablakok kiválasztáskor visszaállnak
+- Folyamatváltó: mostantól beállítható, hogy mindig látható legyen
+- Folyamatváltó: az ikonnevek beszédesebbek
+- A menücímek a kiválasztott nyelvre vannak fordítva (még nem minden, kérlek, légy türelemmel)
+- Javított perspektíva a 3D részecskék (3D Particles) widgetnél az Érzékelők megtekintése ablakban
+
+Javított ZX Desktop:
+- A felső gombok átdefiniálásakor egyes műveletekhez, például openwindow vagy set machine, paraméterek is megadhatók
+- A felső gombok jobb kattintással újrakonfigurálhatók
+- Ha a felső gombokat vagy az F-funkciókat SetMachine műveletre állítod, a gépnév paraméter az aktuális gép lesz
+- Új ikon, felső gomb vagy OpenWindow típusú F-funkció létrehozásakor megjelenik egy ablaklista a választáshoz
+- A gép ikonján jobb kattintással mostantól a billentyűzet súgó is megjeleníthető
+
+* Javítások:
+
+Javított ZX Vision:
+- Javítva a hiba, amikor a láblécre írt szöveg oszlopa kívül esett a határokon (pontosan a 32. oszlopnál)
+- Javítva a splash szövegek, ha a sor > 23
+- Javítva a '.' és ',' billentyűk lenyomása a menüben, ha a gép ZX80 vagy ZX81
+- Javítva egy hiba a ZX Vision BeOS stílusában: F5 lenyomásakor az ablakgombok nem tűntek el, vagy nem jelentek meg újra
+- Javítva az ablakok frissítése az F8 Képernyő-billentyűzet lenyomása után
+- Javítva a splash üzenetek, ha a háttérablakok engedélyezve vannak
+- Javítva sok ablak kezdeti pozíciója
+
+Javítva a http átirányítások a Spectrum online böngészővel történő letöltéskor
+Javítva az FEH port 6. bitje az Issue2/3 függvényében
+Javítva a Sam Coupe FEH hangportja a Real Beeper engedélyezésekor
+Javítva a segfault nem létező valódi kazettafájl behelyezésekor
+Javítva a segfault ZX81 valódi kazetta behelyezésekor és a Kazettanézegető megnyitásakor
+Javítva az érvénytelen adatbusz-érték Jupiter Ace-en (20H, nem FFH)
+Javítva a lefagyás a szöveges kaland térképének rajzolásakor, valamint a sérült GAC kalandjátéknál
+Javítva a CP (HL), CP (IX+d), CP (IY+d) utasítások időzítése
+Javítva a ZRCP hibája egyidejű kapcsolatok kezelésekor
+Javítva a betadisk szektorátfordulás olvasáskor/íráskor (köszönet Mak7ym-nek). Ez javítja például a következők betöltését: BR_DEA7H, HOMER, PARADISE
+Javítva a hiba a Clip Windows adatok mentésekor Spectrum Next ZSF pillanatképekben
+Javítva a hiba eltérő kis-/nagybetűs fejlécű .nex pillanatképek betöltésekor (például Exploding Fist Next)
+Javítva a Kempston egér olvasása, amikor a menü nyitva van
+Javítva a ROM terület memóriamérete ZX80-on és ZX81-en
+Javítva: az esxdos kezelő engedélyezve volt, amikor a gép nem Spectrum
+Javítva a magas CPU-használat a videómód-váltásról szóló ismétlődő splash üzeneteknél
+
+----------------------------------------
+
+
+Verzió X - 10th Anniversary edition. 2023. szeptember 24.
+
+Ez egy különleges kiadás a ZEsarUX 10. születésnapja alkalmából. A verzió neve "X" (valójában ez a 10.10-es verzió)
+
+* Új funkciók:
+
+Új lefordított változatok: Ubuntu és Fedora
+PCW színmódok
+PCW joystick-támogatás: Kempston, Cascade, DKTronics, OPQASpace
+Könyvtárak és tömörített fájlok képernyő-előnézete a fájlválasztóban
+Villogás (flash) támogatása a fájlválasztó képernyő-előnézeteiben
+ROM fájl választható bármelyik kiválasztott géphez, a ROM fájl neve a beállításokban mentődik
+Egy újabb játékszer, a "ZXLife", egy új, Halogatás (Procrastinate) menüben
+ASCII táblázat ablak
+Készítő adatai (Creator Info) a ZSF pillanatképekben
+A fordító rendszer kiadása a Fordítási adatok ablakban
+Docker támogatás
+Egy újabb húsvéti tojás ;)
+
+* Fejlesztések:
+
+Javított ZENG:
+- Kettőnél több gép is csatlakoztatható (legfeljebb 16)
+- A gépnevek/IP-címek után ":port" formában a port is megadható
+- Letiltható a bemeneti események (billentyűzet, joystick) küldése
+- A villogási (flash) állapot szinkronizálása a példányok között
+- ZENG támogatás Jupiter Ace-hez
+
+Javított AY lejátszó:
+- Lejátszási lista
+- Véletlen sorrendű lejátszás
+- Csendérzékelés
+- Az AY lejátszóban éppen szóló dal megjelenítése a konzolon
+
+Javított szöveges kaland funkciók:
+- Mesterséges intelligencia használata valósághű képek készítéséhez a helyszínleírások szövegéből
+- Beállítás a karakterszűrőhöz
+- Beállítások a szöveges kaland térképéhez: követés, nem meglátogatott helyek, nem összekötött helyek, tárgyak és képek megjelenítése, nagyítási szint
+- Rajzolási sztringek exportálása külső fájlba (txt, asm, c vagy pas)
+- A szöveges kaland térképe megőrzi a nagyítási szintet játékok betöltésekor
+- GAC támogatás a szöveges kaland térképéhez
+- GAC támogatás a Kalandjáték hibakeresése funkcióhoz (8-as CPU nézet), a következők támogatásával:
+  - Kapcsolatok táblázata
+  - Szótár
+  - Tárgyak
+  - Igék
+  - Határozószók
+  - Helyszínek
+  - Üzenetek
+
+Javított ZX Vision:
+- Új menüműködés:
+  - Az ESC billentyű mindig bezárja az összes menüt
+  - Egy menüből megnyitott ablak bezárásakor az összes menü bezárul
+  - A bal kurzor visszalép az előző menübe, a jobb kurzor aktiválja a menüpontot (ugyanúgy, mint az Enter)
+
+- Új művelet az ablakok lépcsőzetes elrendezéséhez
+- Saját karakterkészlet-fájl használható a ZX Visionben
+- A karakterkészlet kinyerhető egy játékból, és saját karakterkészlet-fájlként használható a ZX Visionben
+- Csak a megváltozott pixelek kirajzolása (így gyorsabb a megjelenítés)
+- Az "ï" és "Á" utf-8 karakterek támogatása
+- A Folyamatváltó megváltoztathatatlanná tehető, így az Ablakok menü tömeges műveletei (mindet kis méretre, lépcsőzetesen stb.) nem érintik
+- Az ESC lenyomható az előzménylista egy sorának kiválasztásakor
+- Mostantól az ablakkeret színe megváltozik, ha az egeret az átméretezési terület (jobb alsó sarok) fölé viszed
+- Javított kezelés egyes F-műveleteknél/ikonoknál/átdefiniált gomboknál: openwindow, linkto-, machineselection
+
+Javított ZX Desktop
+- Teljes képernyőre váltáskor letiltható a keret és a lábléc
+- Ha teljes képernyőre váltasz, és letiltod a ZX Desktopot, a teljes képernyő kikapcsolása után az ablakok visszaállnak
+- A gépbeállítás ikon mostantól dinamikus: a paraméterben megadott gép ikonját mutatja egy nyíllal
+- ZX Desktop ikonok a TSConf és Baseconf gépekhez
+
+Javított ZRCP:
+- Több egyidejű kliens
+- Fontos változások a ZRCP-ben:
+  - Korábban:
+  * ha egy ZRCP kapcsolat megszakadt, a cpu-step-mode kikapcsolt.
+  * ha egy ZRCP kapcsolatot a "quit", "exit" vagy "logout" paranccsal zártak le, a cpu-step-mode kikapcsolt
+  * a cpu-step-mode nem volt kikapcsolható a menüből
+
+  - Mostantól:
+  * ha egy ZRCP kapcsolat megszakad, a cpu-step-mode nem változik.
+  * ha egy ZRCP kapcsolatot a "quit", "exit" vagy "logout" paranccsal zárnak le, a cpu-step-mode nem változik
+  * a cpu-step-mode kikapcsolható a menüből az ESC lenyomásával
+
+Javított ZX Spectrum Next emuláció: frissített gépazonosító-lista
+Javított Folyamatkezelés: bármely ablak tartalma a belső vágólapra másolható
+Javított akadálymentesség: hangok a grafikus felület eseményeihez
+Javított valódi kazetta behelyezés: a folyamat gyorsabb, és egy része a háttérben fut
+Javított Kazettaböngésző: P és O fájlok is böngészhetők
+Javított ZX80 Billentyűzet súgó: az integrált függvényeket (Integral Functions) is tartalmazza
+
+* Javítások:
+
+Több memóriaszivárgás javítva (a valgrind eszköznek köszönhetően), ezekben:
+- A szöveges kaland térképének rajzolása
+- .Z80 pillanatképek betöltése
+- A Spectrum online böngésző használata
+- A Hilow Audio Convert futtatása
+- A ZRCP engedélyezése
+- ZEsarUX extrák letöltése
+- ZX Spectrum Next MMC kép letöltése
+- Fájlkép szinkronizálása a Fájlkezelő eszközökből
+- Mappa másolása a Fájlkezelő eszközökből
+- Elsősegély ablakok megjelenítése
+
+Javítva a vizuális memória táblák inicializálása
+Javítva a ZX Vision ablakok áthelyezése
+Javítva a képmegjelenítés, ha a CPU Top Speed módban van
+Javítva a hiba, ha nincs írási jog az mmc, ide, trd, dsk, ddh (hilow) fájlokhoz: ilyenkor a tartós írás letiltódik
+Javítva a jogosultságok a ZEsarUX Linuxra telepítésekor: a zxuno.flash és a tbblue.mmc mostantól bárki által írható
+Javítva: a szöveges kaland grafikák érvénytelen karaktereket jelenítettek meg
+Javítva az esxdos kezelő a következő fopen jelzők használatakor: FA_READ + FA_WRITE + FA_OPEN_CREAT
+Javítva a ZRCP hibája a kapcsolat lezárásakor (a socket leíró nyitva maradt)
+Javítva az ESC billentyű olvasása a curses meghajtóban
+Javítva a .config fájlok támogatása .dsk-n
+Javítva a segfault, ha: automatikus visszatekerés bekapcsolva + rwa/smp/wav fájl behelyezése normál kazettaként + kazetta vége + betöltési kísérlet
+Javítva a lehetséges segfault zip fájlok letöltésekor és kicsomagolásakor, ha megszakítod a műveletet
+Javítva a fordítás a pthreads támogatás letiltásakor
+Javítva az adatok megjelenítése a Vizuális valódi kazettában ZX80 hangkazetta behelyezésekor
+Javítva a segfault az fbdev meghajtóban gépváltáskor
+Javítva a karakterkészlet a ZX80/81 kijelző szimulálásakor Spectrumon
+Javítva a valódi betöltés szimulálása egérmozgáskor
+Javítva a hiba a hardveres sprite-ok váltásakor a Sprite-ok megtekintése ablakban
+
+* Egyéb változások:
+
+Megváltozott a CPC Copy billentyű hozzárendelése: mostantól a billentyűzeted End billentyűje
+
+* Mint mindig, van még néhány kisebb hibajavítás és fejlesztés
+
+----------------------------------------
+
+
+Verzió 10.3 - La Abadia del Crimen edition. 2023. május 10.
+
+Ebben a verzióban rengeteg változás van, de néhány különösen figyelemre méltó:
+- Új gépek: Amstrad PCW 8256, PCW 8512, CPC 6128, CPC 664
+- Javítva a 3"-os CF2 floppylemez emulációja (+3, CPC, PCW gépeken használatos): a floppyemulációt teljesen újraírtam, és mostantól szinte tökéletes
+- Rengeteg fejlesztés a CPU hibakereső ablakban
+- Javítva szinte az összes zavaró hangkattanás a Windows-os változatban (és Linuxon az SDL hangmeghajtóval)
+
+
+A 10.3-as verzió teljes változásnaplója:
+
+* Új funkciók:
+
+Új gép: Amstrad PCW 8256
+Új gép: Amstrad PCW 8512
+Új gép: Amstrad CPC 6128
+Új gép: Amstrad CPC 664
+Vizuális floppy a floppylemez-aktivitás megtekintéséhez (+3, CPC, PCW, Betadisk)
+DSK lemezinformáció menü: egy lemez sávjainak és szektorainak lekérdezéséhez
+Új F-funkciók: Poke, Vizuális valódi kazetta, Beállítások, Lábléc váltása (Switch footer)
+Folyamatváltó ablak, amely olyan, mint egy "tálca" a ZX Desktopon
+Új ZRCP parancs: "close-all-menus"
+Ikon/F-billentyű bármely ablak megnyitásához a neve alapján
+Az F-billentyűkhöz további adatok rendelhetők a műveletekhez (például ablaknév az openwindow műveletnél, vagy pillanatképnév a linktosnapshot műveletnél)
+További gépcsere-kombinációk futás közben
+Haladó menüpontok: mostantól a haladó menüpontok alapértelmezetten rejtettek, a Beállítások->Haladó menüpontok alatt kapcsolhatod be őket
+Új parancssori beállítás: --machinelist, a gépek neveinek szóközzel elválasztott listájához
+.POK fájlok okos betöltése
+XEyes "játékszer", amely követi az egeret
+Sierpinsky mérőtípus az Érzékelők megtekintése ablakban
+
+* Fejlesztések:
+
+Javított CPU hibakereső:
+- felcserélt "m" és "o" funkcióbillentyűk: mostantól az "x" módot vált, az "m" pedig a memóriamutatót állítja (hogy egységes legyen a többi hasonló ablakkal)
+- (hl), (de), (bc) hozzáadva
+- (nn) hozzáadva olyan utasítás kiválasztásakor, mint: ld reg,(nn) és ld (nn),reg
+- (ix+d), (iy+d) hozzáadva olyan utasítás kiválasztásakor, mint: ld reg,(IX+d) stb.
+- 4-es folyamatos sebesség (minden alkalommal 10 utasítás futtatása, szünet nélkül)
+- a memóriamutató módosításakor az utolsó értéket mutatja
+- DJNZ esetén a feltétel teljesülésénél a B regisztert is mutatja
+- új függvények: OPMRV(e), OPMWV(e), OPMRA(e), OPMWA(e): 1-et adnak vissza, ha az utolsó utasítás e-re állította ezen változók bármelyikét.
+- új EPC pszeudoregiszter az elemzőben, amely a PC regiszter memóriabankjának és eltolásának felel meg
+- a billentyűk nyomva tarthatók a gyors kurzormozgatáshoz stb.
+- a figyelők (watches) mostantól hexadecimális formában mutatják a számokat
+
+Javított Hibakereső konzol: jobb frissítés, dinamikus szélesség
+Javított hibakereső üzenetek: szűrhetők üzenetosztály szerint (DSK, PD765 stb.)
+Javított I/O portok hibakeresése ablak: a tartalom magassága automatikusan igazodik, ha nem fér el az ablakban
+
+Javított beállítások:
+- jobb elemzés: figyelmeztetés, ha a ZEsarUX-ot régebbi verzióra cserélték
+- ha a beállításfájlban ismeretlen paraméter van, figyelmezteti a felhasználót, de ettől még elindul
+- a Beállításfájl megjelenítése átkerült a Futási adatok menüből a Beállítások-> Beállításfájl menübe
+
+Javított DSK fájlnézegető:
+- jobb fájlrendszer-felismerés
+- rejtett és csak olvasható fájlok megjelenítése
+- a lemez specifikációs formátumának megjelenítése
+- a Vizuális floppyban látszik, hol helyezkednek el a fájlok
+
+Javított Sprite-ok megtekintése:
+- a sprite már nem tiltódik le a memóriamutató módosításakor
+- legfeljebb 1024x1024-es sprite-ok is megtekinthetők
+- PCW általános formátumú képernyő megjelenítése
+
+Javított ZX Desktop:
+- a felső gombokhoz rendelt dinamikus ikonok (Kuka, Saját gép, ...) mostantól dinamikus állapotot mutatnak (kuka üres/tele, aktuális gép képe stb.)
+- jelzőikonok a ZX Desktopon megnyitott alkalmazásokhoz
+- új beállítás a Kuka ürítésére kilépéskor
+- javítva az ikonok nagyítási szintje olyan gépek kiválasztásakor, amelyek menü GUI nagyítás = 2 értéket használnak (Next, CPC, QL stb.)
+- a ZX Desktop mérete mostantól a GUI nagyítással szorzódik (2-es nagyítás olyan gépeken, mint a Next, CPC, QL stb.)
+- a CF2 floppy ikon (+3, CPC, PCW) mostantól animált, amikor a motor jár
+
+Javított ZX Vision:
+- Windows-stílusú tálca, "Folyamatváltó" néven
+- folyamatazonosító (PID) minden ablakhoz
+- a szövegbeviteli mezők mostantól kezelik az ismétlődő billentyűket
+- egyes szövegbeviteli mezők mostantól megjegyzik a legutóbbi elemeket, és az előzmények a beállításfájlba mentődnek
+- új funkció az összes ablak teljes méretre állításához
+- csökkenthető a karaktermagasság
+- javított ablaklista, amely mutatja az egyes ablakokban töltött időt és az egyes ablakok/folyamatok PID-jét
+- javított háttérablak-megjelenítés
+- az igen/nem megerősítő párbeszédablakok spanyolul és katalánul si/no-ként jelennek meg
+- további menüfordítások spanyolra és katalánra
+
+Továbbfejlesztett DSK kibontó: jobb fájlrendszer-felismerés
+Továbbfejlesztett ZSF pillanatképek: a ROM tartalma is menthető, ami egyéni ROM-ok használatakor hasznos
+Továbbfejlesztett fájlválasztó: meg tudja mutatni a legutóbbi mappákat (nyomd meg a szóközt a legutóbbi fájloknál)
+Továbbfejlesztett mutatóváltás néhány ablakban: kifejezést is megadhatsz a memóriamutató módosításakor a "CPU hibakereső", "Sprite-ok megtekintése", "Hexdump", "Visszafordítás" és "Poke" ablakokban
+Továbbfejlesztett váltás nagy kijelzős gépekre (Next, QL, CPC...): a nagyítás automatikusan 1-re áll
+Továbbfejlesztett joystick-típusválasztás
+Továbbfejlesztett Raspberry Pi emuláció: a teljesítményparaméterek alapértelmezésként már nem változnak, lassú Rpi-n (például Rpi1 vagy 2) a "--changeslowparameters" kapcsolót kell használnod
+
+* Javítások:
+
+Javítva a Spectrum +3 lemezemuláció: a lemezemulációs réteget az alapoktól újraírtam, és most már szinte tökéletes.
+Néhány statisztika az összesen 943 Spectrum +3 lemez teszteléséből:
+-Védelem nélküli játékok:              98,3 % működik
+-Paul Owens védelmű játékok:           85,7 % működik
+-Speedlock védelmű játékok:            54,2 % működik
+-Alkatraz védelmű játékok:                0 % működik
+-Ismeretlen módszerrel védett játékok:    0 % működik (összesen 15 lemez, amely védettnek tűnik, de a módszer ismeretlen)
+
+Javítva szinte az összes zavaró hangkattanás a Windows-verzióban (és Linuxon az SDL hangmeghajtónál)
+Javítva az üres találati lista egyes játékok lekérdezésekor a Spectrum online böngészőben
+Javítva a véletlenszerű összeomlás Linuxon induláskor egyes hálózati műveletek végrehajtásakor (frissítések keresése, legutóbbi felhasználók lekérdezése, frissítések küldése)
+Javítva a szegmentálási hibák CTRL-C-vel történő kilépéskor
+Javítva az automatikus betöltés Spectrum +3-on
+Javítva egy hiba, amely összeomlaszthatta a ZEsarUX-ot nagyobb felbontású gépre váltáskor. Úgy tűnik, Linuxot és Windowst érint, Macet nem. Ez a hiba mindig is létezett (egy "hosszú életű hiba" XD)
+Javítva a készítő megjelenítése a DSK fájlnézegetőben
+Javítva a szünet: most már egérgomb lenyomásával is vissza lehet térni belőle
+Javítva az assembler kifejezés-feldolgozása (NN) esetén, ha az NN hexadecimális szám
+Javítva a hibakeresés "step over" (átlépés) funkciója és a billentyűk küldése az emulált gépnek
+Javítva a "Gépváltás pillanatkép betöltésekor" beállítás .Z80 1-es verziójú pillanatképek betöltésekor
+Javítva, hogy Mac OS-en a valódi joystick menüje letiltódott a keret átkapcsolásakor
+Javítva a "Szöveges kaland térképe" ablak háttérbe helyezése
+
+* Egyéb változások:
+
+A DSK fájlokra (+3/CPC/PCW lemezek) történő tartós írás mostantól alapértelmezésként ki van kapcsolva
+
+* Mint mindig, van még néhány kisebb hibajavítás és fejlesztés
+
+----------------------------------------
+
+
+Verzió 10.2 - Hysteria edition. 2022. október 26.
+
+* Új funkciók:
+
+Beállítható ikonok a ZX Desktopon. Ezek az ikonok:
+-Ablakokat nyithatnak meg, például a "Sprite-ok megtekintése" ablakot
+-Műveleteket indíthatnak, például az alaphelyzetbe állítást (Reset)
+-Fájlhivatkozások lehetnek, amelyek a lemezeden lévő kazettákra vagy pillanatképekre mutatnak
+-Vannak más különleges ikonok is, például a Kuka
+Ezek az ikonok egy teljesen új világot nyitnak a ZEsarUX-ban, így a ZX Desktop teljes értékű asztali környezetté válik :)
+
+Új emulált gépek:
+-ZX Spectrum 48k+
+-Microdigital TK80
+-Microdigital TK82
+-Microdigital TK82C
+-Microdigital TK83
+-Microdigital TK85
+-Microdigital TK95 Spanish
+-Timex Computer 2048
+-Timex Computer 2068
+-Timex Sinclair 1000
+-Timex Sinclair 1500
+
+Másoló interfészek emulációja:
+-Defcon
+-Dinamid3
+-Hilow Barbanegra
+-Interface007
+-Microhobby Pokeador Automatico
+-Phoenix
+-Ramjet
+-Spec-Mate
+-Transtape
+
+Dinamic SD1 emuláció
+Sérült .Z80 pillanatképek betöltése a ZXSP emulátorból, amelyek 31 bájtos kiegészítő fejléccel rendelkeznek
+ZSF támogatás a Timex TS2068, MK14, Chrome, Prism, Chloe és Sam Coupe gépekhez
+Útvonal-beállítás, hogy hová töltődjenek le a fájlok a Spectrum és a ZX81 online böngészőből
+Lemezképek böngészése a háttértár MMC/IDE menüiből
+PZX betöltés támogatása normál kazettaként
+TAP-PZX átalakító
+TAP-TZX turbó átalakító (TZX Turbo 4000 baud, a Rodolfo Guerra ROM-okkal használható)
+TAP-SCR átalakító
+Néhány parancssorból indítható művelet, amely nem indítja el a ZEsarUX-ot:
+--convert-tap-tzx, --convert-tap-tzx-turbo-rg, --convert-tap-pzx , --convert-tap-scr, --convert-tzx-tap, --convert-pzx-tap
+
+
+* Fejlesztések:
+
+Továbbfejlesztett Z88 emuláció:
+-Módosított színpaletta, hogy jobban hasonlítson egy valódi Z88-ra
+-A billentyűparancsok megjelenítése a Z88 kijelzője alatt
+-Pillanatkép-beállítás és menüművelet a Z88 órájának a számítógéped órájához igazításához
+-Z88 kártyák behelyezése: most már nem fagyasztja le az emulátort a behelyezés alatt
+-Z88 kártyák kiválasztása: almenük a típusokhoz és méretekhez
+-Z88 lábléc: jelzi, ha a 3. foglalatban lévő kártyára írás történik, a színek követik a stílust
+-Z88 eszközikonok: külön ikon az 1., 2. és 3. foglalathoz, jelzi a 3. foglalatban lévő kártyára írást és azt, ha a fedél nyitva van
+
+Továbbfejlesztett fájlválasztó:
+-Teljes képernyős előnézet, ha az ablak elég nagy
+-A gyorsbillentyűk jobb magyarázata
+
+Továbbfejlesztett hibakeresés:
+-A memóriamutató a veremből vett értékre is állítható
+-Beállítás, amely a keret színének invertálásával mutatja, melyik pásztázósorban hajtódott végre egy Halt
+-A léptető mód bekapcsolásakor az emuláció minden menüben szünetel
+-A léptető mód megmarad, amikor kilépsz egy töréspont által megnyitott CPU hibakeresőből
+-Töréspont aktiválódásakor a léptető mód minden menüben megmarad
+-A "call", "printc", "set-register" és "write" töréspont-műveletek most már fix értékek helyett kifejezéseket is használhatnak
+-Új töréspont-műveletek: "disassemble", "printregs"
+-Figyelmeztetés a láblécen léptető módban
+-Szélesebb töréspontlista
+
+Továbbfejlesztett okos betöltés és fogd és vidd:
+-Egy .rom fájl betölthető egyéni ROM-fájlként az aktuális géphez
+-Fogd és vidd nyitott menü mellett is
+
+Továbbfejlesztett ZX Vision:
+-Az ablakok átrendezése gépváltáskor, de csak akkor, ha a ZEsarUX ablaka kisebb az előzőnél
+-Egyéni nyílkarakterek
+-Az ablakok mostantól alapértelmezésként visszaállnak a ZEsarUX indításakor
+-Jobb átméretezés és áthelyezés a tartományon kívül eső új ablakoknál
+
+Továbbfejlesztett ZX Desktop:
+-A ZX Desktop függőlegesen is kiterjeszthető
+-A jobb egérgomb mostantól másodlagos műveletekre szolgál. Már nem szimulálja az ESC billentyűt (hacsak be nem kapcsolod a "ZX Vision beállításai" menüben)
+-Keret az emulált gép körül
+-Beállítás az scr kép háttérrel való keveréséhez
+-Bármely kazetta/pillanatkép/lemez, amely Spectrum képernyőt (SCR) tartalmaz, beállítható háttérnek
+-Képkocka-kihagyás a ZX Desktop háttér rajzolásakor
+
+Továbbfejlesztett HiLow DataDrive emuláció:
+-Hilow DataDrive kép (.ddh fájl) formázása, böngészése és ellenőrzése (Chkdsk)
+-Valódi Hilow DataDrive kazetta hangjának átalakítása képfájllá (.ddh)
+-Műszaki dokumentáció az extras csomagban
+
+Továbbfejlesztett ZX Spectrum Next emuláció: sprite-megjelenítési prioritásbit
+Továbbfejlesztett ZRCP: a parancssori prompt módosítható
+Továbbfejlesztett generált TZX és PZX fájlok: a fejléc tartalmazza a dátumot és a ZEsarUX verzióját
+Továbbfejlesztett "Custom machine" menü: új +2E MMC gép
+Továbbfejlesztett kazettaböngésző: az automatikus indítási sor megjelenítése a BASIC blokkoknál
+
+
+* Javítások:
+
+Javítva a 2 GB-nál nagyobb fájlok kezelése 32 bites CPU-n (ez a Windows-verzióra 64 bites CPU-n is vonatkozik)
+Javítva a 2 GB-nál nagyobb mmc képek használata
+Javítva a ZX Desktop újrarajzolása a ZEsarUX főablakának átméretezésekor
+Javítva a lefagyás a "View Variables" használatakor, ha a memória sérült
+Javítva a lefagyás a Szünethez rendelt F-billentyű kétszeri lenyomásakor (Mac OS-t nem érintette)
+Javítva egy hiba, amely összeomlaszthatta a ZEsarUX-ot a ZX Spectrum +2 Spanish gép indításakor. Ez a hiba mindig is létezett
+Javítva a behelyezett Z88 kártyák elvesztése a CPU-sebesség módosításakor
+Javítva a Z80 viselkedése EI vagy DD/FD előtagok után és megszakításoknál
+Javítva a Z80 viselkedése blokkutasítások (LDIR stb.) futtatásakor és megszakításoknál
+Javítva a .Z80 Timex TS2068 pillanatképek betöltése
+Javítva a legutóbbi fájlok (Recent Files) megjelenítése, ha a fájlnév % karaktert tartalmaz
+Javítva a HiLow DataDrive emuláció: most már működik a betöltés, mentés, formázás... minden művelet
+Javítva az összeomlás (stack smashing detected) a CPU hibakereső ablak megjelenítésekor (-fstack-protector kapcsolóval fordítva)
+Javítva a szegmentálási hiba a ZEsarUX indításakor, ha az üdvözlő üzenet ki van kapcsolva, az "Ablakok újranyitása induláskor" beállítás be van kapcsolva, és nincs visszaállítandó ablak
+Javítva a számkiírás csapda Spectrumon és ZX81-en (--chardetectcompatnum beállítás)
+Javítva a szegmentálási hiba érvénytelen fájltípus kiválasztásakor valódi kazettánál
+Javítva a Spectravideo 318 billentyűzet súgó képe
+Javítva az engedélyezett gépek .ZX pillanatképek mentésekor
+Javítva a töréspont-műveletek: most már mindenhol végrehajtódnak (még a menüben is)
+Javítva a c billentyű (folyamatos mód) lenyomása a CPU hibakeresőben (az emuláció átmenetileg kilépett a szünetből)
+Javítva a TZX turbó fájlok kibontása (a képernyő-előnézetekkel együtt), átalakítása és fájlinformációi
+Javítva a .Z80 és .ZSF képernyő-előnézetek a 128k-s 7. képernyőlap használatakor
+Javítva a .DSK kibontás
+Javítva az összeomlás .ZSF pillanatképek mentésekor, ha egy DD bájt közvetlenül egy 256-nál többször ismétlődő bájt előtt áll
+Javítva a Next MMC képek letöltése. Mostantól a fordításnál engedélyezni kell az SSL-t
+
+Javítva a ZX Vision:
+-Javítva a kurzor megjelenítése a beviteli mezőkben, ha a szöveg hosszabb a látható résznél
+
+
+* Mint mindig, van még néhány kisebb hibajavítás és fejlesztés
+
+----------------------------------------
+
+
+Verzió 10.1 - Carrier Command edition. 2022. május 6.
+
+Valódi joystick támogatás Macen
+Joystick támogatás Hat vezérlőkhöz
+Új joystick esemény a ZEsarUX-ból való kilépéshez
+Művelet a joystick bal-jobb mozgatásának kiváltására, Decathlon-szerű játékokhoz
+MSX joystick emuláció
+Spectravideo joystick emuláció
+Egyszerű hangszórókimenet támogatása Raspberry PI-n GPIO lábakon keresztül, hangkártya nélkül
+Beállítás másik joystick kiválasztásához Windowson és az SDL meghajtót használó rendszereken
+Beállítás az ULA adatbusz értékének módosításához
+A microdrive címke megjelenítése a 174930 bájt méretű qlay mdv fájlok kibontásakor
+Jupiter Ace TAP és TZX támogatás a kazettaböngészőben
+TZX támogatás a 33-as azonosítóhoz (ID 33 - Hardware type)
+Kazetta automatikus visszatekerése beállítás
+A Z80 Halt jel állapotának támogatása zsf pillanatképekben
+Eszközgomb a ZX-Uno Flash eszközhöz
+Még egy easter egg ;)
+
+
+Továbbfejlesztett szöveges kalandjáték-hibakeresés:
+-Szöveges kaland térképe
+-Helyszínek kapcsolatainak listája
+-Közvetlen menüpont és F-funkció/gomb a 8-as nézethez (kalandjáték-hibakeresés)
+-Javított felismerés néhány paws kalandjátéknál (például superlopez és abracadabra)
+-Javított felismerés néhány daad kalandjátéknál (például jabato)
+
+Továbbfejlesztett CPU hibakereső:
+-Most kiemeli, mely regisztereket módosítja a kurzor pozícióján lévő utasítás
+-Új címtöréspont-kifejezés, az FPEEK, amely a gép teljes címtartományán belül tud tartalmat olvasni
+-T-state számláló az alapnézetben
+-Az utasítás-dekódolás decimális nézete az m (mód) billentyűvel
+-Töréspont-műveletek a CPU tranzakciónapló indításához és leállításához
+
+Továbbfejlesztett akadálymentesség:
+-Közvetlen beállítások a fordított színekhez és a szürke módhoz
+-Beállítás a villogás (Flash) kikapcsolásához
+
+Továbbfejlesztett ZX Vision:
+-Akár ötödére csökkentett CPU-használat a menüben gyorsítótár használatával
+-Jobb ablakfrissítés az automatikus képkocka-kihagyás kikapcsolásával mozgatás vagy átméretezés közben
+-Egy ablak beállítható mindig láthatóra
+-A tartalom mérete átméretezéskor nő, az ablakot nem kell újra létrehozni
+-A szülőfüggvény értesítése, amikor egy ablakot átméreteztek
+-Elkerülhető az ablak frissítése görgetéskor
+-Új felületstílusok: AmigaOS, Atari TOS, OS/2, RiscOS, ZEsarUX Plus (mostantól ez az alapértelmezett stílus)
+-Továbbfejlesztett RetroMac felületstílus: csíkos címsor
+-Továbbfejlesztett BeOS felületstílus: a gombok közvetlenül a cím után helyezkednek el
+-Felismeri, ha a videomeghajtó nem tudja használni az aktuális felületstílust, és átvált egy olyanra, amelyet tud
+-Ablak teljes méretre nagyítása gomb
+-Az inaktív ablakokon a háttér gomb alapértelmezésként rejtett
+-Nagyobb ablakátméretezési jelző (az ablak jobb alsó sarkában)
+-A szöveges ablakok átméretezéskor szélesítik/szűkítik a sorszélességet
+-A szöveges ablakok alapértelmezésként szélesebbek (32 helyett 40 karakter)
+-Ha egy ablakot háttérbe küldesz, és a "Háttérablakok bezárt menünél is" beállítás be van kapcsolva, a menü bezárul
+-Jobb ékezetes karakterek a különböző karakterkészleteken
+-A menüpontok spanyol és katalán fordítása
+-Gyorsbillentyű-segéd a lenyomott gyorsbillentyűk megjelenítéséhez
+-Gomb-előnézet a ZX Desktop gombjainak vagy az F-billentyűknek a testreszabásakor
+-A Spectrum képernyőfájlok jobb felismerése: bármely 6912 bájt méretű fájl
+-A ">" karakter jelzi, ha egy menünek almenüi vannak
+-Az ablakok kis méretre állított és teljes méretre nagyított állapota megmarad
+-Az ablak megjegyzi a méretét kis méretre állítás és teljes méretre nagyítás előtt
+-Új műveletek az "Ablakkezelés" menüben: átváltás, kis méret, teljes méret, alulra helyezés, mindig látható beállítása, ablakinformáció
+-Az "Ablakkezelés" ablak háttérben is futhat
+-ZX Desktop: lábléc gombok a ZX Desktop nagyításához vagy kicsinyítéséhez, nem csak be- és kikapcsolásához
+-ZX Desktop: háttérként SCR fájl is beállítható
+-ZX Desktop: beállítás a ZX Desktop kikapcsolásához teljes képernyőre váltáskor
+
+Továbbfejlesztett PC hangszóró meghajtó: van egy új "onebitspeaker" meghajtó, amely a PC hangszórót és a Raspberry PI GPIO hangszórót is kezeli
+Továbbfejlesztett PC hangszóró hangmeghajtó: jobb hangminőség és magasfrekvenciás szűrő
+Továbbfejlesztett képernyős kalandbillentyűzet: szóköz, Enter és idézőjel is küldhető
+Továbbfejlesztett képernyő-billentyűzet: egérrel is használható, megőrzi az ablak méretét és helyét
+Továbbfejlesztett billentyűzet súgó: gépváltáskor automatikusan betölti a képet
+Javított kezelés az egyes színpaletták módosításainál (vörös, zöld, kék)
+A shell szkriptek jobb hordozhatósága
+Továbbfejlesztett fbdev meghajtó: beállítás a dupla puffereléshez, hogy a menü ne villogjon (--fbdev-double-buffer)
+Továbbfejlesztett fbdev meghajtó: beállítás a felbontásváltás elkerülésére Raspberry Pi teljes képernyős módban (--fbdev-no-res-change)
+Továbbfejlesztett ZX Spectrum Next emuláció: layer2 prioritás színbit
+Továbbfejlesztett "Hangchip zongora" és "Hullám zongora": az összes oktáv megjeleníthető, és a zongora nagyítása beállítható
+
+
+Javítva a Z80 halt viselkedése és a PC helye
+Javítva a keret kikapcsolása bekapcsolt realvideo mellett ezeken a gépeken: Colecovision, Master System, MSX, SG1000, SpectraVideo
+Javítva a lábléc újrarajzolása elhalványításkor
+Javítva a 127-es karakter megjelenítése a curses, stdout és simpletext videomeghajtókon
+Javítva a töréspontok állapotának megőrzése okos betöltéskor
+Javítva a pillanatkép mentése egyes eseményeknél, amelyek bezárják a ZEsarUX-ot (F-billentyű, AY Player stb.)
+Javítva a TZX normál kazettaként való betöltése/mentése Jupiter Ace-en
+Javítva a Spectravideo cartridge kiadása
+Javítva a szegmentálási hiba az F5 lenyomásakor a szünet billentyű lenyomása után
+Javítva a képernyős kalandbillentyűzet hibája 5 karakter hosszú szavaknál, ha a záró szóköz küldése beállítás be van kapcsolva
+Javítva az összeomlás 20kb-nál nagyobb konfigurációs fájl mentésekor
+Javítva az összeomlás teljesen üres mappa böngészésekor
+Javítva a hiba, amely kiürítette a képernyős kalandbillentyűzet szövegét a szókincs hibakeresésekor
+Javítva az okos betöltés ZRCP-ből
+Javítva az összeomlás az emulátorból való kilépéskor bekapcsolt ZRCP mellett (általában Raspberry Pi-n fordult elő)
+
+Javítva a ZX Vision:
+-Javítva a lefagyás a kurzor fel/le lenyomásakor bármely egysoros, füles menüben (például "Hullámforma")
+-Javítva a hibák egyes ablakok átméretezésekor: AY Registers, CPU hibakereső stb...
+-Javítva a villogás a "Billentyűzet súgó" ablak átméretezésekor
+-Javítva az összes ablak kis méretre állítása
+-Javítva a hiba az ablakok induláskori visszaállításakor, ha előzőleg hiba keletkezett
+-Javítva a görgetősávok rajzolása, ha az ablak nem az összes ablak legfelső eleme
+-Javítva a bezárás gomb rajzolása a háttérablakokon
+-Javítva a bemeneti kazetta behelyezési állapotának megjelenítése a menüben és a ZX Desktop ikonon, ha a kazettát nem lehet megnyitni
+-Javítva a "Hexadecimális szerkesztő" ablak mozgatás vagy átméretezés közben
+-Javítva az "Érzékelők megtekintése" ablak a görgetősávokra kattintáskor
+-Javítva a "Vizuális valódi kazetta" ablak frissítése bekapcsolt maximális sebesség (Top Speed) mellett
+
+
+Néhány további kisebb hibajavítás és fejlesztés
+
+
+
+Verzió 10.0 - Clive Sinclair edition. 2021. október 4.
+
+Ebben a verzióban rengeteg változás van, de néhány különösen figyelemre méltó:
+
+- Új emulált gép: Sega Master System
+- "Időgép" funkciók: automatikus pillanatképek a RAM-ba + visszatekerés funkció, visszafelé hibakeresés, visszafelé futtatás
+- Szöveges kalandjátékok valós idejű fordítása egy ZEsarUX ablakban
+- Bármely kép megjeleníthető egy Spectrum szöveges kalandjátékból (támogatott értelmezők: Quill, Paws, Daad, Gac)
+- Vizuális valódi kazetta. Most már láthatod a kazettád hangképét, a kazetta blokkjait, és előre- vagy visszatekerheted a kazettás magnót
+- Mostantól böngészhetők a BASIC változók ZX Spectrumon, ZX81-en és ZX80-on
+- A felső gombok műveletekhez rendelhetők
+- "Érzékelők megtekintése" ablak a belső emulációs érzékelők, a teljesítmény, a statisztikák stb. grafikonjához
+- A menü nyelve választható az alapértelmezett (angol) és a spanyol között. Csak néhány szöveg van lefordítva spanyolra
+
+
+A 10.0-s verzió teljes változásnaplója:
+
+Sega Master System emuláció
+.sms fájlnézegető
+MIDI kimenet és .mid támogatás a QL és SN hangchipekhez (Master System, SG1000 stb.)
+Automatikus pillanatképek a RAM-ba + visszatekerés funkció
+Új, továbbfejlesztett valódi kazetta betöltési algoritmus
+Beállítás a TZX szünetek kikapcsolásához
+zsf-ből scr támogatás a Next, ZX-Uno és TSConf pillanatképekhez
+Jupiter Ace 51 KB RAM emuláció
+Fuzix ide kép a zesarux-extras csomagban
+Rodolfo Guerra TK90X v3 ROM-jai a zesarux-extras csomagban
+ZSF pillanatkép támogatás Jupiter Ace-hez és Z88-hoz
+--slotcard-num beállítás Z88 kártya behelyezéséhez egy megadott sorszámú foglalatba (1, 2 vagy 3)
+ZEsarUX logó az ablak láblécén
+Beállítás a ZX80/81 kazettacsapdák kikapcsolásához
+wav/rwa/smp kazettahang-böngésző a Spectrum/ZX80/ZX81 kazettablokkok hangfájlból való megtekintéséhez
+Vizuális valódi kazetta. Most már láthatod a kazettád hangképét, a kazetta blokkjait, és előre- vagy visszatekerheted a kazettás magnót
+A menü nyelve választható az alapértelmezett (angol) és a spanyol között. Csak néhány szöveg van lefordítva spanyolra
+ZRCP parancsok:
+-mmc-reload: az MMC kép újratöltése
+-snapshot-inram-get-index: visszaadja egy RAM-pillanatkép pozíciójának indexét
+-snapshot-inram-load: betölti a RAM-pillanatképet a megadott pozícióból
+
+Fájlátalakítók:
+-wav/rwa/smp-ből tap
+-wav/rwa/smp-ből p
+-wav/rwa/smp-ből o
+-rwa-ból wav
+
+
+Továbbfejlesztett CPU hibakereső ablak:
+-Visszafelé hibakeresés, visszafelé futtatás
+-CPU-előzmények menü a regiszterek korábbi állapotának megtekintéséhez (ugyanaz, ami a ZRCP-ben már megvolt)
+-Egérműveletek: kattintás (töréspont be/ki, regiszterek módosítása), görgetés fel/le az egérgörgővel
+-Jobb ablakfrissítés billentyűk lenyomásakor nem léptető módban
+-A léptető mód megmarad assemblerezéskor
+-Új billentyű a PC=PTR beállításához
+-Új billentyű a következő PC=dir típusú törésponthoz ugráshoz
+-Akár 100 töréspont is megadható (ugyanannyi, mint a ZRCP-vel)
+
+Továbbfejlesztett hibakeresés:
+-Mostantól böngészhetők a BASIC változók ZX Spectrumon, ZX81-en és ZX80-on
+-Beállítás, amely a "BASIC lista megtekintése" menüben mutatja minden BASIC sor címét és az aktuális sort
+-"Érzékelők megtekintése" ablak a belső emulációs érzékelők, a teljesítmény, a statisztikák stb. grafikonjához
+-Parancssori beállítás a forráskód betöltéséhez
+
+Továbbfejlesztett ZX Vision menüfelület:
+-Új felületstílusok: BeOS, Bloody, Grass, Ocean, Sunny, Panther, Sky
+-Műveletek a valódi kazetta újrabehelyezéséhez, visszatekeréséhez és előretekeréséhez
+-Beállítás a CPU-emuláció szüneteltetéséhez a menüben, ha a többfeladatos mód aktív
+-Színátmenetes ZX Desktop kitöltéstípus
+-Gomb a láblécen a ZX Desktop átkapcsolásához
+-"Akadálymentesség->Felület akadálymentessége" beállítások, amelyekkel gyorsan bekapcsolhatsz néhány felületi fejlesztést: nagy kontrasztú stílus, gyorsbillentyűk stb.
+-Menüpont az ablakok kicsinyítéséhez és átrendezéséhez
+-Néhány grafikus mérő az "AY Registers" és a "Mag statisztikája" ablakban
+-Beállítás az alsó és felső ZX Desktop gombok körüli keretek kikapcsolásához
+-Ékezetes karakterek támogatása
+-Testreszabható karakterkészlet
+-A felső gombok műveletekhez rendelhetők
+-A valódi kazetta ikonja mostantól animált a kazetta lejátszásakor
+-Átszervezett "GUI Settings" és "Window Settings" menü: a "GUI Settings" menü neve mostantól "ZX Vision beállításai", a "Window Settings" menü neve mostantól "Általános beállítások"
+-A gépgyártók listája mostantól név szerint rendezett (a korábbi, kor és típus szerinti vegyes sorrend helyett)
+-A fájlválasztó jelzi, ha egy fájl kibontható
+-Továbbfejlesztett képernyőfájl-előnézetek: bármely 6912 bájt méretű fájlt Spectrum képernyőnek tekint
+-Az ablakok teljes méretre nagyítása figyelembe veszi a ZX Desktop méretét, ha a "Menü megnyitása a ZX Desktopon" beállítás be van kapcsolva
+-Kezeli az ablakra kattintást bezárt menü mellett
+-A színpaletta ablak mostantól az összes színt megmutatja, amely belefér az ablakba
+-A sprite-nézet jelmagyarázata mostantól alkalmazkodik a mérethez
+
+Továbbfejlesztett Next emuláció:
+-Turbó beállítás: NextZXOS alatt alapértelmezésként korlátozott
+-A ZSF pillanatképek tartalmazzák a 123b port összes adatát (a korábbi TBBlue .zsf pillanatképek nem kompatibilisek ezzel a verzióval, bocsi!)
+-Felugró üzenet a Layer 2 módok váltásakor
+
+Továbbfejlesztett szöveges kalandjáték-funkciók:
+-Javított Daad kalandjáték-felismerés hibakereséskor
+-Most már bármely kép megjeleníthető egy Spectrum szöveges kalandjátékból (támogatott értelmezők: Quill, Paws, Daad, Gac)
+-Most már használhatsz egy szövegfelolvasó szkriptet, amely lefordítja a játék szövegét, és a lefordított szöveget egy ZEsarUX ablakban mutatja
+
+Továbbfejlesztett "Keresés" menü: most már több bájtot is kereshet, és a találati listából megnyithatja a "Hexadecimális szerkesztő" ablakot
+Továbbfejlesztett hang-.mid exportáló: a hangszer módosítható
+Továbbfejlesztett konfigurációs fájl: a megengedett legnagyobb méret 256kb-ra és 2000 paraméterre nőtt
+Továbbfejlesztett curses meghajtó ZX80/81-en: a realvideo mód mostantól használhatja a kiterjesztett utf-8 blokk-karaktereket
+
+
+Javítva a fájl-előnézetek sérült fájloknál: pzx, tap
+Javítva az ablakok átrendezése és a teljes ablakmagasság kihasználása
+Javítva a Next ULA görgetés, hogy a 0x26 és 0x27 regisztereket használja
+Javítva a Next tbblue 123b port viselkedése: 48kb RAM lapozás, árnyékkijelző, 3 bites eltolás, olvasási hozzáférés
+Javítva a cpu-step viselkedése az első végrehajtáskor
+Javítva a fel/le kurzorbillentyűk Jupiter Ace-en
+Javítva a --help és --experthelp beállítás: a súgó megjelenítésekor nem dolgozza fel a konfigurációs fájlt
+Javítva az automatikus betöltés spectrum 48k+ spanish gépen
+Javítva a ZX80/81 pillanatképek/kazetták betöltése, ha a fájlnévnek egynél több kiterjesztése van
+Javítva a "Scroll" hullámforma-típus a "Hullámforma" ablakban
+
+
+Néhány további kisebb hibajavítás és fejlesztés
+
+
+
+Verzió 9.2 - Cliff Hanger edition. 2021. április 5.
+
+SamRam Gerton Lunter interfész emuláció
+Új ZX-Uno Prism videomód
+Dandanator háttértár-gombikon
+Alternatív Jupiter ACE ROM
+Még egy, a negyedik easter egg ;)
+Csak olvasható beállítás az esxdos kezelőhöz
+Beállítás a joystick tűzgombjának újradefiniálásához
+MIDI kimeneti hangszerválasztó
+Hibakeresési művelet a PC regiszter nullázásához
+--copy-file-to-mmc parancssori beállítás, amellyel fájlok másolhatók egy mmc képre a ZEsarUX indítása előtt
+realtape-open ZRCP parancs
+
+
+Továbbfejlesztett ZX-Uno emuláció:
+-Frissített BIOS, Flash és ESXDOS (az ESXDOS most a 0.8.6 végleges verziót futtatja)
+-Új parancssori beállítás: --zxuno-initial-64k, egy kezdeti 64kb-os blokk bootm módban történő betöltéséhez, a normál boot ROM megkerülésével
+
+Továbbfejlesztett TBBlue emuláció:
+-.snx pillanatkép támogatás
+-Hibakereső ablak az egyes sprite-ok be- és kikapcsolásához
+-Relatív sprite-típus (composite/unified) a sprite-navigátorban
+-Sprite-ok hibakeresési memóriazóna
+-Optimalizált sprite-megjelenítés (a gépemen 1% CPU-t takarít meg)
+
+Továbbfejlesztett CPC emuláció:
+-Videó képsoros megjelenítés hozzáadva (más néven Real Video)
+-Joystick emuláció
+-Sztereó emuláció
+
+Továbbfejlesztett Fájlkezelő eszközök böngésző:
+-Böngészés FAT fájlrendszerű lemezképeken belül (.img, .mmc, .ide stb.)
+-Felismeri, ha mozgatáskor vagy másoláskor a forrás- és a célmappa azonos
+-Több információ néhány fájlnézegetőben (.sna, .p, .o stb.)
+-.nex fájlnézegető hozzáadva
+-Teljes mappa másolása és törlése hozzáadva
+-SCR-ből TXT fájlátalakító hozzáadva
+
+Továbbfejlesztett CPU hibakereső ablak:
+-Be tud tölteni egy forráskódot
+-Jelzi, hogy egy feltétel teljesül-e vagy sem
+-Felismeri, ha esxdos hívás fut az esxdos kezelővel, és átlépést (step over) végez
+
+Továbbfejlesztett ZX Vision menüfelület:
+-Turbo Vision felületstílus hozzáadva
+-ZEsarUX Matte felületstílus hozzáadva
+-Felületstílus-választó menü hozzáadva
+-Teszt felületstílus hozzáadva
+-Shift+Jobbra kurzor billentyű hozzáadva a másik ablakra váltáshoz
+-Művelet hozzáadva az összes ablak ikonra állításához
+-Beállítás hozzáadva, amellyel az egérkattintás nem nyitja meg a menüt
+-Több utf-8 karakter támogatása
+-Beállítás hozzáadva a fájlok hexa+ascii megjelenítéséhez a fájlnézegetőben
+
+Továbbfejlesztett all-to-pixel szövegmegjelenítés:
+-1:1 méretarány engedélyezése
+-Az ablakméret és az eltolások karakterben is megadhatók
+
+Továbbfejlesztett Spectrum online böngésző:
+-mostantól a ZXinfo API V3-at használja
+-fájlok letöltésekor SSL SNI-t használ
+
+Továbbfejlesztett képkocka-kihagyási algoritmus
+Továbbfejlesztett Mag statisztikája: információ a kirajzolt és eldobott képkockákról
+Továbbfejlesztett Hexadecimális szerkesztő: mostantól háttérbe tehető
+Továbbfejlesztett I/O portok hibakeresése ablak: mostantól háttérbe tehető, és folyamatosan frissül
+Továbbfejlesztett fájlsorolás (File spooling): a késleltetés mostantól bármilyen érték lehet 20 és 2000 ms között (+20-as lépésekben)
+Továbbfejlesztett fájlböngésző: fájlméret információ hozzáadva
+Továbbfejlesztett cocoa (Mac) driver: megkülönbözteti a bal és jobb Ctrl billentyűt, valamint a bal és jobb Alt billentyűt
+Továbbfejlesztett összeomlási (panic) képernyő: visszaszámláló hozzáadva, kiterjesztve a ZX Desktopra
+
+
+Javított ZX-Uno hibák:
+-Javítva az mmc és a flash tárolóréteg hibái, amelyek megakadályozták a bios, az esxdos rom vagy a teljes flash frissítését a BIOS-ból
+-Javítva a chloe mmu leképezés: a bootm-nek van elsőbbsége. Ha bootm=1, a chloe nem képezhető le. Ha bootm=0, lehet chloe vagy +2a
+
+Javított TBBlue hibák:
+-Javítva a relatív sprite-ok: ha a horgony sprite nem látható, negatív koordináták, unified/composite felismerése, tükrözés, forgatás
+-Javítva a 4bpp sprite-ok: mintaszámítás, átlátszóság, horgony
+-Javítva a vágás (a scrollnutter demót érintette a jobb oldali lekerekített sarkokban)
+-Javítva a divmmc memóriába írás aktív layer2 esetén
+
+Javított CPC hibák:
+-Javítva a vsync és hsync megszakítások
+-Javítva a keret színe
+-Javítva az AY chip regiszterválasztás
+-Javítva a CRTC megszakítások. Egy letiltott Z80 megszakítások melletti CRTC megszakítás után a Z80 megszakítások engedélyezésekor nem váltódtak ki
+-Javítva a Gate-Array "Select screen mode and rom configuration" regiszterének 4. bitjének beállítása és a megszakításkérés
+-Javítva a RETURN billentyű
+
+Javítva az IDE parancsok, amelyek szinte minden IDE firmware-t érintettek: fatware, mdos stb.:
+-Javítva az ECH Identify Drive IDE parancs
+-Javítva a 91H Initialize Drive Parameters IDE parancs
+
+Javítva a menü idegesítő villódzása XWindows videó driver használatakor
+Javítva a Mac OS retina kijelzős ablak
+Javítva a Mac OS teljes képernyő
+Javítva a General Sound rom betöltése
+Javítva a szegmentálási hibák a fájlválasztó +3 DSK képernyő-előnézeteinél Speedlock védett vagy hibás lemezek esetén
+Javítva a szegmentálási hibák a fájlválasztó TRD képernyő-előnézeteinél védett vagy hibás lemezek esetén
+Javítva a nagy pillanatképek fogadása ZRCP/ZENG-en
+Javítva a képpont színe az all-to-pixel szövegmegjelenítésnél (színinverzió)
+Javítva a DivIDE/DivMMC mapram működése
+Javítva néhány felületstílus színei
+
+
+Néhány egyéb kisebb hibajavítás és fejlesztés
+
+
+
+Verzió 9.1 - Toi Acid Game edition. 2020. november 26.
+
+PC Speaker hangdriver hozzáadva (csak Linuxon)
+General Sound emuláció hozzáadva
+Fordítási beállítás hozzáadva a hálózati funkciók letiltásához
+Dátum és idő mező a ZSF pillanatképekben
+Konfigurációs és parancssori beállítás a billentyűkiosztás típusának mentéséhez
+Néhány fájlátalakító hozzáadva: SNA, SP, Z80, P, ZSF fájlokból SCR-be
+
+
+Továbbfejlesztett QL emuláció:
+-Hangemuláció hozzáadva
+-A fájlnév-kiterjesztés kitalálása
+-Minden regiszter megjelenítése a CPU hibakereső ablakban
+-ZSF pillanatképek támogatása
+
+Továbbfejlesztett TBBlue emuláció:
+-A tbblue joystick típus (5-ös regiszter) emulációja hozzáadva
+-Sprite nagyítás emuláció hozzáadva
+-Relatív sprite-ok emulációja hozzáadva
+-Sprite vágás emuláció hozzáadva
+
+Továbbfejlesztett ZX Desktop:
+-Közvetlen gombok hozzáadva a menüpontok eléréséhez
+-Eszközgombok/ikonok hozzáadva az eszközök működésének és beállításának megjelenítéséhez
+-F-billentyű hozzáadva az összes nyitott menü bezárásához
+-Menüpontok átrendezve
+-Az ablakok nem záródnak be a ZX Desktop méretének módosításakor
+-Új ZX Desktop kitöltési típusok: RainbowAlive, Chess, Grid, Random
+-Továbbfejlesztett számbeviteli ablakok: gombok az értékek növeléséhez/csökkentéséhez
+-A háttérablakok mostantól zárt menü mellett is láthatók (beállítás és F-billentyű is hozzáadva)
+
+Továbbfejlesztett ZRCP:
+-MMU információ a cpu-history és get-registers parancsokban
+-Új ZRCP parancs, qdos-get-open-files: a QL QDOS nyitott fájljainak lekérdezése
+
+Továbbfejlesztett hibakeresés:
+-Hibakereső konzol menüablakként
+-MMU információ a CPU regiszterek megtekintésekor a terminálkonzolon
+
+Továbbfejlesztett Hullámforma ablak: mostantól a bal és jobb csatornát is meg tudja jeleníteni
+Továbbfejlesztett 1 bites újramintavételező hangszűrő
+Továbbfejlesztett .pok fájlok betöltése: a pokes-ok maximális száma 100-ról 49152-re nőtt
+Továbbfejlesztett fájlböngésző: képernyő-előnézetek hozzáadva (.scr, .tap, .tzx, .pzx, .trd, .dsk, .sna, .sp, .z80, .p, .zsf)
+Továbbfejlesztett ZENG: beállítás az újrakapcsolódáshoz sikertelen küldési újrapróbálkozás után
+
+
+Javított QL hibák:
+-Javítva a QL Superbasic programok betöltése, ha a sorhossz általában 128 bájtnál hosszabb
+-Javítva a futtatható fájlok betöltése, QDOS fejléc nélküli fájlok is futtathatók exec/exec_w paranccsal
+-Javítva az FS.SAVE, FS.HEADS, FS.HEADR, IO.FSTRG, IO.EDLIN, IO.FCLOSE, IO.DELET rendszerhívások
+-Javítva az IO.SSTRG hívásakor esetleg fellépő lefagyás
+-Javítva a QL rendszerhívások használata, ha az előző Trap után az A6 mutató eltolása nem 4 volt
+-Javítva az RTC emuláció
+-Javítva a képkocka-megszakítás
+-Javítva a kurzor villogása
+-Javítva a listázás (dir) hívás
+-Javítva a billentyűzet olvasása nyitott menü mellett
+
+Javítva a billentyűk olvasása SDL és X11 driverekkel alapértelmezett billentyűkiosztás és QL, MSX és Spectravideo gépek esetén
+Javítva az összeomlás gépváltáskor nyitott ZX Desktop ablakok mellett
+Javítva az összeomlás a hang- és videódriverek inicializálásakor
+Javítva az összeomlás tap kibontásakor érvénytelen blokk esetén
+Javítva a gép visszaállítása msx, coleco, sg1000 és svi gépre
+Javítva az utolsó mag-képkocka idejének megjelenítése a Mag statisztikája ablakban
+Javítva a húsvéti tojás és a cirill betűk
+Javítva a ZX Desktop kirajzolása induláskor
+Javítva a ZX Vision ablakok elrendezése gépváltáskor vagy a keret kikapcsolásakor
+Javítva a megnyitási hiba tap kibontásakor, ha a Spectrum nevekben '/' van
+
+
+Néhány egyéb kisebb hibajavítás és fejlesztés
+
+
+
+Verzió 9.0 - Turbo Esprit edition. 2020. augusztus 17.
+
+Új emulált gépek:
+-MSX1
+-Spectravideo 318/328
+-Colecovision
+-Sega SG-1000
+
+Új lefordított változat: FreeBSD
+Fordítás támogatása Haiku rendszeren
+Az AY chip 14-es és 15-ös MIDI regisztereinek emulációja, és továbbításuk külső MIDI eszközre
+Böngésző a gyorsmentési pillanatképekhez
+Képernyő mentése bmp-be funkció hozzáadva
+Menü hozzáadva a ZEsarUX extrák letöltéséhez
+Windows ikon hozzáadva
+F billentyű hozzáadva a maximális CPU-sebesség be- és kikapcsolásához
+F billentyű hozzáadva a kazetta szüneteltetéséhez/folytatásához
+Beállítás hozzáadva a kimeneti kazetta forgatásához, ha már létező kazettát választasz
+Beállítás hozzáadva a hangkimenet 1 bitre történő újramintavételezéséhez
+A tegnapi ZEsarUX felhasználók megjelenítése
+
+
+Továbbfejlesztett emuláció: minden képsoron kicsit kevesebb CPU-t használ
+Továbbfejlesztett fordítószkript: más C fordító is megadható
+Továbbfejlesztett lefordított változatok: mostantól minden kiadás optimalizálással készül, sokkal kevesebb CPU-t használnak, mint korábban
+
+Továbbfejlesztett menü:
+-Egyes ablakok a háttérben is futhatnak, mind egyszerre. Ezzel a menükörnyezet sokkal hatékonyabb lett!
+-Az aktív ablakok mentésre kerülnek, és induláskor visszaállnak
+-Ha nyitott menü mellett megnyomod a menü billentyűt (alapértelmezés szerint F5), visszajutsz a főmenübe. Ugyanez történik, ha a kiterjesztett asztalon a Z logóra kattintasz
+-Egyes ablakok gyorsbillentyűi egérkattintással is használhatók (például: CPU hibakereső ablak, Fájlkezelő eszközök, Sprite-ok megtekintése, Hexadecimális szerkesztő, Visszafordítás)
+-Javítva néhány felületi betűtípus 8 képpontnál keskenyebb méretekben
+-Felületstílusok hozzáadva: MSX, Solarized Dark és Light
+-Beállítás hozzáadva a gép név szerinti kiválasztásához a gyártó szerinti helyett
+-Beállítás hozzáadva a CPU-hőmérséklet vagy az FPS láblécen való megjelenítésének kikapcsolásához
+-Billentyűzet súgó ablak minden géphez
+-A lábléc FPS kijelzése piros színnel figyelmeztet alacsony FPS esetén
+
+Továbbfejlesztett Vizuális memória:
+-MMC olvasás/írás nézetek hozzáadva
+-"Töredezettségmentesítő stílus" (Defrag style) beállítás hozzáadva
+
+Továbbfejlesztett hibakeresés:
+-"reset-tstatp" töréspont-művelet hozzáadva
+-SEG0, SEG1, ... SEG7 változók hozzáadva a TBBlue MMU lapjainak megfelelően
+-IN() függvény hozzáadva port olvasásához a töréspont-értelmezőben
+-Billentyű hozzáadva egy RET végrehajtásához
+
+Továbbfejlesztett ZRCP:
+-A parancsok "" között is megadhatók. Nem minden parancs támogatja ezt
+-save-binary parancs hozzáadva bináris adatok fájlba mentéséhez
+-save-screen parancs hozzáadva a gép képernyőjének fájlba mentéséhez
+
+Továbbfejlesztett Esxdos kezelő:
+-f_mkdir függvény hozzáadva
+-Konfigurációs beállítás hozzáadva a helyi munkamappa mentéséhez
+
+Továbbfejlesztett TBBlue emuláció:
+-320x256 és 640x256 Layer2 módok hozzáadva
+-4bpp sprite-ok hozzáadva
+-Timex videó alapértelmezés szerint bekapcsolva
+-A régi hi-res és keret effektusok alapértelmezés szerint kikapcsolva. Ez akár 13%-kal csökkenti a CPU-használatot, vagy 17 FPS-sel több az én környezetemben
+-Kicsit kisebb CPU-használat (2%-kal kevesebb az én környezetemben) a képsorok kirajzolásakor
+-altrom funkció hozzáadva: mostantól a 48k és 128k mód újra működik
+-A 0x8E (142) regiszter emulálása => Spectrum 128K memórialeképezés
+-Letölthető egy 512 MB-os hivatalos TBBlue SD kártya (letölthető méretek: 32MB, 128MB, 512MB, 2 GB)
+-Fordított perjeles elérési utak engedélyezése az esxdos kezelőben
+
+Továbbfejlesztett Chloe emuláció:
+-Támogatja a CPU-sebesség beállítását a ZX-Uno SCANDBLCTRL regiszterén keresztül
+-Alapértelmezett divmmc firmware-ként az unodos3.rom-ot tölti be
+-chloehd.mmc hozzáadva az extracsomaghoz
+
+
+Javítva a rom betöltése: nincs több CPU-összeomlás, ha a rom nem található
+Javítva az SCF/CCF nem dokumentált flagjeinek emulációja. Fordításkor alapértelmezés szerint nincs bekapcsolva, mert szinte senki sem használja
+Javítva a "CPU-használat" (Show CPU usage) beállítás mentése a láblécen
+Javítva a tab és backspace billentyűk használata a curses driverben
+Javítva a szegmentálási hibák egyes memóriaterületek használatakor és gépváltáskor
+Javítva a szegmentálási hibák, ha a töréspontok a konfigurációs fájlból kerülnek beállításra és a gép QL
+Javítva a szegmentálási hibák gépváltáskor és ablakok átméretezésekor
+Javítva a szegmentálási hibák az Esxdos kezelőben, ha a fájlkezelő egy mappa volt
+Javítva a zsf pillanatkép betöltése és az ay regiszterek
+Javítva a hálózati hiba fájl letöltésekor, ha más url-re történik átirányítás
+Javítva a Vizuális memória ablak mérete, ha a karakterméret < 8
+Javítva az akadálymentességi hiba átlátszó ablakok felolvasásakor
+
+Javított ZRCP hibák:
+-Javítva a socket bontásakor esetleg fellépő összeomlás
+-A cpu-history ZRCP parancs használata már nem vált ki további MRA feltételeket
+
+Javított tbblue hibák:
+-Javítva, hogy a keret csempéinek első 8 sora nem jelent meg
+-Javítva a szöveges mód (1 bites csempe)
+-Javítva a palettaszínek olvasása. Ez javítja a multiface nmi-ből való visszatérést
+-Javítva a vágási értékek olvasása
+-Javítva a képernyővédő
+-Javítva a tbblue memória-prioritások
+-Javítva a tbblue diviface - mmu prioritás
+-Javítva a layer2 2-es mód görgetése
+
+
+Néhány egyéb kisebb hibajavítás és fejlesztés
+
+
+
+Verzió 8.1.1 - The Great Escape edition. 2020. március 2.
+
+Javítva az emulátor indítása egyes Mac OS verziókon
+
+
+Verzió 8.1 - The Great Escape edition. 2020. február 25.
+
+
+ZEsarUX hálózati játékprotokoll (ZENG) hozzáadva, amellyel bármilyen emulált játékkal játszhatsz két ZEsarUX példány segítségével,
+amelyek a világ bármely pontján vagy helyi hálózaton lehetnek. A játékokat nem kell módosítani, bármilyen létező játékot használhatsz
+
+Spectrum és ZX81 online játékböngésző hozzáadva. Szinte bármelyik játékot megkeresheted és elindíthatod ezekre a gépekre!
+Valódi joystick támogatás Windowson
+Pentagon 16C színmód emuláció hozzáadva
+1024 KB RAM emuláció Spectrumhoz és Pentagonhoz
+ZIP fájlok támogatása: többé nincs szükség külső unzip programra
+SCL fájlok támogatása: a fájlválasztó menüben szóköz megnyomásával átalakíthatók
+SNA mentés támogatása
+PZX kazettafájl támogatása
+SCR-ből TAP fájlátalakító hozzáadva
+
+Teljes futásidő statisztika hozzáadva
+Frissítések keresése hozzáadva
+Névtelen használati statisztika küldése hozzáadva
+--disablemenuandexit beállítás hozzáadva: bezárja az emulátort, amikor a menü megnyílna.
+ Ugyanúgy működik, mint a korábbi --disablemenu. Mostantól a --disablemenu csak letiltja a menüt, de nem zárja be az emulátort
+Beállítás hozzáadva, amellyel az ocr funkciók nem keresnek alternatív karakterkészletet a 23606/7 rendszerváltozóból
+DataDrive HiLow emuláció hozzáadva (béta)
+Borland felületstílus hozzáadva
+Beállítás hozzáadva a konfigurációs fájl alapértékekre állításához
+Beállítás hozzáadva a CPU típusának kiválasztásához
+
+Új ZRCP parancsok:
+-cpu-code-coverage: kódlefedettség kezelése
+-cpu-history: CPU-előzmények kezelése
+-extended-stack: belső verem a veremértékek típusainak hibakereséséhez
+-get-ui-io-ports: a billentyűzet és a joystick állapotának lekérdezése
+-get-snapshot: ZSF pillanatkép lekérése ZRCP-ből
+-print-footer: üzenet kiírása a láblécre
+-put-snapshot: ZSF pillanatkép betöltése ZRCP-ből
+-send-keys-event: billentyű lenyomásának/felengedésének szimulálása
+-set-ui-io-ports: a billentyűzet és a joystick állapotának módosítása
+-write-port: érték írása egy portra
+
+Továbbfejlesztett TBBlue emuláció:
+-Új varázsló a hivatalos TBBlue SD képek automatikus letöltéséhez és beállításához
+-optimalizált ula, lores kirajzoló rutinok: 2%-kal kevesebb CPU
+-x,y görgetés hozzáadva az ula rétegen
+-1 bites csempemód hozzáadva
+-63H tbblue regiszter hozzáadva: copper 16 bites írás
+-69H tbblue regiszter hozzáadva: display control 1 regiszter
+-0x35-0x39, 0x75-0x79 tbblue regiszterek hozzáadva
+-NOOP, HALT copper utasítások hozzáadva
+-a mellékelt tbblue.mmc MMC kép mérete 64 MB-ra nőtt
+-frissítve a legújabb tbblue SD disztribúcióra
+-a Real Video alapértelmezés szerint bekapcsolva
+-zsf pillanatkép támogatás hozzáadva
+-támogatja a Core ID ZX Dos-ra állítását
+-támogatja a Core verzió módosítását
+
+Továbbfejlesztett hibakeresés:
+-beállítás hozzáadva .zsf pillanatkép mentéséhez CPU-összeomlás esetén
+-CPU hibakereső ablak: mostantól a magassága átméretezhető, több hibakereső sort mutat, a jelmagyarázat billentyűi a szélességgel bővülnek, a regiszterek a jobb szélen helyezkednek el
+-CPU tranzakciónapló: gyorsabb a tranzakciónapló fájl megnyitásakor
+-'n' billentyű hozzáadva a "futtatáshoz" a CPU hibakeresőben. Ugyanaz, mint az összes menü bezárása és visszatérés az emulációhoz
+-CPU hibakereső ablak: a megszakítási rutin mutatójának megjelenítése im2 módban
+
+Továbbfejlesztett Hexadecimális szerkesztő:
+-mostantól másik memóriaterületre is tud másolni
+-memória szerkesztésekor mutatja a memóriamutatót
+
+Továbbfejlesztett menü:
+-több cirill betű támogatása
+-mostantól a PgUp, PgDn billentyűkkel lehet a menüoldalak között ugrani
+-beállítás hozzáadva a Fájlkezelő eszközök menü letiltásához
+
+-Kettévált forráskódtár: az extras mappa átkerült egy másik tárolóba. Lásd:
+https://github.com/chernandezba/zesarux-extras
+
+
+Továbbfejlesztett assembler: defs utasítás hozzáadva
+Továbbfejlesztett AY Sheet: mostantól kiválaszthatod, melyik AY chipet mutassa
+Továbbfejlesztett Hullámforma: új görgetési típus
+Továbbfejlesztett fájlválasztó: mappa bekérésekor csak a mappákat mutatja, a fájlokat nem
+Továbbfejlesztett curses driver: a @ jel ESC-et szimulál a menüben
+Továbbfejlesztett pillanatkép-betöltés: a "--sna-no-change-machine" beállításból "--snap-no-change-machine" lett, és a .sna és .z80 fájlokra is vonatkozik
+Továbbfejlesztett curses driver: mostantól utf "kockás" karaktereket is használhat, és 64x48-as felbontású lehet
+Továbbfejlesztett pontos Z80 időzítés: az IM 0 mód 1 t-állapottal rövidebb, mint az IM 1 mód
+Továbbfejlesztett valódi kazettás betöltés: a gyorsítás alapértelmezés szerint ki van kapcsolva, beállítás hozzáadva a konfiguráció mentéséhez
+Továbbfejlesztett CPU-sebesség váltás: mostantól sokkal gyorsabb
+
+Továbbfejlesztett akadálymentesség:
+-a letiltott menüpontok (a pirosak) mostantól "nem elérhető" ("unavailable") néven szólalnak meg "letiltott" ("disabled") helyett
+-a kijelölt menüpont mostantól "Kijelölt elem" ("Selected item") néven szólal meg (korábban "Aktív elem" ("Active item") volt)
+-bemondja, ha egy kijelölt menüpont nem elérhető
+-ha egy ablakmenüben megnyomod az F4 billentyűt, újra felolvassa az ablakot
+-a Mac OS beszédszűrő már nem hibázik, ha az üzenetben "-" van
+-ha az stdout driveren hiba keletkezik, az üzenet a szövegfelolvasásra kerül
+
+
+Javítva a Pentagon keret: mostantól az ukflag demó tökéletes
+Javítva a Spectrum 128k gépek kerete: mostantól az ula128 és scroll2017 demók tökéletesek
+Javítva a szegmentálási hiba, ha a konfigurációs fájlban peek/opcode típusú töréspontok vannak
+Javítva a szegmentálási hiba jogosultság nélküli mappa megnyitásakor
+Javítva a felhasználói fájlok megnyitásakor fellépő hiba MacOS Catalinán
+Javítva a zxuno hiba, amely az 5/7-es videó ram-ot váltotta, amikor a lapozást a DI7FFD bit letiltotta
+Javítva az átlagos CPU-statisztika, ha a lábléc nincs bekapcsolva
+Javítva a kempston egér emulációja Next gépen: a görgő bitjei mindig 0-t adnak vissza
+Javítva a hiba PAWS szavak kinyerésekor, ha a szó névmás
+Javítva az ED76 nem dokumentált utasítás: IM0 volt nálam, de IM1
+Javítva a RETI működése
+Javítva a valódi joystick támogatás: a gombok és események táblázata már nem áll vissza automatikusan alapértékre
+Javítva a +3 .z80 pillanatképek betöltése és mentése
+Javítva a menüablakok elhelyezése ZX Desktop használatakor TSConf, TBBlue, CPC és QL gépeken
+Javítva a hiba .sna fájlok betöltésekor, ha az 1-es rom be van lapozva
+Javítva a kazettabetöltő trap visszatérési flagjeinek hibája. Csak a Rocman játékot érintette, "any flag loading" beállítás mellett
+Javítva egy így beállított memória-töréspont: "--set-mem-breakpoint 0000H 2", amely induláskor kiváltódott
+Javítva az f_seek hívás az esxdos kezelőben
+Javítva a memóriabankok megjelenítése a CPU hibakeresőben Z88 gépen
+
+Javított menühibák:
+-javítva az általános üzenet-felugró: megvárja a billentyű felengedését (ha le volt nyomva)
+-javítva a menü megnyitása az stdout driveren a ZEsarUX első indításakor
+-javítva a menü bezárásakor fellépő hiba Z88 gépen kikapcsolt Real Video mellett
+
+Javított tbblue emuláció:
+-javítva a vágás 80x32-es módban
+-javítva a hiba a rom ram-ba lapozásakor, a 0,1,2,3 lapok esetén
+-javítva a 0x68 regiszter "bit 7 = Disable ULA output (soft reset = 0)" bitje
+-javítva a turbosound és a dac aktiválása tbblue gyors indítási módban
+-x8 turbó mód hozzáadva (28 MHz)
+-javítva a 7-es regiszter olvasása
+-javítva az RTC emuláció
+-javítva a kazetta automatikus betöltése
+
+Javított akadálymentességi hibák:
+-mostantól a menübeállítások (bármi szögletes zárójelek [] között) a menüsor végén szólalnak meg
+-mostantól a menübeállítások ([ ] és [X]) "bekapcsolva"/"kikapcsolva" formában szólalnak meg
+
+Néhány egyéb kisebb hibajavítás és fejlesztés
+
+
+
+Verzió 8.0. 2019. július 19. - World Destruction edition
+
+Továbbfejlesztett menüfelület:
+-A program ablaka vízszintesen bővíthető, és a jobb oldalán egy terület helyezhető el a zxvision menüablakok számára (ZX Desktop)
+-Rajzolómotor: mostantól támogatja az átlátszóságot
+-A menüablakok a teljes programablakon belül elhelyezhetők és átméretezhetők
+-Egyes ablakok geometriája (pozíció, méret) mentésre kerül a konfigurációban
+-A gyorsbillentyűk mostantól helyes kis- és nagybetűvel jelennek meg
+-A beviteli mezőben mostantól van billentyű a teljes bevitel törléséhez (lefelé kurzor)
+-A beviteli mezőben mostantól balra és jobbra mozgatható a kurzor, és középre is írható szöveg
+-A kempston egér bekapcsolása már nem tiltja le az egeret a menüben
+-A felület színsávjai az aktuális stílustól függenek
+-Több cirill betű támogatása a menüben
+-RetroMac felületstílus hozzáadva
+-Továbbfejlesztett memóriaterület-választó
+-Továbbfejlesztett lábléc:
+--A lábléc mostantól teljesen követi a felületstílust
+--Átrendezett CPU-használat, piros számok, ha a CPU-használat > 85%
+--Mostantól Linuxon is mutatja a CPU-hőmérsékletet (nem csak Raspbianon, mint korábban)
+
+Valós idejű lejátszás az AY chip hangjáról külső MIDI eszközre
+Menü hozzáadva az AY chip zenéjének midi (.mid) fájlba exportálásához
+AY Sheet hozzáadva: kotta a lejátszott hangjegyekkel
+AY keverő menü hozzáadva
+ZXUno UART Bridge emuláció hozzáadva
+TSConf UART Bridge emuláció hozzáadva
+
+DAAD, PAWS és Quill hibakereső hozzáadva Spectrumhoz és CPC-hez (CPC-n csak a Daad hibakereső támogatott)
+Szöveges kaland billentyűzet CPC-n is
+
+Színek hozzáadva az ncurses driverhez és a Chloe géphez
+Chloe MMU hozzáadva a ZX-Unohoz
+Derby+ és Derby++ romok hozzáadva
+
+hdf-ből ide/mmc nyers formátumba átalakító hozzáadva
+hdf támogatás hozzáadva az MMC emulációhoz
+
+Új ZRCP parancsok: ayplayer, cpu-transaction-log
+
+
+Továbbfejlesztett töréspont-értelmező:
+-teljes kifejezésértelmező: zárójelek, függvények, összeadás, szorzás stb. Teljes értékű számológépként is használható!
+-mostantól sokkal gyorsabb. Akár 7-szer gyorsabb, így 7-szer kevesebb CPU-t használ, mint a régi változat
+
+Továbbfejlesztett figyelések:
+-az új kifejezésértelmezőt használják
+-akár 10 figyelés a képernyőn
+-a figyelések mentésre kerülnek a konfigurációs fájlban
+
+Továbbfejlesztett tbblue emuláció:
+-frissítve a legújabb Next verzió fájljaira
+-.nex pillanatképfájlok tölthetők be parancssorból vagy a ZEsarUX menükből, a NextOS elindítása nélkül
+-UART Bridge emuláció hozzáadva
+-a soronkénti sprite-ok maximális száma 100-ra nőtt
+-a sprite-ok teljes száma 128-ra nőtt
+-javítva a full ink mód keretszíne
+-a tartalék (átlátszósági) szín mostantól 9 bites érték
+
+Továbbfejlesztett kalandjáték-szövegkinyerő (Adventure Text Extractor): mostantól a Daad játékokat is támogatja. Így a Daad, Paws, Quill és Gac játékokat támogatja
+Továbbfejlesztett Vizuális memória: mostantól mind a 3 különböző hozzáférés (írás, olvasás, utasítás) egyszerre látható, RGB színt képezve
+Továbbfejlesztett Hullámforma ablak: mostantól a hullám automatikusan igazodik a zxwindow méretéhez
+Továbbfejlesztett Hexadecimális szerkesztő: mostantól a nézetet a zxwindow magasságához méretezi
+Továbbfejlesztett TSConf rétegek menü: "reveal" beállítás hozzáadva, amellyel látható, mely képpontokat használja egy réteg
+Továbbfejlesztett 0.75-ös méretezés funkció: mostantól élsimítással
+Továbbfejlesztett CPU tranzakciónapló: mostantól a naplófájlok automatikusan forgathatók
+Továbbfejlesztett hibakeresés: "putv" töréspont-művelet hozzáadva értékek írásához egy Debug Memory Zone-ba
+
+
+Javítva a Pentagon megszakításkezelése: mostantól a keret és hi-res effektusok szinte tökéletesen működnek!
+Javítva a megszakítási hiba, amikor az utolsó utasítás >=32 t-állapotig tart, és a megszakítás közben érkezik
+"Jeff Braine" gyártó javítva "New Horizons"-ra. A Prism gép neve "Prism 512"-re változott
+Javítva a hiba, ha a szöveges kaland billentyűzetnek 256-nál több szava van
+Javítva a CPC függőleges görgetésének hibája
+Javítva a szegmentálási hiba a CPC gép kirajzolásakor
+Javítva a szegmentálási hiba az elsősegély-üzenetek megjelenítésekor
+Javítva a zx80/81 kijelző újrarajzolásának hibája kikapcsolt realvideo és 8-nál kisebb menükarakter-szélesség esetén
+Javítva a menüablakok kereteinek kirajzolási hibája 8-nál kisebb karakterszélesség esetén
+Javítva a zxvision bal gombjának kezelése: már nem küld entert, amikor az ablakot húzod
+Javítva a gépnevek, hogy teljesen helyesek legyenek: például a "Spectrum 48k" helyett "ZX Spectrum 48k" stb.
+Javítva a sprite-ok mentése, ha a memóriaterület nem az alapértelmezett
+Javítva a hiba, amikor Chloe gépen a divmmc memóriába íráskor a 0000-3fffh tartományban lévő alatta lévő RAM felülíródott
+Javítva az összeomlás, ha ZRCP-ből hibaüzenet érkezett, miközben a menüben nyitott buboréksúgó volt
+
+
+
+Verzió 7.2. 2019. április 10. - Neula edition
+
+
+Továbbfejlesztett menükörnyezet:
+-Új menüablak-típus: ZX Vision. A felület ablakai mozgathatók, átméretezhetők, görgethetők, ikonra állíthatók, bezárhatók, és a fókusz a háttérre is áthelyezhető
+-Az ablakok az egérgörgővel görgethetők
+-A figyelmeztető és hibaüzenet-ablakok mostantól animációt mutatnak
+-Elsősegély súgóablakok hozzáadva
+
+Hozzáadva: Z80 assembler
+Hozzáadva: beállítás a beállításfájl megadásához
+Hozzáadva: billentyű a szöveges ablakok tartalmának fájlba mentéséhez
+Hozzáadva: beállítás, amellyel a képernyős kalandbillentyűzet minden szó után egy záró szóközt is küld
+Hozzáadva: Dandanator CPC emuláció
+Hozzáadva: Amstrad CPC 4128 gép
+Hozzáadva: CPC gépek támogatása a ZSF pillanatképekben
+Hozzáadva: kazettából wav-ba konvertáló (tap, tzx, o, p -> wav)
+Hozzáadva: szöveges meghajtó (curses, stdout, simpletext) a Chloe 80x24-es módjához
+Hozzáadva: paraméter a divide/divmmc RAM méretének parancssori beállításához
+
+
+Továbbfejlesztett hibakereső:
+-Mostantól a CPU hibakereső menüből lépésenkénti módban is visszafordíthatsz (disassemble)
+-Mostantól a CPU hibakereső menüből assemblálhatsz is
+-Hozzáadva: Chloe memóriaterület
+
+Továbbfejlesztett ZRCP:
+-a smartload és snapshot-load parancsok mostantól intelligensebbek
+-verbose vagy limit módban futtatva, illetve a cpu-step paranccsal a kijelző mostantól azonnal frissülhet (ha a valódi videó beállítás be van kapcsolva)
+-új parancsok: assemble, get-cpu-frequency, get-cpu-turbo-speed, get-tstates, get-tstates-partial, load-binary, reset-tstates-partial
+
+Továbbfejlesztett sprite-nézegető:
+-legfeljebb 512x512-es sprite-okat is megtekinthetsz
+-a sprite-okat C forráskód fájlba exportálhatod
+
+Továbbfejlesztett fájlválasztó:
+-mostantól megjegyzi a legutóbb használt fájlokat
+-Windows: mostantól akár 20000 fájlt is használhatsz ugyanabban a mappában
+-hozzáadva: meghajtóválasztó (nyomd meg a shift-d-t). Windowson a meghajtó váltására szolgál, Linuxon és Macen a /media vagy /Volumes mappára vált
+
+Továbbfejlesztett visszafordító ablak:
+-mostantól a visszafordított kódot szövegfájlba exportálhatod
+-Sinclair QL hibakeresésekor mostantól a teljes utasításkódot (opcode) látod
+-mostantól megjelenítheted/elrejtheted minden utasításkód hexadecimális kiírását
+
+Továbbfejlesztett hexadecimális szerkesztő:
+-mostantól az alterületek adatait is mutatja
+
+Továbbfejlesztett hang: a csendérzékelő alapértelmezés szerint ki van kapcsolva. Ez megoldhat néhány Windowsos hangproblémát. Ha be van kapcsolva a beállítások automatikus mentése, nézd meg a Beállítások->Hang->Csendérzékelő pontot
+Továbbfejlesztett VU-mérők: a nagy hangerő pirossal jelenik meg
+Továbbfejlesztett MMC emuláció: nem szabványos mmc fájlméretek is engedélyezettek
+Továbbfejlesztett lefordított Mac verzió: az alapértelmezett verzió gyorsabb, mint korábban (O2 optimalizálást használ)
+
+
+Javítva: vizuális hibák néhány menüben Pentagon gépen valódi videóval, illetve váltottsoros (interlaced) mód bekapcsolásakor: hullámforma, vizuális memória, AY zongora, hullám zongora, sprite-nézegető
+Javítva: az "opcode" feltételű töréspont kiváltása
+Javítva: az Inves megszakítási hibájának emulálása
+Javítva: szegmentációs hiba az elektron hibakeresés közbeni megjelenítésekor
+
+
+Változások a TBBlue emulációban:
+-Hozzáadva: Tiles videómód
+-Hozzáadva: "reveal" beállítás, amellyel megnézheted, mely képpontokat használja egy réteg
+-Hozzáadva: beállítás a gépazonosító módosításához
+-Javított CPU-használat:
+--4%-kal kevesebb CPU-időt használ (az én gépemen), ha csak az ULA és/vagy a Tiles van bekapcsolva
+--1%-kal kevesebb CPU-időt használ (az én gépemen), ha minden réteg be van kapcsolva
+-Javított kijelzőemuláció: mostantól kétszer nagyobb
+-Javítva: Timex 512x192-es nagyfelbontású mód
+-Javítva: automatikus betöltés tbblue-n (normál és gyors rendszerindítási módban is)
+-Javítva: hiba a Layer 2 függőleges görgetésének kezelésében
+-Javítva: hanghiba: ha a Next regiszterein keresztül küldtél egy mintát a DAC-nak, az nem nullázta a csendérzékelés számlálóját, így a hang valószínűleg megakadt (és újra meg újra ismétlődött...)
+
+
+Néhány egyéb kisebb hibajavítás és fejlesztés
+
+
+
+Verzió 7.1. 2018. szeptember 24. - 5th Anniversary edition
+
+Igen, ez az 5. évfordulós kiadás, vagyis 5 év telt el a 0.1-es verzió óta: 2013. szeptember 24. :))
+
+Íme a 7.1-es verzió változásnaplója:
+
+Hozzáadva: ACB/ABC/BAC/egyéni AY sztereó emuláció
+Hozzáadva: joystick-művelet az emulált joystick típusának váltásához: Sinclair, Kempston stb.
+Hozzáadva: Basic-nézegető a .bas basic fájlokhoz (sima ascii vagy tokenizált Spectrum Basic adat), a .baszx80 (tokenizált ZX80 Basic), a .baszx81 (tokenizált ZX81 Basic) és a tokenizált Z88 basic fájlokhoz
+Hozzáadva: Sped formátumú fájlnézegető
+Hozzáadva: ZXUno DMA emuláció. Néhány dma demó is került a zxuno.mmc képfájlba
+Hozzáadva: TBBlue/DataGear/MB02 DMA emuláció
+Hozzáadva: TBBlue Multiface emuláció
+Hozzáadva: TBBlue hibakeresés menü: Sprite-böngésző, Videórétegek, Videó adatai
+Hozzáadva: beállítás a turbó mód tiltásához TBBlue-n, lassú gépeken hasznos
+Hozzáadva: Beeper zongora (Beeper Piano) menü
+Hozzáadva: új Z80 TBBlue utasításkódok, az elavultak törölve
+Hozzáadva: beállítás a Kempston egér érzékenységének módosításához
+Hozzáadva: menüpont automatikus beállításfájlok (.config) létrehozásához
+Hozzáadva: --random-r-register beállítás, amely minden hidegindításkor véletlen értéket ad az R regiszternek a szokásos 0 helyett. Hasznos, hogy a játékok indulásakor ne mindig ugyanaz legyen az R regiszter, ha azt véletlenszámként használják
+Hozzáadva: képernyős kalandbillentyűzet, amellyel kéznél lehetnek a szöveges kalandjátékok tipikus szavai (és persze bármilyen más játékhoz és programhoz is jó)
+Hozzáadva: eszköz, amely egy PAWS/QUILL/GAC játék szókincsét szólistaként a képernyős kalandbillentyűzetbe exportálja
+Hozzáadva: a Sped fordítóm új verziói:
+*Sped52en: angol fordítás Tim Gilberts munkája, a Sped52 alapján. Sped formátumban
+*Sped53:   a Sped52 hibája javítva (a tárgykódot mindig 49152-től mentette), a Sped52 alapján. Spanyol verzió. Sped formátumban
+*Sped53en: a Sped52 hibája javítva + angol fordítás + kisebb változtatások a spanyol verzióban Tim Gilberts munkája, a Sped52en és a Sped53 alapján. Angol és spanyol verzió. Sped formátumban
+*Sped54en: a Sped52 hibája javítva + angol fordítás Tim Gilberts munkája, a Sped52en, a Sped53 és a Sped54en alapján. Angol verzió. Sima szöveges formátumban
+A Sped53en alapértelmezésként a Spectrum Next része is :)
+
+
+Továbbfejlesztett hibakereső:
+*Mostantól minden regisztert, változót és számot használhatsz egy feltétel bármelyik oldalán (bal, jobb), így a következő töréspont-feltételek is érvényesek:
+32768>PC
+HL=DE
+3=PC
+DE>IX
+stb...
+*Optimalizált hibakereső: a gyakori feltételek, mint a PC=X, MRA=X vagy MWA=X, sokkal kevesebb CPU-t használnak, mint korábban
+*Hozzáadva: új töréspontfajta, a "memória-töréspontok", amelyek az MRA és MWA feltételekhez hasonlóan működnek, de sokkal gyorsabbak azoknál
+*Hozzáadva: AND (&), OR (|), XOR (^) bitenkénti műveletek a regiszterek/változók töréspontjaiban/figyelőiben
+*A töréspont-műveletek nem nullázzák a billentyűzetet
+*Új pszeudováltozók:
+**OUTFIRED: 1-et ad vissza, ha az utolsó Z80 utasítás OUT művelet volt
+**INFIRED: 1-et ad vissza, ha az utolsó Z80 utasítás IN művelet volt
+**INTFIRED: 1-et ad vissza, ha megszakítás keletkezett
+
+Továbbfejlesztett hexdump menü (mostani neve "Hexadecimális szerkesztő"): mostantól szerkesztheted a memóriát és memóriaterületeket másolhatsz
+Továbbfejlesztett Cursor Draw programom: mostantól kempston egeret is használhatsz. A cursordr.tap helyett a cursordr_mouse.tap fájlt töltsd be
+Továbbfejlesztett fájlkonvertáló: tzx-ből tap, tap-ből tzx
+Továbbfejlesztett TBBlue kijelző CPU-használat: 3%-kal kevesebb CPU az én gépemen, optimalizálás (O2) nélküli fordítással
+
+Továbbfejlesztett menü:
+* menüablakok: mostantól 22-nél több soruk is lehet, görgetéssel
+* mostantól bármilyen ascii karaktert beírhatsz a menüben
+* hozzáadva: néhány unicode (utf8) karakter megjelenítésének támogatása a menüben
+* mostantól bináris számokat is használhatsz a kifejezésekben (% utótaggal)
+* mostantól egérrel is görgethetsz a szöveges tartalmú ablakokban és a fájlválasztó menükben, ha a jobb oldali haladásjelzőre (*) vagy a nyilakra kattintasz
+* mostantól egérrel is mozgathatod a kurzort fel/le a szöveges tartalmú ablakokban és a fájlválasztóban az új nyílgombokra kattintva
+* új fájlkibontó a fájlválasztó menüben, a szóköz billentyűvel, a következő fájltípusokhoz: .tap, .tzx, .dsk, .trd, .mdf, .hdf, .P, .O, Z88 kártyák (.epr, .eprom, .flash)
+
+Továbbfejlesztett natív pillanatkép-formátum (ZSF):
+* Hozzáadva: a divmmc/divide állapotának mentése
+
+Javítva: kazetta automatikus betöltése TBBlue-n
+Javítva: hiba okos betöltéskor ismeretlen fájltípus kiválasztásánál: ha megszakítottad, a behelyezett kazetta módosult
+Javítva: hiba a kiterjesztés beolvasásakor kiterjesztés nélküli fájloknál
+Javítva: hiba az AY regiszterek olvasásakor: a regiszterek nem használt bitjei 0-ra állnak
+
+Javított hibák az esxdos kezelőben:
+*a readdir hívás növelte a PC regisztert, amikor nem volt több fájl
+*hozzáadva: ESXDOS_MODE_CREAT_TRUNC mód fájlok megnyitásakor
+*a BCDE nem tért vissza f_seek hívásból
+*javítva: az OPEN_CREAT|WRITE mód, amely seek után felülírás helyett hozzáfűzte az adatot
+*hozzáadva: f_stat, f_unlink, f_rename, m_drive_info, f_sync hívások
+*javítva: a súgóképernyő betöltése az esxdos nmi kezelőben
+*javítva: plus3dos fejléces esxdos fájlok betöltése
+
+Javítva: Multiface Three emuláció
+Javítva: a szövegnézegető és a hexa nézegető egyes speciális karakterek (~ | ^) megjelenítésénél
+Javítva: néhány hiba az sdl meghajtóban (alapértelmezés szerint a windowst és az rpi-t érintette)
+
+Frissítve: a legújabb Next SD képfájlra, TBBLUE V.1.0 "GOLD EDITION"
+
+Néhány egyéb kisebb hibajavítás és fejlesztés
+
+
+
+Verzió 7.0. 2018. május 25. - Xeno edition
+
+Hozzáadva: ZX-Evolution BaseConf emuláció
+Hozzáadva: BetaDisk és TR-DOS emuláció
+Hozzáadva: Spectrum +3 emuláció
+Hozzáadva: a Spectrum billentyűzet szellemkép-hibája (ghosting) funkció
+Hozzáadva: ZX Spectrum Recreated billentyűzet támogatása
+Hozzáadva: továbbfejlesztett Spectrum 16/48/+ színpaletta
+Hozzáadva: gyors spectrum mag (néhány funkció kikapcsolva) kifejezetten lassú eszközökhöz, mint a Raspberry Pi 1/Zero. A ZEsarUX mostantól ismét játszható RPi1/Zero-n!
+Hozzáadva: beállítás az IDE, MMC, ZX-Uno Flash írásvédelméhez
+Hozzáadva: beállítás a változásnapló megjelenítéséhez az emulátor verziójának frissítésekor
+Hozzáadva: műveletek a fájlkezelő eszközök menüben: Másolás, Áthelyezés, Átnevezés
+Hozzáadva: beállítás a tartós írás kikapcsolásához IDE-n és MMC-n
+Hozzáadva: beállítás vízjel elhelyezéséhez a kijelzőn
+Hozzáadva: beállítás a kijelző 0,75-szörösére kicsinyítéséhez. A RunZX rendezvényen használtuk
+Hozzáadva: beállítás a spectrum képernyő pbm fájlba (fekete-fehér) mentéséhez
+Hozzáadva: beállítás a RAM tartalmának fájlba írásához a ZEsarUX-ból való kilépéskor, ideális automatikus tesztek futtatásához
+Hozzáadva: beállítás az emulátorból való kilépéshez adott számú másodperc után (--exit-after)
+Hozzáadva: a Sam Coupe SAA1099 hangchipjének kísérleti szimulációja
+Hozzáadva: második Easter Egg ;)
+Hozzáadva: harmadik Easter Egg ;)
+
+Továbbfejlesztett hibakeresés:
+* új, kibővített CPU hibakereső menü: a TV-elektron helyzetének megjelenítése a képernyőn, új alapnézet, kurzor, töréspontok ki-be kapcsolása, futtatás a kurzorig, regiszterek módosítása és még sok más...
+* hozzáadva: cpu-step-over funkció a hibakeresés menüben (a ZRCP-ből már elérhető volt)
+* hozzáadva: funkció bájt fájlba írására a ZEsarUX hardveres hibakereső portjain
+
+Továbbfejlesztett ZRCP:
+* a run parancs alapértelmezés szerint leáll egy billentyű lenyomásakor (vagy adat küldésekor a socketre)
+* ha cpu-step-mode-ban kiváltódik egy töréspont, a töréspont feltétele megjelenik a ZRCP-ben
+
+Továbbfejlesztett joystick-támogatás:
+* hozzáadva: joystick teszt menü
+* a gombok eseményekhez és a gombok joystickhoz rendelése mentésre kerül a beállításfájlba
+
+Továbbfejlesztett képernyő-billentyűzet:
+* mostantól akár mind a 40 billentyűt (Spectrumon/ZX80-on/ZX81-en) lenyomhatod egyszerre
+* mostantól bárhonnan megnyitható (bekapcsolt multitask szükséges)
+
+Továbbfejlesztett QL emuláció:
+* a LOAD, LRUN parancs kísérleti támogatása
+* mostantól meg tudja nyitni a qlay mdv microdrive képfájlokat
+
+Továbbfejlesztett fájlnézegető a fájlkezelő eszközökben:
+* külön fájlnézegetők a következő fájltípusokhoz: .tap, .zx, .zsf, .sp, .z80, .sna, .spg, .p, .o, .mmc/.ide (fat böngésző, plus3dos böngésző), .dsk, .trd, .tzx, .cdt, .flash (zxuno flash, z88 flash, superupgrade flash), .epr, .eprom
+* alapértelmezett hexadecimális fájlnézegető az ismeretlen fájlokhoz
+* konvertáló segédprogram
+
+Továbbfejlesztett TSConf emuláció:
+* hozzáadva: TSConf DMA, sormegszakítás, sprite-rétegek
+* TSConf megjelenítés: a csempék (tiles) és a sprite-ok mostantól pásztánként rajzolódnak. Keret rajzolása. A görgetési regiszterek kezelése
+* TSConf hibakeresés: hibakeresés a DMA-hoz, videóregiszterekhez, videórétegekhez, sprite-okhoz, csempékhez
+* hozzáadva: TR-DOS emuláció támogatása
+
+Továbbfejlesztett menüfelület:
+* az emulált gép kijelzője a menü megnyitásakor már nem halványul el és nem vált fekete-fehérre. E funkció miatt különféle vizuális hibák jelentkeztek
+* új, "füles" menük a használhatóság, valamint az egérrel, joystickkal és stdout meghajtóval való kezelés javítására: hullámforma, vizuális memória, AY lejátszó
+* A karakterszélesség 7, 6 vagy 5 képpontra csökkenthető
+* hozzáadva: beállítás a menüesemény korlátozására: bekapcsolva egy másodpercen belül háromszor kell megnyomnod a menübillentyűt a menü megnyitásához
+* hozzáadva: beállítás a mappák elrejtésére a fájlválasztó menükben, hasznos, ha nem akarod, hogy a felhasználó bejárhassa a fájlrendszert
+* Okos betöltés: a kurzor mostantól megjegyzi a legutóbb betöltött fájlt
+* hozzáadva: két újabb felületstílus: Clean és CleanInverse
+
+Továbbfejlesztett sprite-nézegető:
+* mostantól speccy képernyőformátumú sprite-okat is láthatsz
+* legfeljebb 512x192-es sprite-okat is megtekinthetsz
+* tsconf sprite-okat is láthatsz
+* pszeudo nagyfelbontású zx81 képernyőket is láthatsz
+
+Továbbfejlesztett TBBlue emuláció:
+* Hozzáadva: vágóablak (clip window) regiszterek
+* Hozzáadva: Copper
+* Hozzáadva: majdnem az összes Next kiterjesztett utasításkód
+* Hozzáadva: beállítás, amellyel a TBBlue közvetlenül egy 48-as ROM-mal indul, de minden Next funkció be van kapcsolva; hasznos a pillanatképek gyors betöltéséhez
+
+Továbbfejlesztett AY lejátszó: mostantól hullámforma-hangerőmérőt is mutat
+Továbbfejlesztett VU-mérők lecsengési effektussal az AY lejátszóban, az AY regisztereknél és a hullámformánál
+Továbbfejlesztett szöveges módú meghajtók (aalib, stdout, simpletext, curses): a szöveges beállítások külön almenübe kerültek, beállítás az stdout/simpletext fps megadásához
+Továbbfejlesztett üzenetablakok. Mostantól van belső vágólap, a c billentyűvel másolhatsz rá. A fájlkezelő eszközökben a P megnyomásával fájlba illesztheted a tartalmát
+Továbbfejlesztett képkocka-kihagyás: jobb teljesítmény, mert képkocka-kihagyáskor a realvideo puffer nem frissül
+Továbbfejlesztett hang: a csendérzékelő alapértelmezés szerint be van kapcsolva, de kikapcsolható
+Továbbfejlesztett csúcssebesség: csúcssebesség beállításakor a betöltés hangja torzított
+Továbbfejlesztett automatikus betöltés: új beállítás, amellyel a reset+load"" folyamat csúcssebességgel fut
+Továbbfejlesztett valódi kazettás betöltés: mostantól mutatja, hány százaléka töltődött be a kazettának
+Továbbfejlesztett alapértelmezett beállítások: ha a beállításfájl nem létezik, az újban be van kapcsolva a beállítások automatikus mentése
+Továbbfejlesztett beállításfájl-feldolgozás: ha a beállításfájlban ismeretlen beállítás van, a ZEsarUX elindul, de figyelmeztet a hibára, és az automatikus mentés funkció nem kapcsol be
+Továbbfejlesztett megjelenítés a szöveges módú meghajtókon: a realvideo mód mostantól közvetlenül fekete-fehér szövegként is megjeleníthet. Próbáld ki a TSConf-ot így: --vo stdout --realvideo --autoredrawstdout
+Továbbfejlesztett Linux könyvtárfüggőségek: a libssl alapértelmezés szerint nincs bekapcsolva fordításkor
+
+Javított ZX-Uno emuláció:
+* a 128kb-os időzítések ugyanazok, mint egy Spectrum 128k-n. Ha az 1ffd port engedélyezve van, az FF port FF-et ad vissza
+* A Kempston port 0-t ad vissza, ha nincs kempston kiválasztva. Mostantól az új BIOS is használható
+
+Javítva: TBBlue MMU a 0000-3FFFH szegmens használatakor
+Javítva: raszter-megszakítások ZX-Unón és TBBlue-n. A vízszintes raszterpozíció hibás volt
+Javítva: ablak lábléce Pentagon futtatásakor
+Javítva: pánikképernyő: mostantól minden gépen megjelenik. Új dizájn. Remélem, sosem látod ;)
+Javítva: néhány összeomlás bekapcsolt felolvasás mellett egyes menük megnyitásakor: AY regiszterek, AY lejátszó stb...
+Javítva: idegesítő hang a Dandanator ROM menüjében
+Javítva: hiba a Z80 CPU magban: megszakítás kiváltásakor az iff2 nem nullázódott, így az LD A,R és LD A,I utasítással való kiolvasása sok demót érintett
+
+Néhány egyéb kisebb hibajavítás és fejlesztés
+
+
+
+Verzió 6.0. 2017. november 27. - Gunfright edition
+
+Hozzáadva: ZX-Evolution TS-Conf gép
+Hozzáadva: Chrome gép (olasz ZX Spectrum klón)
+Hozzáadva: MK14 gép
+Hozzáadva: rengeteg új ZEsarUX távoli parancs (ZRCP). A listájukat a ZRCP súgójában találod
+Hozzáadva: Vizuális memória, Poke, Keresés, Bináris blokk mentése menük Sinclair QL-hez is
+Hozzáadva: QL felületstílus
+Hozzáadva: beállítás a beállítások tesztelésére
+Hozzáadva: menü életek kereséséhez és beállításához játékokban
+Hozzáadva: menü a színpaletták megtekintéséhez
+Hozzáadva: műveletparancsok a töréspontokhoz, így egy töréspont kiváltásakor műveleteket futtathatsz
+Hozzáadva: akár három AY chip
+Hozzáadva: a Specdrumon kívül más DAC chipek emulációja: Covox stb.
+Hozzáadva: Antonio Villena "Kartusho" cartridge interfésze
+Hozzáadva: gyorsmentés funkció
+Hozzáadva: beállítás 256kb vagy 512kb megadásához Spectrum 128k gépeken
+Hozzáadva: beállítás, amellyel az F billentyűkhöz (F1, F2 stb.) különféle műveleteket rendelhetsz: reset, nmi, kilépés az emulátorból stb.
+Hozzáadva: TBBlue funkciók: sprite chip, Layer2, RTC óra az esxdoshoz, 2 MB RAM, új 8kb-os blokkos MMU, 9 bites paletta, lores mód, rétegprioritások, a Next Z80 utasításkódok egy része (az emulált utasításokat lásd: extras/docs/tbblue/new_opcodes.txt)
+Hozzáadva: ZX-Uno funkciók: Radasoffset és Radaspadding regiszterek a hardveres görgetéshez
+Hozzáadva: ESXDOS kezelő, így a fájlműveletek a számítógéped merevlemezén tárolt fájlokkal is elvégezhetők, nem csak virtuális mmc/ide fájlokkal. Példákat az extras/media/spectrum/esxdos_handler/ mappában találsz. A virtuális mmc/ide fájlokat használó "klasszikus" mmc/ide emuláció továbbra is használható
+Hozzáadva: "memóriaterület" (memory zone) funkció a ZRCP-ben és minden memóriát vizsgáló menüben (hibakeresés, visszafordítás, sprite-ok stb.): mostantól az összes memóriaterületet megnézheted, például: a teljes 128kb RAM, a +2A 64kb-os ROM-ja, a divmmc RAM, vagy akár egy fájlt is betölthetsz ebbe a memóriaterületbe
+Hozzáadva: fájlkezelő eszközök menü fájlok megtekintéséhez, törléséhez, csonkításához stb.
+Hozzáadva: indítási logó
+Hozzáadva: beállítás, amellyel .sna pillanatkép-fájl az aktuális géptípus megváltoztatása nélkül tölthető be
+Hozzáadva: beállítás, amellyel egy kazettafájl csonkítható, amikor kimeneti kazettafájlnak választod
+
+Áthelyezett mappák: a docs, media, snap_tests mappák egy "ZEsarUX-extras" csomagba kerültek. Ezeket a mappákat leválasztottam az emulátor fő terjesztési fájljáról, így a fő letöltés kb. 5 MB-ra csökkent. A git tároló továbbra is tartalmazza az összes fájlt (az extrák az "extras" mappába kerültek), de lehet, hogy a jövőben a tárolóból is eltávolítom őket.
+Áthelyezve: az mmc/ide fájlok helye az extras/media/disk_images mappába
+
+Továbbfejlesztett menüfelület:
+*a menü felülete nagyítva jelenik meg a következő gépeken: QL, TSConf, CPC, Prism, Sam
+*menüben mozgás egérrel
+*kikapcsolt multitask esetén a színek szürkeárnyalatosak
+*villogó szöveg engedélyezése, mint például a beviteli kurzor (bekapcsolt multitask szükséges)
+*új, magától eltűnő felugró ablaktípus (bekapcsolt multitask szükséges). Egyelőre csak a memóriaterületek váltásakor használatos a CPU hibakereső menüben, de valószínűleg több helyen is használni fogom
+
+Továbbfejlesztett hibakereső:
+*mostantól minden flaghez megadhatsz feltételt, így írva: FS,FZ,FP,FV,FH,FN,FC
+*mostantól parancssorból/beállításfájlból is megadhatsz töréspontokat, de alapértelmezés szerint nincsenek bekapcsolva. Ehhez a --enable-breakpoints beállítás kell
+*mostantól a multitask beállítás nem vész el, amikor egy töréspont kiváltódik
+*mostantól az enter megnyomásával megismételheted az utolsó parancsot a ZRCP-ben (ehhez egy debug-setting bekapcsolása szükséges)
+
+Továbbfejlesztett QL emuláció: az LBYTES parancs kísérleti támogatása, hozzáadva QL gyökérmappa-választó az mdv1, mdv2, flp1 számára
+Továbbfejlesztett sprite-nézegető: sprite mentése, TBBlue sprite-nézegető, inverz sprite, bpp beállítása (8,4,2,1), paletta beállítása
+Továbbfejlesztett stdout meghajtó. Mostantól ansi színeket is meg tud jeleníteni
+Továbbfejlesztett üzenetablakok. Mostantól az f és n billentyűvel szöveget kereshetsz
+Továbbfejlesztett lábléc. A gazdagép CPU-használata (%) a láblécen alapértelmezés szerint nincs bekapcsolva, hogy ne lehessen összekeverni az emulált CPU sebességével. Egy beállítással bekapcsolhatod. Windowson a gazdagép CPU-használata (%) nem jelenik meg.
+Továbbfejlesztett vizuális memória:
+*a memóriaolvasást és az utasításvégrehajtást is mutatja a vizuális memóriában
+*van egy számlálója (0-255), hogy lásd, egy címet hányszor olvastak/hajtottak végre
+*a menü a különböző értékeket piros árnyalatokkal rajzolja, állítható fényerővel
+
+Javítva: turbó mód és töréspontok. A turbó mód váltásakor a töréspontok kikapcsoltak
+Javítva: késleltetési problémák minden hangmeghajtón
+Javítva: AY hanghibák 15-nél nagyobb hangerőszinteknél
+Javítva: Windows pthreads verzió
+Javítva: a TBBlue i/o portjainak alaphelyzetbe állítása reset és hard reset esetén
+Javítva: Windowsos lefagyások cpu-step használatakor a ZRCP-ben
+
+Frissítve: a TBBlue rendszertöltő (boot loader)
+
+Néhány egyéb kisebb hibajavítás és fejlesztés
+
+
+
+Verzió 5.0. 2017. április 21. - Chase H.Q. edition
+
+Végre sikerült emulálnom a Sinclair QL-t. Rengeteg órát töltöttem azzal, hogy kitaláljam, hogyan működik a billentyűzet.
+Kevés a dokumentáció, és rengeteget kellett visszafordítanom a ROM-ból és tesztelnem a billentyűzetet, hogy megtudjam, hogyan működik...
+Szóval kemény munka volt, ez egy Quantum Leap (kvantumugrás), ezért ez egy új főverzió, az 5.0!
+Teljes változásnapló:
+
+Hozzáadva: Sinclair QL emuláció
+Hozzáadva: távoli parancsprotokoll. Egy telnet klienssel bővített hibakeresést végezhetsz a ZEsarUX-ban.
+  Rengeteg parancs van, köztük sok olyan is, amely csak ebben a protokollban érhető el, a grafikus felületen nem, például:
+* load-source-code
+* hexdump-internal
+* set-register
+
+Hozzáadva: Easter Egg ;)
+Hozzáadva: Specdrum emuláció
+Hozzáadva: RZX lejátszás támogatása
+Hozzáadva: Multiface One, 128 és Three emuláció
+Hozzáadva: beállítás a beállításfájl írásához
+Hozzáadva: menüpont az IDE és MMC tartalmának fájlból való újratöltéséhez. Mostantól egy használt fájlt az emulátoron kívül módosíthatsz, majd újratöltheted a tartalmát
+Hozzáadva: pillanatkép automatikus mentése rögzített időközönként
+Hozzáadva: hardveres hibakereső port ascii karakterek vagy számok közvetlen kiírásához a gazdagép konzoljára
+Hozzáadva: két nem használt port a ZXI készletből a ZEsarUX néhány belső funkciójához. Lásd: docs/zesarux_zxi_registers.txt
+Hozzáadva: menet közbeni váltás (hotswap) 128k-ról +2A-ra és +2A-ról 128k-ra
+Hozzáadva: fájlnézegető
+Hozzáadva: drag&drop támogatás Mac OS X-en, SDL2-ben
+Hozzáadva: OpenGL megjelenítés támogatása a Mac OS X Cocoa meghajtóban
+Hozzáadva: rajzolt zongora az AY zongora menühöz (minden videómeghajtón, kivéve a szövegeseket)
+Hozzáadva: Man Software felületstílus
+Hozzáadva: beállítás a DivIDE/DivMMC eprom firmware fájl módosításához
+Hozzáadva: beállítás a DivIDE/DivMMC eprom firmware írásának engedélyezéséhez
+Hozzáadva: beállítás az automatikus képkocka-kihagyás kikapcsolásához
+Hozzáadva: beállítás töréspontok parancssori megadásához
+Hozzáadva: beállítás, amely megtiltja a turbó mód váltását a ZX-Uno indításakor és a biosban
+Hozzáadva: beállítás a beeper kikapcsolásához
+Továbbfejlesztett CPU hibakereső ablak: mostantól különböző nézetek között válthatsz:
+1) 1 utasítás, CPU regiszterek, egyéb belső regiszterek
+2) 9 utasítás, egyéb belső regiszterek
+3) 15 utasítás
+4) 9 hexdump sor, egyéb belső regiszterek
+5) 15 hexdump sor
+Javítva: a szövegfelolvasó rutin nem ascii karakter küldésekor
+Javítva: hiba a ULAplus 64-es regiszterének olvasásakor
+Javítva: hibák a DivIDE/DivMMC lapozásában
+Javítva: a kijelző kezdősora ZX80/81/ACE gépen kikapcsolt kerettel és realvideo módban (a 4.0 óta hibás volt)
+Javítva: olvasás a lapozóportról 128k és +2 gépeken: ilyenkor az üresjárati busz portjáról olvasott érték kerül a lapozóportra
+Javítva: időzítések beállítása Pentagonról nem Pentagon gépre váltáskor
+Javítva: hiba a valódi joystick azonos számú gombjainak és tengelyeinek hozzárendelésekor
+Javítva: hiba Jupiter Ace gépen kikapcsolt keret esetén
+Frissítve: Z88 OZ V4.7
+Néhány egyéb kisebb hibajavítás és fejlesztés
+
+
+
+Verzió 4.2. 2016. december 5. - Rescue on Fractalus edition
+
+Hozzáadva: Spectrum 48k Spanish gép
+Hozzáadva: Pentagon 128 gép
+Hozzáadva: .ay fájllejátszó Spectrum és CPC fájlokhoz
+Hozzáadva: AY zongora menü a hangjegyek megtekintéséhez
+Hozzáadva: Turbosound emuláció
+Hozzáadva: ZX Dandanator! Mini emuláció
+Hozzáadva: Superupgrade emuláció
+Hozzáadva: kísérleti 8 bites egyszerű IDE emuláció
+Hozzáadva: Z88 Hybdrid (RAM+Eprom) kártya támogatása
+Hozzáadva: karakterkiírás-csapdák (print char traps) TBBlue, CPC464, Sam Coupe gépekhez
+Hozzáadva: három új Prism videómód: 256x128, 128x128, mindkettő 256 színnel, valamint 4 síkos, 256 színű, színütközés nélküli mód
+Hozzáadva: Sam Coupe felületstílus
+Hozzáadva: Sam Coupe curses, stdout, simpletext videómeghajtók
+Hozzáadva: beállítás a színek kikapcsolásához (fekete-fehér) Spectrumon
+Hozzáadva: beállítás a kazettás betöltés hangjának kikapcsolásához
+Hozzáadva: beállítás a DivIDE/DivMMC RAM módosításához
+Hozzáadva: kazettaböngésző
+Hozzáadva: általános Z88 kártyaböngésző
+Hozzáadva: Z88 kártyaböngésző eprom/flash kártyáról való másoláskor
+Javítva: hiba a 2ffd és 3ffd portok olvasásakor, valamint összeomlások +2A/+3 ROM-ok futtatásakor bekapcsolt valódi videóval
+Javítva: Z80 hidegindítási regiszterek
+Javítva: Z88 hiba, amely miatt okos betöltéskor minden foglalat kiadódott
+Javítva: szimbólumok (.  , : / - + < > = ' ( ) ") kezelése a menüben a következő gépeken: Z88, CPC, Sam Coupe
+Javítva: egyes memória- és hibakereső interfészek bekapcsolása, így tetszőleges sorrendben be- és kikapcsolhatod őket
+Javítva: okos betöltéskor a divmmc/divide kikapcsolt
+Javítva: egyes, folyamatosan frissülő menüpontok rajzolása: hullámforma, AY regiszterek, CPU statisztika, CPU hibakereső, vizuális memória
+Javítva: ZXpand emuláció ZX80-on
+Továbbfejlesztett menü. Mostantól minden beállítás külön "Beállítások" menüben van
+Továbbfejlesztett hibakereső:
+*Az egyes töréspontok külön kikapcsolhatók
+*A töréspontok alapértelmezés szerint akkor váltódnak ki, amikor a feltétel hamisból igazra vált. És csak akkor váltódnak ki újra, amikor a feltétel igazról hamisra, majd hamisról igazra vált
+Továbbfejlesztett pásztarajzolás. Néhány demó, amely egy pásztán belül vált képernyőlapot (RAM 5&7), tökéletesen fut
+Továbbfejlesztett szöveges tartalmú ablakok. Mostantól haladásjelző (*) is megjelenik
+Továbbfejlesztett lebegő busz (floating bus) érték
+Frissítve: Z88 OZ V4.6.2
+Frissítve: a ZXUno Flash és MMC képfájl a közösségi finanszírozásból (crowdfunding) származóra. Az MMC képfájl neve mostantól "zxuno.mmc"
+Frissítve: a TBBlue emuláció az új I/O portok használatára
+Néhány egyéb kisebb hibajavítás és fejlesztés
+
+
+
+Verzió 4.1. 2016. július 16. - ZXSpectr edition
+
+Sam Coupe emuláció hozzáadva
+TBBlue/ZX Spectrum Next emuláció hozzáadva
+AtomLite emuláció hozzáadva (Sam Coupe IDE interfész)
+DivIDE emuláció hozzáadva
+Turbó módok hozzáadva: natív támogatás ZX-Uno, Prism, Chloe és TBBlue gépeken, a többi gépen kézi beállítás
+Kazetta automatikus betöltése (Autoload Tape) hozzáadva Amstrad CPC-hez
+Chloe billentyűzet hozzáadva
+Képernyő-billentyűzet hozzáadva, az F8 vagy egy erre kijelölt joystickgomb megnyomásával érhető el
+GUI témák hozzáadva: alapértelmezett ZEsarUX, ZXSpectr stílus (a ZXSpectr 20. évfordulója alkalmából), ZX80/81, Z88, CPC
+Maximális sebesség (Top Speed) beállítás hozzáadva
+Betöltők gyorsítása (Accelerate loaders) beállítás hozzáadva
+Beállítás hozzáadva a beeper hangerejének módosításához. Ez megkönnyíti a hang betöltését egy valódi Spectrumra (az emulátor hangkimenetét átküldve)
+Beállítás hozzáadva a RAM/ROM lapozás letiltásához a Spectrum 128k modelleken
+Meghajtó kiválasztása hozzáadva a fájlválasztóban a Windows-verzióban. Például "D:"-t kell írnod a Fájlnév mezőbe (kétszer megnyomva a TAB-ot)
+Gépcsere menet közben Spectrum 128k-ra hozzáadva minden Spectrum 48k gépen
+A ULAplus nem szabványos kiterjesztett módjának portjai megváltoztak
+Javult a Raspberry Pi hangja SDL hangmeghajtókkal
+Javult az Amstrad CPC megjelenítése
+Javultak a valódi joystick eseményei. Az eseménylista most már törölhető a menüből, parancssorból, konfigurációs fájlból vagy egyéni konfigurációs beállítással
+Javultak a ZEsarUX ULAPlus videomódjai. Ezeket a módokat most már egy fizikai eszköz is támogatja :) (Prism gép)
+
+Javult a hibakereső:
+*tstatesp számláló hozzáadva: részleges T-állapotok. Ez egy számláló, amelyet a P billentyűvel nullázhatsz
+*Új pszeudováltozók:
+**MRV, MWV, MRA, MWA, PRV, PWV, PRA, PWA: a memóriából vagy I/O portból olvasott/oda írt értéket vagy címet adják vissza
+**TSTATES: egy képkocka összes t-állapota
+**TSTATESL: egy képsor t-állapotai
+**TSTATESP: részleges t-állapot számláló, a felhasználó nullázhatja
+**SCANLINE: az éppen rajzolt képsor
+**ENTERROM, EXITROM: 1-et adnak vissza a ROM címtartományba való belépéskor, illetve onnan való kilépéskor
+*Figyelések hozzáadva: bármely regisztert vagy változót valós időben láthatsz a képernyőn és a hibakereső menüben
+*Új feltétel: a / jelentése: nem egyenlő
+*Beállítás a megszakításkezelők átlépéséhez
+
+Javítva: divmmc ROM firmware keresése, ha Spectrum gép van kiválasztva (és nem zxuno)
+Javítva: Little Endian CPU felismerése a configure szkriptben Mac-en
+Javítva: hiba divmmc használatakor olyan gépeken, amelyek RAM-ot használnak a ROM helyén, mint a Chloe, ami a RAM sérülését okozta
+Javítva: a hardveres kijelzőméret-váltás Amstrad CPC-n. Most már helyesen jelennek meg azok a játékok, amelyek például ZX Spectrum felbontást használnak
+Javítva: az AY chip Amstrad CPC-n
+Javítva: hibakereső hiba ismételt DD/FD táblaértékek hibakeresésekor
+Javítva: a ULAplus 0xFF3B portjának olvasása
+Javítva: a ZX80/81 AY chip frekvenciája
+Javítva: hiba valódi kazetta szimulálása és bekapcsolt divmmc vagy divide használatakor
+Néhány egyéb kisebb hibajavítás és fejlesztés
+
+
+
+Verzió 4.0. 2016. március 5. - Rainbow islands edition
+
+Új emulált gépek:
+-Jupiter Ace
+-Chloe 140 SE
+-Chloe 280 SE
+-Timex TS 2068
+-Prism
+-Amstrad CPC 464 (kísérleti)
+
+Így a ZEsarUX az első és egyetlen emulátora a Chloe 140/280, a Prism és a ZX-Uno gépeknek.
+
+Egyéb változások:
+
+Pentagon időzítés támogatása hozzáadva
+AZERTY billentyűzet támogatása hozzáadva
+ZGX Sprite Chip emuláció hozzáadva
+ROM írásának engedélyezése beállítás hozzáadva
+Turbó beállítás hozzáadva a bemeneti spool fájlhoz (Input Spool File)
+Billentyűk átdefiniálása beállítás hozzáadva
+ULA korai/késői időzítés beállítás hozzáadva
+A .ZX pillanatkép a 6-os verzióra változott, a következőkkel:
+*Új támogatott gépek a pillanatképben: ZX-Uno, Jupiter Ace, Chloe, Timex, Amstrad CPC 464, Prism
+*ULAplus állapot és paletta
+*Timex regiszterek állapota
+Gépcsere menet közben 48k-ra hozzáadva minden Spectrum gépen
+Javítva: Timex 512x192 mód
+Javítva: a versengő (contended) memória időzítései Spectrum 128k és +2A gépeken
+Javítva: a felső keret mérete (48 helyett 56 pixel), Chris Smith "The ZX Spectrum ULA" című könyve alapján
+Javítva: a kurzorbillentyűk és a Home billentyű olvasása Raspberry Pi-n
+Javult a váltottsoros mód. Most már bekapcsolható ULAplus, Timex vagy Spectra videomódokkal. Képsorokkal (scanlines) viszont nem
+Javultak a Háttértár menük. Minden adathordozó: kazetták, z88 fájlkártyák, zxuno SPI flash, MMC kártyák, timex kártyák az új "Háttértár beállításai" menüben találhatók
+Javult a Gép kiválasztása menü. Most már gyártó szerint van csoportosítva
+
+Verzió 3.1. 2015. október 2. - Jetpac edition
+
+Az akadálymentesítési támogatás (Karakterkiírás elfogása és szövegfelolvasó program) minden videomeghajtóhoz elérhető, nem csak az stdout-hoz. Így a vak emberek is használhatnak szövegfelolvasó programokat szöveges kalandjátékokhoz. Minden operációs rendszeren elérhető: Linux, Mac, Windows, Raspberry stb.
+ZXMMC emuláció hozzáadva
+DivMMC emuláció hozzáadva. DivMMC támogatás Spectrumon és ZX-Unón
+ZXPand ZX81 MMC emuláció hozzáadva
+Spectra videomódok hozzáadva
+Timex videomódok hozzáadva (0-s mód szabványos, 1-es kettős képernyő, 2-es nagy felbontású szín 8x1). A 6-os mód (512x192 monokróm) még nincs emulálva (256x192 monokrómként jelenik meg)
+Poke-ok betöltése .POK fájlokból hozzáadva
+Poke-olás 128k gépre hozzáadva (bank, cím, érték)
+Konfigurációs beállítás hozzáadva a külső eszközök elérési útjának megadására: sox, unzip, gunzip, tar, unrar
+Parancssori beállítás hozzáadva az emulátorból való gyors kilépéshez: --quickexit
+Javítva: az Inves ULA színkésleltetése. Csak a fényességre (bright) van hatással
+Javítva: üres könyvtárlista hibája egyes Windows gépeken
+Javult a ULAplus. Most már támogatja a HAM módokat (ULAplus palettaváltás minden képsorban)
+Javult a betöltők felismerése. Most már felismeri az egyéni betöltőrutinokat, és a kazettát valódi kazettaként helyezi be újra
+Javultak a Karakterkiírás elfogása funkciók és szűrők
+Javult a hóhatás (Snow Effect)
+Javult a --experthelp listája
+Javult az SDL hang (Windowsra és más operációs rendszerekre hat): csökkent a hang késleltetése, és egy állítható paraméter került be
+Néhány egyéb kisebb hibajavítás és fejlesztés
+
+
+Verzió 3.0. 2015. július 3. - Hard Drivin' edition
+
+Windows-verzió hozzáadva
+ZX-Uno emuláció hozzáadva
+Billentyűparancsok hozzáadva a menüpontokhoz
+Egyéni konfigurációs fájlok hozzáadva pillanatképekhez és kazettákhoz
+Új simpletext videomeghajtó hozzáadva. Bármilyen rendszeren működik
+Videó kimenet fájlba hozzáadva a Z88 géphez
+A Diamond és Square billentyűk emulációja hozzáadva Z88-on, valamint a Symbol shift emulációja a curses, caca, aa videomeghajtókon
+Új ablaklábléc hozzáadva. A régi második átfedés törölve, és minden gépinformáció a láblécre került
+Karakterkiírási ROM-elfogások hozzáadva az stdout és simpletext meghajtóhoz, valamint a Z88 géphez
+Javítva: a flagek hibája az INC RR, DEC RR utasításoknál. Most például a Hard Drivin' tökéletesen jelenik meg
+Javítva: videó kimenet fájlba letiltott kerettel
+Javult a Spectrum keret emulációja. Most már 100%-ig pontos!
+Javult a hibakereső: billentyű a képernyő megtekintéséhez, jobb lépésenkénti végrehajtás
+Javult a curses és stdout megjelenítés Z88-on
+Néhány egyéb kisebb hibajavítás és fejlesztés
+
+
+Verzió 2.1. 2015. május 13. - Lemmings edition
+
+Cocoa videomeghajtó hozzáadva a Mac OS X verzióhoz. Már nem kell xwindows könyvtárakat telepítened Mac-en
+ULAplus támogatás hozzáadva: 64 színű paletta mód, Radastan mód: 128x96, pixelenként 16 szín. Továbbá új, pixelenként 16 színű módok: 5-ös mód: 256x96, 7-es mód: 128x192, 9-es mód: 256x192
+SDL hang- és videomeghajtó hozzáadva
+Akadálymentesítési funkciók hozzáadva: stdout szövegszkript-szűrő, például szövegfelolvasó program futtatásához
+CPU sebesség beállítás hozzáadva
+Z88 Intel Flash kártyák támogatása hozzáadva
+Z88 beállítás hozzáadva a fájlok visszaállításához és a szabad hely visszanyeréséhez EPROM és flash kártyákon
+Z88 menüpont hozzáadva az EPROM/Flash kártya típusának megjelenítéséhez: alkalmazás, fájlok vagy ismeretlen
+Kempston egér és fénypisztoly támogatás hozzáadva a curses meghajtóhoz
+mantransfer hozzáadva a menühöz (Spectrum program, amely pillanatképet készít a memóriából Spectrum kazettára)
+Parancssori beállítások hozzáadva a valódi joystick gombjainak megadásához
+Hangjegyek és burkológörbe-név megjelenítése hozzáadva az AY regiszterek megtekintése (View AY Registers) ablakban
+Hangjegy és frekvencia megjelenítése hozzáadva a hullámforma megtekintése (View Waveform) ablakban
+TZX fájltípus felismerése (szabványos vagy turbó stb.) hozzáadva a gyorsbetöltéshez
+A menü megnyitásának billentyűje F5-re változott
+A "Gyorsbetöltés" átnevezve "Okos betöltés"-re
+Javítva: Z88 színek
+Javítva: Z88 kurzor és szöveg villogási frekvenciája
+Javítva: Z88 3200 Hz-es hang
+Javítva: nagy felbontású módok zx80/81-en és curses&stdout meghajtókon
+Javítva: az IFF1 és IFF2 viselkedése. Most már működik a JBRACING játék ZX81-en
+Javítva: Gigascreen színek
+Javítva: ULA port olvasási prioritása.
+Javítva: kempston portok Inves és minden más Spectrum gépen
+Javítva: néhány Raspberry hiba, amelyet egy fordítási hiba okozott. Most már működik: valódi kazetta betöltése, hangerő, hullámforma megtekintése
+Törölve: ROM kártyák használatának támogatása Z88-on az 1-3. foglalatban (ezek valójában EPROM kártyák)
+Javult az időzítés Raspberry-n
+Javultak a feltételes töréspontok:
+-Indirekt regiszterek: (HL),(IX) stb.
+-Kifejezések összekapcsolása az "and", "or" és "xor" logikai operátorokkal
+-"OPCODE" kulcsszó, amely egy adott utasítás futtatásakor teljesül
+-"ram" vagy "rom" kulcsszó, amely a Spectrum 128 modelleken belapozott RAM-ra vagy ROM-ra teljesül, valamint "seg0", "seg1", "seg2", seg3 a Z88-on belapozott memóriabankokra
+Javult a konfigurációs fájl feldolgozása: most már idézőjeles elemeket is tartalmazhat, például --joystickemulated "OPQA Space"
+Néhány egyéb kisebb hibajavítás és fejlesztés
+
+
+Verzió 2.0. 2015. január 27. - Sir Fred edition
+
+Cambridge Z88 emuláció hozzáadva
+Valódi hangkazetta betöltése hozzáadva ZX Spectrumon, ZX80-on, ZX81-en (.rwa, .smp, .wav, .tzx, .tap, .p, .o formátumok). Kezeli a turbó betöltésű kazettákat és bármilyen kazettabetöltést szabványos/nem szabványos betöltőrutinokkal
+Chroma81 támogatás hozzáadva - színes mód ZX81-en
+Váltottsoros és képsoros (scanlines) mód hozzáadva
+Gigascreen mód hozzáadva
+Beállítás hozzáadva az AY chip automatikus bekapcsolásához, amikor szükség van rá
+Beállítás hozzáadva a hullámforma-megjelenítés alakjának módosításához
+Bájtok keresése beállítás hozzáadva, POKE-ok felderítéséhez hasznos
+Beállítás hozzáadva a RAM-frissítés emulálásához
+Beállítás hozzáadva a CPU tranzakciónapló bekapcsolásához
+BASIC megtekintése beállítás hozzáadva
+Betöltési támogatás hozzáadva a .z81 ZX80 pillanatképhez
+A .ZX pillanatkép az 5-ös verzióra változott a Z88 pillanatképek támogatásához
+Javult a beeper hangja minden gépen: Spectrum, ZX80, ZX81, Z88
+Javult az Inves Spectrum+ emulációja
+Javítva: az üres busz (idle bus) port értéke +2A gépeken bekapcsolt memórialapozással
+Javítva: a CALL utasítások időzítése, jobb ZX80/81/Spectrum nagy felbontású videoeffektusok. Már nem kell a Video t_states offset beállítást használni ZX81-en
+Javítva: a MEMPTR értéke egyes utasításoknál
+Javítva: a CPU regisztereinek inicializálása és a varázslatos RANDOMIZE USR 46578. Lásd: http://foro.speccy.org/viewtopic.php?f=11&t=2319
+Javítva: az OUT(N),A CPU utasítás
+Javítva: a WRX mód ZX81-en és az utolsó oszlop
+Javítva: ZX80/81 megjelenítési hiba és a linecntr számláló
+Néhány egyéb kisebb hibajavítás és fejlesztés
+
+
+Verzió 1.3. 2014. október 28. - Rick edition
+
+Kísérleti Raspberry (raspbian) támogatás hozzáadva
+Framebuffer Device videomeghajtó (fbdev) hozzáadva
+Funkciók hozzáadva a gépinformációk képernyőre vetítéséhez (átfedés)
+Gyorsbetöltés funkció hozzáadva
+Kézi képkocka-kihagyás beállítás hozzáadva
+WRX mód automatikus felismerése hozzáadva ZX80/81-en
+Pillanatkép automatikus betöltése és mentése hozzáadva
+COPY nyomtatóra funkció hozzáadva a menübe
+Valódi joystick emuláció hozzáadva (csak Linuxon)
+Szöveges kalandjátékok támogatása hozzáadva az stdout meghajtón. Azokhoz, amelyek nem használnak ROM-hívásokat (RST 10H). Támogatja a karakterkiíró rutinok automatikus felismerését, valamint néhány más ismert rutint és játékot: AD Adventures, Hobbit, Sherlock és még néhány...
+Támogatás hozzáadva a .zx pillanatképek régi verzióinak mentéséhez (2-es verzió a ZXSpectr-hez és ZEsarux-hoz, 3-as verzió az 1.3 alatti ZEsarUX verziókhoz)
+Hexadecimális kiírás megtekintése (View Hexdump) hozzáadva
+Sprite-ok megtekintése hozzáadva
+Visszafordítás beállítás hozzáadva a CPU hibakereső menühöz
+Töréspontok beállítás hozzáadva a CPU hibakereső menühöz: PC cím töréspont, feltételes töréspont, Peek (címolvasás) töréspont
+Hullámforma megtekintése és Visualmem menüpontok hozzáadva a nem grafikus meghajtókhoz: curses, aa, caca
+.SNA pillanatkép betöltésének támogatása hozzáadva (mentésé nem)
+Beállítás hozzáadva NMI előidézéséhez a menüből
+A .ZX pillanatkép a 4-es verzióra változott. Néhány új paraméter került be, támogatás a következőkhöz: valódi videó, zx80/81 RAM bővítők, zx80/81 videoparaméterek és még néhány
+Javult az automatikus betöltés funkció. Most már minden gépen működik
+Javult a CPU mag és a megjelenítő funkciók: kicsit gyorsabbak lettek
+Javult a menüfelület: kezeli a billentyűismétlést
+Javult a CPU-statisztika: utasításnév a teljes statisztikában, összes lefuttatott utasítás
+Javítva: a fekete szín (bekapcsolt fényességgel) szürke és piros/kék/zöld módban
+Javítva: kempston joystick portok
+
+
+Verzió 1.2. 2014. augusztus 25. - Agent Dan edition
+
+A Spectrum hóhatásának emulációja hozzáadva
+Súgó menü hozzáadva
+Eszköztippek és súgó hozzáadva a menüpontokhoz
+Inverz videó beállítás hozzáadva
+Joystick emuláció hozzáadva a kurzorbillentyűkkel: Kempston, Sinclair 1&2, Cursor Joystick, Cursor & Shift, Fuller, Zebra, Mikro-Gen. Autofire funkcióval is
+Beállítás hozzáadva a versengő (contended) memória letiltásához
+Fuller audio box emuláció hozzáadva
+Speciális hardverbeállítások menüpont hozzáadva
+Menü hozzáadva az stdout meghajtóhoz
+Keret hozzáadva ZX80/81-hez és Spectrumhoz stdout és curses alatt, nem realvideo módban
+Bemeneti spool szövegfájl beállítás hozzáadva billentyűlenyomások szimulálásához
+Beállítás hozzáadva egyéni gép futtatásához (géptípus és egyéni ROM)
+Kazetta automatikus betöltése hozzáadva ZX80-hoz és ZX81-hez
+(Ismét) hozzáadva a keret letiltásának beállítása
+ZX nyomtató emuláció hozzáadva
+CPU-statisztika beállítás hozzáadva. A configure alapértelmezésként nem kapcsolja be
+Konfigurációs fájl hozzáadva
+Fénypisztoly emuláció hozzáadva: az MHT Ingenieros S.L Gunstick majdnem tökéletes emulációja és a Magnum Light Phaser kísérleti emulációja
+Kempston egér emuláció hozzáadva
+Javult a curses és stdout billentyűzet viselkedése
+Javítva: a "mozgó fehér vonal" hatás ZX80/81-en valódi videó megjelenítéssel
+Javítva: hiba a 32-es TZX ID típus olvasásakor
+Néhány egyéb kisebb hibajavítás
+
+Verzió 1.1. 2014. július 4. - ID edition
+
+Támogatás hozzáadva .z80 pillanatképek betöltéséhez nem támogatott gépekkel, mint a Spectrum +3, Pentagon.
+Zip, rar, tar és gz fájlok támogatása hozzáadva a menüben (külső programokat használ)
+Betöltési támogatás hozzáadva a ZX81 EightOne .z81 fájlformátumhoz
+Teljes képernyős mód hozzáadva az xwindows meghajtón
+Hullámforma megtekintése beállítás hozzáadva
+Visualmem beállítás hozzáadva. Megjeleníti a RAM-ba történő írási műveleteket. A configure alapértelmezésként nem kapcsolja be
+Kijelzőpaletták hozzáadva: szürke mód, zöld mód stb.
+A numerikus billentyűzet néhány billentyűje hozzáadva: / * - +
+Poke funkció hozzáadva a menübe
+Beállítás hozzáadva a realvideo programok automatikus felismeréséhez
+Beállítás hozzáadva az elveszett vsync szimulálásához zx80/81-en
+WAV formátumú aofile hozzáadva
+Javult a függőleges képszinkronizálás ZX80/81-en
+Javult a CPU regiszterek megtekintése beállítás az utasítások visszafordításával
+Javítva: LD IX/IY(h/l),IX/IY(h/l) utasítások
+Javítva: egyes utasítások időzítése. Jobb a rainbow (spectrum) és a nagy felbontás (zx80/81) megjelenítése. Az Overscan demó tökéletes 128k módban (48k-ban még nem)
+Néhány egyéb kisebb hibajavítás
+
+
+
+Verzió 1.0.1. 2014. május 27. - Rainbow edition +
+
+Javítva: hiba az AY chippel olyan csatornáknál, ahol a hang és a zaj is be van kapcsolva. Elég zavaró, mert ezek a hangok hangosabban szólnak
+Szülőmappa hozzáadva a bináris és a forrás tar.gz-hez
+
+Ebben a verzióban nincs más változás, csak a zavaró AY chip hanghiba miatt döntöttem a kiadása mellett
+
+
+
+Verzió 1.0. 2014. május 26. - Rainbow edition
+
+Versengő (contended) memória és valós időzítés Spectrumhoz, ZX80-hoz, ZX81-hez
+Javult a valódi videó megjelenítés (rainbow) Spectrumhoz és ZX80/81-hez (nem szabványos és nagy felbontású módok)
+Gyorsult a Z80 mag a HL, DE, BC 16 bites műveleteinek használatával
+Váltottsoros mód hozzáadva
+Gépcsere menet közben beállítás hozzáadva
+Az Inves Spectrum + néhány további furcsaságának emulációja hozzáadva: nincs versengő memória, hó a keretben, ULA színkésleltetés, a megszakítás a videó megjelenítésnél kezdődik (nem a keret tetején)
+32 KB-os és 48 KB-os RAM bővítő emulációja hozzáadva ZX80/81-hez
+Üres busz (idle bus) port emuláció hozzáadva
+Beállítás hozzáadva bináris adatok betöltéséhez és mentéséhez
+Beállítás hozzáadva a CPU és ULA regiszterek megtekintéséhez
+Beállítás hozzáadva videofájl mentéséhez
+Javult a felhasználói felület: megerősítés a mentési műveleteknél a menüben, hibaüzenetek megjelenítése a menüben
+Javítva: néhány AY chip hiba (magas burkológörbe-frekvencia, hang&zaj viselkedése)
+
+
+
+Verzió 0.6. 2014. április 23. - Saint George edition
+
+ZX Spectrum smp kazetta betöltése hozzáadva (nyers hang)
+Képstabilizálás hozzáadva a nagy felbontású módokhoz ZX80/81-en
+Valódi videó megjelenítés hozzáadva curses és stdout alatt ZX80/81-hez
+Pulse Audio meghajtó hozzáadva
+Kísérleti MEMPTR regiszter támogatás hozzáadva - a configure alapértelmezésként nem kapcsolja be
+A keret mérete megváltozott curses alatt
+Javult a HRG támogatás: már nem kell bekapcsolni a HRG beállítást. A HRG használatához be kell töltened a HRG-driver.p-t, majd LOAD ""-dal a kiválasztott HRG programot
+Javult a ZX81 kazettarutin: most már betölthetsz egy ZX81 kazettát a LOAD "NAME" paranccsal (a "NAME.P" fájlt tölti be). Többrészes játékoknál használatos
+Javultak a ZX81 nagy felbontású módjai (WRX és mások) - jobb a képszélesség kezelése
+Kicsit gyorsabbak lettek egyes Z80 utasítások
+Javítva: hiba az alsa meghajtóval és a nem pthreads verzióval
+Javítva: hiba a CHR$128-cal és a 64. utáni karakterekkel
+
+
+
+Verzió 0.5. 2014. március 27.
+
+Valódi videó megjelenítés hozzáadva (béta) - Spectrumhoz (rainbow effektus) és ZX80/81-hez (nem szabványos és nagy felbontású módok)
+Gyorsultak a videorutinok pixel gyorsítótár használatával
+Jobb CPU időzítő kezelés pthreads használatakor
+Az alternatív karakterkészlet jobb kezelése curses alatt
+Néhány további program hozzáadva ZX80-hoz, ZX81-hez és Spectrumhoz
+Telepítési folyamat hozzáadva
+Mac Os App csomag hozzáadva
+bintargz előállítása hozzáadva a fordítási folyamathoz
+Kazetták/pillanatképek nevének automatikus felismerése és az emulációs beállítások ennek megfelelő beállítása hozzáadva
+Valódi kazetta betöltésének szimulálása (hang és betöltési csíkok) hozzáadva spectrumhoz/zx80/81-hez
+A menü viselkedése megváltozott: egyes menüpontok, mint a Pillanatkép betöltése, kiválasztáskor automatikusan kilépnek a menüből
+A fájlválasztó viselkedése megváltozott:
+* a rejtett fájlok/mappák (amelyek .-tal kezdődnek) alapértelmezésként rejtve vannak
+* kazetták és pillanatképek megnyitásakor megjegyzi az utolsó könyvtárat
+* kazetták és pillanatképek megnyitásakor alapértelmezésként a telepítési könyvtárat / app csomagot nyitja meg
+Javítva: néhány hanghiba alsa & pthreads használatakor
+Javítva: hiba egyes z80 pillanatképek betöltésekor (v3, 3-as géptípus - 48k + M.G.T.)
+Javítva: hiba, amely Spectrumon minden képkocka megjelenítésének kezdetén egy extra hangbájtot állított elő. Emiatt nem lehetett tiszta impulzushangot előállítani
+
+-Változások ZX80/81-hez:
+ZX80/81 CPU mag valós szinkronizálása
+Javult a leezx81
+zx80/zx81 smp kazetta betöltése hozzáadva (nyers hang)
+.o/.p zx80/81 kazetta és pillanatkép mentése hozzáadva
+ZX80/81 RAM méretének kiválasztása hozzáadva a menüben
+Bi-Pak ZON-X81 hang hozzáadva ZX80/81-hez. Ugyanaz az AY chip, mint a Spectrum 128k modellekben
+Kísérleti támogatás hozzáadva a nagy felbontású és nem szabványos videomódokhoz ZX80/81-en:
+* UDG, CHR$128: támogatás hozzáadva a 2000H címen lévő további RAM-hoz
+* WRX
+* HRG
+* Egyéb nagy felbontású módok, amelyeket például a Manic Miner és a TetrisHR használ
+Javítva: hiba pillanatképek és kazetták betöltésekor zx80/81-en 16kb-nál kevesebb memóriával
+Javítva: hiba ZX80/81 pillanatkép betöltésekor, ha előtte Spectrum mód volt kiválasztva
+
+
+
+
+Verzió 0.4. 2014. február 19.
+
+Menüfelület hozzáadva
+Pillanatkép betöltése és mentése hozzáadva a következő fájlformátumokhoz: .Z80, .ZX, .SP
+A Microdigital TK90X (portugál és spanyol) és TK95 emulációja hozzáadva
+ZX80/81 hang hozzáadva. Ez nem alapértelmezett, kényszerítened kell
+Quicksilva QS hangkártya hozzáadva ZX80-hoz, ZX81-hez. Ugyanaz az AY chip, mint a Spectrum 128k modellekben
+Mac Os X coreaudio meghajtó hozzáadva
+stdout videomeghajtó hozzáadva
+Ismeretlen karakterek művészi emulációja hozzáadva curses és stdout alatt
+Alternatív karakterkészletek keresése hozzáadva curses és stdout alatt
+Szimulált zx80/81 videó hozzáadva Spectrumon
+Néhány általam készített régi program hozzáadva
+Javítva: hiba az R regiszter viselkedésével
+Javítva: hiba a visszatérési regiszterekkel a ROM kazettabetöltő hívásainál
+Javítva: a viselkedés egynél több billentyű-félsor olvasásakor
+Javítva: hiba a csendérzékeléssel és a CPU 100%-os használatával
+Javítva: hiba az ablakok átméretezésekor Mac Os alatt
+
+
+Verzió 0.3. 2013. december 5.
+
+Jobb hang pthreads-szel alsa és dsp alatt
+Javítva: az AY chip hangjainak és zajának frekvenciaértékei; korábban a hang nem volt valósághű
+aalib videomeghajtó hozzáadva
+cacalib videomeghajtó hozzáadva
+Jobb automatikus felismerés a hang- és videomeghajtókhoz
+Javult az xwindows meghajtó. Most már átméretezheted az ablakot
+Mentési funkciók hozzáadva TAP-hoz és TZX-hez
+Javítva: hiba a curses meghajtóval és a színekkel ismeretlen karaktereknél
+A ZX80 és ZX81 kísérleti emulációja hozzáadva
+Pillanatkép/kazetta betöltése hozzáadva ZX80-hoz és ZX81-hez
+
+
+Verzió 0.2. 2013. november 15.
+
+noautoload beállítás hozzáadva
+Javítva: OUTI, INI, CPI stb. utasítások
+Javítva: az R regiszter viselkedése
+Csendérzékelés hozzáadva
+AY chip hangemuláció hozzáadva
+aofile beállítás hozzáadva
+128K emuláció hozzáadva (128k, +2, +2A)
+Kiterjesztett billentyűk emulációja hozzáadva xwindows alatt: kurzorok, tab, caps lock, ","  "." "-"
+Betöltés TZX fájlokból hozzáadva (csak szabványos betöltés)
+alsa hangmeghajtó hozzáadva
+Általam készített segédprogramok és játékok hozzáadva
+smpatap, sp_z80, tapabin segédprogramok hozzáadva
+
+
+Verzió 0.1. 2013. szeptember 24.
+
+Javítva: CCF. Most már be lehet írni sorokat BASIC-ben
+Javítva: RLD, RRD. A számok helyesen íródnak ki. A flagek az A eredményéből jöttek. Nincsenek nagy számok. Nincsenek tizedes számok->már MŰKÖDIK. A hibám az volt, hogy az RLCA/RRCA/RLA és RRA utasításokat ugyanolyannak tekintettem, mint az RLC A, RRC A, RL A és RR A utasításokat. Az előbbiek nem módosítják az S, Z, P flageket, az utóbbiak viszont igen... Ezt javítva a számok helyesen íródnak ki
+A homepage.ntlworld.com/mark.woodmass/z80tests.tap segítségével jöttem rá az rlc/rlca stb. megoldására
+A BASIC programok betöltődnek és elindulnak, de usr0-t csinálnak. Merge & run esetén működnek->Az LD IY/IX,(NN) utasítás javításával működik
+Egyszerű rutin .TAP betöltéséhez
+Működik az im0, im1, im2
+cpi, cpd, cpdr, cpir, ini, ind, inir, ind emulálása. Részlegesen outi stb.
+Keret emulálása curses és xwindows alatt
+Gyorsabb X11 emuláció xshm-mel. Minden billentyűt emulál. A rainbow-t nem emulálja
+Az R regiszter részleges emulációja
+Paraméterek átvétele a parancssorból
+1/50-es megszakítás emulációja
+A CPU félszinkronizálása: t-állapotok nélkül, helyette az utasítások számának számlálásával
+Visszaesés curses-ra
+Configure folyamat
+Scrnull külön fájlban
+Javítva: az scf, ccf, inc8, dec8 flagjei
+Kísérleti hangemuláció /dev/dsp-vel
+Inves hangemuláció
+A zx80, zx81 kísérleti emulációja
+Javítva: az adc, sbc utasítások a flagekkel, túlcsordulással és félátvitellel
+Néhány IX/IY h,l-t használó utasítás hozzáadva
