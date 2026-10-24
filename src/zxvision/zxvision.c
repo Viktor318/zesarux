@@ -4650,7 +4650,7 @@ void menu_footer_f5_menu(void)
     //menu_putstring_footer(0,WINDOW_FOOTER_ELEMENT_Y_F5MENU,"                                ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
     menu_putstring_footer_spaces(WINDOW_FOOTER_ELEMENT_Y_F5MENU);
     char texto_f_menu[32];
-    sprintf(texto_f_menu,"%s Menu",openmenu_key_message);
+    snprintf(texto_f_menu,sizeof(texto_f_menu),menu_tr("%s Menu"),menu_tr(openmenu_key_message));
     menu_putstring_footer(0,WINDOW_FOOTER_ELEMENT_Y_F5MENU,texto_f_menu,WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
 
 
@@ -16126,6 +16126,9 @@ void zxvision_print_char_simple(zxvision_window *w,int x,int y,int tinta,int pap
 void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,int parpadeo,char *texto)
 {
 
+    //Hungarian: texts written inside windows
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN && texto[0]) texto=menu_hungarian(texto);
+
     //Si la ventana tiene desactivado el parseo de caracteres especiales
     int antes_menu_disable_special_chars=menu_disable_special_chars.v;
     if (w->disable_special_chars) menu_disable_special_chars.v=1;
@@ -16258,6 +16261,8 @@ void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,in
 void zxvision_print_string_format (zxvision_window *w,int x,int y,int tinta,int papel,int parpadeo, const char * format , ...)
 {
 
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) format=menu_hungarian(format);
+
     char buffer_final[4096];
 
     va_list args;
@@ -16279,6 +16284,8 @@ void zxvision_print_string_defaults(zxvision_window *w,int x,int y,char *texto)
 
 void zxvision_print_string_defaults_format (zxvision_window *w,int x,int y, const char * format , ...)
 {
+
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) format=menu_hungarian(format);
 
     char buffer_final[4096];
 
@@ -16347,6 +16354,8 @@ void zxvision_print_string_fillspc(zxvision_window *w,int x,int y,int tinta,int 
 
 void zxvision_print_string_fillspc_format(zxvision_window *w,int x,int y,int tinta,int papel,int parpadeo,const char * format , ...)
 {
+
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) format=menu_hungarian(format);
     zxvision_fill_width_spaces(w,y);
 
     char buffer_final[4096];
@@ -16361,6 +16370,8 @@ void zxvision_print_string_fillspc_format(zxvision_window *w,int x,int y,int tin
 
 void zxvision_print_string_defaults_fillspc_format(zxvision_window *w,int x,int y,const char * format , ...)
 {
+
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) format=menu_hungarian(format);
 
     char buffer_final[4096];
 
@@ -24962,6 +24973,13 @@ char *menu_hungarian(const char *english)
     return (char *)(found!=NULL ? found->hungarian : english);
 }
 
+//Text in the current language (only Hungarian uses the translation table), for texts built with sprintf/strcpy
+char *menu_tr(char *english)
+{
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) return menu_hungarian(english);
+    return english;
+}
+
 char *menu_get_string_language(char *string_english)
 {
     if (gui_language==GUI_LANGUAGE_HUNGARIAN) return menu_hungarian(string_english);
@@ -31323,6 +31341,7 @@ void get_welcome_message(char *texto_welcome)
 {
     if (gui_language==GUI_LANGUAGE_SPANISH) sprintf(texto_welcome," Bienvenido a ZEsarUX " EMULATOR_VERSION " ");
     else if (gui_language==GUI_LANGUAGE_CATALAN) sprintf(texto_welcome," Benvingut a ZEsarUX " EMULATOR_VERSION " ");
+    else if (gui_language==GUI_LANGUAGE_HUNGARIAN) sprintf(texto_welcome," Üdvözöl a ZEsarUX " EMULATOR_VERSION " ");
     else sprintf(texto_welcome," Welcome to ZEsarUX " EMULATOR_VERSION " ");
 }
 
@@ -31330,6 +31349,7 @@ void get_press_key_menu_message(char *destino)
 {
     if (gui_language==GUI_LANGUAGE_SPANISH) sprintf(destino," Pulse %s para menu ",openmenu_key_message);
     else if (gui_language==GUI_LANGUAGE_CATALAN) sprintf(destino," Premi %s per menu ",openmenu_key_message);
+    else if (gui_language==GUI_LANGUAGE_HUNGARIAN) sprintf(destino,menu_tr(" Press %s for menu "),menu_tr(openmenu_key_message));
     else sprintf(destino," Press %s for menu ",openmenu_key_message);
 }
 

@@ -1081,9 +1081,9 @@ void zxvision_menu_filesel_print_filters(zxvision_window *ventana,char *filtros[
 
         int i,p;
         p=0;
-        sprintf(buffer_filtros,"Filter: ");
+        sprintf(buffer_filtros,"%s",menu_tr("Filter: "));
 
-        p=p+8;  //8 es lo que ocupa el texto "Filter: "
+        p=p+strlen(buffer_filtros);  //lo que ocupa el texto "Filter: "
 
 
         for (i=0;filtros[i];i++) {
@@ -1298,7 +1298,7 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
     if (!es_directorio) {
         if (item_seleccionado!=NULL) {
             if (menu_filesel_file_can_be_expanded(item_seleccionado->d_name)) {
-                strcpy(buffer_expand," ~^S~^P~^C: Expand");
+                strcpy(buffer_expand,menu_tr(" ~^S~^P~^C: Expand"));
             }
         }
     }
@@ -1307,7 +1307,7 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
     //Drive también mostrado en Linux y Mac
     //01234567890123456789012345678901
     // TAB: Section R: Recent D: Drive
-    sprintf (leyenda_inferior,"~^T~^A~^B:Section ~^Recent ~^Drives%s",buffer_expand);
+    sprintf (leyenda_inferior,menu_tr("~^T~^A~^B:Section ~^Recent ~^Drives%s"),buffer_expand);
 
     zxvision_print_string_defaults_fillspc(ventana,1,posicion_leyenda,leyenda_inferior);
 
@@ -3491,7 +3491,7 @@ void menu_textspeech_say_current_directory(void)
         char buffer_texto[PATH_MAX+200];
         getcwd(current_dir,PATH_MAX);
 
-        sprintf (buffer_texto,"Current directory: %s",current_dir);
+        sprintf (buffer_texto,menu_tr("Current directory: %s"),current_dir);
 
     //Quiero que siempre se escuche
     menu_speech_reset_tecla_pulsada();
@@ -3522,7 +3522,7 @@ void zxvision_menu_filesel_print_text_contents(zxvision_window *ventana)
         if (menu_mmc_image_montada && menu_current_drive_mmc_image.v) {
             int total,free;
             filesel_return_free_mmc_mounted(&total,&free);
-            sprintf(buffer_linea,"Directory Contents: (Image total %d MB Free %d MB)",total,free);
+            sprintf(buffer_linea,menu_tr("Directory Contents: (Image total %d MB Free %d MB)"),total,free);
         }
         else {
             strcpy(buffer_linea,"Directory Contents:");
@@ -3603,7 +3603,7 @@ void zxvision_filesel_show_current_dir(zxvision_window *ventana)
     zvfs_getcwd(current_dir,PATH_MAX);
 
     menu_tape_settings_trunc_name(current_dir,buffer_dir,ventana->visible_width-14); //14 es lo que ocupa el texto "Current dir: "
-    sprintf (buffer3,"Current dir: %s",buffer_dir);
+    sprintf (buffer3,menu_tr("Current dir: %s"),buffer_dir);
     //menu_escribe_texto_ventana(1,0,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer3);
     zxvision_print_string_defaults_fillspc(ventana,1,0,buffer3);
 }
@@ -3742,7 +3742,7 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
     zvfs_getcwd(current_dir,PATH_MAX);
 
     menu_tape_settings_trunc_name(current_dir,buffer_dir,ventana->visible_width-14); //14 es lo que ocupa el texto "Current dir: "
-    sprintf (buffer3,"Current dir: %s",buffer_dir);
+    sprintf (buffer3,menu_tr("Current dir: %s"),buffer_dir);
     //menu_escribe_texto_ventana(1,0,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer3);
     zxvision_print_string_defaults_fillspc(ventana,1,0,buffer3);
 */
@@ -4078,7 +4078,7 @@ char *menu_filesel_recent_files_folders(int *tipo)
 
         char nombre_ventana[30];
         if (menu_filesel_recent_files_folders_tipo_seleccionado==0) {
-            strcpy(nombre_ventana,"Recent files (SPC switch)");
+            strcpy(nombre_ventana,"Recent files (SPC switch)"); //translated as window title
         }
         else {
             strcpy(nombre_ventana,"Recent folders (SPC switch)");
@@ -5904,7 +5904,7 @@ int menu_filesel_overlay_show_current_dir_aux(zxvision_window *ventana,char *cur
     //getcwd(current_dir,PATH_MAX);
     zvfs_getcwd(current_dir,PATH_MAX);
 
-    strcpy(current_dir_mensaje,"Current dir: ");
+    strcpy(current_dir_mensaje,menu_tr("Current dir: "));
     int longitud_current_dir_mensaje=strlen(current_dir_mensaje);
 
     int longitud=strlen(current_dir);

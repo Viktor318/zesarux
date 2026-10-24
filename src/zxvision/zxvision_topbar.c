@@ -119,6 +119,39 @@ int topmenus_visibles[TOPMENU_TOTAL_MENUS]={1,1,1,1,1,1,1,1,1,1,1,1};
 //etc
 char *topbar_hotkeys="zsnmadteowil";
 
+//Hungarian top bar. Every menu name must contain its hotkey letter (topbar_hotkeys_hungarian), menus are separated by spaces
+//Written in UTF-8, converted to the charset codes (one byte per letter) the first time they are used
+const char *topbar_string_linea_menus_with_zxdesktop_hungarian_utf8=
+    "Z Okosbetöltés Pillanatkép Gép Hang Kijelző Háttértár Hibakeresés Hálózat Ablakok Beállítások Súgó";
+const char *topbar_string_linea_menus_without_zxdesktop_hungarian_utf8=
+    "Z Ok Pil Gép Hang Kij Tár Hib Hál Abl Beá Súgó";
+
+char *topbar_hotkeys_hungarian="zopghktilabs";
+
+char topbar_string_linea_menus_with_zxdesktop_hungarian[200]="";
+char topbar_string_linea_menus_without_zxdesktop_hungarian[100]="";
+
+static void topbar_convert_hungarian(const char *origen,char *destino,int max)
+{
+    const unsigned char *t=(const unsigned char *)origen;
+    int d=0;
+    while (*t && d<max-1) {
+        if (menu_es_prefijo_utf(t[0]) && t[1]) {
+            destino[d++]=menu_escribe_texto_convert_utf(t[0],t[1]);
+            t+=2;
+        }
+        else destino[d++]=*t++;
+    }
+    destino[d]=0;
+}
+
+//Hotkeys of the top bar menus for the current language
+char *topbar_get_hotkeys(void)
+{
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) return topbar_hotkeys_hungarian;
+    return topbar_hotkeys;
+}
+
 //Indica que se ha pulsado en la barra de menu antes de entrar en menu_topbarmenu()
 int menu_topbarmenu_pressed_bar=0;
 
@@ -327,6 +360,17 @@ z80_byte menu_topbarmenu_get_key(void)
 
 char *menu_topbar_get_text_topbar(void)
 {
+    if (gui_language==GUI_LANGUAGE_HUNGARIAN) {
+        if (topbar_string_linea_menus_with_zxdesktop_hungarian[0]==0) {
+            topbar_convert_hungarian(topbar_string_linea_menus_with_zxdesktop_hungarian_utf8,
+                topbar_string_linea_menus_with_zxdesktop_hungarian,sizeof(topbar_string_linea_menus_with_zxdesktop_hungarian));
+            topbar_convert_hungarian(topbar_string_linea_menus_without_zxdesktop_hungarian_utf8,
+                topbar_string_linea_menus_without_zxdesktop_hungarian,sizeof(topbar_string_linea_menus_without_zxdesktop_hungarian));
+        }
+        if (!topbar_show_short_menu_names) return topbar_string_linea_menus_with_zxdesktop_hungarian;
+        else return topbar_string_linea_menus_without_zxdesktop_hungarian;
+    }
+
     if (!topbar_show_short_menu_names) {
         if (gui_language==GUI_LANGUAGE_SPANISH) return topbar_string_linea_menus_with_zxdesktop_spanish;
         else if (gui_language==GUI_LANGUAGE_CATALAN) return topbar_string_linea_menus_with_zxdesktop_catalan;
@@ -412,7 +456,7 @@ void menu_topbarmenu_write_bar(void)
 
         //printf("Comparar posiciones_menus[%d]=%d\n",pos_menu,posiciones_menus[pos_menu]);
 
-        if (x>=get_posiciones_menus(pos_menu) && caracter_escribir_minusculas==topbar_hotkeys[pos_menu] ) {
+        if (x>=get_posiciones_menus(pos_menu) && caracter_escribir_minusculas==topbar_get_hotkeys()[pos_menu] ) {
             //printf("Letra hotkey: [%c] x=%d\n",topbar_hotkeys[pos_menu],x);
 
             //Esta en una posicion de hotkey. Saltamos al siguiente para la proxima hotkey
@@ -760,10 +804,11 @@ void menu_topbarmenu(void)
 
                 if (tecla_leida>='a' && tecla_leida<='z') {
                     //ver hotkeys
-                    for (i=0;topbar_hotkeys[i];i++) {
-                        if (tecla_leida==topbar_hotkeys[i] && topbar_get_topmenus_visibles(i)) break;
+                    char *hotkeys_idioma=topbar_get_hotkeys();
+                    for (i=0;hotkeys_idioma[i];i++) {
+                        if (tecla_leida==hotkeys_idioma[i] && topbar_get_topmenus_visibles(i)) break;
                     }
-                    if (topbar_hotkeys[i]) {
+                    if (hotkeys_idioma[i]) {
                         dibujar_cursor_topbar_pos_cursor=i;
                         tecla_leida=13;
                         salir_linea_superior=1;

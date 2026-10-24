@@ -1807,6 +1807,7 @@ extern int zxvision_any_window_over_me(zxvision_window *w);
 
 extern char *menu_get_string_language(char *texto);
 extern char *menu_hungarian(const char *english);
+extern char *menu_tr(char *english);
 
 extern void menu_init_strings_language_array(void);
 
