@@ -7412,9 +7412,9 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
         //Kempston en zxuno, cuando no esta seleccionado kempston devolver 0 en vez de FF o si no, la bios no funciona
         if (MACHINE_IS_ZXUNO) return 0;
 
-        // El menu nmi de Scorpion GMX lee Kempston aunque no se haya seleccionado
+        // El menu nmi de Scorpion lee Kempston aunque no se haya seleccionado
         // en el menú.
-        if (MACHINE_IS_SCORPION_GMX) return 0;
+        if (MACHINE_IS_SCORPION) return 0;
 
         //Los juegos: alteregobeta, xnx, y todos los de los mojon twins, leen el joystick kempston
         //Si retorno el valor del bus idle, esos juegos se saltan los menus , como si hubiese tecla pulsada
@@ -8582,8 +8582,29 @@ z80_byte lee_puerto_sms_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
             //7EH & 193 = 0x40
 
             //0x7E : Reading: returns VDP V counter
-            //printf("scanline draw: %d\n",t_scanline_draw);
-            return t_scanline_draw;
+            // t_scanline_draw avanza linealmente, pero el contador vertical que lee
+            // la CPU por 7EH no: empieza en cero en la primera línea visible.
+            {
+                int linea_vdp=t_scanline_draw-screen_indice_inicio_pant;
+                // Las líneas anteriores a la imagen activa pertenecen al final
+                // de la cuenta anterior; la conversión a byte da esos valores.
+                if (linea_vdp<0) return (z80_byte)linea_vdp;
+
+                // Después de DAH, NTSC vuelve a D5H; después de F2H, PAL vuelve
+                // a BAH. Al llegar a la línea del salto, restar la diferencia
+                // hace que el valor leído sea D5H o BAH y siga creciendo desde ahí.
+                if (machine_60hz.v) {
+                    if (linea_vdp>=VDP_9918A_SMS_VCOUNTER_NTSC_WRAP_LINE) {
+                        linea_vdp-=VDP_9918A_SMS_VCOUNTER_NTSC_WRAP_LINE-VDP_9918A_SMS_VCOUNTER_NTSC_RESTART_VALUE;
+                    }
+                }
+                else {
+                    if (linea_vdp>=VDP_9918A_SMS_VCOUNTER_PAL_WRAP_LINE) {
+                        linea_vdp-=VDP_9918A_SMS_VCOUNTER_PAL_WRAP_LINE-VDP_9918A_SMS_VCOUNTER_PAL_RESTART_VALUE;
+                    }
+                }
+                return (z80_byte)linea_vdp;
+            }
 
             //return 0xB0; //sonic por ejemplo espera este valor
         break;
