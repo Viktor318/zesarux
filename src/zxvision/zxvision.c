@@ -2837,6 +2837,20 @@ int ventana_tipo_activa=1;
 //(no con el teclado ni pulsando)
 int menu_seleccion_con_raton=0;
 
+//Menu del dialogo de numero con slider (mientras esta abierto) y si su slider esta agarrado:
+//sin agarrar, pasar el raton por encima del slider no lo selecciona (no se marca)
+menu_item *menu_ventana_scanf_slider_menu=NULL;
+int menu_ventana_scanf_slider_agarrado=0;
+//Rango de valor_opcion de los elementos del slider
+int menu_ventana_scanf_slider_opcion_min=0,menu_ventana_scanf_slider_opcion_max=-1;
+
+static int menu_raton_no_selecciona_item(menu_item *m,menu_item *item)
+{
+    if (m!=menu_ventana_scanf_slider_menu || menu_ventana_scanf_slider_agarrado) return 0;
+    return (item->valor_opcion>=menu_ventana_scanf_slider_opcion_min &&
+            item->valor_opcion<=menu_ventana_scanf_slider_opcion_max);
+}
+
 int menu_tooltip_counter;
 
 
@@ -23526,7 +23540,8 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
                 if (tecla_leida!=0) menu_seleccion_con_raton=0;
 
                 //printf ("tecla_leida: %d\n",tecla_leida);
-                if (mouse_movido) {
+                //(con el dialogo de slider, tambien al hacer clic: el slider sin agarrar no se selecciona al pasar por encima)
+                if (mouse_movido || (mouse_left && m==menu_ventana_scanf_slider_menu)) {
                     //printf ("mouse x: %d y: %d menu mouse x: %d y: %d\n",mouse_x,mouse_y,menu_mouse_x,menu_mouse_y);
                     //printf ("ventana x %d y %d ancho %d alto %d\n",ventana_x,ventana_y,ventana_ancho,ventana_alto);
                     if (si_menu_mouse_en_ventana() ) {
@@ -23559,7 +23574,9 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
                                 if (buscar_tabulado!=NULL) {
                                     //Buscar por coincidencia de coordenada x,y
-                                    if (buscar_tabulado->tipo_opcion!=MENU_OPCION_SEPARADOR) {
+                                    //(el slider sin agarrar solo se selecciona al hacer clic)
+                                    if (buscar_tabulado->tipo_opcion!=MENU_OPCION_SEPARADOR &&
+                                        (mouse_left || !menu_raton_no_selecciona_item(m,buscar_tabulado))) {
                                         (*opcion_inicial)=linea_buscada;
                                         redibuja_ventana=1;
                                         menu_tooltip_counter=0;
@@ -27828,8 +27845,6 @@ void menu_ventana_scanf_number_aux(zxvision_window *ventana,char *texto,int max_
 
 int menu_ventana_scanf_texto_item_slider_last_slider=0;
 
-//El slider esta "agarrado" con el raton: un clic lo agarra (sigue al raton) y otro clic lo suelta
-int menu_ventana_scanf_slider_agarrado=0;
 
 void menu_ventana_scanf_number_get_string_slider(char *destino,char *texto_input,int minimo,int maximo)
 {
@@ -28257,7 +28272,11 @@ int menu_ventana_scanf_numero(char *titulo,char *texto,int max_length,int increm
             }
         }
 
+        menu_ventana_scanf_slider_menu=array_menu_common;
+        menu_ventana_scanf_slider_opcion_min=MENU_SCANF_NUMERO_START_INDEX_OPTIONS_SLIDER;
+        menu_ventana_scanf_slider_opcion_max=MENU_SCANF_NUMERO_START_INDEX_OPTIONS_SLIDER+MENU_SCANF_NUMERO_ANCHO_SLIDER-1;
         retorno_menu=menu_dibuja_menu_no_title_lang(&comun_opcion_seleccionada,&item_seleccionado,array_menu_common,titulo);
+        menu_ventana_scanf_slider_menu=NULL;
 
 
             if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
