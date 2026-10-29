@@ -131,9 +131,6 @@ void core_cpc_final_frame(void)
     }
 
 
-    //Reproductor AY: medicion de la duracion de una cancion
-    ay_player_frame_end();
-
     if (!interrupcion_timer_generada.v) {
         //Llegado a final de frame pero aun no ha llegado interrupcion de timer. Esperemos...
         //printf ("no demasiado\n");

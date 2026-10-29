@@ -4416,5 +4416,4 @@ Add to song length:	Dalok hosszabbítása:	item
 no limit	nincs korlát	item
 sec	mp	item
 [%c] Measure song lengths	[%c] Dalhosszak mérése	item
-The first time a song is played, it runs without sound for a few seconds until its music repeats; the length found is kept and used afterwards	Egy dal első lejátszásakor a program néhány másodpercig hang nélkül futtatja, amíg a zene ismétlődni nem kezd; a talált hosszt megjegyzi és később azt használja	help
-Measuring length...	Hossz mérése...	item
+The first time a song is played, its length is measured in the background (where its music starts to repeat); the length found is kept and used afterwards	Egy dal első lejátszásakor a program a háttérben megméri a hosszát (ahol a zene ismétlődni kezd); a talált hosszt megjegyzi, és később azt használja	help

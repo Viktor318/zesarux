@@ -787,8 +787,6 @@ z80_bit interrupcion_fifty_generada={0};
 
 int timer_condicion_top_speed(void)
 {
-        //Midiendo la duracion de una cancion AY: tambien con el menu abierto
-        if (ay_player_scanning) return 1;
         if (menu_abierto==1) return 0;
         if (top_speed_timer.v) return 1;
         return 0;

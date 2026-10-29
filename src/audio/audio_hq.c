@@ -254,9 +254,6 @@ static void audio_hq_fifo_put(short left,short right)
 {
     if (!audio_hq_fifo_in_use) return;
 
-    //Midiendo la duracion de una cancion AY: silencio
-    if (ay_player_scanning) left=right=0;
-
     int w=hq_fifo_write;
     int next=w+1;
     if (next==AUDIO_HQ_FIFO_FRAMES) next=0;
@@ -1015,9 +1012,7 @@ void audio_hq_end_frame(int frame_tstates)
     }
 
     //Sonido del chip AY de este frame
-    //(no mientras se mide la duracion de una cancion AY: no se escucha)
-    if (hq_ay_running && !ay_player_scanning) hq_ay_render(frame_tstates);
-    else hq_ay_change_count=0;
+    if (hq_ay_running) hq_ay_render(frame_tstates);
 
     blip_buffer_end_frame(hq_buf_beeper,frame_tstates);
     blip_buffer_end_frame(hq_buf_left,frame_tstates);

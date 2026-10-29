@@ -40,9 +40,7 @@ extern void ay_player_load_and_play(char *filename);
 extern z80_bit ay_player_playing;
 
 extern void ay_player_playing_timer(void);
-extern void ay_player_frame_end(void);
-extern int ay_player_scanning;
-extern int ay_player_scan_progress(void);
+extern int ay_player_measuring(void);
 extern int ay_player_length_measured;
 extern z80_bit ay_player_measure_lengths;
 extern long ay_player_known_length(unsigned int sum,int song);
