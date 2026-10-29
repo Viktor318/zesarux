@@ -122,6 +122,7 @@ RE, RF: Registros de AY-RS232 para midi externo
 #include "joystick.h"
 #include "zxvision.h"
 #include "scorpion.h"
+#include "audio_hq.h"
 
 
 //Indica si esta presente el chip o no
@@ -1425,6 +1426,9 @@ void out_port_ay(z80_int puerto,z80_byte value)
     else if (puerto==49149) {
         //valor a registro
         ay_3_8912_registros[ay_chip_selected][ay_3_8912_registro_sel[ay_chip_selected]&15]=value;
+
+        //Salida de sonido de alta calidad: la escritura con su instante exacto
+        audio_hq_ay_write(ay_chip_selected,ay_3_8912_registro_sel[ay_chip_selected]&15,value,t_estados);
 
 
         //Nota sobre registro 7 mixer:

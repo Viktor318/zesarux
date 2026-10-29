@@ -39,6 +39,9 @@ extern void audio_hq_beeper(int tstates,int value);
 extern void audio_hq_others(int tstates,int left,int right);
 extern void audio_hq_end_frame(int frame_tstates);
 
+extern void audio_hq_ay_write(int chip,int reg,int value,int tstates);
+extern int audio_hq_ay_active(void);
+
 extern int audio_hq_fifo_frames(void);
 extern void audio_hq_fifo_empty(void);
 extern void audio_hq_fifo_get(short *destino,int frames);

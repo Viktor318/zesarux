@@ -49,6 +49,7 @@
 #include "cpu.h"
 #include "debug.h"
 #include "screen.h"
+#include "ay38912.h"
 
 //Ajuste: usar la salida de sonido de alta calidad
 z80_bit audio_hq_enabled={1};
@@ -188,6 +189,8 @@ static void audio_hq_filters_init(void)
 
 
 static short audio_hq_clip(double v);
+static Blip_Synth *audio_hq_new_synth(Blip_Buffer *b);
+static blip_time_t audio_hq_time(int tstates);
 
 /* --- FIFO de salida: 16 bits estéreo, lo lee el driver de la tarjeta de sonido --- */
 
@@ -326,6 +329,440 @@ void audio_hq_fifo_get(short *destino,int frames)
 static FILE *hq_dump_file=NULL;
 
 
+/* --- Chip AY, como en Fuse ---
+
+   Adaptado de sound/ay_engine.c de Fuse (Russell Marks, Matan Ziv-Av, Philip Kendall,
+   Fredrick Meunier, Patrik Rak), GPL 2 o posterior.
+
+   Cada escritura en un registro del AY se guarda con su t-estado. El sonido se genera
+   a la frecuencia real del chip (cada 16 ciclos de reloj del AY) y cada cambio de nivel
+   se introduce con limitacion de banda, con los niveles de volumen medidos por
+   Matthew Westcott. Se emulan todos los chips (Turbosound), con los modos estereo y
+   los filtros de canales de ZEsarUX.
+*/
+
+#define HQ_AY_CHANGE_MAX 8000
+#define HQ_AY_CHANNELS 3
+#define HQ_AY_ENV_STEPS 16
+#define HQ_AY_ENV_CONT 8
+#define HQ_AY_ENV_ATTACK 4
+#define HQ_AY_ENV_ALT 2
+#define HQ_AY_ENV_HOLD 1
+#define HQ_AY_CLOCK_DIVISOR 16
+
+struct hq_ay_change {
+    int tstates;
+    unsigned char chip,reg,val;
+};
+
+struct hq_ay_chip {
+    z80_byte registers[16];
+    unsigned int tone_tick[HQ_AY_CHANNELS],tone_high[HQ_AY_CHANNELS],tone_period[HQ_AY_CHANNELS];
+    unsigned int noise_period,env_period;
+    unsigned int noise_tick,tone_cycles,env_cycles;
+    unsigned int env_internal_tick,env_tick;
+    int rng,noise_toggle,env_first,env_reverse,env_counter;
+    //Ultimo nivel enviado a cada lado (0 izquierdo, 1 derecho) de cada canal
+    int previous[HQ_AY_CHANNELS][2];
+    Blip_Synth *synth[HQ_AY_CHANNELS][2];
+};
+
+static struct hq_ay_change hq_ay_changes[HQ_AY_CHANGE_MAX];
+static int hq_ay_change_count=0;
+static struct hq_ay_chip hq_ay_chips[MAX_AY_CHIPS];
+static unsigned int hq_ay_levels[HQ_AY_ENV_STEPS];
+//Siguiente tick del AY, en t-estados desde el inicio del frame
+static double hq_ay_next_tick=0;
+//El AY se genera en la salida de alta calidad
+static int hq_ay_running=0;
+
+static void hq_ay_levels_init(void)
+{
+    //Medidas de Matthew Westcott (comp.sys.sinclair, diciembre 2001) con el ajuste de Russell Marks.
+    //La salida del chip va de 0 al nivel; en el sonido clasico de ZEsarUX va de -24 a +24. Con 2*24
+    //la amplitud pico a pico, y por tanto el volumen, es la misma
+    static const int measured_levels[HQ_AY_ENV_STEPS]={
+        0x0000,0x0385,0x053D,0x0770,0x0AD7,0x0FD5,0x15B0,0x230C,
+        0x2B4C,0x43C1,0x5A4B,0x732F,0x9204,0xAFF1,0xD921,0xFFFF
+    };
+    int i;
+    for (i=0;i<HQ_AY_ENV_STEPS;i++) {
+        hq_ay_levels[i]=(measured_levels[i]*2*24*AUDIO_HQ_SCALE+0x8000)/0xffff;
+    }
+}
+
+static void hq_ay_apply(struct hq_ay_chip *c,int reg,int val)
+{
+    int channel;
+
+    reg &=15;
+    c->registers[reg]=val;
+
+    if (reg<=5) {
+        channel=reg>>1;
+        c->tone_period[channel]=c->registers[reg & ~1] | (c->registers[reg | 1] & 15)<<8;
+        if (!c->tone_period[channel]) c->tone_period[channel]=1;
+        //Mantener la fase acotada cuando cambia el periodo (si no, el vibrato suena aspero)
+        if (c->tone_tick[channel]>=c->tone_period[channel]*2) {
+            c->tone_tick[channel] %=c->tone_period[channel]*2;
+        }
+    }
+    else if (reg==6) {
+        c->noise_tick=0;
+        c->noise_period=c->registers[6] & 31;
+    }
+    else if (reg==11 || reg==12) {
+        c->env_period=c->registers[11] | (c->registers[12]<<8);
+    }
+    else if (reg==13) {
+        c->env_internal_tick=c->env_tick=c->env_cycles=0;
+        c->env_first=1;
+        c->env_reverse=0;
+        c->env_counter=(c->registers[13] & HQ_AY_ENV_ATTACK) ? 0 : HQ_AY_ENV_STEPS-1;
+    }
+}
+
+static void hq_ay_finish_envelope_cycle(struct hq_ay_chip *c,int shape)
+{
+    if (!(shape & HQ_AY_ENV_CONT)) {
+        c->env_counter=0;
+    }
+    else if (shape & HQ_AY_ENV_HOLD) {
+        if (c->env_first && (shape & HQ_AY_ENV_ALT)) {
+            c->env_counter=(c->env_counter ? 0 : HQ_AY_ENV_STEPS-1);
+        }
+    }
+    else if (shape & HQ_AY_ENV_ALT) {
+        c->env_reverse=!c->env_reverse;
+    }
+    else {
+        c->env_counter=(shape & HQ_AY_ENV_ATTACK) ? 0 : HQ_AY_ENV_STEPS-1;
+    }
+    c->env_first=0;
+}
+
+static void hq_ay_advance_envelope(struct hq_ay_chip *c,int shape)
+{
+    if (c->env_first || ((shape & HQ_AY_ENV_CONT) && !(shape & HQ_AY_ENV_HOLD))) {
+        if (c->env_reverse) c->env_counter +=((shape & HQ_AY_ENV_ATTACK) ? -1 : 1);
+        else c->env_counter +=((shape & HQ_AY_ENV_ATTACK) ? 1 : -1);
+        if (c->env_counter<0) c->env_counter=0;
+        if (c->env_counter>=HQ_AY_ENV_STEPS) c->env_counter=HQ_AY_ENV_STEPS-1;
+    }
+
+    c->env_internal_tick++;
+    while (c->env_internal_tick>=HQ_AY_ENV_STEPS) {
+        c->env_internal_tick -=HQ_AY_ENV_STEPS;
+        hq_ay_finish_envelope_cycle(c,shape);
+    }
+}
+
+//Un tick (16 ciclos del AY) de la envolvente. Retorna los pasos que avanza el ruido
+static int hq_ay_clock_envelope(struct hq_ay_chip *c,int shape)
+{
+    int noise_count=0;
+
+    c->env_cycles +=HQ_AY_CLOCK_DIVISOR;
+    while (c->env_cycles>=HQ_AY_CLOCK_DIVISOR) {
+        c->env_cycles -=HQ_AY_CLOCK_DIVISOR;
+        noise_count++;
+        c->env_tick++;
+        while (c->env_tick>=c->env_period) {
+            c->env_tick -=c->env_period;
+            hq_ay_advance_envelope(c,shape);
+            if (!c->env_period) break;
+        }
+    }
+    return noise_count;
+}
+
+static void hq_ay_clock_noise(struct hq_ay_chip *c,int count)
+{
+    c->noise_tick +=count;
+    while (c->noise_tick>=c->noise_period) {
+        c->noise_tick -=c->noise_period;
+        //LFSR de 17 bits
+        c->noise_toggle ^=(c->rng ^ (c->rng>>1)) & 1;
+        c->rng=(c->rng>>1) ^ (0x12000 & -(c->rng & 1));
+        if (!c->noise_period) break;
+    }
+}
+
+static int hq_ay_channel_output(struct hq_ay_chip *c,int chip,int channel,int envelope_level,unsigned int tone_count)
+{
+    int volume=c->registers[8+channel];
+    int output;
+    //Registro del mezclador con los filtros de canales de ZEsarUX
+    int mixer=c->registers[7] | ay_filtros[chip];
+
+    if (volume & 16) {
+        output=(ay_envelopes_enabled.v ? envelope_level : (int)hq_ay_levels[15]);
+    }
+    else {
+        output=hq_ay_levels[volume & 15];
+    }
+
+    if (!(mixer & (1<<channel))) {
+        c->tone_tick[channel] +=tone_count;
+        if (c->tone_tick[channel]>=c->tone_period[channel]) {
+            c->tone_tick[channel] -=c->tone_period[channel];
+            c->tone_high[channel]=!c->tone_high[channel];
+        }
+        if (!c->tone_high[channel]) output=0;
+    }
+
+    if (!(mixer & (0x08<<channel)) && c->noise_toggle) output=0;
+
+    //Tono y ruido desactivados: el nivel pasa tal cual (permite reproducir muestras de voz),
+    //salvo que se haya desactivado esa opcion
+    if ((mixer & (0x09<<channel))==(0x09<<channel) && !ay_speech_enabled.v) output=0;
+
+    return output;
+}
+
+//A que lados va cada canal segun el modo estereo de ZEsarUX. lados[canal][0]=izquierdo, [1]=derecho
+static void hq_ay_stereo_sides(int sides[HQ_AY_CHANNELS][2])
+{
+    int custom[HQ_AY_CHANNELS];
+    int i;
+
+    for (i=0;i<HQ_AY_CHANNELS;i++) sides[i][0]=sides[i][1]=1;
+
+    switch (ay3_stereo_mode) {
+        case 1: //ACB
+            sides[0][1]=0;
+            sides[1][0]=0;
+        break;
+
+        case 2: //ABC
+            sides[0][1]=0;
+            sides[2][0]=0;
+        break;
+
+        case 3: //BAC
+            sides[1][1]=0;
+            sides[2][0]=0;
+        break;
+
+        case 4: //CBA
+            sides[0][0]=0;
+            sides[2][1]=0;
+        break;
+
+        case 5: //Personalizado: 0 izquierdo, 1 centro, 2 derecho
+            custom[0]=ay3_custom_stereo_A;
+            custom[1]=ay3_custom_stereo_B;
+            custom[2]=ay3_custom_stereo_C;
+            for (i=0;i<HQ_AY_CHANNELS;i++) {
+                if (custom[i]==0) sides[i][1]=0;
+                if (custom[i]==2) sides[i][0]=0;
+            }
+        break;
+
+        default: //Mono
+        break;
+    }
+}
+
+static void hq_ay_reset_chip_state(struct hq_ay_chip *c)
+{
+    int i;
+
+    c->noise_tick=c->noise_period=0;
+    c->env_internal_tick=c->env_tick=c->env_period=0;
+    c->tone_cycles=c->env_cycles=0;
+    for (i=0;i<HQ_AY_CHANNELS;i++) {
+        c->tone_tick[i]=c->tone_high[i]=0;
+        c->tone_period[i]=1;
+    }
+    c->rng=1;
+    c->noise_toggle=0;
+    c->env_first=1;
+    c->env_reverse=0;
+    c->env_counter=HQ_AY_ENV_STEPS-1;
+}
+
+//Copiar los registros del chip de ZEsarUX que no coincidan con los del generador.
+//Asi se recogen los cambios que no pasan por el puerto: snapshots, reset, pausa del reproductor AY...
+static void hq_ay_sync_registers(void)
+{
+    int chip,reg,i;
+
+    for (chip=0;chip<MAX_AY_CHIPS;chip++) {
+        //No si quedan escrituras pendientes de ese chip (instruccion pasada del final del frame)
+        int pending=0;
+        for (i=0;i<hq_ay_change_count;i++) {
+            if (hq_ay_changes[i].chip==chip) pending=1;
+        }
+        if (pending) continue;
+
+        for (reg=0;reg<14;reg++) {
+            if (hq_ay_chips[chip].registers[reg]!=ay_3_8912_registros[chip][reg]) {
+                hq_ay_apply(&hq_ay_chips[chip],reg,ay_3_8912_registros[chip][reg]);
+            }
+        }
+    }
+}
+
+static void hq_ay_end(void)
+{
+    int chip,channel,side;
+
+    hq_ay_running=0;
+
+    for (chip=0;chip<MAX_AY_CHIPS;chip++) {
+        for (channel=0;channel<HQ_AY_CHANNELS;channel++) {
+            for (side=0;side<2;side++) {
+                if (hq_ay_chips[chip].synth[channel][side]!=NULL) {
+                    delete_Blip_Synth(&hq_ay_chips[chip].synth[channel][side]);
+                }
+            }
+        }
+    }
+}
+
+static int hq_ay_init(void)
+{
+    int chip,channel,side,reg;
+
+    hq_ay_end();
+    hq_ay_levels_init();
+
+    for (chip=0;chip<MAX_AY_CHIPS;chip++) {
+        struct hq_ay_chip *c=&hq_ay_chips[chip];
+
+        hq_ay_reset_chip_state(c);
+        for (reg=0;reg<16;reg++) {
+            c->registers[reg]=0;
+        }
+        //Empezar desde los registros actuales del chip
+        for (reg=0;reg<14;reg++) {
+            hq_ay_apply(c,reg,ay_3_8912_registros[chip][reg]);
+        }
+
+        for (channel=0;channel<HQ_AY_CHANNELS;channel++) {
+            for (side=0;side<2;side++) {
+                c->previous[channel][side]=0;
+                c->synth[channel][side]=audio_hq_new_synth(side ? hq_buf_right : hq_buf_left);
+                if (c->synth[channel][side]==NULL) {
+                    hq_ay_end();
+                    return 1;
+                }
+            }
+        }
+    }
+
+    hq_ay_change_count=0;
+    hq_ay_next_tick=0;
+    hq_ay_running=1;
+    return 0;
+}
+
+//Escritura en un registro del chip AY (desde out_port_ay), en el t-estado indicado del frame
+void audio_hq_ay_write(int chip,int reg,int value,int tstates)
+{
+    if (!hq_ay_running) return;
+    if (chip<0 || chip>=MAX_AY_CHIPS) return;
+    if (hq_ay_change_count>=HQ_AY_CHANGE_MAX) return;
+
+    hq_ay_changes[hq_ay_change_count].tstates=tstates;
+    hq_ay_changes[hq_ay_change_count].chip=chip;
+    hq_ay_changes[hq_ay_change_count].reg=reg & 15;
+    hq_ay_changes[hq_ay_change_count].val=value;
+    hq_ay_change_count++;
+}
+
+//El AY se genera aqui (y no hay que mezclarlo con las demas fuentes de sonido)
+int audio_hq_ay_active(void)
+{
+    return hq_ay_running && ay_chip_present.v;
+}
+
+//T-estados entre dos ticks del AY (16 ciclos de su reloj)
+static double hq_ay_tick_tstates(void)
+{
+    extern int original_timer_sleep_machine;
+    double frame_us=original_timer_sleep_machine;
+    if (frame_us<=0) frame_us=(machine_60hz.v ? 16666 : 20000);
+    double tstates_per_second=screen_testados_total*1000000.0/frame_us;
+    int frequency=ay_chip_frequency;
+    if (frequency<=0) frequency=FRECUENCIA_SPECTRUM_AY;
+    return HQ_AY_CLOCK_DIVISOR*tstates_per_second/frequency;
+}
+
+//Generar el sonido del AY hasta el final del frame
+static void hq_ay_render(int frame_tstates)
+{
+    int sides[HQ_AY_CHANNELS][2];
+    int chips,chip,channel,side;
+    int position=0;
+    double step=hq_ay_tick_tstates();
+    double f;
+
+    if (step<1) step=1;
+
+    hq_ay_stereo_sides(sides);
+
+    chips=ay_retorna_numero_chips();
+    if (chips<1) chips=1;
+    if (chips>MAX_AY_CHIPS) chips=MAX_AY_CHIPS;
+
+    for (f=hq_ay_next_tick;f<frame_tstates;f+=step) {
+        int at=(int)f;
+
+        while (position<hq_ay_change_count && hq_ay_changes[position].tstates<=at) {
+            struct hq_ay_change *change=&hq_ay_changes[position++];
+            hq_ay_apply(&hq_ay_chips[change->chip],change->reg,change->val);
+        }
+
+        for (chip=0;chip<chips;chip++) {
+            struct hq_ay_chip *c=&hq_ay_chips[chip];
+            int envelope_level=hq_ay_levels[c->env_counter];
+            int noise_count=hq_ay_clock_envelope(c,c->registers[13]);
+            unsigned int tone_count;
+
+            c->tone_cycles +=HQ_AY_CLOCK_DIVISOR;
+            tone_count=c->tone_cycles>>3;
+            c->tone_cycles &=7;
+
+            for (channel=0;channel<HQ_AY_CHANNELS;channel++) {
+                int output=hq_ay_channel_output(c,chip,channel,envelope_level,tone_count);
+                if (!ay_chip_present.v) output=0;
+                //Varios chips: dividir, como en el sonido clasico
+                output /=chips;
+
+                for (side=0;side<2;side++) {
+                    int level=(sides[channel][side] ? output : 0);
+                    if (level!=c->previous[channel][side]) {
+                        blip_synth_update(c->synth[channel][side],audio_hq_time(at),level);
+                        c->previous[channel][side]=level;
+                    }
+                }
+            }
+
+            hq_ay_clock_noise(c,noise_count);
+        }
+    }
+
+    hq_ay_next_tick=f-frame_tstates;
+    if (hq_ay_next_tick<0) hq_ay_next_tick=0;
+
+    //Escrituras que quedan despues del final del frame: pasan al siguiente
+    int remaining=hq_ay_change_count-position;
+    if (remaining>0) {
+        memmove(hq_ay_changes,hq_ay_changes+position,remaining*sizeof(hq_ay_changes[0]));
+        int i;
+        for (i=0;i<remaining;i++) {
+            hq_ay_changes[i].tstates -=frame_tstates;
+            if (hq_ay_changes[i].tstates<0) hq_ay_changes[i].tstates=0;
+        }
+    }
+    hq_ay_change_count=(remaining>0 ? remaining : 0);
+
+    hq_ay_sync_registers();
+}
+
+
 /* --- Maquinas soportadas --- */
 
 int audio_hq_machine_supported(void)
@@ -383,6 +820,8 @@ void audio_hq_end(void)
 {
     audio_hq_running=0;
 
+    hq_ay_end();
+
     if (hq_synth_beeper!=NULL) delete_Blip_Synth(&hq_synth_beeper);
     if (hq_synth_left!=NULL) delete_Blip_Synth(&hq_synth_left);
     if (hq_synth_right!=NULL) delete_Blip_Synth(&hq_synth_right);
@@ -413,6 +852,12 @@ void audio_hq_init(void)
     hq_synth_left=audio_hq_new_synth(hq_buf_left);
     hq_synth_right=audio_hq_new_synth(hq_buf_right);
     if (hq_synth_beeper==NULL || hq_synth_left==NULL || hq_synth_right==NULL) {
+        debug_printf(VERBOSE_ERR,"Can not allocate memory for the high quality sound");
+        audio_hq_end();
+        return;
+    }
+
+    if (hq_ay_init()) {
         debug_printf(VERBOSE_ERR,"Can not allocate memory for the high quality sound");
         audio_hq_end();
         return;
@@ -532,6 +977,9 @@ void audio_hq_end_frame(int frame_tstates)
         blip_buffer_set_clock_rate(hq_buf_left,rate);
         blip_buffer_set_clock_rate(hq_buf_right,rate);
     }
+
+    //Sonido del chip AY de este frame
+    if (hq_ay_running) hq_ay_render(frame_tstates);
 
     blip_buffer_end_frame(hq_buf_beeper,frame_tstates);
     blip_buffer_end_frame(hq_buf_left,frame_tstates);

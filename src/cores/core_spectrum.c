@@ -538,8 +538,12 @@ void core_spectrum_fin_scanline(void)
 
         audio_valor_enviar_sonido_izquierdo=audio_valor_enviar_sonido_derecho=0;
 
-        audio_valor_enviar_sonido_izquierdo +=da_output_ay_izquierdo();
-        audio_valor_enviar_sonido_derecho +=da_output_ay_derecho();
+        //Parte del chip AY en esta muestra. La salida de alta calidad genera el AY por su cuenta
+        char hq_ay_izquierdo,hq_ay_derecho;
+        da_output_ay_izquierdo_derecho(&hq_ay_izquierdo,&hq_ay_derecho);
+
+        audio_valor_enviar_sonido_izquierdo +=hq_ay_izquierdo;
+        audio_valor_enviar_sonido_derecho +=hq_ay_derecho;
 
         if (audio_nagra_effect.v) {
             //Nota para beeper se gestiona independiente porque el silencio en beeper no es 0 y al multiplicar por el coseno, generaria un pitido en silencio
@@ -617,8 +621,15 @@ void core_spectrum_fin_scanline(void)
 
         //Salida de alta calidad: las demas fuentes de sonido, sin el beeper
         if (audio_hq_running) {
-            audio_hq_others(t_estados,audio_valor_enviar_sonido_izquierdo-hq_beeper_added,
-                            audio_valor_enviar_sonido_derecho-hq_beeper_added);
+            int hq_otros_izquierdo=audio_valor_enviar_sonido_izquierdo-hq_beeper_added;
+            int hq_otros_derecho=audio_valor_enviar_sonido_derecho-hq_beeper_added;
+
+            if (audio_hq_ay_active()) {
+                hq_otros_izquierdo -=hq_ay_izquierdo;
+                hq_otros_derecho -=hq_ay_derecho;
+            }
+
+            audio_hq_others(t_estados,hq_otros_izquierdo,hq_otros_derecho);
         }
 
         if (audio_nagra_effect.v) {

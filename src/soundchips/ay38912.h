@@ -101,6 +101,7 @@ extern int ay_retorna_frecuencia(int registro,int chip);
 extern int ay_retorna_frecuencia_valor_registro(z80_byte value_l,z80_byte value_h);
 
 extern char da_output_ay_izquierdo(void);
+extern void da_output_ay_izquierdo_derecho(char *iz, char *de);
 extern char da_output_ay_derecho(void);
 
 extern int ay3_stereo_mode;
