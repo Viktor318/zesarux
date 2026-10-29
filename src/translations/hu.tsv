@@ -218,14 +218,14 @@ Save marked items playlist	Megjelölt elemek mentése listába	item
 Playlist contents:	A lejátszási lista tartalma:	item
 Playlist	Lejátszási lista	menu title
 AY Player	AY lejátszó	window title
-~~Add	~~Hozzáadás	item
-P~~rev	~~Előző	item
+~~Add	~^Hozzáadás	item
+P~~rev	~^Előző	item
 N~~ext	Kö~~vetkező	item
 E~~dit	Sze~~rkesztés	item
 ~~Prev	Elő~~ző	item
-~~Stop	~~Leállítás	item
-Pa~~use	~~Szünet	item
-~~Next	~~Következő	item
+~~Stop	~^Leállítás	item
+Pa~~use	~^Szünet	item
+~~Next	~^Következő	item
 [%c] Shuffle	[%c] Véletlen sorrend	item
 [%c] Repeat	[%c] Ismétlés	item
 [%c] Exitend	[%c] Exitend	item
@@ -4395,3 +4395,23 @@ Makes the sound at 48000 Hz, 16 bit, in the way the Fuse emulator does: every ch
 A~~udio	Han~~g	item
 U~~LA	UL~~A	item
 Vi~~deo	~~Videó	item
+# AY lejátszó: új ablak (2026-10-29)
+Title:	Cím:	window text
+File:	Fájl:	window text
+Track:	Szám:	window text
+List:	Lista:	window text
+List: %d/%d	Lista: %d/%d	window text
+Out:	Ki:	window text
+~~Mark	~^Jelölés	item
+Un~~mark	Jelölés ~~törlése	item
+Se~~ttings	~^Beállítások	item
+Player settings	A lejátszó beállításai	help
+AY Player settings	AY lejátszó beállításai	window title
+AY Player (Paused)	AY lejátszó (szünet)	window title
+[%c] Repeat file	[%c] Fájl ismétlése	item
+[%c] Exit ZEsarUX at the end	[%c] ZEsarUX bezárása a lista végén	item
+Infinite songs length:	Végtelen dalok hossza:	item
+Maximum song length:	Leghosszabb dal:	item
+Add to song length:	Dalok hosszabbítása:	item
+no limit	nincs korlát	item
+sec	mp	item
