@@ -2833,6 +2833,10 @@ int ventana_tipo_activa=1;
 
 
 
+//La opcion seleccionada del ultimo menu se eligio pasando el raton por encima
+//(no con el teclado ni pulsando)
+int menu_seleccion_con_raton=0;
+
 int menu_tooltip_counter;
 
 
@@ -23518,6 +23522,8 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
                 //printf ("mouse_movido: %d\n",mouse_movido);
 
+                //Con el teclado la seleccion ya no es del raton
+                if (tecla_leida!=0) menu_seleccion_con_raton=0;
 
                 //printf ("tecla_leida: %d\n",tecla_leida);
                 if (mouse_movido) {
@@ -23542,6 +23548,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
                                     (*opcion_inicial)=posicion_raton_y;
                                     redibuja_ventana=1;
                                     menu_tooltip_counter=0;
+                                    menu_seleccion_con_raton=1;
                                 }
                             }
                             else {
@@ -23556,6 +23563,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
                                         (*opcion_inicial)=linea_buscada;
                                         redibuja_ventana=1;
                                         menu_tooltip_counter=0;
+                                        menu_seleccion_con_raton=1;
                                     }
                                 }
                                 else {
@@ -28015,7 +28023,11 @@ char *menu_ventana_scanf_texto_item_slider(struct s_menu_item *item_pedido)
 
     int actualizar_campo_texto=1;
 
-    if (posicion_slider<0 || posicion_slider>=MENU_SCANF_NUMERO_ANCHO_SLIDER) {
+    //Con el raton el slider solo se mueve mientras se mantiene pulsado el boton (como en Windows):
+    //pasar el raton por encima sin pulsar no cambia el valor
+    int solo_raton_encima=(menu_seleccion_con_raton && !mouse_left);
+
+    if (posicion_slider<0 || posicion_slider>=MENU_SCANF_NUMERO_ANCHO_SLIDER || solo_raton_encima) {
         //Para cuando el cursor se ha ido del slider hacia abajo, retornamos ultima posicion conocida del slider
         posicion_slider=menu_ventana_scanf_texto_item_slider_last_slider;
         actualizar_campo_texto=0;
