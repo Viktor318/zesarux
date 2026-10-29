@@ -78,6 +78,7 @@
 #include "zeng_online_client.h"
 #include "if1.h"
 #include "video_chips_common.h"
+#include "audio_ayplayer.h"
 
 z80_byte byte_leido_core_spectrum;
 
@@ -364,6 +365,9 @@ void core_spectrum_store_rainbow_current_atributes(void)
 
 void core_spectrum_fin_frame_pantalla(void)
 {
+    //Reproductor AY: medicion de la duracion de una cancion
+    ay_player_frame_end();
+
 	//Siguiente frame de pantalla
     timer_get_elapsed_core_frame_post();
 
@@ -1307,7 +1311,9 @@ void cpu_core_loop_spectrum(void)
         //printf ("%d\n",interlaced_numero_frame);
 
         //Para calcular lo que se tarda en ejecutar todo un frame
-        timer_get_elapsed_core_frame_pre();
+        //(no mientras se mide una cancion AY: en top speed esto llega despues
+        //de cada instruccion)
+        if (!ay_player_scanning) timer_get_elapsed_core_frame_pre();
 
 
     }

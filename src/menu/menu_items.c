@@ -6401,8 +6401,14 @@ void menu_audio_new_ayplayer_overlay(void)
         sprintf(texto,"%d/%d",ay_player_pista_actual,ay_player_total_songs());
         ayplayer_linea_info(w,AYPLAYER_INICIO_LINEA_TRACK,"Track:",texto);
 
-        sprintf(tiempo,"%02d:%02d.%02d / %02d:%02d.%02d",minutos,segundos,decimas_segundo,
-            minutos_total,segundos_total,decimas_segundo_total);
+        if (ay_player_scanning) {
+            //Midiendo la duracion de la cancion: aun no hay tiempo
+            sprintf(tiempo,"%s %d%%",menu_tr("Measuring length..."),ay_player_scan_progress());
+        }
+        else {
+            sprintf(tiempo,"%02d:%02d.%02d / %02d:%02d.%02d",minutos,segundos,decimas_segundo,
+                minutos_total,segundos_total,decimas_segundo_total);
+        }
         int columna_tiempo=w->visible_width-2-strlen(tiempo);
         if (columna_tiempo<1) columna_tiempo=1;
         zxvision_print_string_defaults(w,columna_tiempo,AYPLAYER_INICIO_LINEA_TRACK,tiempo);
@@ -6639,6 +6645,11 @@ void menu_ayplayer_shuffle(MENU_ITEM_PARAMETERS)
 void menu_ayplayer_detect_silence(MENU_ITEM_PARAMETERS)
 {
     ay_player_silence_detection.v ^=1;
+}
+
+void menu_ayplayer_measure_lengths(MENU_ITEM_PARAMETERS)
+{
+    ay_player_measure_lengths.v ^=1;
 }
 
 void menu_ayplayer_next_file(MENU_ITEM_PARAMETERS)
@@ -7082,6 +7093,11 @@ void menu_audio_new_ayplayer_settings(MENU_ITEM_PARAMETERS)
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ayplayer_detect_silence,NULL,"[%c] Detect silence",
             (ay_player_silence_detection.v ? 'X' : ' '));
         menu_add_item_menu_ayuda(array_menu_common,"Jump to next track if silence detected during 10 seconds");
+
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ayplayer_measure_lengths,NULL,"[%c] Measure song lengths",
+            (ay_player_measure_lengths.v ? 'X' : ' '));
+        menu_add_item_menu_ayuda(array_menu_common,"The first time a song is played, it runs without sound for a few seconds "
+            "until its music repeats; the length found is kept and used afterwards");
 
         menu_add_item_menu_separator(array_menu_common);
 

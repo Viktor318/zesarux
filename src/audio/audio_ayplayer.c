@@ -42,6 +42,8 @@
 #include "menu_items.h"
 #include "menu_filesel.h"
 #include "compileoptions.h"
+#include "timer.h"
+#include "audio_hq.h"
 
 
 
@@ -159,6 +161,10 @@ void ay_player_set_footer(char *texto1,char *texto2)
 
 }
 
+//Checksum del archivo cargado: lo identifica en el archivo de duraciones
+static unsigned int ay_player_file_crc=0;
+static unsigned int ay_player_checksum(z80_byte *data,int length);
+
 char ay_player_file_author[1024]="";
 char ay_player_file_misc[1024]="";
 char ay_player_file_song_name[1024]="";
@@ -210,6 +216,8 @@ int audio_ay_player_load(char *filename)
 
 
     fclose(ptr_ayfile);
+
+    ay_player_file_crc=ay_player_checksum(audio_ay_player_mem,leidos);
 
     //Mostrar información de la canción
 	int indice_autor=audio_ay_player_get_abs_index(12);
@@ -305,9 +313,309 @@ void ay_player_mem_set(z80_int destino,z80_byte valor,z80_int longitud)
 	}
 }
 
+/* ------------------------------------------------------------------------
+   Medicion de la duracion de una cancion (como en el fork de Fuse): la
+   primera vez que se reproduce una cancion, se ejecuta sin sonido en top
+   speed guardando los registros AY de cada frame, hasta que la musica se
+   repite. Las duraciones se guardan en un archivo del directorio home, por
+   checksum del archivo
+   ------------------------------------------------------------------------ */
+
+#define AY_SCAN_SECONDS 15
+#define AY_SCAN_MAX_FRAMES (60L*60*50)  //una hora de musica
+#define AY_SCAN_MIN_PERIOD 250          //5 segundos
+#define AY_SCAN_CONFIRM 3000            //un minuto
+#define AY_SCAN_CHECK_EVERY 250
+#define AY_LENGTHS_FILE "zesarux_ay_lengths.txt"
+
+//Medir la duracion de las canciones
+z80_bit ay_player_measure_lengths={1};
+
+int ay_player_scanning=0;
+static int ay_scan_skip_once=0;
+static long ay_scan_count;
+static int ay_scan_start;
+static int ay_scan_top_speed_before;
+static unsigned int *ay_scan_hash=NULL;
+static z80_byte *ay_scan_silent=NULL;
+//La duracion de la cancion actual es medida
+int ay_player_length_measured=0;
+
+static unsigned int ay_player_checksum(z80_byte *data,int length)
+{
+    unsigned int crc=0xffffffff;
+    int i,bit;
+
+    for (i=0;i<length;i++) {
+        crc ^=data[i];
+        for (bit=0;bit<8;bit++) crc=(crc>>1) ^ (0xedb88320 & -(crc & 1));
+    }
+    return ~crc;
+}
+
+/* Lineas: checksum (hex), cancion (desde 0), duracion en frames (0: no se
+   encontro repeticion), el frame desde donde sigue la musica despues del
+   final (-1: la musica termina). Cuenta la ultima linea de una cancion. Se
+   lee una vez y luego se mantiene en memoria */
+struct s_ay_length_entry {
+    unsigned int sum;
+    int song;
+    long frames,loop;
+};
+
+static struct s_ay_length_entry *ay_lengths=NULL;
+static int ay_lengths_count=0,ay_lengths_size=0,ay_lengths_read=0;
+
+static int ay_lengths_path(char *path)
+{
+    return util_get_file_in_home_dir(path,AY_LENGTHS_FILE);
+}
+
+static void ay_lengths_remember(unsigned int sum,int song,long frames,long loop)
+{
+    int i;
+
+    for (i=0;i<ay_lengths_count;i++) {
+        if (ay_lengths[i].sum==sum && ay_lengths[i].song==song) break;
+    }
+
+    if (i==ay_lengths_count) {
+        if (ay_lengths_count==ay_lengths_size) {
+            ay_lengths_size=(ay_lengths_size ? ay_lengths_size*2 : 64);
+            ay_lengths=realloc(ay_lengths,ay_lengths_size*sizeof(struct s_ay_length_entry));
+            if (ay_lengths==NULL) cpu_panic("Error allocating memory for AY lengths");
+        }
+        ay_lengths_count++;
+    }
+
+    ay_lengths[i].sum=sum;
+    ay_lengths[i].song=song;
+    ay_lengths[i].frames=frames;
+    ay_lengths[i].loop=loop;
+}
+
+static int ay_lengths_lookup(unsigned int sum,int song,long *frames,long *loop)
+{
+    int i;
+
+    if (!ay_lengths_read) {
+        char path[PATH_MAX],line[128];
+        unsigned long file_sum;
+        int file_song;
+        long file_frames,file_loop;
+        FILE *f;
+
+        ay_lengths_read=1;
+        if (ay_lengths_path(path)) {
+            f=fopen(path,"r");
+            if (f) {
+                while (fgets(line,sizeof(line),f)) {
+                    if (sscanf(line,"%lx %d %ld %ld",&file_sum,&file_song,&file_frames,&file_loop)==4) {
+                        ay_lengths_remember(file_sum,file_song,file_frames,file_loop);
+                    }
+                }
+                fclose(f);
+            }
+        }
+    }
+
+    for (i=0;i<ay_lengths_count;i++) {
+        if (ay_lengths[i].sum==sum && ay_lengths[i].song==song) {
+            *frames=ay_lengths[i].frames;
+            *loop=ay_lengths[i].loop;
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+static void ay_lengths_store(unsigned int sum,int song,long frames,long loop)
+{
+    char path[PATH_MAX];
+    long old_frames,old_loop;
+    FILE *f;
+
+    ay_lengths_lookup(sum,song,&old_frames,&old_loop); //leerlo primero
+    ay_lengths_remember(sum,song,frames,loop);
+
+    if (!ay_lengths_path(path)) return;
+    f=fopen(path,"a");
+    if (!f) return;
+    fprintf(f,"%08x %d %ld %ld\n",sum,song,frames,loop);
+    fclose(f);
+}
+
+//La duracion medida de una cancion, sin medirla (0: ninguna)
+long ay_player_known_length(unsigned int sum,int song)
+{
+    long frames,loop;
+    if (ay_lengths_lookup(sum,song,&frames,&loop)) return frames;
+    return 0;
+}
+
+static void ay_scan_begin(void)
+{
+    if (ay_scan_hash==NULL) {
+        ay_scan_hash=malloc(AY_SCAN_MAX_FRAMES*sizeof(unsigned int));
+        ay_scan_silent=malloc(AY_SCAN_MAX_FRAMES);
+        if (ay_scan_hash==NULL || ay_scan_silent==NULL) cpu_panic("Error allocating memory for AY length measurement");
+    }
+
+    ay_player_scanning=1;
+    ay_scan_count=0;
+    ay_scan_start=contador_segundo_infinito;
+    ay_scan_top_speed_before=top_speed_timer.v;
+    top_speed_timer.v=1;
+    debug_printf(VERBOSE_INFO,"Measuring the length of song %d",ay_player_pista_actual);
+}
+
+//store: guardar la duracion (0: no encontrada)
+static void ay_scan_end(int store,long frames,long loop)
+{
+    if (!ay_player_scanning) return;
+
+    ay_player_scanning=0;
+    top_speed_timer.v=ay_scan_top_speed_before;
+    ay_player_silence_detection_counter=0;
+    audio_hq_fifo_empty();
+
+    if (store) {
+        debug_printf(VERBOSE_INFO,"Song %d length: %ld frames, goes on from %ld (%ld frames measured)",ay_player_pista_actual,frames,loop,ay_scan_count);
+        ay_lengths_store(ay_player_file_crc,ay_player_pista_actual-1,frames,loop);
+    }
+}
+
+/* Ha vuelto a empezar la musica? El menor periodo P para el que los
+   ultimos max(P, un minuto) frames son iguales a los de P frames antes;
+   luego atras hasta el primer frame S de la repeticion. La cancion dura
+   hasta S + P y sigue desde S; si lo que se repite es silencio, la musica
+   termino en S (*loop = -1). -1: aun no */
+static long ay_scan_find(long *loop)
+{
+    long n=ay_scan_count,period,need,k,start,i;
+    int silent;
+
+    for (period=AY_SCAN_MIN_PERIOD;;period++) {
+        need=(period>AY_SCAN_CONFIRM ? period : AY_SCAN_CONFIRM);
+        if (period+need>n) return -1;
+
+        for (k=0;k<need;k++) {
+            if (ay_scan_hash[n-1-k]!=ay_scan_hash[n-1-k-period]) break;
+        }
+        if (k<need) continue;
+
+        start=n-need-period;
+        while (start>0 && ay_scan_hash[start-1]==ay_scan_hash[start-1+period]) start--;
+
+        silent=1;
+        for (i=start;i<start+period;i++) {
+            if (!ay_scan_silent[i]) {
+                silent=0;
+                break;
+            }
+        }
+
+        if (silent) {
+            *loop=-1;
+            return start;
+        }
+        *loop=start;
+        return start+period;
+    }
+}
+
+//Se llama al final de cada frame emulado
+void ay_player_frame_end(void)
+{
+    z80_byte *r;
+    unsigned int hash=2166136261U;
+    long length,loop;
+    int i,finished=0;
+
+    if (!ay_player_scanning) return;
+
+    if (audio_ay_player_mem==NULL || ay_player_playing.v==0) {
+        ay_scan_end(0,0,0);
+        return;
+    }
+
+    r=ay_3_8912_registros[0];
+    for (i=0;i<14;i++) {
+        hash ^=r[i];
+        hash *=16777619U;
+    }
+    ay_scan_hash[ay_scan_count]=hash;
+    ay_scan_silent[ay_scan_count]=!((r[8] | r[9] | r[10]) & 0x1f);
+    ay_scan_count++;
+
+    if (ay_scan_count % AY_SCAN_CHECK_EVERY==0) {
+        length=ay_scan_find(&loop);
+        if (length>=0) {
+            //Solo silencio: sin duracion
+            if (length<50) ay_scan_end(1,0,0);
+            else ay_scan_end(1,length,loop);
+            finished=1;
+        }
+    }
+
+    if (!finished && (ay_scan_count>=AY_SCAN_MAX_FRAMES ||
+        contador_segundo_infinito-ay_scan_start>AY_SCAN_SECONDS*1000)) {
+        ay_scan_end(1,0,0);
+        finished=1;
+    }
+
+    //La cancion empieza de nuevo, ahora con su duracion
+    if (finished) {
+        ay_scan_skip_once=1;
+        audio_ay_player_play_song(ay_player_pista_actual);
+    }
+}
+
+//0-100
+int ay_player_scan_progress(void)
+{
+    int elapsed;
+
+    if (!ay_player_scanning) return 100;
+    elapsed=contador_segundo_infinito-ay_scan_start;
+    if (elapsed<0) elapsed=0;
+    if (elapsed>AY_SCAN_SECONDS*1000) elapsed=AY_SCAN_SECONDS*1000;
+    return elapsed*100/(AY_SCAN_SECONDS*1000);
+}
+
+//La duracion medida, o medirla ahora
+static void ay_player_song_length_measured(z80_byte song)
+{
+    long frames,loop;
+
+    ay_player_length_measured=0;
+    if (ay_player_cpc_mode.v) return;
+
+    if (ay_lengths_lookup(ay_player_file_crc,song-1,&frames,&loop)) {
+        if (frames>0) {
+            if (frames>65535) frames=65535;
+            ay_song_length=frames;
+            ay_player_length_measured=1;
+            if (ay_player_limit_any_track>0 && ay_song_length>ay_player_limit_any_track) {
+                ay_song_length=ay_player_limit_any_track;
+            }
+        }
+    }
+    else if (ay_scan_skip_once) {
+        ay_scan_skip_once=0;
+    }
+    else if (ay_player_measure_lengths.v) {
+        ay_scan_begin();
+    }
+}
+
 //Retorna 0 si ok
 int audio_ay_player_play_song(z80_byte song)
 {
+    //Si se estaba midiendo una cancion: ya no
+    ay_scan_end(0,0,0);
+
     ay_player_silence_detection_counter=0;
 
 	if (audio_ay_player_mem==NULL) {
@@ -540,8 +848,8 @@ int audio_ay_player_play_song(z80_byte song)
         e) if INIT equal to ZERO then place to first CALL instruction address of
             first AY file block instead of INIT (see next f) and g) steps)
 
-        The player calls the first block, so that its RET comes back to the
-        player (starting the processor there returned to nowhere)
+        El reproductor llama al primer bloque, para que su RET vuelva al
+        reproductor (empezar el procesador alli volvia a ninguna parte)
     */
     if (reg_init==0) {
         reg_init=audio_ay_player_get_be_word(pdata);
@@ -683,6 +991,7 @@ int audio_ay_player_play_song(z80_byte song)
 
     //printf("PC register: %04XH\n",reg_pc);
 
+    ay_player_song_length_measured(song);
 
     return 0;
 
@@ -1173,6 +1482,8 @@ void ay_player_playing_timer(void)
 	if (audio_ay_player_mem==NULL) return;
 	if (ay_player_playing.v==0) return;
     if (ay_player_paused.v) return;
+    //Midiendo la duracion: la cancion empieza de nuevo despues
+    if (ay_player_scanning) return;
 
 
 	ay_song_length_counter++;
@@ -1203,6 +1514,7 @@ void ay_player_playing_timer(void)
 
 void ay_player_stop_player(void)
 {
+    ay_scan_end(0,0,0);
 	ay_player_playing.v=0;
 	audio_ay_player_mem=NULL;
 

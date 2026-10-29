@@ -2529,6 +2529,9 @@ void audio_send_stereo_sample(char valor_sonido_izquierdo,char valor_sonido_dere
 
 	limite_buffer_audio=AUDIO_BUFFER_SIZE*2;
 
+	//Midiendo la duracion de una cancion AY: silencio
+	if (ay_player_scanning) valor_sonido_izquierdo=valor_sonido_derecho=0;
+
 	//printf ("inicial %d\n",valor_sonido_izquierdo);
 
 	if (audio_resample_1bit.v) {
