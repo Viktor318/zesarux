@@ -14,11 +14,21 @@ Así además en todos esos se podrá usar el zoom 0.75, 0.5, 0.25
 http://www.rwapadventures.com/ql_wiki/index.php?title=Sinclair%20QL%20Home%20Computer&lang=en
 
 
+QL-Emulación CST Thor, Q40, Q60, Q68
 
 -ql_return_full_path: gestionar retorno valor 1 en todos los casos?
 -gestionar if (hacer_trap) { aunque device no sea valido?
 -ql_microdrive_floppy_emulation: misma gestion cuando mdv1 o mdv2 o flp1 no esten habilitados. Creo que esto ya está correcto
 
+
+
+
+
+QL-poder crear alias de dispositivos : por ejemplo win1_launchpad que apunte a mdv1_
+-> tiene sentido?
+
+
+QL-si mdv1_ no esta activado y hago dir mdv1_ se pone inverso mdv1_ y flp1_
 
 
 QL -soporte joystick ql? joystick  1 es cursores+space, joystick 2 es
@@ -288,16 +298,8 @@ el bit 15 de cada color y sin perder los cambios de CRAM durante efectos de rast
 con el color más cercano de la tabla RGB555, o añadir una tabla exclusiva para reproducir sus intensidades exactas.
 Revisar también el valor VDVER del registro 00AF: actualmente anuncia VDAC2/FT812 por defecto.
 
--Puerto 57 tsconf es mmc?? usado en zifi demo
 
 
-http://speccy.info/Pentagon
-
-Misma wiki para info de cosas de TSConf, como el z controller ide
-
--sonic: fondo se ve negro, se deberia ver azul?
-
--Quiza algunas demos no se ven bien efectos de linea debidos al turbo? se ven mas arriba: ejemplos chess, 200,
 
 -Render modo spectrum compatible debería leer de buffer atributos y pixeles ; para que demos como overscan se vean bien
 
@@ -305,18 +307,29 @@ Misma wiki para info de cosas de TSConf, como el z controller ide
 
 -sin real video no borra border. al menos en demo carousel.spg
 
--mmc. Esto tambien para baseconf. Parece que envia un comando FF invalido y luego se queda en un bucle
 
 con gigascreen activo, al pulsar teclas en el menu (cursores?) las demos se alteran! :(
 gestion interrupciones (dma, linea, frame) a la vez. cosa poco probable?
 truco para que las demos vayan mas fluidas: poner turbo x1, en algunas no se ralentiza el cambio de turbo y van perfectas a 50 fps
 
--ideas por que tsconf va lento algunas demos: porque basicamente usan modo turbo X4
-hay rutinas, como gestion de sprites y tiles, que se podrian mejorar ligeramente, cacheando algunas cosas.... pero aun asi, aunque desactive los sprites o tiles del todo, el uso de cpu no baja significativamente, apenas 1 o 2 % en un uso total de 75%..... la solución seria que el core de Z80 usase menos cpu fisica, asi el modo turbo x4 funcionaria mas ligero
 
 -factor compresion tsconf a texto en drivers curses, stdout, simpletext que sea configurable
 
 -Tsconf: escritura dma en fmaps. No he encontrado ningun juego que lo haga
+
+-TSConf: falta el arbitraje exacto de memoria entre CPU, vídeo, TSU y DMA. La DMA avanza
+con una temporización simplificada; para reproducir la contención real habría que asignar
+los turnos del bus de RAM en el instante preciso de cada acceso, también en modos turbo.
+
+-TSConf DMA: implementar RAM a SPI (modo 5) y probarlo con un programa que lo utilice.
+
+-TSConf DMA: probar IDE por SMUC en ambos sentidos con una demo o juego real; el código
+existe, pero aún no se ha validado así.
+
+-TSConf DMA: FDD a RAM queda pendiente de emular la controladora floppy de TSConf.
+
+-TSConf DMA: revisar los casos límite de los modos implementados (alineación, ráfagas,
+cruces de página y finalización de la interrupción) con pruebas funcionales.
 
 -tsconf:
 *tsconf:

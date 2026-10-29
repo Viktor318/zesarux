@@ -1177,6 +1177,14 @@ z80_byte fetch_opcode_spectrum(void)
 	return peek_byte_no_time (reg_pc);
 }
 
+z80_byte fetch_opcode_tsconf(void)
+{
+#ifdef EMULATE_VISUALMEM
+    set_visualmemopcodebuffer(reg_pc);
+#endif
+    return tsconf_cache_read(reg_pc);
+}
+
 z80_byte fetch_opcode_baseconf(void)
 {
 	z80_byte opcode;
@@ -3102,6 +3110,7 @@ void poke_byte_no_time_tsconf(z80_int dir,z80_byte valor)
 		puntero=puntero+dir;
 
 		*puntero=valor;
+		tsconf_cache_invalidate(dir);
 
 }
 
@@ -3151,9 +3160,9 @@ z80_byte peek_byte_tsconf(z80_int dir)
                 }
 #endif
 
-                t_estados += 3;
+                t_estados += tsconf_cache_read_wait(dir,0)+3;
 
-        return peek_byte_no_time_tsconf(dir);
+        return tsconf_cache_read(dir);
 
 }
 

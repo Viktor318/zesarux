@@ -253,6 +253,129 @@ z80_byte *tsconf_ram_mem_table[256];
 
 //Direcciones actuales mapeadas, bloques de 16 kb
 z80_byte *tsconf_memory_paged[4];
+
+/* Caché de RAM de TSConf: 512 bytes de correspondencia directa. Solo actúa
+   a 14 MHz y en las ventanas habilitadas por CacheConfig (#2BAF). Cada fallo
+   carga dos bytes contiguos y añade la espera de acceso a DRAM; una lectura
+   posterior de esos bytes evita esa espera. Las escrituras de CPU invalidan
+   el par afectado. La ROM y los modos de 3,5/7 MHz no usan la caché. */
+static z80_byte *tsconf_cache_tags[512];
+static z80_byte tsconf_cache_data[512];
+static unsigned long long tsconf_cache_hits[4];
+static unsigned long long tsconf_cache_misses[4];
+static unsigned long long tsconf_cache_total_hits;
+static unsigned long long tsconf_cache_total_misses;
+
+/* Invalida las 512 entradas y reinicia los contadores de hit/miss.
+   No recibe parámetros ni devuelve valor; se llama al reiniciar o cambiar
+   la configuración de caché o velocidad. */
+static void tsconf_cache_clear(void)
+{
+    int i;
+    for (i=0;i<512;i++) tsconf_cache_tags[i]=NULL;
+    for (i=0;i<4;i++) {
+        tsconf_cache_hits[i]=0;
+        tsconf_cache_misses[i]=0;
+    }
+    tsconf_cache_total_hits=0;
+    tsconf_cache_total_misses=0;
+}
+
+/* Indica si la dirección de CPU 'address' apunta a RAM según el mapa actual.
+   Devuelve 1 para RAM y 0 para ROM; la caché no actúa sobre la ROM. */
+static int tsconf_cache_is_ram(z80_int address)
+{
+    return address>=0x4000 || (tsconf_get_memconfig()&8) || tsconf_vdos_active.v;
+}
+
+/* Copia el estado actual de la ventana 'window' (0-3) en 'info'. Devuelve
+   página mapeada, tipo de memoria, habilitación efectiva y contadores de
+   lecturas de CPU desde el último cambio de página o configuración. */
+void tsconf_get_cache_debug_info(int window,struct tsconf_cache_debug_info *info)
+{
+    int address=window<<14;
+    info->is_ram=tsconf_cache_is_ram(address);
+    info->enabled=info->is_ram && cpu_turbo_speed==4 &&
+                  (tsconf_af_ports[0x2b]&(1<<window));
+    info->page=debug_paginas_memoria_mapeadas[window]&DEBUG_PAGINA_MAP_MASK;
+    info->hits=tsconf_cache_hits[window];
+    info->misses=tsconf_cache_misses[window];
+}
+
+/* Devuelve en 'hits' y 'misses' los accesos de todas las ventanas desde el
+   último reinicio o cambio de caché/velocidad. Estos totales no se reinician
+   al cambiar una página mapeada. */
+void tsconf_get_cache_debug_totals(unsigned long long *hits,unsigned long long *misses)
+{
+    *hits=tsconf_cache_total_hits;
+    *misses=tsconf_cache_total_misses;
+}
+
+/* Consulta o rellena la entrada asociada a la dirección de CPU 'address'.
+   Devuelve 0 si ya estaba en caché y 1 si hubo que leer la RAM física.
+   El relleno carga el par de bytes que comparte el acceso de DRAM. */
+static int tsconf_cache_fetch(z80_int address)
+{
+    int window=address>>14;
+    int index=address&511;
+    z80_byte *block=tsconf_memory_paged[window]+(address&0x3e00);
+    // CacheConfig (#2BAF): cada bit 0-3 habilita la caché en una ventana de 16 KiB.
+    // La caché solo interviene cuando la CPU funciona a 14 MHz.
+    int enabled=(cpu_turbo_speed==4) && (tsconf_af_ports[0x2b]&(1<<window));
+    if (enabled && tsconf_cache_tags[index]==block) return 0;
+
+    // Cada fallo carga dos bytes consecutivos de la RAM física.
+    int pair=index&~1;
+    int offset=(address&0x3fff)&~1;
+    tsconf_cache_data[pair]=tsconf_memory_paged[window][offset];
+    tsconf_cache_data[pair+1]=tsconf_memory_paged[window][offset+1];
+    tsconf_cache_tags[pair]=tsconf_cache_tags[pair+1]=enabled ? block : NULL;
+    return 1;
+}
+
+/* Calcula la espera adicional de una lectura de RAM en 'address'. 'm1' vale
+   1 para la lectura de opcode y 0 para una lectura de datos. Devuelve ciclos
+   de CPU adicionales; solo los fallos de caché a 14 MHz introducen espera. */
+int tsconf_cache_read_wait(z80_int address,int m1)
+{
+    if (!tsconf_cache_is_ram(address)) return 0;
+    int miss=tsconf_cache_fetch(address);
+    int window=address>>14;
+    if (cpu_turbo_speed!=4) return 0;
+    if (tsconf_af_ports[0x2b]&(1<<window)) {
+        if (miss) {
+            tsconf_cache_misses[window]++;
+            tsconf_cache_total_misses++;
+        }
+        else {
+            tsconf_cache_hits[window]++;
+            tsconf_cache_total_hits++;
+        }
+    }
+    if (!miss) return 0;
+    // A 14 MHz, el fallo espera al siguiente ciclo de la DRAM de 7 MHz.
+    if (m1) return (t_estados&1) ? 3 : 4;
+    return (t_estados&1) ? 3 : 2;
+}
+
+/* Lee la dirección de CPU 'address' a través de la caché de TSConf.
+   Devuelve el byte leído. El tiempo del acceso se cuenta por separado. */
+z80_byte tsconf_cache_read(z80_int address)
+{
+    if (!tsconf_cache_is_ram(address) || cpu_turbo_speed!=4) {
+        return tsconf_memory_paged[address>>14][address&0x3fff];
+    }
+    tsconf_cache_fetch(address);
+    return tsconf_cache_data[address&511];
+}
+
+/* Invalida el par de bytes de caché correspondiente a una escritura en la
+   dirección de CPU 'address'. No devuelve valor. */
+void tsconf_cache_invalidate(z80_int address)
+{
+    int pair=address&510;
+    tsconf_cache_tags[pair]=tsconf_cache_tags[pair+1]=NULL;
+}
 static int tsconf_7ffd_locked;
 
 //Almacena tamanyo pantalla y border para modo actual
@@ -482,10 +605,13 @@ void tsconf_set_emulator_setting_turbo(void)
 
 
                                 */
+        int velocidad_anterior=cpu_turbo_speed;
         z80_byte t=tsconf_af_ports[32] & 3;
         if (t==0) cpu_turbo_speed=1;
         else if (t==1) cpu_turbo_speed=2;
         else cpu_turbo_speed=4;
+
+        if (cpu_turbo_speed!=velocidad_anterior) tsconf_cache_clear();
 
 
         //printf ("Setting turbo: %d\n",cpu_turbo_speed);
@@ -584,6 +710,81 @@ z80_byte debug_tsconf_dma_rw=0;
 
 z80_bit tsconf_dma_disabled={0};
 
+typedef struct {
+    int active, source, destination, burst_source, burst_destination;
+    int words_left, bursts_left, burst_length, cycles;
+    z80_byte s_align, d_align, align_size, device, direction, option;
+} tsconf_dma_state_t;
+
+static tsconf_dma_state_t tsconf_dma_state;
+static int tsconf_dma_recent_seconds;
+void tsconf_dma_operation(int source,int destination,int burst_length,int burst_number,z80_byte s_align,z80_byte d_align,z80_byte addr_align_size,z80_byte dma_ddev,z80_byte dma_rw,z80_byte dma_opt);
+
+// Reduce cada segundo el tiempo durante el que se muestra actividad reciente de la DMA.
+void tsconf_dma_decrease_info_timer(void)
+{
+    if (tsconf_dma_recent_seconds>0) tsconf_dma_recent_seconds--;
+}
+
+// Devuelve el progreso actual de la DMA para la ventana de depuración.
+void tsconf_dma_get_debug_state(tsconf_dma_debug_state_t *state)
+{
+    state->active=tsconf_dma_state.active;
+    state->source=tsconf_dma_state.source;
+    state->destination=tsconf_dma_state.destination;
+    state->words_left=tsconf_dma_state.words_left;
+    state->bursts_left=tsconf_dma_state.bursts_left;
+    state->smuc_selected=ide_smuc_dma_selected && ide_smuc_enabled.v;
+    if (tsconf_dma_recent_seconds>0) state->used_recently=1;
+    else state->used_recently=0;
+}
+
+// Avanza la DMA con los ciclos de memoria transcurridos desde la última instrucción.
+// La transferencia se hace por palabras y sus registros cambian al terminar cada ráfaga.
+void tsconf_dma_advance(int cycles)
+{
+    tsconf_dma_state_t *dma=&tsconf_dma_state;
+    if (!dma->active || tsconf_dma_disabled.v) return;
+
+    dma->cycles+=cycles;
+    while (dma->active && dma->cycles>=2) {
+        dma->cycles-=2;
+        int source_before=dma->source;
+        int destination_before=dma->destination;
+        tsconf_dma_operation(dma->source,dma->destination,1,1,0,0,dma->align_size,
+            dma->device,dma->direction,dma->option);
+        tsconf_dma_recent_seconds=5;
+        dma->source=tsconf_return_dma_addr_reg_to_linear(tsconf_af_ports[0x1a],tsconf_af_ports[0x1b],tsconf_af_ports[0x1c]);
+        dma->destination=tsconf_return_dma_addr_reg_to_linear(tsconf_af_ports[0x1d],tsconf_af_ports[0x1e],tsconf_af_ports[0x1f]);
+        int mask=dma->align_size ? 0x1ff : 0xff;
+        if (dma->s_align) dma->source=(source_before & ~mask) | (dma->source & mask);
+        if (dma->d_align) dma->destination=(destination_before & ~mask) | (dma->destination & mask);
+        tsconf_return_dma_addr_linear_to_reg(dma->source,&tsconf_af_ports[0x1a],&tsconf_af_ports[0x1b],&tsconf_af_ports[0x1c]);
+        tsconf_return_dma_addr_linear_to_reg(dma->destination,&tsconf_af_ports[0x1d],&tsconf_af_ports[0x1e],&tsconf_af_ports[0x1f]);
+        dma->words_left--;
+        if (dma->words_left) continue;
+
+        dma->bursts_left--;
+        if (!dma->bursts_left) {
+            if (dma->s_align) dma->source=tsconf_align_address(dma->burst_source,dma->align_size);
+            if (dma->d_align) dma->destination=tsconf_align_address(dma->burst_destination,dma->align_size);
+            tsconf_return_dma_addr_linear_to_reg(dma->source,&tsconf_af_ports[0x1a],&tsconf_af_ports[0x1b],&tsconf_af_ports[0x1c]);
+            tsconf_return_dma_addr_linear_to_reg(dma->destination,&tsconf_af_ports[0x1d],&tsconf_af_ports[0x1e],&tsconf_af_ports[0x1f]);
+            dma->active=0;
+            tsconf_fire_dma_interrupt();
+            break;
+        }
+
+        if (dma->s_align) dma->source=tsconf_align_address(dma->burst_source,dma->align_size);
+        if (dma->d_align) dma->destination=tsconf_align_address(dma->burst_destination,dma->align_size);
+        dma->burst_source=dma->source;
+        dma->burst_destination=dma->destination;
+        dma->words_left=dma->burst_length;
+        tsconf_return_dma_addr_linear_to_reg(dma->source,&tsconf_af_ports[0x1a],&tsconf_af_ports[0x1b],&tsconf_af_ports[0x1c]);
+        tsconf_return_dma_addr_linear_to_reg(dma->destination,&tsconf_af_ports[0x1d],&tsconf_af_ports[0x1e],&tsconf_af_ports[0x1f]);
+    }
+}
+
 void tsconf_dma_put_pixel_blit2(z80_byte *destination, z80_byte byte_source, z80_byte addr_align_size,z80_byte dma_opt)
 {
     //addr_align_size: 0 4bpp. 1 8bb
@@ -659,17 +860,6 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 
     z80_byte *source_pointer;
     z80_byte *destination_pointer;
-
-    //Guardamos estos valores en variable de debug para mostrarlos en menu debug, solo a titulo informativo
-    debug_tsconf_dma_source=source;
-    debug_tsconf_dma_destination=destination;
-    debug_tsconf_dma_burst_length=burst_length;
-    debug_tsconf_dma_burst_number=burst_number;
-    debug_tsconf_dma_s_align=s_align;
-    debug_tsconf_dma_d_align=d_align;
-    debug_tsconf_dma_addr_align_size=addr_align_size;
-    debug_tsconf_dma_ddev=dma_ddev;
-    debug_tsconf_dma_rw=dma_rw;
 
     z80_byte dma_operation=dma_ddev*2+dma_rw;
 
@@ -828,14 +1018,26 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
                     incremento_destino=2;
             break;
 
+            // La DMA IDE con SMUC, en ambos sentidos, no se ha probado con demos ni juegos.
             case 6:
-                    destination_pointer[destination]=zxevo_nemo_ide_enabled.v ? zxevo_nemo_ide_read(0x10) : 0xff;
-                    destination_pointer[(destination+1)&destination_mask]=zxevo_nemo_ide_enabled.v ? zxevo_nemo_ide_read(0x10) : 0xff;
+                    if (ide_smuc_dma_selected && ide_smuc_enabled.v) {
+                        // SMUC y DMA comparten el registro de datos ATA de 16 bits.
+                        destination_pointer[destination]=ide_read_command_block_register(0);
+                        destination_pointer[(destination+1)&destination_mask]=ide_read_command_block_register(0);
+                    }
+                    else {
+                        destination_pointer[destination]=zxevo_nemo_ide_enabled.v ? zxevo_nemo_ide_read(0x10) : 0xff;
+                        destination_pointer[(destination+1)&destination_mask]=zxevo_nemo_ide_enabled.v ? zxevo_nemo_ide_read(0x10) : 0xff;
+                    }
                     incremento_destino=2;
             break;
 
             case 7:
-                    if (zxevo_nemo_ide_enabled.v) {
+                    if (ide_smuc_dma_selected && ide_smuc_enabled.v) {
+                        ide_write_command_block_register(0,source_pointer[source]);
+                        ide_write_command_block_register(0,source_pointer[(source+1)&source_mask]);
+                    }
+                    else if (zxevo_nemo_ide_enabled.v) {
                         zxevo_nemo_ide_write(0x11,source_pointer[(source+1)&source_mask]);
                         zxevo_nemo_ide_write(0x10,source_pointer[source]);
                     }
@@ -959,6 +1161,7 @@ char *tsconf_dma_types[]={
 
 void tsconf_write_af_port(z80_byte puerto_h,z80_byte value)
 {
+  z80_byte cache_anterior=tsconf_af_ports[0x2b];
 
   tsconf_af_ports[puerto_h]=value;
 
@@ -1026,8 +1229,12 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
   }
 
   if (puerto_h==32) {
+    tsconf_af_ports[0x2b]=(tsconf_af_ports[0x2b]&0xf0) | ((value&4) ? 15 : 0);
     tsconf_set_emulator_setting_turbo();
   }
+
+  if (puerto_h==0x2b) tsconf_af_ports[0x2b]&=15;
+  if (tsconf_af_ports[0x2b]!=cache_anterior) tsconf_cache_clear();
 
   //if (puerto_h>=0x1A && puerto_h<=0x1F) debug_printf (VERBOSE_DEBUG,"Writing DMA source/dest register %02XH",puerto_h);
 
@@ -1062,11 +1269,37 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
         //debug_printf (VERBOSE_DEBUG,"Writing DMA DMA source: %06XH dest: %06XH DMALen: %02XH A_SZ: %d D_ALGN: %d S_ALGN: %d DMACtrl: %02XH DMANum: %02XH",
         //	dmasource,dmadest,tsconf_af_ports[0x26],dma_a_sz,dma_d_algn,dma_s_algn,tsconf_af_ports[0x27],tsconf_af_ports[0x28]);
 
-        tsconf_dma_operation(dmasource,dmadest,dma_burst_length,dma_num,dma_s_algn,dma_d_algn,dma_a_sz,dma_ddev,dma_rw,dma_opt);
-
-        //void tsconf_dma_operation(int source,int destination,int burst_length,int burst_number,z80_byte s_align,z80_byte d_align,z80_byte addr_align_size,z80_byte dma_ddev,z80_byte dma_rw)
-
-        if (tsconf_dma_disabled.v==0) tsconf_fire_dma_interrupt();
+        // Un controlador DMA admite una sola transacción simultánea.
+        int dma_mode=dma_ddev*2+dma_rw;
+        // TODO: implementar RAM a SPI (modo 5) cuando haya un programa conocido que lo use
+        // para poder comprobar el envío de bytes al Z-Controller.
+        int supported=(dma_mode==2 || dma_mode==3 || dma_mode==4 ||
+            dma_mode==6 || dma_mode==7 || dma_mode==8 || dma_mode==9 ||
+            dma_mode==11 || dma_mode==12);
+        if (!tsconf_dma_state.active && !tsconf_dma_disabled.v && supported) {
+            debug_tsconf_dma_source=dmasource;
+            debug_tsconf_dma_destination=dmadest;
+            debug_tsconf_dma_burst_length=dma_burst_length;
+            debug_tsconf_dma_burst_number=dma_num;
+            debug_tsconf_dma_s_align=dma_s_algn;
+            debug_tsconf_dma_d_align=dma_d_algn;
+            debug_tsconf_dma_addr_align_size=dma_a_sz;
+            debug_tsconf_dma_ddev=dma_ddev;
+            debug_tsconf_dma_rw=dma_rw;
+            tsconf_dma_state.active=1;
+            tsconf_dma_state.source=tsconf_dma_state.burst_source=dmasource;
+            tsconf_dma_state.destination=tsconf_dma_state.burst_destination=dmadest;
+            tsconf_dma_state.words_left=tsconf_dma_state.burst_length=dma_burst_length;
+            tsconf_dma_state.bursts_left=dma_num;
+            tsconf_dma_state.cycles=0;
+            tsconf_dma_state.s_align=dma_s_algn;
+            tsconf_dma_state.d_align=dma_d_algn;
+            tsconf_dma_state.align_size=dma_a_sz;
+            tsconf_dma_state.device=dma_ddev;
+            tsconf_dma_state.direction=dma_rw;
+            tsconf_dma_state.option=dma_opt;
+        }
+        else if (!supported) debug_printf(VERBOSE_DEBUG,"Unemulated dma type: rw: %d ddev: %02XH",dma_rw,dma_ddev);
 
 
   }
@@ -1116,7 +1349,7 @@ mis opciones:
           //return tsconf_af_ports[index] & 0x7f; //Quitar bit 7
 
           //Solo se usa bit 7, quitarlos todos
-          return 0;
+          return tsconf_dma_state.active ? 0x80 : 0;
       break;
 
   }
@@ -1126,6 +1359,9 @@ mis opciones:
 
 void tsconf_reset_cpu(void)
 {
+    tsconf_dma_state.active=0;
+    tsconf_dma_recent_seconds=0;
+    tsconf_cache_clear();
     tsconf_ula_y_last_scanline=-1;
     tsconf_ula_y_reload=0;
     tsconf_ula_y_reload_next=0;
@@ -1371,6 +1607,10 @@ z80_byte tsconf_get_vram_page(void)
 
 void tsconf_set_memory_pages(void)
 {
+    z80_byte *pagina_anterior[4];
+    int ventana;
+    for (ventana=0;ventana<4;ventana++) pagina_anterior[ventana]=tsconf_memory_paged[ventana];
+
     z80_byte rom_page=tsconf_get_rom_bank();
 
 
@@ -1415,6 +1655,15 @@ void tsconf_set_memory_pages(void)
     debug_paginas_memoria_mapeadas[2]=ram_page_80;
     debug_paginas_memoria_mapeadas[3]=ram_page_c0;
 
+    // Las estadísticas de cada ventana corresponden solo a su página actual.
+    // El cambio de página no invalida la caché física: solo reinicia sus contadores.
+    for (ventana=0;ventana<4;ventana++) {
+        if (pagina_anterior[ventana]!=tsconf_memory_paged[ventana]) {
+            tsconf_cache_hits[ventana]=0;
+            tsconf_cache_misses[ventana]=0;
+        }
+    }
+
   //printf ("32765: %02XH rom %d ram1 %d ram2 %d ram3 %d\n",puerto_32765,rom_page,ram_page_40,ram_page_80,ram_page_c0);
 
 }
@@ -1422,6 +1671,7 @@ void tsconf_set_memory_pages(void)
 
 void tsconf_hard_reset(void)
 {
+  tsconf_cache_clear();
 
   ide_smuc_reset();
   tsconf_ula_y_last_scanline=-1;
@@ -3314,9 +3564,7 @@ void tsconf_handle_frame_interrupts(void)
     //Ver en que posicion de t-estados por linea estamos
 
     int estados_en_linea=t_estados % screen_testados_linea;
-
-    //Dividir por turbo
-    //estados_en_linea /=cpu_turbo_speed;
+    int posicion_interrupcion=int_raster_x*cpu_turbo_speed;
 
     //primero comparar scanline
     if (t_scanline==int_raster_y) {
@@ -3324,7 +3572,7 @@ void tsconf_handle_frame_interrupts(void)
         //printf ("disparada raster y: %d  \n",int_raster_y);
         //Y ahora ver si nos "hemos" pasado de la posicion estados_en_linea anterior
 
-        if (estados_en_linea>=int_raster_x && estados_en_linea<tsconf_handle_frame_interrupts_prev_horiz) {
+        if (estados_en_linea>=posicion_interrupcion && estados_en_linea<tsconf_handle_frame_interrupts_prev_horiz) {
             //temp saltar sin tener en cuenta posicion X
             //if (t_scanline>tsconf_last_frame_y) {
 

@@ -121,6 +121,20 @@ extern z80_byte debug_tsconf_dma_rw;
 extern char *tsconf_dma_types[];
 
 extern z80_bit tsconf_dma_disabled;
+extern void tsconf_dma_advance(int cycles);
+
+typedef struct {
+    int active;
+    int source;
+    int destination;
+    int words_left;
+    int bursts_left;
+    int smuc_selected;
+    int used_recently;
+} tsconf_dma_debug_state_t;
+
+extern void tsconf_dma_get_debug_state(tsconf_dma_debug_state_t *state);
+extern void tsconf_dma_decrease_info_timer(void);
 
 
 extern int tsconf_if_ula_enabled(void);
@@ -170,6 +184,20 @@ extern int tsconf_handle_frame_interrupts_prev_horiz;
 extern void tsconf_handle_frame_interrupts(void);
 
 extern void tsconf_handle_line_interrupts(void);
+
+extern int tsconf_cache_read_wait(z80_int address,int m1);
+extern z80_byte tsconf_cache_read(z80_int address);
+extern void tsconf_cache_invalidate(z80_int address);
+
+struct tsconf_cache_debug_info {
+    int enabled;
+    int is_ram;
+    z80_byte page;
+    unsigned long long hits;
+    unsigned long long misses;
+};
+extern void tsconf_get_cache_debug_info(int window,struct tsconf_cache_debug_info *info);
+extern void tsconf_get_cache_debug_totals(unsigned long long *hits,unsigned long long *misses);
 
 extern void tsconf_set_default_basic_palette(void);
 

@@ -85,6 +85,8 @@ Fixed ZX Evo TSConf:
 - Added IDE Nemo emulation
 - Added IDE Smuc emulation
 - Updated to last ROM
+- Improved TSConf CPU timing: added 14 MHz RAM wait states and cache emulation, and corrected raster interrupt timing in turbo modes
+- Fixed DMA emulation timing
 - Fixed scroll counter, raster interrupt
 - Fixed DMA burst alignment, burst wrapping
 - Fixed tile zero transparency
@@ -95,6 +97,13 @@ Fixed ZX Evo TSConf:
 - Fixed accessing .trd, .scl and .tap selected from the machine (for example on Wild commander)
 - Fixed selecting different boot roms on TS Bios
 - Fixed reading keyboard on PS/2 mode (for Wild Commander for example)
+
+Fixed floppy disk 3" CF2 emulation (used on +3, CPC, PCW):
+- Most disks now load, including protected discs.
+- Fixed PD765 end-of-cylinder status after EOT read (Alkatraz protected games now load)
+- Fixed PD765 read timeout
+- Fixed Speedlock weak sector reads (CRC error) in +3 EDSK images
+- Fixed Speedlock protected disk loading on Spectrum +3
 
 Fixed timings for TK90X and TK95 for 50 hz and 60 hz models
 Fixed MEMPTR after Z80 return instructions

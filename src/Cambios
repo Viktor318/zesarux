@@ -85,6 +85,8 @@ Corregido ZX Evo TSConf:
 - Agregado emulación IDE Nemo
 - Agregado emulación IDE Smuc
 - Actualizado a última ROM
+- Mejorada la temporización de la CPU en TSConf: añadidas las esperas de acceso a RAM y la emulación de la caché a 14 MHz, y corregido el momento de la interrupción raster en los modos turbo.
+- Corregida temporización de DMA
 - Corregido contador de scroll scroll counter, interrupción raster
 - Corregido alineación de DMA en modo burst, retorno en modo burst
 - Corregido transparencia del tile zero
@@ -95,6 +97,13 @@ Corregido ZX Evo TSConf:
 - Corregido al seleccionar diferentes roms de arranque en TS Bios
 - Corregido al acceder .trd, .scl y .tap seleccionados desde la máquina (por ejemplo con Wild commander)
 - Corregido al leer teclado en modo PS/2 (para Wild Commander por ejemplo)
+
+Corregida emulación del floppy disk 3" CF2 (usado en +3, CPC, PCW):
+- La mayoria de discos ya cargan, incluido discos protegidos
+- Corregido estado de fin-de-cilindro del PD765 despues de leer EOT (juegos protegidos con Alkatraz ahora cargan)
+- Corregido PD765 timeout de lectura
+- Corregido PD765 Speedlock lecturas de sectores débiles (CRC error) en imágenes EDSK de +3
+- Corregido carga de discos protegidos con Speedlock en Spectrum +3
 
 Corregidos timings para TK90X y TK95 modelos de 50 hz y 60 hz
 Corregido MEMPTR despues de instrucciones return de Z80

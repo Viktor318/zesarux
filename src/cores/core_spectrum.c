@@ -144,29 +144,7 @@ void t_scanline_next_border(void)
 }
 */
 
-void t_scanline_next_fullborder(void)
-{
-    //resetear buffer border
 
-    int i;
-
-    //No si esta desactivado en tbblue
-    if (MACHINE_IS_TBBLUE && tbblue_store_scanlines_border.v==0) return;
-
-    //a 255
-    //for (i=0;i<CURRENT_FULLBORDER_ARRAY_LENGTH;i++) fullbuffer_border[i]=255;
-    //mas rapido con memset
-    memset(fullbuffer_border,255,CURRENT_FULLBORDER_ARRAY_LENGTH);
-
-	//Resetear buffer border para prism
-	if (MACHINE_IS_PRISM) {
-		for (i=0;i<CURRENT_PRISM_BORDER_BUFFER;i++) prism_ula2_border_colour_buffer[i]=65535;
-	}
-
-	//printf ("max buffer border : %d\n",i);
-
-
-}
 
 
 void interrupcion_si_despues_lda_ir(void)
@@ -1113,6 +1091,7 @@ void core_spectrum_ciclo_fetch(void)
 #endif
 
     int delta_t_estados=t_estados-t_estados_antes_opcode;
+    if (MACHINE_IS_TSCONF) tsconf_dma_advance(delta_t_estados*4/cpu_turbo_speed);
 
     //if (!core_refetch) duracion_ultimo_opcode=delta_t_estados;
     //else duracion_ultimo_opcode +=delta_t_estados;

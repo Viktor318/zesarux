@@ -51,16 +51,16 @@ int baseconf_sd_cs=0;
 z80_byte *baseconf_rom_mem_table[32];
 
 // Punteros a las 256 páginas de RAM de 16 KiB.
-z80_byte *baseconf_ram_mem_table[256];
+z80_byte *baseconf_ram_mem_table[BASECONF_RAM_PAGES];
 
 // Punteros a las cuatro páginas de 16 KiB visibles por la CPU.
 z80_byte *baseconf_memory_paged[4];
 
 // Números de página resueltos para las cuatro ventanas de la CPU.
-z80_byte baseconf_memory_segments[4];
+z80_byte baseconf_memory_segments[4]; //OK NO ZSF
 
 // Tipo de cada ventana: cero para ROM y valor distinto de cero para RAM.
-z80_byte baseconf_memory_segments_type[4];
+z80_byte baseconf_memory_segments_type[4]; //OK NO ZSF
 
 /*
  * BaseConf tiene dos conjuntos de cuatro registros de gestión de memoria.
@@ -72,25 +72,64 @@ z80_byte baseconf_memory_segments_type[4];
  * #7FFD; el bit 6 selecciona RAM. Los números de página se guardan sin invertir.
  */
 // Números de página programados en los dos bancos de registros MMU.
-static z80_byte baseconf_mmu_pages[8];
+z80_byte baseconf_mmu_pages[8];   //OK ZSF
 // Banderas de tipo y sustitución de página de cada registro MMU.
-static z80_byte baseconf_mmu_flags[8];
+z80_byte baseconf_mmu_flags[8];  //OK ZSF
 // Fuente de 2 KiB escribible por la CPU para los modos de texto.
 static z80_byte baseconf_text_font[2048];
 // Señal que activa la ROM TR-DOS y sus puertos shadow.
-static int baseconf_dos_signal;
+int baseconf_dos_signal;  //OK ZSF
 /* Estado del Beta Disk virtual de PentEvo. El firmware guarda el servicio
    de RAM-disk en la página RAM FE y lo selecciona en lugar del FDC físico. */
 // Máscara de unidades Beta Disk cuyo medio procede del RAM-disk.
-static z80_byte baseconf_beta_drive_virtual;
+z80_byte baseconf_beta_drive_virtual; //OK ZSF
 // Número de unidad Beta Disk seleccionado actualmente.
-static z80_byte baseconf_beta_drive_selected;
+z80_byte baseconf_beta_drive_selected; //OK ZSF
 // Indica que la ventana ROM está sustituida por el servicio TR-DOS en RAM.
-static int baseconf_trdos_emulation_active;
+int baseconf_trdos_emulation_active; //OK ZSF
 // Últimos valores de los cuatro puertos de DOS extendido.
-static z80_byte baseconf_extended_dos_ports[4];
+z80_byte baseconf_extended_dos_ports[4]; //OK ZSF
 // Entradas RGB de la paleta programable de dieciséis colores.
-static z80_int baseconf_palette[16];
+
+
+// Último valor escrito en el puerto 77 de vídeo y turbo.
+z80_byte baseconf_last_port_77; //OK ZSF
+// Último valor escrito en el puerto 77 de la interfaz SD.
+z80_byte baseconf_last_port_sd_77;
+// Bits de control shadow del puerto 77, separados de los de vídeo.
+z80_byte baseconf_shadow_mode_port_77; //OK ZSF
+// Último valor escrito en el puerto BF de configuración.
+z80_byte baseconf_last_port_bf; //OK ZSF
+// Último valor escrito en EFF7 de vídeo, memoria y velocidad.
+z80_byte baseconf_last_port_eff7; //OK ZSF
+// Último valor escrito en el puerto BD de breakpoint NMI.
+z80_byte baseconf_last_port_bd;
+// Último valor escrito en el puerto BE de control NMI.
+z80_byte baseconf_last_port_be;
+// Último valor escrito en el puerto FF de vídeo.
+z80_byte baseconf_last_port_ff;
+// Último valor escrito en el puerto 57 de Beta Disk.
+z80_byte baseconf_last_port_57;
+// Índice CMOS seleccionado mediante DFF7.
+z80_byte baseconf_last_port_dff7;
+// Último dato de CMOS leído o escrito mediante BFF7.
+z80_byte baseconf_last_port_bff7;
+// Último valor escrito en el puerto 7FFD de paginación Spectrum.
+z80_byte baseconf_last_port_7ffd;
+
+
+// Últimos valores escritos en los cuatro puertos de DOS extendido.
+z80_byte baseconf_last_port_extended_dos[4];
+
+// Último valor escrito en el puerto FF7 del gestor de memoria.
+z80_byte baseconf_last_port_ff7; //OK ZSF
+// Último valor escrito en el puerto 7F7 del gestor de memoria.
+z80_byte baseconf_last_port_7f7; //OK ZSF
+// Último valor escrito en el puerto BF7 del gestor de memoria.
+z80_byte baseconf_last_port_bf7; //OK ZSF
+
+
+z80_int baseconf_palette[BASECONF_PALETTE_ENTRIES]; //OK ZSF
 /* Paleta inicial tras un hard reset: copia las primeras 16 entradas de
    initial_prism_palette_zero (prism.c). Cada valor es RGB444 (0xRGB).
    Orden Spectrum en cada fila: negro, azul, rojo, magenta, verde, cian,
@@ -101,7 +140,7 @@ static const z80_int baseconf_palette_default[16]={
         0,15,3840,3855,240,255,4080,4095
 };
 // Índice de color actual del borde de cuatro bits.
-static z80_byte baseconf_border_colour;
+z80_byte baseconf_border_colour;
 // Color del borde guardado antes de entrar en el servicio NMI.
 static z80_byte baseconf_nmi_saved_border_colour;
 // Dirección M1 donde se intercepta la entrada del servicio NMI.
@@ -590,46 +629,7 @@ void baseconf_write_cmos(z80_byte valor)
     zxevo_nvram[indice]=valor;
 }
 
-// Último valor escrito en el puerto 77 de vídeo y turbo.
-z80_byte baseconf_last_port_77;
-// Último valor escrito en el puerto 77 de la interfaz SD.
-z80_byte baseconf_last_port_sd_77;
-// Bits de control shadow del puerto 77, separados de los de vídeo.
-z80_byte baseconf_shadow_mode_port_77;
-// Último valor escrito en el puerto BF de configuración.
-z80_byte baseconf_last_port_bf;
-// Último valor escrito en EFF7 de vídeo, memoria y velocidad.
-z80_byte baseconf_last_port_eff7;
-// Último valor escrito en el puerto BD de breakpoint NMI.
-z80_byte baseconf_last_port_bd;
-// Último valor escrito en el puerto BE de control NMI.
-z80_byte baseconf_last_port_be;
-// Último valor escrito en el puerto FF de vídeo.
-z80_byte baseconf_last_port_ff;
-// Último valor escrito en el puerto 57 de Beta Disk.
-z80_byte baseconf_last_port_57;
-// Índice CMOS seleccionado mediante DFF7.
-z80_byte baseconf_last_port_dff7;
-// Último dato de CMOS leído o escrito mediante BFF7.
-z80_byte baseconf_last_port_bff7;
-// Último valor escrito en el puerto 7FFD de paginación Spectrum.
-z80_byte baseconf_last_port_7ffd;
 
-/*
-baseconf_last_port_extended_dos[0] // xx2F
-baseconf_last_port_extended_dos[1] // xx4F
-baseconf_last_port_extended_dos[2] // xx6F
-baseconf_last_port_extended_dos[3] // xx8F
-*/
-// Últimos valores escritos en los cuatro puertos de DOS extendido.
-z80_byte baseconf_last_port_extended_dos[4];
-
-// Último valor escrito en el puerto FF7 del gestor de memoria.
-z80_byte baseconf_last_port_ff7;
-// Último valor escrito en el puerto 7F7 del gestor de memoria.
-z80_byte baseconf_last_port_7f7;
-// Último valor escrito en el puerto BF7 del gestor de memoria.
-z80_byte baseconf_last_port_bf7;
 
 // Velocidad de CPU aplicada por última vez, en décimas de MHz.
 static int baseconf_cpu_speed_selected=70;
@@ -678,7 +678,7 @@ void baseconf_update_timing(int force)
 
 
 // Aplica la velocidad de CPU indicada por los puertos BaseConf; sin parámetros ni retorno.
-static void baseconf_set_cpu_speed(void)
+void baseconf_set_cpu_speed(void)
 {
     int nueva_velocidad;
 
@@ -1257,6 +1257,7 @@ void baseconf_store_scanline_rainbow_border(void)
         state_colour[state]=colour;
     }
     screen_border_last_color=colour;
+    //printf("color %d\n",colour);
 
     //BaseConf genera 288 scanlines visibles, que se duplican verticalmente hasta 576.
     if (visible_y>=0 && visible_y<288) {

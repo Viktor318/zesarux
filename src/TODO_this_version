@@ -25,14 +25,11 @@ el minimo para que no corte el titulo. Ver funcion menu_dibuja_ventana
 
 
 
-
-
 -en stdout no deja ir al menu anterior -> culpa de topbar, al estar activado no se comporta bien
 
 
 
 -rutinas speech y kill speech se llaman aunque no haya nada pendiente. desde timer, llama a scrtextspeech_filter_run_pending
-
 
 
 
@@ -43,7 +40,6 @@ abra vista basic
 defina también tamaños de esas ventanas?
 Todo esto es para tener esas ventanas auxiliares útiles cuando se está cargando o copiando desde cinta
 ->quiza esto se podria hacer con envio de mensajes entre las dos ventanas (*send_message_function...)
-
 
 
 
@@ -143,14 +139,7 @@ Pendientes ahora
 ***QL*****
 
 
-QL-Emulación CST Thor, Q40, Q60, Q68
 
-
-QL-poder crear alias de dispositivos : por ejemplo win1_launchpad que apunte a mdv1_
--> tiene sentido?
-
-
-QL-si mdv1_ no esta activado y hago dir mdv1_ se pone inverso mdv1_ y flp1_
 
 
 QL-Qsound AY
@@ -186,7 +175,6 @@ https://zxaaa.net/view_demos.php?t=%2F&s=Base&title=Title&vers=35
 -baseconf tiene timex video? demo 2048hrcdevo parece que usa puerto FF
 -> parece que baseconf no. quiza eso es de atm
 
--guardar estado baseconf en snapshot zsf
 
 -indicar como:
 * cargar un trd desde la SD: R Service, Image to ramdisk. ...
@@ -206,7 +194,7 @@ https://zxaaa.net/view_demos.php?t=%2F&s=Base&title=Title&vers=35
 -habilitar covox pentagon?
 
 -*snapshots zsf
-
+ok pero no restaura color border en modo rainbow-> revisar parche feo puesto en carga
 
 ------
 
@@ -253,7 +241,6 @@ necesita core 3.2.0 o inferior!
 Debug:    ZENG Online: Error returning data from command streaming-get-audio-cont. Retries: 0 Source IP=127.0.0.1
 Debug:    ZENG Online: Error returning data from command streaming-get-audio-cont. Retries: 1 Source IP=127.0.0.1
 Debug:    ZENG Online: Error returning data from command streaming-get-audio-cont. Retries: 2 Source IP=127.0.0.1
-Debug:    ZENG Online: Set alive time for user 1588586687.178043
 Debug:    ZENG Online: Error returning data from command streaming-get-audio-cont. Retries: 3 Source IP=127.0.0.1
 Debug:    ZENG Online: Error returning data from command streaming-get-audio-cont. Retries: 4 Source IP=127.0.0.1
 Debug:    ZENG Online: Error returning data from command streaming-get-audio-cont. Retries: 5 Source IP=127.0.0.1
@@ -284,10 +271,7 @@ machines/tsconf.c:1251:28: runtime error: index 135 out of bounds for type 'z80_
 SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior machines/tsconf.c:1251:28
 
 
-
-
 -NeoGS emular?
-
 
 ------
 
@@ -318,9 +302,7 @@ https://www.freetimeweb.nl/home/computer/alt/lawsons-amstrad-computer_site/web.u
 -Scorpion
 
 
-*mover funciones peek y poke de scorpion a scorpion.h
-
-*snapshots zsf
+*snapshots zsf. falta restaurar modo turbo en scorpion turbo
 
 *de DEVELOPMENT, pendiente desde keyboard_48p.bmp en adelante
 
@@ -336,32 +318,26 @@ acabar de probarlo **modos de video ampliado
 *usamos pruebascorpiongmx.mmc
 
 
-*realvideo scorpion y gmx ok
-
 soft? https://zxaaa.net/view_demos.php?t=&s=scorpion&title=Title&vers=35
 
 *probar gmx en otros drivers de video (sdl, x11, etc)
 
-ok teclado virtual scorpion
-
-*falta en debug indicar memory zones
+*snapshots zsf para gmx
 
 ------
 
 -didaktik Gama
-*falta en debug indicar memory zones
+*ok todo?
 
 
 ---
 
 -----
+
 -en features agregar nuevos accesos ide, sd en tsconf, baseconf, gmx
 
 
 ---
-
-
--timings tsconf
 
 
 -en teoria en las máquinas que no se puede quitar border, si me voy a fullscreen con opcion de "no border en full screen", se verán mal, ejemplo tbblue
@@ -372,3 +348,6 @@ outrun: corregido dibujado pista y tablero y nubes
 chasehq: tambien bien
 bank panic ok
 astro flash ok
+
+
+-+3: seguir otros speedlock que no cargan. revisar los que cargan
