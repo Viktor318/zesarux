@@ -27903,6 +27903,17 @@ void menu_ventana_scanf_number_print_buttons(zxvision_window *ventana,char *text
 
     zxvision_print_string_defaults(ventana,x_boton_menos,MENU_SCANF_NUMERO_POS_Y_SLIDER,buffer_slider);
 
+    //El caracter seleccionado del slider se vuelve a marcar: si no, al redibujar la linea
+    //solo se veia la marca a la derecha del valor (los de la izquierda ya se habian dibujado)
+    int posicion_seleccionada=opcion_seleccionada-MENU_SCANF_NUMERO_START_ORDEN_SLIDER;
+    if (posicion_seleccionada>=0 && posicion_seleccionada<MENU_SCANF_NUMERO_ANCHO_SLIDER) {
+        char caracter[2];
+        caracter[0]=buffer_slider[posicion_seleccionada];
+        caracter[1]=0;
+        zxvision_print_string(ventana,x_boton_menos+posicion_seleccionada,MENU_SCANF_NUMERO_POS_Y_SLIDER,
+            ESTILO_GUI_TINTA_SELECCIONADO,ESTILO_GUI_PAPEL_SELECCIONADO,0,caracter);
+    }
+
     zxvision_print_string_defaults(ventana,x_boton_ok,4,"<OK>");
 
     zxvision_print_string_defaults(ventana,x_boton_cancel,4,"<Cancel>");
