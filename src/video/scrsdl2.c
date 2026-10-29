@@ -89,6 +89,29 @@ int scrsdl_crea_ventana(void)
 
     flags=SDL_WINDOW_RESIZABLE;
 
+    //Que la ventana quepa en la pantalla: si no, reducir el zoom (por ejemplo tras pulsar varias veces
+    //el boton de aumentar zoom, o con una configuracion guardada con un zoom demasiado grande,
+    //la ventana se salia de la pantalla y no se podia recuperar)
+    if (!ventana_fullscreen && !scr_sdl_force_size.v) {
+        SDL_Rect disponible;
+        if (SDL_GetDisplayUsableBounds(0,&disponible)==0 && disponible.w>0 && disponible.h>0) {
+            //Margen para el titulo y el borde de la ventana
+            int max_ancho=disponible.w-16;
+            int max_alto=disponible.h-48;
+
+            while (zoom_x>1 && zoom_y>1) {
+                int ancho_total=screen_get_window_size_width_zoom_border_en()+screen_get_ext_desktop_width_zoom();
+                int alto_total=screen_get_window_size_height_zoom_border_en()+screen_get_ext_desktop_height_zoom();
+                if (ancho_total<=max_ancho && alto_total<=max_alto) break;
+
+                debug_printf(VERBOSE_INFO,"Window %d X %d does not fit on the screen (%d X %d): zoom %d -> %d",
+                    ancho_total,alto_total,disponible.w,disponible.h,zoom_x,zoom_x-1);
+                zoom_x--;
+                zoom_y--;
+            }
+        }
+    }
+
 
     int ancho=screen_get_window_size_width_zoom_border_en();
     ancho +=screen_get_ext_desktop_width_zoom();
