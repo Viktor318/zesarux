@@ -50,6 +50,9 @@
 #include "zxvision.h"
 #include "ql_i8049.h"
 
+//Ventana del teclado virtual (menu_items.c)
+extern zxvision_window menu_help_show_keyboard_ventana;
+
 z80_bit hungarian_keyboard={0};
 
 //Left Alt + number keys = Caps shift + number (Spectrum). Enabled by default
@@ -428,8 +431,10 @@ int hungarian_keyboard_is_active(void)
 
     if (!hungarian_keyboard_machine_supported()) return 0;
 
-    //Con el menu abierto, las teclas las gestiona el menu como siempre
-    if (menu_abierto) return 0;
+    //Con el menu abierto, las teclas las gestiona el menu como siempre. Excepto si la ventana activa
+    //es el teclado virtual: esa ventana deja pasar las teclas a la maquina, y entonces tambien
+    //debe valer la distribucion de teclado del sistema
+    if (menu_abierto && zxvision_current_window!=&menu_help_show_keyboard_ventana) return 0;
 
     //Chloe tiene su propio teclado completo, y en modo raw se leen posiciones fisicas
     if (chloe_keyboard.v) return 0;
