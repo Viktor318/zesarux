@@ -403,7 +403,9 @@ if $CCOMPILER --version 2>/dev/null | grep -qi clang; then
 	CFLAGS="$CFLAGS -Werror=excess-initializers"
 fi
 
-LIBS="$LIBS"
+#Biblioteca matematica (exp, cos...): la usa la salida de sonido de alta calidad.
+#Las demas bibliotecas se anaden delante, asi que queda al final, como debe ser
+LIBS="$LIBS -lm"
 
 # Si version snapshot, activar tambien warnings extra
 # TODO: esto solo vale si el define esta justo al principio de linea
