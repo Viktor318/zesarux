@@ -536,6 +536,18 @@ int audio_ay_player_play_song(z80_byte song)
         JR      LOOP
     */
 
+    /*
+        e) if INIT equal to ZERO then place to first CALL instruction address of
+            first AY file block instead of INIT (see next f) and g) steps)
+
+        The player calls the first block, so that its RET comes back to the
+        player (starting the processor there returned to nowhere)
+    */
+    if (reg_init==0) {
+        reg_init=audio_ay_player_get_be_word(pdata);
+        debug_printf (VERBOSE_DEBUG,"No init routine: calling the first block at %04XH",reg_init);
+    }
+
     z80_byte player[256];
 
     if (reg_inter==0) {
@@ -639,11 +651,6 @@ int audio_ay_player_play_song(z80_byte song)
             ay_player_copy_mem(origen_archivo,bloque_direccion,bloque_longitud);
             //memcpy(&memoria_spectrum[bloque_direccion],&audio_ay_player_mem[origen_archivo],bloque_longitud);
 
-            /*
-            e) if INIT equal to ZERO then place to first CALL instruction address of
-                first AY file block instead of INIT (see next f) and g) steps)
-                */
-            if (reg_init==0 && bloque==0) reg_pc=bloque_direccion;
         }
 
         bloque++;
