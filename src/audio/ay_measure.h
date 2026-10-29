@@ -39,6 +39,30 @@ extern int ay_measure_result(int id,long *frames,long *loop);
 //Midiendo ahora?
 extern int ay_measure_running(void);
 
+//Un Spectrum 48K reducido: solo memoria, Z80 y puertos del AY
+//(tambien lo usa el reproductor en hilo aparte)
+#include "chips_z80.h"
+
+//t-estados de un frame
+#define AY_MEASURE_FRAME_TSTATES 69888
+
+struct ay_measure_machine {
+    z80_t cpu;
+    uint64_t pins;
+    unsigned char mem[65536];
+    unsigned char ay_registers[16];
+    int ay_selected;
+    int ay_chip;
+};
+
+struct ay_measure_write {
+    int tstates;
+    unsigned char reg,value;
+};
+
+extern int ay_measure_setup(struct ay_measure_machine *m,unsigned char *data,int size,int song);
+extern int ay_measure_run_frame(struct ay_measure_machine *m,struct ay_measure_write *writes,int max_writes);
+
 //Medir sin hilo (para pruebas). Retorna la duracion en frames (0: no encontrada)
 extern long ay_measure_song(unsigned char *data,int size,int song,long *loop,volatile int *cancel);
 

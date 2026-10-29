@@ -4417,3 +4417,8 @@ no limit	nincs korlát	item
 sec	mp	item
 [%c] Measure song lengths	[%c] Dalhosszak mérése	item
 The first time a song is played, its length is measured in the background (where its music starts to repeat); the length found is kept and used afterwards	Egy dal első lejátszásakor a program a háttérben megméri a hosszát (ahol a zene ismétlődni kezd); a talált hosszt megjegyzi, és később azt használja	help
+~~Quieter	Halk~~abb	item
+~~Louder	Han~~gosabb	item
+AY Player volume down (5%)	Az AY lejátszó halkítása (5%)	help
+AY Player volume up (5%)	Az AY lejátszó hangosítása (5%)	help
+Sound:	Hang:	window text

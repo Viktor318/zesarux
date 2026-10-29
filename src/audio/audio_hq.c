@@ -51,6 +51,7 @@
 #include "screen.h"
 #include "ay38912.h"
 #include "audio_ayplayer.h"
+#include "ay_thread_player.h"
 
 //Ajuste: usar la salida de sonido de alta calidad
 z80_bit audio_hq_enabled={1};
@@ -309,6 +310,8 @@ void audio_hq_fifo_get(short *destino,int frames)
 {
     int i;
 
+    short *inicio=destino;
+
     for (i=0;i<frames;i++) {
         if (hq_fifo_buffering) {
             if (audio_hq_fifo_frames()>=audio_hq_fifo_target()) hq_fifo_buffering=0;
@@ -334,6 +337,9 @@ void audio_hq_fifo_get(short *destino,int frames)
         *destino++=(short)((int)hq_fifo_last_left*hq_fifo_fade/AUDIO_HQ_FADE_SAMPLES);
         *destino++=(short)((int)hq_fifo_last_right*hq_fifo_fade/AUDIO_HQ_FADE_SAMPLES);
     }
+
+    //La musica del reproductor AY en hilo aparte se mezcla con el sonido del emulador
+    ay_tp_mix(inicio,frames);
 }
 
 
@@ -975,7 +981,8 @@ void audio_hq_end_frame(int frame_tstates)
     //igual. En vez de descartar o repetir audio, se generan un poco mas o menos muestras por frame
     //(como mucho un 2%, y cambiando muy despacio) para mantener el FIFO cerca del retardo objetivo
     //Retardo largo mientras toca el reproductor AY
-    int largo=(ay_player_playing.v ? 1 : 0);
+    //(con el reproductor en hilo aparte la musica no pasa por aqui: retardo corto)
+    int largo=(ay_player_playing.v && !ay_tp_active() ? 1 : 0);
     if (largo!=hq_fifo_long) {
         hq_fifo_long=largo;
         if (largo) {

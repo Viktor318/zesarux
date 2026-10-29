@@ -45,8 +45,6 @@
 
 #include "ay_measure.h"
 
-//Spectrum 48K: t-estados de un frame y duracion de la señal de interrupcion
-#define AY_MEASURE_FRAME_TSTATES 69888
 #define AY_MEASURE_INT_TSTATES 32
 
 #define AY_MEASURE_MAX_FRAMES (60L*60*50)  //una hora de musica
@@ -118,23 +116,21 @@ static long ay_measure_find(unsigned int *hash,unsigned char *silent,long n,long
     }
 }
 
-long ay_measure_song(unsigned char *data,int size,int song,long *loop,volatile int *cancel)
+//Preparar la memoria y el Z80 para la cancion (desde 1), como audio_ay_player_play_song.
+//Retorna 0 si ok
+int ay_measure_setup(struct ay_measure_machine *m,unsigned char *data,int size,int song)
 {
     struct ay_measure_file file={data,size};
     struct ay_measure_file *f=&file;
-    unsigned char *mem;
-    unsigned int *hash;
-    unsigned char *silent;
-    unsigned char ay_registers[16];
-    int ay_selected=0,ay_chip=0;
-    long frames=0,length=0;
-    int i;
 
-    *loop=0;
-    if (size<20 || memcmp(data,"ZXAYEMUL",8)) return 0;
-    if (song<1 || song>ay_measure_byte(f,16)+1) return 0;
+    memset(m->ay_registers,0,sizeof(m->ay_registers));
+    m->ay_selected=0;
+    m->ay_chip=0;
 
-    //Datos de la cancion, como en audio_ay_player_play_song
+    if (size<20 || memcmp(data,"ZXAYEMUL",8)) return 1;
+    if (song<1 || song>ay_measure_byte(f,16)+1) return 1;
+
+    //Datos de la cancion
     int song_struct=ay_measure_pointer(f,18)+(song-1)*4;
     int song_data=ay_measure_pointer(f,song_struct+2);
     int ppoints,pdata;
@@ -155,15 +151,7 @@ long ay_measure_song(unsigned char *data,int size,int song,long *loop,volatile i
     //Sin rutina init: se llama al primer bloque
     if (reg_init==0) reg_init=ay_measure_word(f,pdata);
 
-    mem=malloc(65536);
-    hash=malloc(AY_MEASURE_MAX_FRAMES*sizeof(unsigned int));
-    silent=malloc(AY_MEASURE_MAX_FRAMES);
-    if (mem==NULL || hash==NULL || silent==NULL) {
-        free(mem);
-        free(hash);
-        free(silent);
-        return 0;
-    }
+    unsigned char *mem=m->mem;
 
     //Memoria: 0000-00FF RET, 0100-3FFF FFh, 4000-FFFF 0, 0038 EI
     memset(mem,0xc9,0x100);
@@ -217,77 +205,120 @@ long ay_measure_song(unsigned char *data,int size,int song,long *loop,volatile i
         }
     }
 
-    //Registros, como en audio_ay_player_play_song: valores de arranque en frio,
-    //A y F de la cancion, SP de la cancion, I=3, interrupciones desactivadas, IM 0
-    z80_t cpu;
-    uint64_t pins=z80_init(&cpu);
-    cpu.af=cpu.bc=cpu.de=cpu.hl=cpu.ix=cpu.iy=0xffff;
-    cpu.af2=cpu.bc2=cpu.de2=cpu.hl2=0xffff;
-    cpu.a=ay_measure_byte(f,song_data+8);
-    cpu.f=ay_measure_byte(f,song_data+9);
-    cpu.sp=reg_sp;
-    cpu.i=3;
-    cpu.r=0;
-    cpu.im=0;
-    cpu.iff1=cpu.iff2=false;
-    pins=z80_prefetch(&cpu,0);
+    //Registros: valores de arranque en frio, A y F de la cancion, SP de la cancion,
+    //I=3, interrupciones desactivadas, IM 0
+    z80_t *cpu=&m->cpu;
+    m->pins=z80_init(cpu);
+    cpu->af=cpu->bc=cpu->de=cpu->hl=cpu->ix=cpu->iy=0xffff;
+    cpu->af2=cpu->bc2=cpu->de2=cpu->hl2=0xffff;
+    cpu->a=ay_measure_byte(f,song_data+8);
+    cpu->f=ay_measure_byte(f,song_data+9);
+    cpu->sp=reg_sp;
+    cpu->i=3;
+    cpu->r=0;
+    cpu->im=0;
+    cpu->iff1=cpu->iff2=false;
+    m->pins=z80_prefetch(cpu,0);
 
-    memset(ay_registers,0,sizeof(ay_registers));
+    return 0;
+}
+
+//Ejecutar un frame. Si writes no es NULL, se guardan ahi las escrituras en el
+//primer chip AY con su t-estado (como mucho max_writes). Retorna cuantas
+int ay_measure_run_frame(struct ay_measure_machine *m,struct ay_measure_write *writes,int max_writes)
+{
+    z80_t *cpu=&m->cpu;
+    uint64_t pins=m->pins;
+    unsigned char *mem=m->mem;
+    int count=0;
+    long t;
+
+    for (t=0;t<AY_MEASURE_FRAME_TSTATES;t++) {
+        if (t<AY_MEASURE_INT_TSTATES) pins|=Z80_INT;
+        else pins&=~Z80_INT;
+
+        pins=z80_tick(cpu,pins);
+
+        if (pins & Z80_MREQ) {
+            uint16_t addr=Z80_GET_ADDR(pins);
+            if (pins & Z80_RD) {
+                Z80_SET_DATA(pins,mem[addr]);
+            }
+            else if (pins & Z80_WR) {
+                mem[addr]=Z80_GET_DATA(pins);
+            }
+        }
+        else if (pins & Z80_IORQ) {
+            uint16_t port=Z80_GET_ADDR(pins);
+            if (pins & Z80_M1) {
+                //Reconocimiento de interrupcion: bus a FFh
+                Z80_SET_DATA(pins,0xff);
+            }
+            else if (pins & Z80_WR) {
+                uint8_t value=Z80_GET_DATA(pins);
+                //Puertos del AY del Spectrum: seleccion FFFDh y datos BFFDh
+                if ((port & 0xc002)==0xc000) {
+                    //Turbosound: FFh primer chip, FEh segundo
+                    if (value>=0xf0) m->ay_chip=(value==0xff ? 0 : 1);
+                    else m->ay_selected=value & 15;
+                }
+                else if ((port & 0xc002)==0x8000) {
+                    if (m->ay_chip==0) {
+                        m->ay_registers[m->ay_selected]=value;
+                        if (writes!=NULL && count<max_writes) {
+                            writes[count].tstates=t;
+                            writes[count].reg=m->ay_selected;
+                            writes[count].value=value;
+                            count++;
+                        }
+                    }
+                }
+            }
+            else if (pins & Z80_RD) {
+                Z80_SET_DATA(pins,0xff);
+            }
+        }
+
+        //Esperando con HALT a la siguiente interrupcion: saltar hasta el final del frame
+        if ((pins & Z80_HALT) && t>=AY_MEASURE_INT_TSTATES) break;
+    }
+
+    m->pins=pins;
+    return count;
+}
+
+long ay_measure_song(unsigned char *data,int size,int song,long *loop,volatile int *cancel)
+{
+    struct ay_measure_machine *m;
+    unsigned int *hash;
+    unsigned char *silent;
+    long frames=0,length=0;
+    int i;
+
+    *loop=0;
+
+    m=malloc(sizeof(struct ay_measure_machine));
+    hash=malloc(AY_MEASURE_MAX_FRAMES*sizeof(unsigned int));
+    silent=malloc(AY_MEASURE_MAX_FRAMES);
+    if (m==NULL || hash==NULL || silent==NULL || ay_measure_setup(m,data,size,song)) {
+        free(m);
+        free(hash);
+        free(silent);
+        return 0;
+    }
 
     while (frames<AY_MEASURE_MAX_FRAMES) {
-        long t;
-
         if (cancel!=NULL && *cancel) break;
 
-        for (t=0;t<AY_MEASURE_FRAME_TSTATES;t++) {
-            if (t<AY_MEASURE_INT_TSTATES) pins|=Z80_INT;
-            else pins&=~Z80_INT;
-
-            pins=z80_tick(&cpu,pins);
-
-            if (pins & Z80_MREQ) {
-                uint16_t addr=Z80_GET_ADDR(pins);
-                if (pins & Z80_RD) {
-                    Z80_SET_DATA(pins,mem[addr]);
-                }
-                else if (pins & Z80_WR) {
-                    mem[addr]=Z80_GET_DATA(pins);
-                }
-            }
-            else if (pins & Z80_IORQ) {
-                uint16_t port=Z80_GET_ADDR(pins);
-                if (pins & Z80_M1) {
-                    //Reconocimiento de interrupcion: bus a FFh
-                    Z80_SET_DATA(pins,0xff);
-                }
-                else if (pins & Z80_WR) {
-                    uint8_t value=Z80_GET_DATA(pins);
-                    //Puertos del AY del Spectrum: seleccion FFFDh y datos BFFDh
-                    if ((port & 0xc002)==0xc000) {
-                        //Turbosound: FFh primer chip, FEh segundo
-                        if (value>=0xf0) ay_chip=(value==0xff ? 0 : 1);
-                        else ay_selected=value & 15;
-                    }
-                    else if ((port & 0xc002)==0x8000) {
-                        if (ay_chip==0) ay_registers[ay_selected]=value;
-                    }
-                }
-                else if (pins & Z80_RD) {
-                    Z80_SET_DATA(pins,0xff);
-                }
-            }
-
-            //Esperando con HALT a la siguiente interrupcion: saltar hasta el final del frame
-            if ((pins & Z80_HALT) && t>=AY_MEASURE_INT_TSTATES) break;
-        }
+        ay_measure_run_frame(m,NULL,0);
 
         unsigned int h=2166136261U;
         for (i=0;i<14;i++) {
-            h ^=ay_registers[i];
+            h ^=m->ay_registers[i];
             h *=16777619U;
         }
         hash[frames]=h;
-        silent[frames]=!((ay_registers[8] | ay_registers[9] | ay_registers[10]) & 0x1f);
+        silent[frames]=!((m->ay_registers[8] | m->ay_registers[9] | m->ay_registers[10]) & 0x1f);
         frames++;
 
         if (frames % AY_MEASURE_CHECK_EVERY==0) {
@@ -301,7 +332,7 @@ long ay_measure_song(unsigned char *data,int size,int song,long *loop,volatile i
         }
     }
 
-    free(mem);
+    free(m);
     free(hash);
     free(silent);
     return length;

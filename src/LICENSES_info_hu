@@ -4,6 +4,10 @@ A ZEsarUX külső modulokat is tartalmaz. Ezek licencei:
 Copyright Simon Owen. A GNU GENERAL PUBLIC LICENSE v2 alatt terjesztve, a licencet a LICENSE_simcoupe fájlban olvashatod
 http://www.simcoupe.org
 
+-chips z80.h - Z80-emulátor egy C fejlécfájlban, az AY fájlok méréséhez és lejátszásához
+Copyright (c) 2021 Andre Weissflog. A zlib/libpng licenc alatt terjesztve, a licencet a LICENSE_chips_z80 fájlban olvashatod
+https://github.com/floooh/chips
+
 -DOS betűkészlet, néhány felületstílus használja.
 Copyright Neil Roy. A CC BY-SA 3.0 licenc alatt terjesztve, a licencet a LICENSE_DOS_font fájlban olvashatod
 https://opengameart.org/content/dos-8x8-font

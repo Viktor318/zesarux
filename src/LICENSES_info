@@ -4,6 +4,10 @@ ZEsarUX includes external modules. Licenses are:
 Copyright Simon Owen. Distributed under GNU GENERAL PUBLIC LICENSE v2, you may read it on the LICENSE_simcoupe file
 http://www.simcoupe.org
 
+-chips z80.h - Z80 emulator in a C header, used to measure and play AY files
+Copyright (c) 2021 Andre Weissflog. Distributed under zlib/libpng license, you may read it on the LICENSE_chips_z80 file
+https://github.com/floooh/chips
+
 -DOS font, used on some GUI styles.
 Copyright Neil Roy. Distributed under CC BY-SA 3.0 license, you may read it on the LICENSE_DOS_font file
 https://opengameart.org/content/dos-8x8-font

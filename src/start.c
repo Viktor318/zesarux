@@ -869,6 +869,7 @@ printf (
         "--ayplayer-shuffle               Random playback\n"
         "--ayplayer-no-silence-detection  Do not jump to next track if silence detected during 10 seconds\n"
         "--ayplayer-no-measure-lengths    Do not measure the lengths of the songs when played first\n"
+        "--ayplayer-volume n              AY Player volume in percent, relative to the general volume\n"
         "--ayplayer-end-exit              Exit emulator when end playing all ay files in playlist\n"
         "--ayplayer-end-repeat            Repeat playing from the beginning when end playing current ay file\n"
         "--ayplayer-inf-length n          Limit to n seconds to ay tracks with infinite length\n"
@@ -6905,6 +6906,16 @@ int parse_cmdline_options(int desde_commandline)
 
             else if (!strcmp(argv[puntero_parametro],"--ayplayer-no-measure-lengths")) {
                 ay_player_measure_lengths.v=0;
+            }
+
+            else if (!strcmp(argv[puntero_parametro],"--ayplayer-volume")) {
+                siguiente_parametro_argumento();
+                int valor=parse_string_to_number(argv[puntero_parametro]);
+                if (valor<0 || valor>10000) {
+                    printf ("Invalid value for AY Player volume\n");
+                    exit(1);
+                }
+                ay_player_volume=valor;
             }
 
             //Por compatibilidad con versiones < 10.10

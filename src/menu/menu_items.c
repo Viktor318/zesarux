@@ -6264,7 +6264,7 @@ zxvision_window *menu_audio_new_ayplayer_overlay_window;
 //lineas 0-4 informacion (archivo, titulo, autor, otros, cancion y tiempo), 5 separador,
 //6-9 indicadores de volumen, 10 separador, 11-13 botones
 #define AYPLAYER_ANCHO_VENTANA 44
-#define AYPLAYER_ALTO_VENTANA 16
+#define AYPLAYER_ALTO_VENTANA 17
 #define AYPLAYER_LINEA_ARCHIVO 0
 #define AYPLAYER_INICIO_LINEA_TRACK 4
 #define AYPLAYER_LINEA_SEPARADOR_1 5
@@ -6373,6 +6373,8 @@ static void ayplayer_separador(zxvision_window *w,int linea)
 
 int ayplayer_force_refresh=0;
 
+void ayplayer_mostrar_volumen(zxvision_window *w);
+
 void menu_audio_new_ayplayer_overlay(void)
 {
     zxvision_window *w=menu_audio_new_ayplayer_overlay_window;
@@ -6387,6 +6389,9 @@ void menu_audio_new_ayplayer_overlay(void)
     int vol_A=0,vol_B=0,vol_C=0;
 
     int mostrar_player=menu_audio_new_ayplayer_si_mostrar();
+
+    //Volumen del reproductor (sigue al volumen general)
+    ayplayer_mostrar_volumen(w);
 
     //Lo que cambia en cada frame: tiempo e indicadores de volumen
     if (mostrar_player) {
@@ -6410,9 +6415,9 @@ void menu_audio_new_ayplayer_overlay(void)
         char volumen[32];
         char textovolumen[64];
 
-        vol_A=ay_3_8912_registros[0][8] & 15;
-        vol_B=ay_3_8912_registros[0][9] & 15;
-        vol_C=ay_3_8912_registros[0][10] & 15;
+        vol_A=ay_player_display_register(8) & 15;
+        vol_B=ay_player_display_register(9) & 15;
+        vol_C=ay_player_display_register(10) & 15;
 
         ayplayer_previo_valor_volume_A=menu_decae_ajusta_valor_volumen(ayplayer_previo_valor_volume_A,vol_A);
         ayplayer_previo_valor_volume_B=menu_decae_ajusta_valor_volumen(ayplayer_previo_valor_volume_B,vol_B);
@@ -6433,9 +6438,9 @@ void menu_audio_new_ayplayer_overlay(void)
 
         z80_byte registros_volumen[3];
         int previos[3];
-        registros_volumen[0]=ay_3_8912_registros[0][8];
-        registros_volumen[1]=ay_3_8912_registros[0][9];
-        registros_volumen[2]=ay_3_8912_registros[0][10];
+        registros_volumen[0]=ay_player_display_register(8);
+        registros_volumen[1]=ay_player_display_register(9);
+        registros_volumen[2]=ay_player_display_register(10);
         previos[0]=ayplayer_previo_valor_volume_A;
         previos[1]=ayplayer_previo_valor_volume_B;
         previos[2]=ayplayer_previo_valor_volume_C;
@@ -6644,6 +6649,43 @@ void menu_ayplayer_detect_silence(MENU_ITEM_PARAMETERS)
 void menu_ayplayer_measure_lengths(MENU_ITEM_PARAMETERS)
 {
     ay_player_measure_lengths.v ^=1;
+}
+
+void menu_ayplayer_volume_down(MENU_ITEM_PARAMETERS)
+{
+    ay_player_volume -=5;
+    ay_player_volume_limit();
+}
+
+void menu_ayplayer_volume_up(MENU_ITEM_PARAMETERS)
+{
+    ay_player_volume +=5;
+    ay_player_volume_limit();
+}
+
+//Donde se escribe el volumen del reproductor en la ventana (-1: no se escribe)
+int ayplayer_columna_volumen=-1;
+int ayplayer_linea_volumen=-1;
+
+//Volumen del reproductor y, entre parentesis, con el que suena la musica.
+//Se actualiza en cada frame: cambia tambien al cambiar el volumen general
+void ayplayer_mostrar_volumen(zxvision_window *w)
+{
+    char texto[32];
+    int ancho;
+
+    if (ayplayer_columna_volumen<0 || ayplayer_linea_volumen<0) return;
+
+    ay_player_volume_limit();
+
+    sprintf(texto,"%d%% (%d%%)",ay_player_volume,ay_player_volume_effective());
+    ancho=w->visible_width-1-ayplayer_columna_volumen;
+    if (ancho<1) return;
+    //Borrar lo anterior (puede ser mas largo)
+    char linea[64];
+    if (ancho>(int)sizeof(linea)-1) ancho=sizeof(linea)-1;
+    snprintf(linea,ancho+1,"%-*s",ancho,texto);
+    zxvision_print_string_defaults(w,ayplayer_columna_volumen,ayplayer_linea_volumen,linea);
 }
 
 void menu_ayplayer_next_file(MENU_ITEM_PARAMETERS)
@@ -7160,7 +7202,7 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
         }
 
         //Tamanyo guardado de la disposicion anterior de la ventana (mas estrecha): usar el nuevo
-        else if (ancho_ventana<ayplayer_ancho_ventana_defecto()) {
+        else if (ancho_ventana<ayplayer_ancho_ventana_defecto() || alto_ventana<AYPLAYER_ALTO_VENTANA) {
             ancho_ventana=ayplayer_ancho_ventana_defecto();
             alto_ventana=AYPLAYER_ALTO_VENTANA;
             xventana=menu_center_x_from_width(ancho_ventana);
@@ -7254,8 +7296,8 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
             //uno tras otro segun el ancho de su texto (traducido), para que no se monten
             int columna_botones=0;
             {
-                char *etiquetas_filas[]={"Track:","File:","List:"};
-                for (i=0;i<3;i++) {
+                char *etiquetas_filas[]={"Track:","File:","List:","Sound:"};
+                for (i=0;i<4;i++) {
                     int ancho=ayplayer_ancho_texto(menu_tr(etiquetas_filas[i]));
                     if (ancho>columna_botones) columna_botones=ancho;
                 }
@@ -7311,6 +7353,16 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
             AYPLAYER_BOTON(menu_audio_new_ayplayer_load,"~~Add",'a',"Add AY file");
             AYPLAYER_BOTON(menu_ayplayer_edit_playlist,"E~~dit",'d',"Edit playlist");
             AYPLAYER_BOTON(menu_audio_new_ayplayer_settings,"Se~~ttings",'t',"Player settings");
+            linea++;
+
+            //Volumen propio del reproductor
+            zxvision_print_string_defaults(ventana,1,linea,"Sound:");
+            x=columna_botones;
+            AYPLAYER_BOTON(menu_ayplayer_volume_down,"~~Quieter",'q',"AY Player volume down (5%)");
+            AYPLAYER_BOTON(menu_ayplayer_volume_up,"~~Louder",'l',"AY Player volume up (5%)");
+            ayplayer_columna_volumen=x;
+            ayplayer_linea_volumen=linea;
+            ayplayer_mostrar_volumen(ventana);
             linea++;
 
             if (!menu_audio_new_ayplayer_si_mostrar() && ay_player_playlist_get_total_elements()!=0) {

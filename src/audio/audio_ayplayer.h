@@ -41,6 +41,11 @@ extern z80_bit ay_player_playing;
 
 extern void ay_player_playing_timer(void);
 extern int ay_player_measuring(void);
+extern int ay_player_volume;
+extern int ay_player_volume_max(void);
+extern void ay_player_volume_limit(void);
+extern int ay_player_volume_effective(void);
+extern z80_byte ay_player_display_register(int reg);
 extern int ay_player_length_measured;
 extern z80_bit ay_player_measure_lengths;
 extern long ay_player_known_length(unsigned int sum,int song);

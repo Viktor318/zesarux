@@ -43,6 +43,8 @@
 #include "menu_filesel.h"
 #include "compileoptions.h"
 #include "ay_measure.h"
+#include "ay_thread_player.h"
+#include "audio_hq.h"
 
 
 
@@ -94,6 +96,41 @@ int ay_player_silence_detection_counter=0;
 
 //Si pausado
 z80_bit ay_player_paused={0};
+
+//Volumen propio del reproductor en %. La musica suena a volumen general x este volumen,
+//como mucho al 100%: puede pasar de 100 hasta que la musica llega al 100%
+int ay_player_volume=100;
+
+//Maximo del volumen del reproductor con el volumen general actual (multiplo de 5)
+int ay_player_volume_max(void)
+{
+    int maximo;
+
+    if (audiovolume<=0) return 100;
+    maximo=100*100/audiovolume;
+    maximo -=maximo % 5;
+    if (maximo<100) maximo=100;
+    return maximo;
+}
+
+//Ajustar el volumen del reproductor al maximo, si el volumen general ha cambiado
+void ay_player_volume_limit(void)
+{
+    //Con el volumen general a 0 (silencio) no se toca: al volver, sigue como estaba
+    if (audiovolume<=0) return;
+
+    int maximo=ay_player_volume_max();
+    if (ay_player_volume>maximo) ay_player_volume=maximo;
+    if (ay_player_volume<0) ay_player_volume=0;
+}
+
+//Volumen con el que suena la musica, en % (como mucho 100)
+int ay_player_volume_effective(void)
+{
+    int efectivo=audiovolume*ay_player_volume/100;
+    if (efectivo>100) efectivo=100;
+    return efectivo;
+}
 
 
 //Retorna valor de 16 bit apuntado como big endian
@@ -471,6 +508,13 @@ static void ay_player_measure_check(void)
     ay_player_measure_song=0;
 }
 
+//Registro del AY de la cancion que suena (para los indicadores de la ventana)
+z80_byte ay_player_display_register(int reg)
+{
+    if (ay_tp_active()) return ay_tp_register(reg);
+    return ay_3_8912_registros[0][reg];
+}
+
 //Midiendo la duracion de la cancion actual?
 int ay_player_measuring(void)
 {
@@ -538,6 +582,32 @@ int audio_ay_player_play_song(z80_byte song)
 
 
 	int song_data=audio_ay_player_get_abs_index(song_struct+2);
+
+    //Reproductor en hilo aparte, sin tomar el control de la maquina emulada
+    //(solo modo Spectrum y con la salida de sonido de alta calidad)
+    ay_tp_stop();
+    if (ay_player_cpc_mode.v==0 && audio_hq_fifo_in_use) {
+        sprintf (ay_player_file_song_name,"%s",&audio_ay_player_mem[indice_nombre]);
+        sprintf (ay_player_second_footer,"%s - %s",ay_player_file_author,ay_player_file_misc);
+        ay_player_set_footer(ay_player_file_song_name,ay_player_second_footer);
+
+        ay_song_length=audio_ay_player_get_be_word(song_data+4);
+        if (ay_song_length==0) ay_song_length=ay_player_limit_infinite_tracks;
+        if (ay_player_limit_any_track>0) {
+            if (ay_song_length>ay_player_limit_any_track || ay_song_length==0) ay_song_length=ay_player_limit_any_track;
+        }
+
+        ay_song_length_counter=0;
+        ay_player_playing.v=1;
+        ay_player_paused.v=0;
+
+        if (ay_tp_start(audio_ay_player_mem,audio_ay_player_file_size,song)==0) {
+            debug_printf(VERBOSE_INFO,"Song %d played on the separate AY player",song);
+            ay_player_song_length_measured(song);
+            return 0;
+        }
+        debug_printf(VERBOSE_ERR,"Can not start the AY player thread");
+    }
 
 
     if (ay_player_cpc_mode.v==0) {
@@ -897,6 +967,10 @@ z80_byte ayplayer_antes_pausa_ay_3_8912_reg_mixer[MAX_AY_CHIPS];
 
 void ay_player_pause(void)
 {
+    if (ay_tp_active()) {
+        ay_tp_set_paused(1);
+        return;
+    }
 
     int i;
     for (i=0;i<MAX_AY_CHIPS;i++) {
@@ -914,6 +988,10 @@ void ay_player_pause(void)
 
 void ay_player_unpause(void)
 {
+    if (ay_tp_active()) {
+        ay_tp_set_paused(0);
+        return;
+    }
     //Restaurar canales
     int i;
     for (i=0;i<MAX_AY_CHIPS;i++) {
@@ -1378,6 +1456,13 @@ void ay_player_playing_timer(void)
     //Medicion de la duracion terminada?
     ay_player_measure_check();
 
+    //Con el reproductor en hilo aparte, el tiempo es el de la musica escuchada
+    //(la deteccion de silencio del emulador no sirve: la maquina no suena)
+    if (ay_tp_active()) {
+        ay_song_length_counter=ay_tp_frames_played();
+        ay_player_silence_detection_counter=0;
+    }
+
 
 	ay_song_length_counter++;
 
@@ -1409,6 +1494,15 @@ void ay_player_stop_player(void)
 {
     ay_measure_stop();
     ay_player_measure_song=0;
+
+    //Con el reproductor en hilo aparte la maquina emulada no se toco
+    if (ay_tp_active()) {
+        ay_tp_stop();
+        ay_player_playing.v=0;
+        audio_ay_player_mem=NULL;
+        ay_player_playlist_item_actual=0;
+        return;
+    }
 	ay_player_playing.v=0;
 	audio_ay_player_mem=NULL;
 
