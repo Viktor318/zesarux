@@ -21164,6 +21164,22 @@ z80_byte menu_da_todas_teclas_si_reset_mouse_movido(int reset_mouse_movido,int a
         //QL
         acumulado=acumulado &   ql_keyboard_table[0] & ql_keyboard_table[1] & ql_keyboard_table[2] & ql_keyboard_table[3] &
                                 ql_keyboard_table[4] & ql_keyboard_table[5] & ql_keyboard_table[6] & ql_keyboard_table[7];
+
+        //Teclas que solo estan en la tabla de teclado propia de la maquina (por ejemplo el teclado
+        //numerico del CPC, SAM y PCW): si no, ventanas como el teclado virtual no las ven pulsadas
+        //y no las dejan pasar a la maquina
+        int i;
+        if (MACHINE_IS_CPC) {
+            for (i=0;i<10;i++) acumulado &=cpc_keyboard_table[i];
+        }
+        if (MACHINE_IS_PCW) {
+            //La fila 15 no son teclas (bits de estado del teclado que cambian solos)
+            for (i=0;i<15;i++) acumulado &=pcw_keyboard_table[i];
+        }
+        if (MACHINE_IS_SAM) {
+            acumulado &=puerto_teclado_sam_fef9 & puerto_teclado_sam_fdf9 & puerto_teclado_sam_fbf9 & puerto_teclado_sam_f7f9 &
+                        puerto_teclado_sam_eff9 & puerto_teclado_sam_dff9 & puerto_teclado_sam_bff9 & puerto_teclado_sam_7ff9;
+        }
     }
 
     if (zxvision_setting_use_speccy_keys.v && (puerto_65278 & 1)==0 && (puerto_32766 & 2)==0) {
