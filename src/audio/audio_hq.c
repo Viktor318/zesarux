@@ -50,6 +50,7 @@
 #include "debug.h"
 #include "screen.h"
 #include "ay38912.h"
+#include "audio_ayplayer.h"
 
 //Ajuste: usar la salida de sonido de alta calidad
 z80_bit audio_hq_enabled={1};
@@ -194,15 +195,27 @@ static blip_time_t audio_hq_time(int tstates);
 
 /* --- FIFO de salida: 16 bits estéreo, lo lee el driver de la tarjeta de sonido --- */
 
-//Medio segundo
-#define AUDIO_HQ_FIFO_FRAMES (AUDIO_HQ_SAMPLE_RATE/2)
+//Un segundo
+#define AUDIO_HQ_FIFO_FRAMES (AUDIO_HQ_SAMPLE_RATE)
 
 //Retardo objetivo del FIFO: absorbe las irregularidades del temporizador del sistema
 //(en Windows los frames llegan a rafagas) y las pausas cortas, por ejemplo al abrir un menu
-#define AUDIO_HQ_FIFO_TARGET (AUDIO_HQ_SAMPLE_RATE*70/1000)
+#define AUDIO_HQ_FIFO_TARGET_SHORT (AUDIO_HQ_SAMPLE_RATE*70/1000)
 
-//Por encima de esto se descarta audio antiguo (solo en casos extremos)
-#define AUDIO_HQ_FIFO_MAX (AUDIO_HQ_SAMPLE_RATE*300/1000)
+//Mientras el reproductor AY toca, el retardo no importa: mas margen, para que la musica no se corte
+//cuando el emulador se detiene un momento (por ejemplo al redibujar los menus al mover el raton)
+#define AUDIO_HQ_FIFO_TARGET_LONG (AUDIO_HQ_SAMPLE_RATE*300/1000)
+
+//Por encima del objetivo mas esto se descarta audio antiguo (solo en casos extremos)
+#define AUDIO_HQ_FIFO_MAX_EXTRA (AUDIO_HQ_SAMPLE_RATE*230/1000)
+
+//Usando el retardo largo (lo cambia el hilo de emulacion, lo lee tambien el de audio)
+static volatile int hq_fifo_long=0;
+
+static int audio_hq_fifo_target(void)
+{
+    return (hq_fifo_long ? AUDIO_HQ_FIFO_TARGET_LONG : AUDIO_HQ_FIFO_TARGET_SHORT);
+}
 
 //Muestras para hacer el fundido de entrada/salida al quedarse sin sonido (5 ms)
 #define AUDIO_HQ_FADE_SAMPLES (AUDIO_HQ_SAMPLE_RATE*5/1000)
@@ -257,8 +270,8 @@ static void audio_hq_fifo_put(short left,short right)
 void audio_hq_fifo_limit_latency(void)
 {
     int frames=audio_hq_fifo_frames();
-    if (frames>AUDIO_HQ_FIFO_MAX) {
-        int drop=frames-AUDIO_HQ_FIFO_TARGET;
+    if (frames>audio_hq_fifo_target()+AUDIO_HQ_FIFO_MAX_EXTRA) {
+        int drop=frames-audio_hq_fifo_target();
         int r=hq_fifo_read+drop;
         if (r>=AUDIO_HQ_FIFO_FRAMES) r-=AUDIO_HQ_FIFO_FRAMES;
         hq_fifo_read=r;
@@ -298,7 +311,7 @@ void audio_hq_fifo_get(short *destino,int frames)
 
     for (i=0;i<frames;i++) {
         if (hq_fifo_buffering) {
-            if (audio_hq_fifo_frames()>=AUDIO_HQ_FIFO_TARGET) hq_fifo_buffering=0;
+            if (audio_hq_fifo_frames()>=audio_hq_fifo_target()) hq_fifo_buffering=0;
         }
 
         int r=hq_fifo_read;
@@ -961,11 +974,31 @@ void audio_hq_end_frame(int frame_tstates)
     //Ajuste fino de la velocidad: el reloj del emulador y el de la tarjeta de sonido nunca van exactamente
     //igual. En vez de descartar o repetir audio, se generan un poco mas o menos muestras por frame
     //(como mucho un 2%, y cambiando muy despacio) para mantener el FIFO cerca del retardo objetivo
-    static double fifo_medio=AUDIO_HQ_FIFO_TARGET;
+    //Retardo largo mientras toca el reproductor AY
+    int largo=(ay_player_playing.v ? 1 : 0);
+    if (largo!=hq_fifo_long) {
+        hq_fifo_long=largo;
+        if (largo) {
+            //Esperar a tener el retardo largo antes de seguir sonando (al empezar una cancion)
+            hq_fifo_buffering=1;
+        }
+        else {
+            //Volver enseguida al retardo corto (al parar el reproductor)
+            int frames=audio_hq_fifo_frames();
+            if (frames>AUDIO_HQ_FIFO_TARGET_SHORT) {
+                int r=hq_fifo_read+frames-AUDIO_HQ_FIFO_TARGET_SHORT;
+                if (r>=AUDIO_HQ_FIFO_FRAMES) r-=AUDIO_HQ_FIFO_FRAMES;
+                hq_fifo_read=r;
+            }
+        }
+    }
+
+    int objetivo=audio_hq_fifo_target();
+    static double fifo_medio=AUDIO_HQ_FIFO_TARGET_SHORT;
     double ajuste=0;
     if (audio_hq_fifo_in_use) {
         fifo_medio=fifo_medio*0.98+audio_hq_fifo_frames()*0.02;
-        ajuste=(fifo_medio-AUDIO_HQ_FIFO_TARGET)/AUDIO_HQ_FIFO_TARGET*0.02;
+        ajuste=(fifo_medio-objetivo)/objetivo*0.02;
     }
     if (ajuste>0.02) ajuste=0.02;
     if (ajuste<-0.02) ajuste=-0.02;
