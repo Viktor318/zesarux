@@ -1422,6 +1422,7 @@ static const struct s_hungarian_string hungarian_strings[]={
     {"First messages appear at the bottom of the window","Az els\305\221 \303\274zenetek az ablak alj\303\241n jelennek meg"},
     {"First-use","Els\305\221 haszn\303\241lat"},
     {"First-use help","Els\305\221 haszn\303\241lati s\303\272g\303\263"},
+    {"First-use of the day","A nap tippje"},
     {"Fix scroll in some games, like Astro Flash or Wonder Boy in Monster World","G\303\266rget\303\251s jav\303\255t\303\241sa n\303\251h\303\241ny j\303\241t\303\251kban, p\303\251ld\303\241ul Astro Flash vagy Wonder Boy in Monster World"},
     {"Flag","Flag"},
     {"Flash","Villog\303\241s"},
