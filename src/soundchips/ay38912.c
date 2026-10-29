@@ -261,7 +261,12 @@ void init_chip_ay(void)
 
         //resetear valores de puertos de sonido
         int r;
-        for (r=0;r<16;r++) ay_3_8912_registros[chip][r]=255;
+        //Como el chip real tras un reset: todos los registros a 0. Antes se ponian a 255, y eso es
+        //volumen 15 con envolvente en los tres canales, con tono y ruido desactivados: en ese caso el
+        //nivel pasa tal cual a la salida (sintesis de voz), y la envolvente (periodo FFFFh, forma 15)
+        //subia despacio durante unos 10 segundos tras cada reset. Se oian como clics en la salida
+        //de alta calidad. Los puertos de E/S (registros 14 y 15) quedan a 255, como las lineas sin nada conectado
+        for (r=0;r<16;r++) ay_3_8912_registros[chip][r]=(r>=14 ? 255 : 0);
 
         ciclo_envolvente[chip]=0;
 
