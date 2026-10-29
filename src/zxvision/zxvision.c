@@ -27828,6 +27828,9 @@ void menu_ventana_scanf_number_aux(zxvision_window *ventana,char *texto,int max_
 
 int menu_ventana_scanf_texto_item_slider_last_slider=0;
 
+//El slider esta "agarrado" con el raton: un clic lo agarra (sigue al raton) y otro clic lo suelta
+int menu_ventana_scanf_slider_agarrado=0;
+
 void menu_ventana_scanf_number_get_string_slider(char *destino,char *texto_input,int minimo,int maximo)
 {
     //Slider
@@ -28023,9 +28026,9 @@ char *menu_ventana_scanf_texto_item_slider(struct s_menu_item *item_pedido)
 
     int actualizar_campo_texto=1;
 
-    //Con el raton el slider solo se mueve mientras se mantiene pulsado el boton (como en Windows):
-    //pasar el raton por encima sin pulsar no cambia el valor
-    int solo_raton_encima=(menu_seleccion_con_raton && !mouse_left);
+    //Con el raton el slider solo se mueve mientras esta agarrado (entre un clic y el siguiente):
+    //pasar el raton por encima sin agarrarlo no cambia el valor
+    int solo_raton_encima=(menu_seleccion_con_raton && !menu_ventana_scanf_slider_agarrado);
 
     if (posicion_slider<0 || posicion_slider>=MENU_SCANF_NUMERO_ANCHO_SLIDER || solo_raton_encima) {
         //Para cuando el cursor se ha ido del slider hacia abajo, retornamos ultima posicion conocida del slider
@@ -28172,6 +28175,9 @@ int menu_ventana_scanf_numero(char *titulo,char *texto,int max_length,int increm
 
     //Decir que habra que ajustar raton segun posicion mouse actual
     int debe_ajustar_cursor_segun_mouse=1;
+
+    //El slider empieza suelto
+    menu_ventana_scanf_slider_agarrado=0;
 
     int valor_opcion=-1;
 
@@ -28322,6 +28328,11 @@ int menu_ventana_scanf_numero(char *titulo,char *texto,int max_length,int increm
                     if (valor_opcion>=MENU_SCANF_NUMERO_START_INDEX_OPTIONS_SLIDER && valor_opcion<MENU_SCANF_NUMERO_START_INDEX_OPTIONS_SLIDER+MENU_SCANF_NUMERO_ANCHO_SLIDER) {
                         //esto ya no hace falta, el valor se actualiza dinamicamente al mover el slider
                         //menu_ventana_scanf_numero_set_texto_segun_valor_slider(valor_opcion);
+
+                        //Clic con el raton: agarrar o soltar el slider
+                        if (menu_seleccion_con_raton) {
+                            menu_ventana_scanf_slider_agarrado=!menu_ventana_scanf_slider_agarrado;
+                        }
 
                         //Saltar a OK pero ajustar el mouse si apunta a alguna opcion
                         debe_ajustar_cursor_segun_mouse=1;
