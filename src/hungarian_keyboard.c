@@ -49,6 +49,7 @@
 #include "debug.h"
 #include "zxvision.h"
 #include "ql_i8049.h"
+#include "cpc.h"
 
 //Ventana del teclado virtual (menu_items.c)
 extern zxvision_window menu_help_show_keyboard_ventana;
@@ -193,6 +194,38 @@ static const struct s_hungarian_keyboard_simbolo_ql hungarian_keyboard_simbolos_
 };
 
 
+//Amstrad CPC (teclado ingles del 464/6128): caracter -> tecla y SHIFT.
+//tecla_base es la letra, el numero, o el caracter sin SHIFT de la tecla
+static const struct s_hungarian_keyboard_simbolo_ql hungarian_keyboard_simbolos_cpc[]={
+    //Simbolos de la fila de numeros
+    {'!','1',1,0}, {'"','2',1,0}, {'#','3',1,0}, {'$','4',1,0}, {'%','5',1,0},
+    {'&','6',1,0}, {'\'','7',1,0}, {'(','8',1,0}, {')','9',1,0}, {'_','0',1,0},
+    //Teclas de simbolos
+    {'-','-',0,0}, {'=','-',1,0}, {'^','^',0,0}, {0xA3,'^',1,0} /* libra */,
+    {'@','@',0,0}, {'|','@',1,0}, {'[','[',0,0}, {'{','[',1,0},
+    {']',']',0,0}, {'}',']',1,0}, {';',';',0,0}, {'+',';',1,0},
+    {':',':',0,0}, {'*',':',1,0}, {',',',',0,0}, {'<',',',1,0},
+    {'.','.',0,0}, {'>','.',1,0}, {'/','/',0,0}, {'?','/',1,0},
+    {'\\','\\',0,0}, {'`','\\',1,0},
+    //Signos de multiplicar y dividir
+    {0xD7,':',1,0}, {0xF7,'/',0,0},
+    {0,0,0,0}
+};
+
+//Amstrad CPC: posicion en la matriz del teclado de las teclas de simbolos
+struct s_hungarian_keyboard_tecla_cpc {
+    z80_byte tecla_base;
+    int fila;
+    z80_byte mascara;
+};
+
+static const struct s_hungarian_keyboard_tecla_cpc hungarian_keyboard_teclas_cpc[]={
+    {'^',3,1}, {'-',3,2}, {'@',3,4}, {';',3,16}, {':',3,32}, {'/',3,64}, {'.',3,128},
+    {',',4,128}, {'[',2,2}, {']',2,8}, {'\\',2,64},
+    {0,0,0}
+};
+
+
 //Convierte las letras acentuadas (hungaras y alguna mas de AltGr) a su letra sin acento
 static unsigned int hungarian_keyboard_quitar_acento(unsigned int c)
 {
@@ -256,6 +289,7 @@ int hungarian_keyboard_char_to_spectrum(unsigned int codepoint,z80_byte *tecla_b
 #define HK_FAMILIA_ZX81     2
 #define HK_FAMILIA_ZX80     3
 #define HK_FAMILIA_QL       4
+#define HK_FAMILIA_CPC      5
 
 static int hungarian_keyboard_familia(void)
 {
@@ -263,6 +297,7 @@ static int hungarian_keyboard_familia(void)
     if (MACHINE_IS_ZX81_TYPE) return HK_FAMILIA_ZX81;
     if (MACHINE_IS_ZX80_TYPE) return HK_FAMILIA_ZX80;
     if (MACHINE_IS_QL) return HK_FAMILIA_QL;
+    if (MACHINE_IS_CPC) return HK_FAMILIA_CPC;
     return HK_FAMILIA_NINGUNA;
 }
 
@@ -328,7 +363,30 @@ static int hungarian_keyboard_char_to_ql(unsigned int codepoint,z80_byte *tecla_
     return 0;
 }
 
-//Character to key of the current machine. caps = Caps shift (Spectrum) or SHIFT (ZX80/81, QL),
+//Amstrad CPC: no tiene letras acentuadas; se envian sin acento
+static int hungarian_keyboard_char_to_cpc(unsigned int codepoint,z80_byte *tecla_base,int *necesita_shift)
+{
+    unsigned int c=hungarian_keyboard_quitar_acento(codepoint);
+
+    *necesita_shift=0;
+
+    if (c>='a' && c<='z') { *tecla_base=c; return 1; }
+    if (c>='A' && c<='Z') { *tecla_base=c+('a'-'A'); *necesita_shift=1; return 1; }
+    if (c>='0' && c<='9') { *tecla_base=c; return 1; }
+
+    int i;
+    for (i=0;hungarian_keyboard_simbolos_cpc[i].caracter;i++) {
+        if (hungarian_keyboard_simbolos_cpc[i].caracter==c) {
+            *tecla_base=hungarian_keyboard_simbolos_cpc[i].tecla_base;
+            *necesita_shift=hungarian_keyboard_simbolos_cpc[i].shift;
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+//Character to key of the current machine. caps = Caps shift (Spectrum) or SHIFT (ZX80/81, QL, CPC),
 //symbol = Symbol shift (Spectrum only), ctrl = CTRL (QL only)
 static int hungarian_keyboard_char_to_key(unsigned int codepoint,z80_byte *tecla_base,int *necesita_caps,int *necesita_symbol,int *necesita_ctrl)
 {
@@ -348,6 +406,9 @@ static int hungarian_keyboard_char_to_key(unsigned int codepoint,z80_byte *tecla
 
         case HK_FAMILIA_QL:
             return hungarian_keyboard_char_to_ql(codepoint,tecla_base,necesita_caps,necesita_ctrl);
+
+        case HK_FAMILIA_CPC:
+            return hungarian_keyboard_char_to_cpc(codepoint,tecla_base,necesita_caps);
     }
 
     return 0;
@@ -377,6 +438,20 @@ static void hungarian_keyboard_pulsar_tecla(z80_byte tecla,int pressrelease)
     if (MACHINE_IS_QL) {
         //Unshifted character of the key: the QL table presses only that key
         ascii_to_keyboard_port_set_clear(tecla,pressrelease);
+        return;
+    }
+
+    if (MACHINE_IS_CPC) {
+        int i;
+        for (i=0;hungarian_keyboard_teclas_cpc[i].tecla_base;i++) {
+            if (hungarian_keyboard_teclas_cpc[i].tecla_base==tecla) {
+                int fila=hungarian_keyboard_teclas_cpc[i].fila;
+                z80_byte mascara=hungarian_keyboard_teclas_cpc[i].mascara;
+                if (pressrelease) cpc_keyboard_table[fila] &=255-mascara;
+                else cpc_keyboard_table[fila] |=mascara;
+                return;
+            }
+        }
         return;
     }
 }
@@ -458,9 +533,15 @@ int hungarian_keyboard_key_is_held(int keyid)
 }
 
 
-//Caps shift on Spectrum, SHIFT on ZX80/81 (same key position) and on QL
+//Caps shift on Spectrum, SHIFT on ZX80/81 (same key position), on QL and on CPC
 static void hungarian_keyboard_set_caps(int pulsar)
 {
+    if (MACHINE_IS_CPC) {
+        if (pulsar) cpc_keyboard_table[2] &=255-32;
+        else cpc_keyboard_table[2] |=32;
+        return;
+    }
+
     if (MACHINE_IS_QL) {
         if (pulsar) ql_keyboard_table[7] &=255-1;
         else ql_keyboard_table[7] |=1;
@@ -471,9 +552,15 @@ static void hungarian_keyboard_set_caps(int pulsar)
     else puerto_65278 |=1;
 }
 
-//CTRL on QL
+//CTRL on QL, CONTROL on CPC
 static void hungarian_keyboard_set_ctrl(int pulsar)
 {
+    if (MACHINE_IS_CPC) {
+        if (pulsar) cpc_keyboard_table[2] &=255-128;
+        else cpc_keyboard_table[2] |=128;
+        return;
+    }
+
     if (!MACHINE_IS_QL) return;
 
     if (pulsar) ql_keyboard_table[7] &=255-2;
@@ -518,7 +605,7 @@ static void hungarian_keyboard_restaurar_shifts(int host_mods)
     else {
         hungarian_keyboard_set_caps(host_mods & HUNGARIAN_KEYBOARD_MOD_SHIFT);
         hungarian_keyboard_set_symbol(host_mods & HUNGARIAN_KEYBOARD_MOD_SYMBOL);
-        //Host Ctrl is CTRL on QL
+        //Host Ctrl is CTRL on QL and CONTROL on CPC
         hungarian_keyboard_set_ctrl(host_mods & HUNGARIAN_KEYBOARD_MOD_SYMBOL);
     }
 }
