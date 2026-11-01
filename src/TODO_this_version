@@ -193,9 +193,6 @@ https://zxaaa.net/view_demos.php?t=%2F&s=Base&title=Title&vers=35
 
 -habilitar covox pentagon?
 
--*snapshots zsf
-ok pero no restaura color border en modo rainbow-> revisar parche feo puesto en carga
-
 ------
 
 ***Spectrum Next*****
@@ -322,15 +319,7 @@ soft? https://zxaaa.net/view_demos.php?t=&s=scorpion&title=Title&vers=35
 
 *probar gmx en otros drivers de video (sdl, x11, etc)
 
-*snapshots zsf para gmx
 
-------
-
--didaktik Gama
-*ok todo?
-
-
----
 
 -----
 
@@ -350,4 +339,5 @@ bank panic ok
 astro flash ok
 
 
--+3: seguir otros speedlock que no cargan. revisar los que cargan
+ok -pentagon: que tr-dos se comporte como scorpion, baseconf, etc. y no necesite setting de betadisk enabled
+ese setting solo quedaria para spectrum 128k. ojo porque puede tener codigo comun para todo spectrum 128k

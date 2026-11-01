@@ -747,6 +747,8 @@ static void hq_ay_render(int frame_tstates)
             for (channel=0;channel<HQ_AY_CHANNELS;channel++) {
                 int output=hq_ay_channel_output(c,chip,channel,envelope_level,tone_count);
                 if (!ay_chip_present.v) output=0;
+                //Si cpu pausada, el chip tampoco suena (como en el sonido clasico)
+                if (paused_cpu_emulation.v) output=0;
                 //Varios chips: dividir, como en el sonido clasico
                 output /=chips;
 

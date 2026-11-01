@@ -27,6 +27,7 @@
 #include "tape.h"
 #include "ay38912.h"
 #include "mem128.h"
+#include "betadisk.h"
 #include "zx8081.h"
 #include "zxvision.h"
 #include "screen.h"
@@ -70,6 +71,7 @@
 #include "tsconf.h"
 #include "mk14.h"
 #include "betadisk.h"
+#include "vg93.h"
 #include "baseconf.h"
 #include "zxevo.h"
 #include "settings.h"
@@ -1175,6 +1177,45 @@ z80_byte fetch_opcode_spectrum(void)
 	set_visualmemopcodebuffer(reg_pc);
 #endif
 	return peek_byte_no_time (reg_pc);
+}
+
+static int pentagon_trdos_active=0;
+
+void pentagon_trdos_reset(void)
+{
+    pentagon_trdos_active=0;
+}
+
+z80_byte fetch_opcode_pentagon(void)
+{
+    if (reg_pc>=0x4000) pentagon_trdos_active=0;
+    else if ((reg_pc&0xff00)==0x3d00 && (puerto_32765&16)) pentagon_trdos_active=1;
+
+    if (pentagon_trdos_active) betadisk_handle_trdos_traps();
+    return fetch_opcode_spectrum();
+}
+
+z80_byte peek_byte_no_time_pentagon(z80_int dir)
+{
+    if (pentagon_trdos_active && dir<0x4000) {
+#ifdef EMULATE_VISUALMEM
+        set_visualmemreadbuffer(dir);
+#endif
+        return pentagon_trdos_rom[dir];
+    }
+    return peek_byte_no_time_spectrum_128k(dir);
+}
+
+z80_byte peek_byte_pentagon(z80_int dir)
+{
+    if (pentagon_trdos_active && dir<0x4000) {
+#ifdef EMULATE_VISUALMEM
+        set_visualmemreadbuffer(dir);
+#endif
+        t_estados+=3;
+        return pentagon_trdos_rom[dir];
+    }
+    return peek_byte_spectrum_128k(dir);
 }
 
 z80_byte fetch_opcode_tsconf(void)
@@ -7043,6 +7084,14 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 	}
 
+    //El VG93 de Scorpion, incluido GMX, responde durante TR-DOS.
+    if (MACHINE_IS_SCORPION && trd_enabled.v &&
+        scorpion_trdos_is_active() && reg_pc<0x4000 &&
+        (puerto_l==0x1f || puerto_l==0x3f || puerto_l==0x5f ||
+         puerto_l==0x7f || puerto_l==0xff)) {
+        return vg93_read_port(puerto);
+    }
+
     //Acceso betadisk
     if (betadisk_enabled.v || (MACHINE_IS_SCORPION && scorpion_trdos_is_active() && trd_enabled.v)) {
 
@@ -9130,6 +9179,15 @@ Port: 10-- ---- ---- --0-
 	  samram_write_port(value);
 	}
 
+
+   //Los accesos directos al VG93 de Scorpion, incluido GMX, usan el controlador común.
+    if (MACHINE_IS_SCORPION && trd_enabled.v &&
+        scorpion_trdos_is_active() && reg_pc<0x4000 &&
+        (puerto_l==0x1f || puerto_l==0x3f || puerto_l==0x5f ||
+         puerto_l==0x7f || puerto_l==0xff)) {
+        vg93_write_port(puerto,value);
+        return;
+    }
 
    //Acceso betadisk
     if (betadisk_enabled.v || (MACHINE_IS_SCORPION && scorpion_trdos_is_active() && trd_enabled.v)) {
