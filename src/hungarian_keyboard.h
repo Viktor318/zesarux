@@ -48,6 +48,7 @@ extern int hungarian_keyboard_release(int keyid,int host_mods);
 extern void hungarian_keyboard_release_all(void);
 extern void hungarian_keyboard_timer(void);
 extern int hungarian_keyboard_sequence_running(void);
+extern int hungarian_keyboard_any_key_held(void);
 extern void hungarian_keyboard_host_mods_changed(int host_mods);
 extern unsigned int hungarian_keyboard_utf8_decode(const char *texto);
 extern int hungarian_keyboard_char_to_spectrum(unsigned int codepoint,z80_byte *tecla_base,int *necesita_caps,int *necesita_symbol);

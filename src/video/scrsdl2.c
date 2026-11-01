@@ -1551,6 +1551,17 @@ static int scrsdl_hungarian_keyboard_event(SDL_Event *event)
         return 1;
     }
 
+    //Shift y Ctrl del host mientras hay una tecla nuestra pulsada, o repeticiones de ellos
+    //(Windows repite las teclas modificadoras mantenidas): no deben tocar los shifts de la maquina,
+    //que los decide el caracter (por ejemplo Shift+punto = dos puntos, sin SHIFT en el CPC).
+    //Al soltar nuestra tecla se dejan segun los modificadores del host
+    if (hungarian_keyboard_is_active() &&
+        (sym_mod==SDLK_LSHIFT || sym_mod==SDLK_RSHIFT || sym_mod==SDLK_LCTRL || sym_mod==SDLK_RCTRL) &&
+        (hungarian_keyboard_any_key_held() || (event->type==SDL_KEYDOWN && event->key.repeat))) {
+        hungarian_keyboard_host_mods_changed(host_mods);
+        return 1;
+    }
+
     //Al soltar, liberar siempre lo que hayamos pulsado nosotros, aunque ya no este activo
     if (event->type==SDL_KEYUP) return hungarian_keyboard_release(keyid,host_mods);
 
@@ -1570,7 +1581,14 @@ static int scrsdl_hungarian_keyboard_event(SDL_Event *event)
 
     //Solo teclas que pueden generar un caracter imprimible. Espacio, enter, borrar, cursores,
     //F1..F12, teclado numerico, etc siguen por la gestion normal
-    if (sym<=32 || sym==SDLK_DELETE || (sym & SDLK_SCANCODE_MASK)) return 0;
+    //En el CPC tambien las operaciones y la coma decimal del teclado numerico (el CPC no las tiene
+    //en su teclado numerico): se envia el caracter que generan. Sin texto (Bloq Num desactivado)
+    //siguen por la gestion normal
+    int teclado_numerico_caracter=(MACHINE_IS_CPC &&
+        (sym==SDLK_KP_DIVIDE || sym==SDLK_KP_MULTIPLY || sym==SDLK_KP_MINUS || sym==SDLK_KP_PLUS ||
+         sym==SDLK_KP_PERIOD || sym==SDLK_KP_COMMA || sym==SDLK_KP_DECIMAL));
+
+    if (!teclado_numerico_caracter && (sym<=32 || sym==SDLK_DELETE || (sym & SDLK_SCANCODE_MASK))) return 0;
 
     //AltGr: en Linux suele ser RALT o MODE; en Windows llega como LCtrl+RAlt
     int altgr=( (keysym.mod & (KMOD_RALT|KMOD_MODE)) ? 1 : 0);

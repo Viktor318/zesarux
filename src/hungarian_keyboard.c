@@ -786,6 +786,17 @@ int hungarian_keyboard_press(int keyid,unsigned int codepoint)
 }
 
 
+//Si alguna tecla nuestra esta pulsada en la maquina emulada (sus shifts los decide el caracter)
+int hungarian_keyboard_any_key_held(void)
+{
+    int i;
+    for (i=0;i<HUNGARIAN_KEYBOARD_MAX_KEYS;i++) {
+        if (hungarian_keyboard_teclas[i].pulsada && hungarian_keyboard_teclas[i].tecla_base) return 1;
+    }
+    return 0;
+}
+
+
 //Liberar una tecla del host. Retorna 1 si era una tecla gestionada por nosotros
 int hungarian_keyboard_release(int keyid,int host_mods)
 {
