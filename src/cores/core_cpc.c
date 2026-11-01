@@ -55,6 +55,7 @@
 #include "pd765.h"
 
 #include "zeng_online_client.h"
+#include "audio_hq.h"
 
 z80_byte byte_leido_core_cpc;
 
@@ -109,6 +110,9 @@ void core_cpc_final_frame(void)
 
 
 
+    //Salida de sonido de alta calidad: final del frame
+    audio_hq_end_frame(screen_testados_total);
+
     t_estados -=screen_testados_total;
 
 
@@ -162,8 +166,15 @@ void core_cpc_end_scanline_stuff(void)
 
     //audio_valor_enviar_sonido +=da_output_ay();
 
-	audio_valor_enviar_sonido_izquierdo +=da_output_ay_izquierdo();
-	audio_valor_enviar_sonido_derecho +=da_output_ay_derecho();
+    //Parte del chip AY en esta muestra. La salida de alta calidad genera el AY por su cuenta,
+    //asi que se sigue cuanto queda de el tras las mezclas, para quitarlo de las demas fuentes
+    char hq_ay_izquierdo_char,hq_ay_derecho_char;
+    da_output_ay_izquierdo_derecho(&hq_ay_izquierdo_char,&hq_ay_derecho_char);
+    int hq_ay_izquierdo=hq_ay_izquierdo_char;
+    int hq_ay_derecho=hq_ay_derecho_char;
+
+	audio_valor_enviar_sonido_izquierdo +=hq_ay_izquierdo;
+	audio_valor_enviar_sonido_derecho +=hq_ay_derecho;
 
     if (cpc_sound_cassette_out.v) {
         //bit 5    Cassette Write data     Cassette Out (sometimes also used as Printer Bit7, see 8bit Printer Ports)
@@ -176,6 +187,9 @@ void core_cpc_end_scanline_stuff(void)
 
         audio_valor_enviar_sonido_derecho /=2;
         audio_valor_enviar_sonido_derecho += sonido_cassette_out/2;
+
+        hq_ay_izquierdo /=2;
+        hq_ay_derecho /=2;
 
         //printf("sonido_mic: %d\n",sonido_mic);
     }
@@ -206,12 +220,28 @@ void core_cpc_end_scanline_stuff(void)
             audio_valor_enviar_sonido_derecho /=2;
             audio_valor_enviar_sonido_derecho += get_realtape_last_value()/2;
 
+            hq_ay_izquierdo /=2;
+            hq_ay_derecho /=2;
+
             //Sonido alterado cuando top speed
             if (timer_condicion_top_speed() ) {
                 audio_valor_enviar_sonido_izquierdo=audio_change_top_speed_sound(audio_valor_enviar_sonido_izquierdo);
                 audio_valor_enviar_sonido_derecho=audio_change_top_speed_sound(audio_valor_enviar_sonido_derecho);
             }
         }
+    }
+
+    //Salida de alta calidad: las demas fuentes de sonido (cassette, cinta real), sin el AY
+    if (audio_hq_running) {
+        int hq_otros_izquierdo=audio_valor_enviar_sonido_izquierdo;
+        int hq_otros_derecho=audio_valor_enviar_sonido_derecho;
+
+        if (audio_hq_ay_active()) {
+            hq_otros_izquierdo -=hq_ay_izquierdo;
+            hq_otros_derecho -=hq_ay_derecho;
+        }
+
+        audio_hq_others(t_estados,hq_otros_izquierdo,hq_otros_derecho);
     }
 
     //Ajustar volumen
