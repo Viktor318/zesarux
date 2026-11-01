@@ -98,6 +98,8 @@ struct s_hungarian_keyboard_secuencia {
     int necesita_symbol;
     int necesita_ctrl;
     int modo_extendido;
+    //CPC: cambiar antes los shifts, y pulsar la tecla unos frames despues
+    int shifts_antes;
 };
 
 static struct s_hungarian_keyboard_secuencia hungarian_keyboard_cola[HUNGARIAN_KEYBOARD_COLA_MAX];
@@ -105,7 +107,8 @@ static int hungarian_keyboard_cola_inicio=0;
 static int hungarian_keyboard_cola_total=0;
 
 //Paso actual de la secuencia en curso:
-//0: pulsar Caps+Symbol (modo E)  1: soltar  2: pulsar tecla  3: soltar
+//0: pulsar Caps+Symbol (modo E)  1: soltar (o, si shifts_antes, poner los shifts de la tecla)
+//2: pulsar tecla  3: soltar
 static int hungarian_keyboard_cola_paso=0;
 static int hungarian_keyboard_cola_frames=0;
 
@@ -611,7 +614,15 @@ static void hungarian_keyboard_restaurar_shifts(int host_mods)
 }
 
 
-static void hungarian_keyboard_cola_agregar(z80_byte tecla_base,int necesita_caps,int necesita_symbol,int necesita_ctrl,int modo_extendido)
+//Paso con el que empieza una entrada de la cola
+static int hungarian_keyboard_cola_primer_paso(struct s_hungarian_keyboard_secuencia *e)
+{
+    if (e->modo_extendido) return 0;
+    if (e->shifts_antes) return 1;
+    return 2;
+}
+
+static void hungarian_keyboard_cola_agregar(z80_byte tecla_base,int necesita_caps,int necesita_symbol,int necesita_ctrl,int modo_extendido,int shifts_antes)
 {
     if (hungarian_keyboard_cola_total>=HUNGARIAN_KEYBOARD_COLA_MAX) {
         debug_printf(VERBOSE_DEBUG,"Hungarian keyboard: sequence queue full. Key ignored");
@@ -625,6 +636,7 @@ static void hungarian_keyboard_cola_agregar(z80_byte tecla_base,int necesita_cap
     hungarian_keyboard_cola[indice].necesita_symbol=necesita_symbol;
     hungarian_keyboard_cola[indice].necesita_ctrl=necesita_ctrl;
     hungarian_keyboard_cola[indice].modo_extendido=modo_extendido;
+    hungarian_keyboard_cola[indice].shifts_antes=shifts_antes;
 
     if (hungarian_keyboard_cola_total==0) {
         //Empieza una secuencia nueva: soltar lo que tengamos pulsado para que no interfiera
@@ -638,7 +650,7 @@ static void hungarian_keyboard_cola_agregar(z80_byte tecla_base,int necesita_cap
             }
         }
 
-        hungarian_keyboard_cola_paso=(modo_extendido ? 0 : 2);
+        hungarian_keyboard_cola_paso=hungarian_keyboard_cola_primer_paso(&hungarian_keyboard_cola[indice]);
         hungarian_keyboard_cola_frames=0;
     }
 
@@ -685,6 +697,14 @@ void hungarian_keyboard_timer(void)
             break;
 
             case 1:
+                if (e->shifts_antes) {
+                    //Solo los shifts, sin la tecla todavia
+                    hungarian_keyboard_set_caps(e->necesita_caps);
+                    hungarian_keyboard_set_symbol(e->necesita_symbol);
+                    hungarian_keyboard_set_ctrl(e->necesita_ctrl);
+                    break;
+                }
+                //Si no, igual que el paso 3
             case 3:
                 hungarian_keyboard_set_caps(0);
                 hungarian_keyboard_set_symbol(0);
@@ -715,7 +735,7 @@ void hungarian_keyboard_timer(void)
     hungarian_keyboard_cola_total--;
 
     if (hungarian_keyboard_cola_total) {
-        hungarian_keyboard_cola_paso=(hungarian_keyboard_cola[hungarian_keyboard_cola_inicio].modo_extendido ? 0 : 2);
+        hungarian_keyboard_cola_paso=hungarian_keyboard_cola_primer_paso(&hungarian_keyboard_cola[hungarian_keyboard_cola_inicio]);
     }
     else {
         //Cola vacia: dejar los shifts segun lo que tenga pulsado el host
@@ -747,7 +767,7 @@ int hungarian_keyboard_press(int keyid,unsigned int codepoint)
         t->pulsada=1;
         t->tecla_base=0;
         t->orden=++hungarian_keyboard_contador_orden;
-        hungarian_keyboard_cola_agregar(tecla_extendido,0,1,0,1);
+        hungarian_keyboard_cola_agregar(tecla_extendido,0,1,0,1,0);
         return 1;
     }
 
@@ -764,9 +784,19 @@ int hungarian_keyboard_press(int keyid,unsigned int codepoint)
     t->necesita_ctrl=necesita_ctrl;
     t->orden=++hungarian_keyboard_contador_orden;
 
+    //CPC: su firmware da una tecla por pulsada si lo estaba en esta lectura del teclado o en la anterior.
+    //Si SHIFT (o CONTROL) se soltara a la vez que se pulsa la tecla, aun la veria con SHIFT
+    //(Shift+punto = dos puntos daria asterisco). Entonces primero se cambian, y la tecla va despues
+    int shifts_antes=0;
+    if (tecla_base && MACHINE_IS_CPC) {
+        int shift_pulsado=((cpc_keyboard_table[2] & 32)==0);
+        int control_pulsado=((cpc_keyboard_table[2] & 128)==0);
+        if (shift_pulsado!=(necesita_caps ? 1 : 0) || control_pulsado!=(necesita_ctrl ? 1 : 0)) shifts_antes=1;
+    }
+
     //Si hay una secuencia en curso, esta tecla va a la cola para conservar el orden
-    if (tecla_base && hungarian_keyboard_cola_total) {
-        hungarian_keyboard_cola_agregar(tecla_base,necesita_caps,necesita_symbol,necesita_ctrl,0);
+    if (tecla_base && (hungarian_keyboard_cola_total || shifts_antes)) {
+        hungarian_keyboard_cola_agregar(tecla_base,necesita_caps,necesita_symbol,necesita_ctrl,0,shifts_antes);
         t->tecla_base=0;
         return 1;
     }
