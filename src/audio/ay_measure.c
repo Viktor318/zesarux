@@ -118,7 +118,7 @@ static long ay_measure_find(unsigned int *hash,unsigned char *silent,long n,long
 
 //Preparar la memoria y el Z80 para la cancion (desde 1), como audio_ay_player_play_song.
 //Retorna 0 si ok
-int ay_measure_setup(struct ay_measure_machine *m,unsigned char *data,int size,int song)
+int ay_measure_setup(struct ay_measure_machine *m,unsigned char *data,int size,int song,int cpc)
 {
     struct ay_measure_file file={data,size};
     struct ay_measure_file *f=&file;
@@ -126,6 +126,10 @@ int ay_measure_setup(struct ay_measure_machine *m,unsigned char *data,int size,i
     memset(m->ay_registers,0,sizeof(m->ay_registers));
     m->ay_selected=0;
     m->ay_chip=0;
+    m->cpc=cpc;
+    m->ppi_a=m->ppi_c=0;
+    m->frame_tstates=(cpc ? AY_MEASURE_FRAME_TSTATES_CPC : AY_MEASURE_FRAME_TSTATES);
+    m->ay_frequency=(cpc ? AY_MEASURE_AY_FREQUENCY_CPC : AY_MEASURE_AY_FREQUENCY);
 
     if (size<20 || memcmp(data,"ZXAYEMUL",8)) return 1;
     if (song<1 || song>ay_measure_byte(f,16)+1) return 1;
@@ -223,6 +227,100 @@ int ay_measure_setup(struct ay_measure_machine *m,unsigned char *data,int size,i
     return 0;
 }
 
+//Guardar una escritura en un registro del primer chip AY
+static int ay_measure_ay_write(struct ay_measure_machine *m,int reg,int value,long t,
+                               struct ay_measure_write *writes,int max_writes,int count)
+{
+    m->ay_registers[reg]=value;
+    if (writes!=NULL && count<max_writes) {
+        writes[count].tstates=t;
+        writes[count].reg=reg;
+        writes[count].value=value;
+        count++;
+    }
+    return count;
+}
+
+//CPC: funcion del AY segun los bits 7 (BDIR) y 6 (BC1) del puerto C del PPI,
+//con el dato del puerto A
+static int ay_measure_cpc_psg(struct ay_measure_machine *m,long t,
+                              struct ay_measure_write *writes,int max_writes,int count)
+{
+    switch (m->ppi_c & 0xc0) {
+        case 0xc0: //Seleccionar registro
+            m->ay_selected=m->ppi_a & 15;
+        break;
+
+        case 0x80: //Escribir en el registro
+            count=ay_measure_ay_write(m,m->ay_selected,m->ppi_a,t,writes,max_writes,count);
+        break;
+
+        default: //Leer o inactivo
+        break;
+    }
+    return count;
+}
+
+//CPC: escritura en un puerto. El PPI responde cuando A11=0; A9 y A8 eligen el puerto
+static int ay_measure_cpc_out(struct ay_measure_machine *m,uint16_t port,uint8_t value,long t,
+                              struct ay_measure_write *writes,int max_writes,int count)
+{
+    if (port & 0x0800) return count;
+
+    switch ((port>>8) & 3) {
+        case 0: //Puerto A: dato para el AY
+            m->ppi_a=value;
+            //Con la funcion de escritura activa, el AY toma el nuevo dato
+            if ((m->ppi_c & 0xc0)==0x80) count=ay_measure_cpc_psg(m,t,writes,max_writes,count);
+        break;
+
+        case 2: //Puerto C: funcion del AY
+            m->ppi_c=value;
+            count=ay_measure_cpc_psg(m,t,writes,max_writes,count);
+        break;
+
+        case 3: //Control
+            if (value & 0x80) {
+                //Cambio de modo: las salidas del puerto C pasan a 0
+                m->ppi_c=0;
+            }
+            else {
+                //Poner a 1 o a 0 un bit del puerto C
+                int bit=(value>>1) & 7;
+                if (value & 1) m->ppi_c |=(1<<bit);
+                else m->ppi_c &=~(1<<bit);
+                count=ay_measure_cpc_psg(m,t,writes,max_writes,count);
+            }
+        break;
+
+        default:
+        break;
+    }
+    return count;
+}
+
+//CPC: lectura de un puerto. Puerto B del PPI: VSYNC en el bit 0 (algunos reproductores
+//esperan al retrazado vertical en vez de usar HALT), 50 Hz, fabricante Amstrad
+static uint8_t ay_measure_cpc_in(struct ay_measure_machine *m,uint16_t port,long t)
+{
+    if (port & 0x0800) return 0xff;
+
+    switch ((port>>8) & 3) {
+        case 1:
+            //VSYNC al principio del frame, durante 16 lineas de 256 t-estados
+            return 0x7e | (t<16*256 ? 1 : 0);
+
+        case 0:
+            return m->ppi_a;
+
+        case 2:
+            return m->ppi_c;
+
+        default:
+            return 0xff;
+    }
+}
+
 //Ejecutar un frame. Si writes no es NULL, se guardan ahi las escrituras en el
 //primer chip AY con su t-estado (como mucho max_writes). Retorna cuantas
 int ay_measure_run_frame(struct ay_measure_machine *m,struct ay_measure_write *writes,int max_writes)
@@ -233,7 +331,7 @@ int ay_measure_run_frame(struct ay_measure_machine *m,struct ay_measure_write *w
     int count=0;
     long t;
 
-    for (t=0;t<AY_MEASURE_FRAME_TSTATES;t++) {
+    for (t=0;t<m->frame_tstates;t++) {
         if (t<AY_MEASURE_INT_TSTATES) pins|=Z80_INT;
         else pins&=~Z80_INT;
 
@@ -254,6 +352,12 @@ int ay_measure_run_frame(struct ay_measure_machine *m,struct ay_measure_write *w
                 //Reconocimiento de interrupcion: bus a FFh
                 Z80_SET_DATA(pins,0xff);
             }
+            else if ((pins & Z80_WR) && m->cpc) {
+                count=ay_measure_cpc_out(m,port,Z80_GET_DATA(pins),t,writes,max_writes,count);
+            }
+            else if ((pins & Z80_RD) && m->cpc) {
+                Z80_SET_DATA(pins,ay_measure_cpc_in(m,port,t));
+            }
             else if (pins & Z80_WR) {
                 uint8_t value=Z80_GET_DATA(pins);
                 //Puertos del AY del Spectrum: seleccion FFFDh y datos BFFDh
@@ -264,13 +368,7 @@ int ay_measure_run_frame(struct ay_measure_machine *m,struct ay_measure_write *w
                 }
                 else if ((port & 0xc002)==0x8000) {
                     if (m->ay_chip==0) {
-                        m->ay_registers[m->ay_selected]=value;
-                        if (writes!=NULL && count<max_writes) {
-                            writes[count].tstates=t;
-                            writes[count].reg=m->ay_selected;
-                            writes[count].value=value;
-                            count++;
-                        }
+                        count=ay_measure_ay_write(m,m->ay_selected,value,t,writes,max_writes,count);
                     }
                 }
             }
@@ -287,7 +385,35 @@ int ay_measure_run_frame(struct ay_measure_machine *m,struct ay_measure_write *w
     return count;
 }
 
-long ay_measure_song(unsigned char *data,int size,int song,long *loop,volatile int *cancel)
+//Escrituras en el AY de los primeros frames de la cancion, como Spectrum o como CPC
+static long ay_measure_probe(struct ay_measure_machine *m,unsigned char *data,int size,int song,int cpc)
+{
+    static struct ay_measure_write writes[1000];
+    long total=0;
+    int frame;
+
+    if (ay_measure_setup(m,data,size,song,cpc)) return 0;
+    for (frame=0;frame<AY_MEASURE_PROBE_FRAMES;frame++) {
+        total +=ay_measure_run_frame(m,writes,1000);
+    }
+    return total;
+}
+
+/* Cancion de CPC? El archivo AY no lo dice, pero los puertos del AY de las dos maquinas no
+   coinciden: el codigo de CPC no escribe datos en BFFDh, ni el de Spectrum en el PPI.
+   Se ejecutan unos frames de la cancion como cada maquina */
+int ay_measure_is_cpc(unsigned char *data,int size,int song)
+{
+    struct ay_measure_machine *m=malloc(sizeof(struct ay_measure_machine));
+    int cpc=0;
+
+    if (m==NULL) return 0;
+    if (ay_measure_probe(m,data,size,song,0)==0 && ay_measure_probe(m,data,size,song,1)>0) cpc=1;
+    free(m);
+    return cpc;
+}
+
+long ay_measure_song(unsigned char *data,int size,int song,int cpc,long *loop,volatile int *cancel)
 {
     struct ay_measure_machine *m;
     unsigned int *hash;
@@ -300,7 +426,7 @@ long ay_measure_song(unsigned char *data,int size,int song,long *loop,volatile i
     m=malloc(sizeof(struct ay_measure_machine));
     hash=malloc(AY_MEASURE_MAX_FRAMES*sizeof(unsigned int));
     silent=malloc(AY_MEASURE_MAX_FRAMES);
-    if (m==NULL || hash==NULL || silent==NULL || ay_measure_setup(m,data,size,song)) {
+    if (m==NULL || hash==NULL || silent==NULL || ay_measure_setup(m,data,size,song,cpc)) {
         free(m);
         free(hash);
         free(silent);
@@ -353,6 +479,7 @@ static volatile int ay_measure_busy=0;
 static unsigned char *ay_measure_data=NULL;
 static int ay_measure_size;
 static int ay_measure_song_number;
+static int ay_measure_cpc;
 static int ay_measure_id;
 
 //Resultado
@@ -364,7 +491,7 @@ static void *ay_measure_thread_function(void *arg)
     long loop,frames;
 
     (void)arg;
-    frames=ay_measure_song(ay_measure_data,ay_measure_size,ay_measure_song_number,&loop,&ay_measure_cancel);
+    frames=ay_measure_song(ay_measure_data,ay_measure_size,ay_measure_song_number,ay_measure_cpc,&loop,&ay_measure_cancel);
 
     pthread_mutex_lock(&ay_measure_mutex);
     if (!ay_measure_cancel) {
@@ -391,7 +518,7 @@ void ay_measure_stop(void)
     ay_measure_data=NULL;
 }
 
-void ay_measure_start(unsigned char *data,int size,int song,int id)
+void ay_measure_start(unsigned char *data,int size,int song,int id,int cpc)
 {
     ay_measure_stop();
 
@@ -400,6 +527,7 @@ void ay_measure_start(unsigned char *data,int size,int song,int id)
     memcpy(ay_measure_data,data,size);
     ay_measure_size=size;
     ay_measure_song_number=song;
+    ay_measure_cpc=cpc;
     ay_measure_id=id;
     ay_measure_cancel=0;
     ay_measure_busy=1;
@@ -452,9 +580,9 @@ void ay_measure_stop(void)
 {
 }
 
-void ay_measure_start(unsigned char *data,int size,int song,int id)
+void ay_measure_start(unsigned char *data,int size,int song,int id,int cpc)
 {
-    ay_measure_done_frames=ay_measure_song(data,size,song,&ay_measure_done_loop,NULL);
+    ay_measure_done_frames=ay_measure_song(data,size,song,cpc,&ay_measure_done_loop,NULL);
     ay_measure_done_id=id;
 }
 

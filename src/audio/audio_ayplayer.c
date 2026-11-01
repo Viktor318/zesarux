@@ -81,6 +81,9 @@ z80_bit ay_player_repeat_file={0};
 //Reproducir en modo cpc
 z80_bit ay_player_cpc_mode={0};
 
+//La cancion actual es de CPC (por el ajuste o porque solo funciona como CPC)
+static int ay_player_song_is_cpc=0;
+
 //Mostrar info de cancion tambien en consola
 z80_bit ay_player_show_info_console={0};
 
@@ -527,7 +530,6 @@ static void ay_player_song_length_measured(z80_byte song)
     long frames,loop;
 
     ay_player_length_measured=0;
-    if (ay_player_cpc_mode.v) return;
 
     if (ay_lengths_lookup(ay_player_file_crc,song-1,&frames,&loop)) {
         if (frames>0) {
@@ -542,7 +544,7 @@ static void ay_player_song_length_measured(z80_byte song)
     else if (ay_player_measure_lengths.v) {
         ay_player_measure_id++;
         ay_player_measure_song=song;
-        ay_measure_start(audio_ay_player_mem,audio_ay_player_file_size,song,ay_player_measure_id);
+        ay_measure_start(audio_ay_player_mem,audio_ay_player_file_size,song,ay_player_measure_id,ay_player_song_is_cpc);
     }
 }
 
@@ -567,6 +569,13 @@ int audio_ay_player_play_song(z80_byte song)
 
 	z80_byte version=ay_player_version();
 
+    //Cancion de CPC: con el ajuste, o reconocida al probar unos frames
+    ay_player_song_is_cpc=ay_player_cpc_mode.v;
+    if (!ay_player_song_is_cpc && ay_measure_is_cpc(audio_ay_player_mem,audio_ay_player_file_size,song)) {
+        debug_printf(VERBOSE_INFO,"Song %d is for Amstrad CPC",song);
+        ay_player_song_is_cpc=1;
+    }
+
 	//Puntero a estructura inicial
 	int song_struct=audio_ay_player_song_str();
 
@@ -584,9 +593,9 @@ int audio_ay_player_play_song(z80_byte song)
 	int song_data=audio_ay_player_get_abs_index(song_struct+2);
 
     //Reproductor en hilo aparte, sin tomar el control de la maquina emulada
-    //(solo modo Spectrum y con la salida de sonido de alta calidad)
+    //(con la salida de sonido de alta calidad; tambien las canciones de CPC)
     ay_tp_stop();
-    if (ay_player_cpc_mode.v==0 && audio_hq_fifo_in_use) {
+    if (audio_hq_fifo_in_use) {
         sprintf (ay_player_file_song_name,"%s",&audio_ay_player_mem[indice_nombre]);
         sprintf (ay_player_second_footer,"%s - %s",ay_player_file_author,ay_player_file_misc);
         ay_player_set_footer(ay_player_file_song_name,ay_player_second_footer);
@@ -601,7 +610,7 @@ int audio_ay_player_play_song(z80_byte song)
         ay_player_playing.v=1;
         ay_player_paused.v=0;
 
-        if (ay_tp_start(audio_ay_player_mem,audio_ay_player_file_size,song)==0) {
+        if (ay_tp_start(audio_ay_player_mem,audio_ay_player_file_size,song,ay_player_song_is_cpc)==0) {
             debug_printf(VERBOSE_INFO,"Song %d played on the separate AY player",song);
             ay_player_song_length_measured(song);
             return 0;
@@ -610,7 +619,7 @@ int audio_ay_player_play_song(z80_byte song)
     }
 
 
-    if (ay_player_cpc_mode.v==0) {
+    if (ay_player_song_is_cpc==0) {
         //Si maquina actual ya es spectrum, no cargar de nuevo rom
         if (current_machine_type!=MACHINE_ID_SPECTRUM_48) {
             //Resetear a maquina spectrum 48
@@ -633,7 +642,7 @@ int audio_ay_player_play_song(z80_byte song)
 	cold_start_cpu_registers();
 	reset_cpu();
 
-    if (ay_player_cpc_mode.v==1) {
+    if (ay_player_song_is_cpc==1) {
         cpc_gate_registers[2] |=(4|8); //Mapear todo RAM
         cpc_set_memory_pages();
     }

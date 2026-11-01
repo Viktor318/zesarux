@@ -50,9 +50,10 @@
 #include "audio_ayplayer.h"
 
 #define TP_SAMPLE_RATE 48000
-//T-estados por segundo de un Spectrum 48K a 50 Hz
-#define TP_CLOCK_RATE (AY_MEASURE_FRAME_TSTATES*50)
-#define TP_AY_FREQUENCY 1773400
+//T-estados por segundo de la maquina (Spectrum 48K o CPC) a 50 Hz
+#define TP_CLOCK_RATE (tp_machine->frame_tstates*50)
+#define TP_AY_FREQUENCY (tp_machine->ay_frequency)
+#define TP_FRAME_TSTATES (tp_machine->frame_tstates)
 #define TP_CHANNELS 3
 #define TP_ENV_STEPS 16
 #define TP_ENV_CONT 8
@@ -336,7 +337,7 @@ static void tp_render_frame(void)
 
     tp_stereo_sides(sides);
 
-    for (f=tp_next_tick;f<AY_MEASURE_FRAME_TSTATES;f+=step) {
+    for (f=tp_next_tick;f<TP_FRAME_TSTATES;f+=step) {
         int at=(int)f;
 
         while (position<count && tp_writes[position].tstates<=at) {
@@ -373,11 +374,11 @@ static void tp_render_frame(void)
         position++;
     }
 
-    tp_next_tick=f-AY_MEASURE_FRAME_TSTATES;
+    tp_next_tick=f-TP_FRAME_TSTATES;
     if (tp_next_tick<0) tp_next_tick=0;
 
     for (side=0;side<2;side++) {
-        blip_buffer_end_frame(tp_buf[side],AY_MEASURE_FRAME_TSTATES);
+        blip_buffer_end_frame(tp_buf[side],TP_FRAME_TSTATES);
     }
 
     long avail=blip_buffer_samples_avail(tp_buf[0]);
@@ -388,7 +389,7 @@ static void tp_render_frame(void)
     tp_samples_position=0;
 }
 
-int ay_tp_start(unsigned char *data,int size,int song)
+int ay_tp_start(unsigned char *data,int size,int song,int cpc)
 {
     int error=0;
 
@@ -397,7 +398,7 @@ int ay_tp_start(unsigned char *data,int size,int song)
     tp_active=0;
 
     if (tp_machine==NULL) tp_machine=malloc(sizeof(struct ay_measure_machine));
-    if (tp_machine==NULL || ay_measure_setup(tp_machine,data,size,song) || tp_new_buffers()) {
+    if (tp_machine==NULL || ay_measure_setup(tp_machine,data,size,song,cpc) || tp_new_buffers()) {
         error=1;
     }
     else {

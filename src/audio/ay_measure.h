@@ -27,7 +27,8 @@
 
 //Empezar a medir la cancion (desde 1) de los datos de un archivo AY (se copian).
 //Si ya se estaba midiendo otra, se abandona. id identifica la medicion
-extern void ay_measure_start(unsigned char *data,int size,int song,int id);
+//cpc: cancion de Amstrad CPC (AY en los puertos del PPI, Z80 a 4 MHz, AY a 1 MHz)
+extern void ay_measure_start(unsigned char *data,int size,int song,int id,int cpc);
 
 //Abandonar la medicion en curso (y esperar a que termine el hilo)
 extern void ay_measure_stop(void);
@@ -39,12 +40,17 @@ extern int ay_measure_result(int id,long *frames,long *loop);
 //Midiendo ahora?
 extern int ay_measure_running(void);
 
-//Un Spectrum 48K reducido: solo memoria, Z80 y puertos del AY
+//Un Spectrum 48K (o un Amstrad CPC) reducido: solo memoria, Z80 y puertos del AY
 //(tambien lo usa el reproductor en hilo aparte)
 #include "chips_z80.h"
 
 //t-estados de un frame
 #define AY_MEASURE_FRAME_TSTATES 69888
+//En el CPC: 4 MHz / 50 Hz
+#define AY_MEASURE_FRAME_TSTATES_CPC 80000
+
+#define AY_MEASURE_AY_FREQUENCY 1773400
+#define AY_MEASURE_AY_FREQUENCY_CPC 1000000
 
 struct ay_measure_machine {
     z80_t cpu;
@@ -53,6 +59,12 @@ struct ay_measure_machine {
     unsigned char ay_registers[16];
     int ay_selected;
     int ay_chip;
+    //Amstrad CPC: el AY se maneja con los puertos A y C del PPI 8255
+    int cpc;
+    unsigned char ppi_a,ppi_c;
+    //t-estados de un frame y frecuencia del AY de la maquina
+    long frame_tstates;
+    long ay_frequency;
 };
 
 struct ay_measure_write {
@@ -60,10 +72,14 @@ struct ay_measure_write {
     unsigned char reg,value;
 };
 
-extern int ay_measure_setup(struct ay_measure_machine *m,unsigned char *data,int size,int song);
+extern int ay_measure_setup(struct ay_measure_machine *m,unsigned char *data,int size,int song,int cpc);
 extern int ay_measure_run_frame(struct ay_measure_machine *m,struct ay_measure_write *writes,int max_writes);
 
+//Cancion (desde 1) de Amstrad CPC? Se prueban unos frames como Spectrum y como CPC
+#define AY_MEASURE_PROBE_FRAMES 50
+extern int ay_measure_is_cpc(unsigned char *data,int size,int song);
+
 //Medir sin hilo (para pruebas). Retorna la duracion en frames (0: no encontrada)
-extern long ay_measure_song(unsigned char *data,int size,int song,long *loop,volatile int *cancel);
+extern long ay_measure_song(unsigned char *data,int size,int song,int cpc,long *loop,volatile int *cancel);
 
 #endif

@@ -25,7 +25,8 @@
 //Reproductor de archivos AY con un Z80 propio, en el hilo de audio.
 //La musica no depende del emulador ni de los menus
 
-extern int ay_tp_start(unsigned char *data,int size,int song);
+//cpc: cancion de Amstrad CPC
+extern int ay_tp_start(unsigned char *data,int size,int song,int cpc);
 extern void ay_tp_stop(void);
 extern void ay_tp_set_paused(int paused);
 extern int ay_tp_active(void);
