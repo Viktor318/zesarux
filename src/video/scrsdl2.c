@@ -1562,6 +1562,13 @@ static int scrsdl_hungarian_keyboard_event(SDL_Event *event)
         return 1;
     }
 
+    //AltGr (Alt derecho): con la distribucion del sistema solo sirve para escribir caracteres
+    //(por ejemplo AltGr+Q = barra invertida). No se pasa a la maquina: en el CPC el Alt es la tecla CLR,
+    //y pulsarla sola hacia pitar al CPC. Al soltar si se pasa, por si se pulso con la opcion inactiva
+    if (event->type==SDL_KEYDOWN && hungarian_keyboard_is_active() && (sym_mod==SDLK_RALT || sym_mod==SDLK_MODE)) {
+        return 1;
+    }
+
     //Al soltar, liberar siempre lo que hayamos pulsado nosotros, aunque ya no este activo
     if (event->type==SDL_KEYUP) return hungarian_keyboard_release(keyid,host_mods);
 

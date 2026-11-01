@@ -82,6 +82,11 @@ static unsigned int hungarian_keyboard_contador_orden=0;
 //Ultimos modificadores del host recibidos, para restaurar los shifts al acabar una secuencia
 static int hungarian_keyboard_ultimos_host_mods=0;
 
+//CPC: frames que faltan para dejar los shifts segun el host tras soltar una tecla (0: nada pendiente).
+//Su firmware veria aun la tecla pulsada con los nuevos shifts (soltar dos puntos con Shift aun pulsado
+//daria un asterisco)
+static int hungarian_keyboard_restaurar_pendiente=0;
+
 
 //Secuencias temporizadas (cola de pulsaciones que se envian frame a frame)
 //Se usan para los simbolos del modo extendido, y para cualquier tecla que se pulse
@@ -100,6 +105,9 @@ struct s_hungarian_keyboard_secuencia {
     int modo_extendido;
     //CPC: cambiar antes los shifts, y pulsar la tecla unos frames despues
     int shifts_antes;
+    //Tecla del host (con shifts_antes): si sigue pulsada, la tecla se queda pulsada
+    //hasta que se suelte (y asi se repite). -1 si no
+    int keyid;
 };
 
 static struct s_hungarian_keyboard_secuencia hungarian_keyboard_cola[HUNGARIAN_KEYBOARD_COLA_MAX];
@@ -622,7 +630,7 @@ static int hungarian_keyboard_cola_primer_paso(struct s_hungarian_keyboard_secue
     return 2;
 }
 
-static void hungarian_keyboard_cola_agregar(z80_byte tecla_base,int necesita_caps,int necesita_symbol,int necesita_ctrl,int modo_extendido,int shifts_antes)
+static void hungarian_keyboard_cola_agregar(z80_byte tecla_base,int necesita_caps,int necesita_symbol,int necesita_ctrl,int modo_extendido,int shifts_antes,int keyid)
 {
     if (hungarian_keyboard_cola_total>=HUNGARIAN_KEYBOARD_COLA_MAX) {
         debug_printf(VERBOSE_DEBUG,"Hungarian keyboard: sequence queue full. Key ignored");
@@ -637,6 +645,7 @@ static void hungarian_keyboard_cola_agregar(z80_byte tecla_base,int necesita_cap
     hungarian_keyboard_cola[indice].necesita_ctrl=necesita_ctrl;
     hungarian_keyboard_cola[indice].modo_extendido=modo_extendido;
     hungarian_keyboard_cola[indice].shifts_antes=shifts_antes;
+    hungarian_keyboard_cola[indice].keyid=keyid;
 
     if (hungarian_keyboard_cola_total==0) {
         //Empieza una secuencia nueva: soltar lo que tengamos pulsado para que no interfiera
@@ -676,6 +685,13 @@ void hungarian_keyboard_host_mods_changed(int host_mods)
 //Llamado cada 20 ms (50 Hz). Avanza la secuencia en curso
 void hungarian_keyboard_timer(void)
 {
+    if (hungarian_keyboard_restaurar_pendiente) {
+        hungarian_keyboard_restaurar_pendiente--;
+        if (!hungarian_keyboard_restaurar_pendiente && !hungarian_keyboard_cola_total) {
+            hungarian_keyboard_restaurar_shifts(hungarian_keyboard_ultimos_host_mods);
+        }
+    }
+
     if (hungarian_keyboard_cola_total==0) return;
 
     //Si ya no aplica (menu abierto, opcion desactivada...), descartar todo
@@ -728,6 +744,19 @@ void hungarian_keyboard_timer(void)
     hungarian_keyboard_cola_frames=0;
     hungarian_keyboard_cola_paso++;
 
+    //Tecla pulsada tras cambiar los shifts: si la tecla del host sigue pulsada y no hay nada mas
+    //en la cola, se queda pulsada como una tecla normal (se repite) hasta que se suelte
+    if (hungarian_keyboard_cola_paso==3 && e->shifts_antes && e->keyid>=0 && hungarian_keyboard_cola_total==1) {
+        struct s_hungarian_keyboard_tecla *t=&hungarian_keyboard_teclas[e->keyid];
+        if (t->pulsada && !t->tecla_base) {
+            t->tecla_base=e->tecla_base;
+            t->necesita_caps=e->necesita_caps;
+            t->necesita_symbol=e->necesita_symbol;
+            t->necesita_ctrl=e->necesita_ctrl;
+            hungarian_keyboard_cola_paso=4;
+        }
+    }
+
     if (hungarian_keyboard_cola_paso<=3) return;
 
     //Fin de esta entrada
@@ -755,6 +784,9 @@ int hungarian_keyboard_press(int keyid,unsigned int codepoint)
     //Autorepeticion del host: ya esta pulsada
     if (t->pulsada) return 1;
 
+    //La nueva tecla decide los shifts
+    hungarian_keyboard_restaurar_pendiente=0;
+
     z80_byte tecla_base=0;
     int necesita_caps=0;
     int necesita_symbol=0;
@@ -767,7 +799,7 @@ int hungarian_keyboard_press(int keyid,unsigned int codepoint)
         t->pulsada=1;
         t->tecla_base=0;
         t->orden=++hungarian_keyboard_contador_orden;
-        hungarian_keyboard_cola_agregar(tecla_extendido,0,1,0,1,0);
+        hungarian_keyboard_cola_agregar(tecla_extendido,0,1,0,1,0,-1);
         return 1;
     }
 
@@ -796,7 +828,7 @@ int hungarian_keyboard_press(int keyid,unsigned int codepoint)
 
     //Si hay una secuencia en curso, esta tecla va a la cola para conservar el orden
     if (tecla_base && (hungarian_keyboard_cola_total || shifts_antes)) {
-        hungarian_keyboard_cola_agregar(tecla_base,necesita_caps,necesita_symbol,necesita_ctrl,0,shifts_antes);
+        hungarian_keyboard_cola_agregar(tecla_base,necesita_caps,necesita_symbol,necesita_ctrl,0,shifts_antes,(shifts_antes ? keyid : -1));
         t->tecla_base=0;
         return 1;
     }
@@ -816,10 +848,12 @@ int hungarian_keyboard_press(int keyid,unsigned int codepoint)
 }
 
 
-//Si alguna tecla nuestra esta pulsada en la maquina emulada (sus shifts los decide el caracter)
+//Si alguna tecla nuestra esta pulsada en la maquina emulada (sus shifts los decide el caracter),
+//o se acaba de soltar y aun no se han dejado los shifts segun el host
 int hungarian_keyboard_any_key_held(void)
 {
     int i;
+    if (hungarian_keyboard_restaurar_pendiente) return 1;
     for (i=0;i<HUNGARIAN_KEYBOARD_MAX_KEYS;i++) {
         if (hungarian_keyboard_teclas[i].pulsada && hungarian_keyboard_teclas[i].tecla_base) return 1;
     }
@@ -840,7 +874,13 @@ int hungarian_keyboard_release(int keyid,int host_mods)
 
     if (t->tecla_base) {
         hungarian_keyboard_pulsar_tecla(t->tecla_base,0);
-        hungarian_keyboard_restaurar_shifts(host_mods);
+        if (MACHINE_IS_CPC && !hungarian_keyboard_cola_total) {
+            hungarian_keyboard_ultimos_host_mods=host_mods;
+            hungarian_keyboard_restaurar_pendiente=HUNGARIAN_KEYBOARD_FRAMES_PASO;
+        }
+        else {
+            hungarian_keyboard_restaurar_shifts(host_mods);
+        }
     }
 
     t->tecla_base=0;
@@ -854,6 +894,8 @@ void hungarian_keyboard_release_all(void)
 {
     int i;
     int alguna=0;
+
+    hungarian_keyboard_restaurar_pendiente=0;
 
     //Descartar secuencias pendientes
     if (hungarian_keyboard_cola_total) {
