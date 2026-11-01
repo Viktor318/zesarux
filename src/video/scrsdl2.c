@@ -1581,12 +1581,11 @@ static int scrsdl_hungarian_keyboard_event(SDL_Event *event)
 
     //Solo teclas que pueden generar un caracter imprimible. Espacio, enter, borrar, cursores,
     //F1..F12, teclado numerico, etc siguen por la gestion normal
-    //En el CPC tambien las operaciones y la coma decimal del teclado numerico (el CPC no las tiene
-    //en su teclado numerico): se envia el caracter que generan. Sin texto (Bloq Num desactivado)
-    //siguen por la gestion normal
+    //En el CPC tambien las operaciones del teclado numerico (el CPC no las tiene en su teclado
+    //numerico): se envia el caracter que generan. La tecla decimal sigue siendo la tecla f. del CPC
+    //(punto), como en su teclado. Sin texto (Bloq Num desactivado) siguen por la gestion normal
     int teclado_numerico_caracter=(MACHINE_IS_CPC &&
-        (sym==SDLK_KP_DIVIDE || sym==SDLK_KP_MULTIPLY || sym==SDLK_KP_MINUS || sym==SDLK_KP_PLUS ||
-         sym==SDLK_KP_PERIOD || sym==SDLK_KP_COMMA || sym==SDLK_KP_DECIMAL));
+        (sym==SDLK_KP_DIVIDE || sym==SDLK_KP_MULTIPLY || sym==SDLK_KP_MINUS || sym==SDLK_KP_PLUS));
 
     if (!teclado_numerico_caracter && (sym<=32 || sym==SDLK_DELETE || (sym & SDLK_SCANCODE_MASK))) return 0;
 
