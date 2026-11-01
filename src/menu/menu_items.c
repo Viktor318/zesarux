@@ -6570,7 +6570,8 @@ void menu_audio_new_ayplayer_exitend(MENU_ITEM_PARAMETERS)
 void menu_audio_new_ayplayer_cpcmode(MENU_ITEM_PARAMETERS)
 {
     ay_player_cpc_mode.v ^=1;
-    audio_ay_player_play_song(ay_player_pista_actual);
+    //Volver a empezar la cancion actual en el nuevo modo (si hay alguna cargada)
+    if (audio_ay_player_mem!=NULL) audio_ay_player_play_song(ay_player_pista_actual);
 }
 
 
