@@ -24564,9 +24564,11 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 
             //540x201 es lo que ocupa el bmp de spectrum 48k
 
-            ancho=1+1+(540*2)/menu_char_width/zoom_x;
+            //En las maquinas con zoom de menu 2 (QL, CPC...) los caracteres del menu son el doble de grandes:
+            //sin tenerlo en cuenta la ventana salia del doble de tamanyo
+            ancho=1+1+(540*2)/menu_char_width/zoom_x/menu_gui_zoom;
 
-            alto=1+2+(201*2)/8/zoom_y;
+            alto=1+2+(201*2)/8/zoom_y/menu_gui_zoom;
 
             //Default size: twice the image size (the image is scaled to the window), limited to the screen
             if (ancho>scr_get_menu_width()) ancho=scr_get_menu_width();
