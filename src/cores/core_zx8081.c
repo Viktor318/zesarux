@@ -53,6 +53,7 @@
 #include "zeng_online_client.h"
 #include "menu_items_storage.h"
 #include "tv.h"
+#include "audio_hq.h"
 
 
 int core_zx8081_t_estados_antes=0;
@@ -245,22 +246,32 @@ void cpu_core_loop_zx8081(void)
 
         //Envio sonido
         audio_valor_enviar_sonido=0;
-        audio_valor_enviar_sonido +=da_output_ay();
+
+        //Partes del chip AY y del sonido de vsync en esta muestra. La salida de alta calidad las genera
+        //por su cuenta, asi que se sigue cuanto queda de ellas tras las mezclas, para quitarlas de las demas fuentes
+        int hq_ay_parte=da_output_ay();
+        int hq_vsync_parte=0;
+
+        audio_valor_enviar_sonido +=hq_ay_parte;
 
         if (zx8081_vsync_sound.v) {
             if (beeper_real_enabled==0) {
-                    audio_valor_enviar_sonido += da_amplitud_speaker_zx8081();
+                    hq_vsync_parte=da_amplitud_speaker_zx8081();
             }
 
             else {
-                    audio_valor_enviar_sonido += get_value_beeper_sum_array();
+                    hq_vsync_parte=get_value_beeper_sum_array();
                     beeper_new_line();
             }
+            audio_valor_enviar_sonido += hq_vsync_parte;
         }
 
         else {
             //Si no hay vsync sound, beeper sound off, forzamos que hay silencio de beepr
             beeper_silence_detection_counter=SILENCE_DETECTION_MAX;
+
+            //Alta calidad: sin sonido de vsync
+            audio_hq_beeper(t_estados,0);
         }
 
         if (audio_nagra_effect.v) {
@@ -287,9 +298,18 @@ void cpu_core_loop_zx8081(void)
                 reset_silence_detection_counter();
                 audio_valor_enviar_sonido /=2;
                 audio_valor_enviar_sonido += get_realtape_last_value()/2;
+                hq_ay_parte /=2;
+                hq_vsync_parte /=2;
                 //Sonido alterado cuando top speed
                 if (timer_condicion_top_speed() ) audio_valor_enviar_sonido=audio_change_top_speed_sound(audio_valor_enviar_sonido);
             }
+        }
+
+        //Salida de alta calidad: las demas fuentes de sonido (cinta real), sin el AY ni el vsync
+        if (audio_hq_running) {
+            int hq_otros=audio_valor_enviar_sonido-hq_vsync_parte;
+            if (audio_hq_ay_active()) hq_otros -=hq_ay_parte;
+            audio_hq_others(t_estados,hq_otros,hq_otros);
         }
 
         //Ajustar volumen
@@ -334,6 +354,9 @@ void cpu_core_loop_zx8081(void)
                 menu_convert_audio_to_zx81_get_audio_buffer();
             }
 
+
+            //Salida de sonido de alta calidad: final del frame
+            audio_hq_end_frame(screen_testados_total);
 
             t_estados -=screen_testados_total;
 

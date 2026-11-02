@@ -23,6 +23,7 @@
 #include <string.h>
 
 #include "zx8081.h"
+#include "audio_hq.h"
 #include "cpu.h"
 #include "screen.h"
 #include "debug.h"
@@ -1007,6 +1008,9 @@ int zx8081_read_port_a0_low(z80_byte puerto_h)
 
     set_value_beeper_on_array(da_amplitud_speaker_zx8081() );
 
+    //Salida de sonido de alta calidad: el cambio con su instante exacto
+    if (zx8081_vsync_sound.v) audio_hq_beeper(t_estados,da_amplitud_speaker_zx8081() );
+
 
     if (zx8081_vsync_sound.v) {
         //solo resetea contador de silencio cuando esta activo el vsync sound - beeper
@@ -1112,6 +1116,9 @@ void zx8081_out_any_port_video_stuff(void)
     bit_salida_sonido_zx8081.v=1;
 
     set_value_beeper_on_array(da_amplitud_speaker_zx8081() );
+
+    //Salida de sonido de alta calidad: el cambio con su instante exacto
+    if (zx8081_vsync_sound.v) audio_hq_beeper(t_estados,da_amplitud_speaker_zx8081() );
 
 
     if (zx8081_vsync_sound.v) {
