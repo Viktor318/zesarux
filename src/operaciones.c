@@ -10053,6 +10053,8 @@ acts as expected unless this registe is explicitly changed by the user/software.
 
 		if (sonido) {
 			audiodac_send_sample_value(value);
+			//Salida de sonido de alta calidad: la escritura con su instante exacto
+			audio_hq_dac(t_estados,value-128,value-128);
 			//audiodac_last_value_data=value;
 			//silence_detection_counter=0;
 		}

@@ -211,6 +211,7 @@ void gs_mix_dac_channels(void)
     char valor_signed_audiodac_right=(gs_dac_valor_final_right-128);
 
 	//Mezclar con el valor de salida. Mezclar mono
+	audio_mix_halvings++;
 	int v;
 	v=audio_valor_enviar_sonido_izquierdo+valor_signed_audiodac_left;
 	v /=2;

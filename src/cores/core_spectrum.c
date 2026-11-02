@@ -550,26 +550,29 @@ void core_spectrum_fin_scanline(void)
             audio_apply_nagra_effect();
         }
 
-        //Parte del beeper en esta muestra, para la salida de alta calidad (que introduce el beeper por su cuenta)
-        int hq_beeper_added=0;
-
         if (beeper_enabled.v) {
             if (beeper_real_enabled==0) {
                 audio_valor_enviar_sonido_izquierdo += value_beeper;
                 audio_valor_enviar_sonido_derecho += value_beeper;
-                hq_beeper_added=value_beeper;
             }
 
             else {
                 char suma_beeper=get_value_beeper_sum_array();
                 audio_valor_enviar_sonido_izquierdo += suma_beeper;
                 audio_valor_enviar_sonido_derecho += suma_beeper;
-                hq_beeper_added=suma_beeper;
                 beeper_new_line();
             }
 
 
         }
+
+        //Los demas mezcladores reducen a la mitad lo que ya hay (v=(v+x)/2). Se mezclan sobre cero, contando
+        //cuantas veces lo hacen, y al final se suma el AY y el beeper en la proporcion que les corresponde.
+        //Asi la salida de alta calidad recibe solo las demas fuentes, sin el AY, el beeper ni los DAC
+        int hq_base_izquierdo=audio_valor_enviar_sonido_izquierdo;
+        int hq_base_derecho=audio_valor_enviar_sonido_derecho;
+        audio_valor_enviar_sonido_izquierdo=audio_valor_enviar_sonido_derecho=0;
+        audio_mix_halvings=0;
 
         if (audiodac_enabled.v) {
             audiodac_mix();
@@ -578,6 +581,11 @@ void core_spectrum_fin_scanline(void)
         if (MACHINE_IS_TBBLUE) {
             tbblue_dac_mix();
         }
+
+        //Parte de los DAC, y mitades que se le aplican despues
+        int hq_dac_izquierdo=audio_valor_enviar_sonido_izquierdo;
+        int hq_dac_derecho=audio_valor_enviar_sonido_derecho;
+        int hq_mitades_dac=audio_mix_halvings;
 
         if (gs_enabled.v) {
             gs_mix_dac_channels();
@@ -601,35 +609,49 @@ void core_spectrum_fin_scanline(void)
             }
         }
 
+        int hq_top_speed=0;
+
         if (leer_cinta_real) {
             realtape_get_byte();
             if (realtape_loading_sound.v) {
                 reset_silence_detection_counter();
+                audio_mix_halvings++;
                 audio_valor_enviar_sonido_izquierdo /=2;
                 audio_valor_enviar_sonido_izquierdo += get_realtape_last_value()/2;
 
                 audio_valor_enviar_sonido_derecho /=2;
                 audio_valor_enviar_sonido_derecho += get_realtape_last_value()/2;
 
-                //Sonido alterado cuando top speed
-                if (timer_condicion_top_speed() ) {
-                    audio_valor_enviar_sonido_izquierdo=audio_change_top_speed_sound(audio_valor_enviar_sonido_izquierdo);
-                    audio_valor_enviar_sonido_derecho=audio_change_top_speed_sound(audio_valor_enviar_sonido_derecho);
-                }
+                //Sonido alterado cuando top speed (se aplica al final, a todo)
+                if (timer_condicion_top_speed() ) hq_top_speed=1;
             }
         }
 
-        //Salida de alta calidad: las demas fuentes de sonido, sin el beeper
-        if (audio_hq_running) {
-            int hq_otros_izquierdo=audio_valor_enviar_sonido_izquierdo-hq_beeper_added;
-            int hq_otros_derecho=audio_valor_enviar_sonido_derecho-hq_beeper_added;
+        //Las demas fuentes (incluidos los DAC), y el AY y el beeper reducidos tantas veces como se ha mezclado
+        int hq_otros_izquierdo=audio_valor_enviar_sonido_izquierdo;
+        int hq_otros_derecho=audio_valor_enviar_sonido_derecho;
+        int hq_divisor=1<<audio_mix_halvings;
 
-            if (audio_hq_ay_active()) {
-                hq_otros_izquierdo -=hq_ay_izquierdo;
-                hq_otros_derecho -=hq_ay_derecho;
-            }
+        audio_valor_enviar_sonido_izquierdo=hq_otros_izquierdo+hq_base_izquierdo/hq_divisor;
+        audio_valor_enviar_sonido_derecho=hq_otros_derecho+hq_base_derecho/hq_divisor;
+
+        if (hq_top_speed) {
+            audio_valor_enviar_sonido_izquierdo=audio_change_top_speed_sound(audio_valor_enviar_sonido_izquierdo);
+            audio_valor_enviar_sonido_derecho=audio_change_top_speed_sound(audio_valor_enviar_sonido_derecho);
+        }
+
+        //Salida de alta calidad: las demas fuentes de sonido, sin el AY, el beeper ni los DAC (que genera por su cuenta)
+        if (audio_hq_running) {
+            int hq_divisor_dac=1<<(audio_mix_halvings-hq_mitades_dac);
+            hq_otros_izquierdo -=hq_dac_izquierdo/hq_divisor_dac;
+            hq_otros_derecho -=hq_dac_derecho/hq_divisor_dac;
 
             audio_hq_others(t_estados,hq_otros_izquierdo,hq_otros_derecho);
+
+            //Sin ningun DAC activo: silencio en sus canales
+            if (!audiodac_enabled.v && !(MACHINE_IS_TBBLUE && (tbblue_registers[8] & 0x08))) {
+                audio_hq_dac(t_estados,0,0);
+            }
         }
 
         if (audio_nagra_effect.v) {

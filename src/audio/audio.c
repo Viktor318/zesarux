@@ -2104,8 +2104,14 @@ int temp_audio_return_frecuencia_buffer(void)
 
 //Mezclar la salida actual de sonido con el audiodac.
 //El audiodac es muy simple, lo que hace es generar un valor de onda de 8 bits signed
+//Veces que los mezcladores han reducido a la mitad la salida en esta muestra (los que mezclan v=(v+x)/2).
+//Asi el nucleo sabe en que proporcion quedan las demas fuentes (para la salida de alta calidad)
+int audio_mix_halvings=0;
+
 void audiodac_mix(void)
 {
+	audio_mix_halvings++;
+
 	//Pasar valor a signed
 	char valor_signed_audiodac=(audiodac_last_value_data-128);
 

@@ -2250,6 +2250,7 @@ void hilow_mix_audio(void)
 
 
     reset_silence_detection_counter();
+    audio_mix_halvings++;
     audio_valor_enviar_sonido_izquierdo /=2;
     audio_valor_enviar_sonido_izquierdo += sonido_hilow/2;
 

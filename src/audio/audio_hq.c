@@ -70,6 +70,9 @@ static Blip_Buffer *hq_buf_right=NULL;
 static Blip_Synth *hq_synth_beeper=NULL;
 static Blip_Synth *hq_synth_left=NULL;
 static Blip_Synth *hq_synth_right=NULL;
+//Convertidores digital-analogico (Specdrum, Covox, los DAC del Next): cada escritura en su instante
+static Blip_Synth *hq_synth_dac_left=NULL;
+static Blip_Synth *hq_synth_dac_right=NULL;
 
 static long hq_clock_rate=0;
 
@@ -77,6 +80,8 @@ static long hq_clock_rate=0;
 static int hq_last_beeper=0;
 static int hq_last_left=0;
 static int hq_last_right=0;
+static int hq_last_dac_left=0;
+static int hq_last_dac_right=0;
 
 //Muestras de un frame. A 48000 Hz y velocidad 2% serian 48000 muestras por frame
 #define AUDIO_HQ_MAX_FRAME_SAMPLES 48000
@@ -845,6 +850,8 @@ void audio_hq_end(void)
 
     if (hq_synth_beeper!=NULL) delete_Blip_Synth(&hq_synth_beeper);
     if (hq_synth_left!=NULL) delete_Blip_Synth(&hq_synth_left);
+    if (hq_synth_dac_left!=NULL) delete_Blip_Synth(&hq_synth_dac_left);
+    if (hq_synth_dac_right!=NULL) delete_Blip_Synth(&hq_synth_dac_right);
     if (hq_synth_right!=NULL) delete_Blip_Synth(&hq_synth_right);
     if (hq_buf_beeper!=NULL) delete_Blip_Buffer(&hq_buf_beeper);
     if (hq_buf_left!=NULL) delete_Blip_Buffer(&hq_buf_left);
@@ -872,7 +879,10 @@ void audio_hq_init(void)
     hq_synth_beeper=audio_hq_new_synth(hq_buf_beeper);
     hq_synth_left=audio_hq_new_synth(hq_buf_left);
     hq_synth_right=audio_hq_new_synth(hq_buf_right);
-    if (hq_synth_beeper==NULL || hq_synth_left==NULL || hq_synth_right==NULL) {
+    hq_synth_dac_left=audio_hq_new_synth(hq_buf_left);
+    hq_synth_dac_right=audio_hq_new_synth(hq_buf_right);
+    if (hq_synth_beeper==NULL || hq_synth_left==NULL || hq_synth_right==NULL ||
+        hq_synth_dac_left==NULL || hq_synth_dac_right==NULL) {
         debug_printf(VERBOSE_ERR,"Can not allocate memory for the high quality sound");
         audio_hq_end();
         return;
@@ -887,6 +897,8 @@ void audio_hq_init(void)
     //Empezar desde los niveles actuales, sin saltos
     blip_synth_set_level(hq_synth_beeper,hq_last_beeper);
     blip_synth_set_level(hq_synth_left,hq_last_left);
+    blip_synth_set_level(hq_synth_dac_left,hq_last_dac_left);
+    blip_synth_set_level(hq_synth_dac_right,hq_last_dac_right);
     blip_synth_set_level(hq_synth_right,hq_last_right);
 
     audio_hq_filters_init();
@@ -944,6 +956,26 @@ void audio_hq_beeper(int tstates,int value)
     hq_last_beeper=level;
 
     blip_synth_update(hq_synth_beeper,audio_hq_time(tstates),level);
+}
+
+//Escritura en un convertidor digital-analogico, en este t-estado del frame.
+//left y right: valores de 8 bits con signo (0 = silencio)
+void audio_hq_dac(int tstates,int left,int right)
+{
+    if (!audio_hq_running) return;
+
+    int level_left=left*AUDIO_HQ_SCALE;
+    int level_right=right*AUDIO_HQ_SCALE;
+
+    if (level_left!=hq_last_dac_left) {
+        hq_last_dac_left=level_left;
+        blip_synth_update(hq_synth_dac_left,audio_hq_time(tstates),level_left);
+    }
+
+    if (level_right!=hq_last_dac_right) {
+        hq_last_dac_right=level_right;
+        blip_synth_update(hq_synth_dac_right,audio_hq_time(tstates),level_right);
+    }
 }
 
 //Las demas fuentes de sonido, una vez por scanline. Valores de 8 bits, sin el beeper

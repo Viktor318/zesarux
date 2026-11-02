@@ -25,6 +25,9 @@
 
 #include "cpu.h"
 #include "tbblue.h"
+#include "audio_hq.h"
+
+static void tbblue_hq_dac_update(void);
 #include "mem128.h"
 #include "debug.h"
 #include "contend.h"
@@ -5283,6 +5286,7 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
         case 44:
 
         tbblue_dac_b=value;
+        tbblue_hq_dac_update();
 
         reset_silence_detection_counter();
 
@@ -5295,6 +5299,7 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
         }*/
 
         tbblue_dac_a=tbblue_dac_d=value;
+        tbblue_hq_dac_update();
 
         reset_silence_detection_counter();
 
@@ -5303,6 +5308,7 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
         case 46:
 
         tbblue_dac_c=value;
+        tbblue_hq_dac_update();
 
         reset_silence_detection_counter();
 
@@ -8936,6 +8942,17 @@ void tbblue_retn(void)
 
 
 
+//Salida de sonido de alta calidad: los DAC A y B a la izquierda, C y D a la derecha, como en tbblue_dac_mix
+static void tbblue_hq_dac_update(void)
+{
+    if (!(tbblue_registers[8] & 0x08)) return;
+
+    int dac_izquierdo=((tbblue_dac_a-128)+(tbblue_dac_b-128))/2;
+    int dac_derecho=((tbblue_dac_c-128)+(tbblue_dac_d-128))/2;
+
+    audio_hq_dac(t_estados,dac_izquierdo,dac_derecho);
+}
+
 void tbblue_out_port_dac(z80_byte puerto_l,z80_byte value)
 {
 
@@ -8970,6 +8987,8 @@ void tbblue_out_port_dac(z80_byte puerto_l,z80_byte value)
         break;
     }
 
+    tbblue_hq_dac_update();
+
     reset_silence_detection_counter();
 
 }
@@ -8981,6 +9000,8 @@ void tbblue_dac_mix(void)
     // 0x08 (08) => Peripheral 3 Setting
     //  bit 3 = Enable 8-bit DACs (A,B,C,D) (hard reset = 0)
     if (!(tbblue_registers[8] & 0x08)) return;
+
+    audio_mix_halvings++;
 
     int dac_a=tbblue_dac_a-128;
     int dac_b=tbblue_dac_b-128;

@@ -267,6 +267,7 @@ extern z80_byte mid_instrument;
 extern char audio_valor_enviar_sonido;
 
 extern char audio_valor_enviar_sonido_izquierdo;
+extern int audio_mix_halvings;
 extern char audio_valor_enviar_sonido_derecho;
 
 
