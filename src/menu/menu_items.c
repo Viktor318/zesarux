@@ -24066,14 +24066,18 @@ void menu_help_keyboard_overlay(void)
 int menu_help_keyboard_pending_size=0;
 
 //Image scale (1/256 units) for a size preset
+//En las maquinas con zoom de menu 2 (QL, CPC...) cada pixel de la ventana se dibuja doble:
+//la escala se divide por ese zoom, para que el teclado tenga el mismo tamanyo en pantalla que en Spectrum
 int menu_help_keyboard_preset_scale(int preset)
 {
+    int gui_zoom=(menu_gui_zoom>0 ? menu_gui_zoom : 1);
+
     if (preset==MENU_HELP_KEYBOARD_SIZE_ORIGINAL) {
         int factor=menu_help_keyboard_bmp_factor;
         if (factor<1) factor=256;
-        return (256*256)/factor;
+        return (256*256)/factor/gui_zoom;
     }
-    return 256;
+    return 256/gui_zoom;
 }
 
 void menu_help_keyboard_set_size(zxvision_window *w,int preset)
