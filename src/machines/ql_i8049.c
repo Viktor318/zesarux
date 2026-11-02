@@ -1065,8 +1065,13 @@ void ql_audio_switch_pitches(void)
 }
 
 
+//Salida de sonido de alta calidad: posicion del ultimo cambio de nivel dentro del paso de
+//ql_audio_next_cycle (0 a 65535, en fraccion del paso), o -1 si no ha habido cambio en ese paso
+int ql_audio_hq_edge_fraction=-1;
+
 void ql_audio_next_cycle(void)
 {
+    ql_audio_hq_edge_fraction=-1;
 
     if (!ql_audio_playing) return;
 
@@ -1100,6 +1105,17 @@ void ql_audio_next_cycle(void)
                 ql_audio_phase_accumulator=ql_audio_output_bit ? 0x80000000U : 0;
 
             ql_audio_set_current_pitch(pitch);
+        }
+    }
+
+    //Alta calidad: donde cruza la fase el limite de la onda (bit 31) dentro de este paso
+    if (ql_audio_phase_increment) {
+        moto_long_long antes=(moto_long_long)(ql_audio_phase_accumulator & 0xFFFFFFFFU);
+        moto_long_long limite=(antes<0x80000000ULL ? 0x80000000ULL : 0x100000000ULL);
+        moto_long_long incremento=(moto_long_long)(ql_audio_phase_increment & 0xFFFFFFFFU);
+        if (antes+incremento>=limite) {
+            ql_audio_hq_edge_fraction=(int)(((limite-antes)<<16)/incremento);
+            if (ql_audio_hq_edge_fraction>65535) ql_audio_hq_edge_fraction=65535;
         }
     }
 

@@ -55,6 +55,7 @@
 #include "snap_zsf.h"
 #include "snap_ram.h"
 #include "zeng_online_client.h"
+#include "audio_hq.h"
 
 
 z80_byte byte_leido_core_ql;
@@ -211,16 +212,36 @@ void cpu_core_loop_ql(void)
 
         audio_valor_enviar_sonido_izquierdo=audio_valor_enviar_sonido_derecho=0;
 
-        audio_valor_enviar_sonido_izquierdo +=da_output_ay_izquierdo();
-        audio_valor_enviar_sonido_derecho +=da_output_ay_derecho();
+        //Partes del chip AY y del sonido del 8049 en esta muestra. La salida de alta calidad las genera
+        //por su cuenta, asi que se quitan de las demas fuentes
+        char hq_ay_izquierdo,hq_ay_derecho;
+        da_output_ay_izquierdo_derecho(&hq_ay_izquierdo,&hq_ay_derecho);
+
+        audio_valor_enviar_sonido_izquierdo +=hq_ay_izquierdo;
+        audio_valor_enviar_sonido_derecho +=hq_ay_derecho;
 
         if (audio_nagra_effect.v) {
             audio_apply_nagra_effect();
             audio_apply_nagra_effect_next();
         }
 
-        audio_valor_enviar_sonido_izquierdo +=ql_audio_da_output();
-        audio_valor_enviar_sonido_derecho +=ql_audio_da_output();
+        int hq_ql_parte=ql_audio_da_output();
+
+        audio_valor_enviar_sonido_izquierdo +=hq_ql_parte;
+        audio_valor_enviar_sonido_derecho +=hq_ql_parte;
+
+        //Salida de alta calidad: las demas fuentes de sonido, sin el AY ni el sonido del 8049
+        if (audio_hq_running) {
+            int hq_otros_izquierdo=audio_valor_enviar_sonido_izquierdo-hq_ql_parte;
+            int hq_otros_derecho=audio_valor_enviar_sonido_derecho-hq_ql_parte;
+
+            if (audio_hq_ay_active()) {
+                hq_otros_izquierdo -=hq_ay_izquierdo;
+                hq_otros_derecho -=hq_ay_derecho;
+            }
+
+            audio_hq_others(t_estados,hq_otros_izquierdo,hq_otros_derecho);
+        }
 
 
         //Ajustar volumen
@@ -234,6 +255,23 @@ void cpu_core_loop_ql(void)
 
 
         ql_audio_next_cycle();
+
+        //Salida de alta calidad: el sonido del 8049 (como el beeper del Spectrum), con cada cambio de
+        //nivel en su instante dentro de esta scanline
+        if (audio_hq_running) {
+            static int hq_ql_nivel=0;
+            int nivel=ql_audio_da_output();
+            if (nivel!=hq_ql_nivel) {
+                int instante=t_estados;
+                if (ql_audio_hq_edge_fraction>=0) {
+                    int inicio_linea=t_estados-screen_testados_linea;
+                    if (inicio_linea<0) inicio_linea=0;
+                    instante=inicio_linea+(int)(((long long)(t_estados-inicio_linea)*ql_audio_hq_edge_fraction)>>16);
+                }
+                audio_hq_beeper(instante,nivel);
+                hq_ql_nivel=nivel;
+            }
+        }
 
         ay_chip_siguiente_ciclo();
 
@@ -267,6 +305,9 @@ void cpu_core_loop_ql(void)
                     linea_estados++;
             }
 
+
+            //Salida de sonido de alta calidad: final del frame
+            audio_hq_end_frame(screen_testados_total);
 
             t_estados -=screen_testados_total;
 

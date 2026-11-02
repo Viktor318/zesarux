@@ -788,7 +788,7 @@ static void hq_ay_render(int frame_tstates)
 
 int audio_hq_machine_supported(void)
 {
-    return MACHINE_IS_SPECTRUM || MACHINE_IS_CPC || MACHINE_IS_ZX8081;
+    return MACHINE_IS_SPECTRUM || MACHINE_IS_CPC || MACHINE_IS_ZX8081 || MACHINE_IS_QL;
 }
 
 //El 16K/48K tienen altavoz interno. Las demas van a un televisor

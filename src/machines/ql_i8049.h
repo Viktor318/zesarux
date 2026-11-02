@@ -30,6 +30,7 @@ extern unsigned char ql_read_ipc(void);
 extern void ql_write_ipc(unsigned char Data);
 extern char ql_audio_da_output(void);
 extern void ql_audio_next_cycle(void);
+extern int ql_audio_hq_edge_fraction;
 
 extern void ql_ipc_reset(void);
 
