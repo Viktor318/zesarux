@@ -92,6 +92,21 @@ int scrsdl_crea_ventana(void)
     //Que la ventana quepa en la pantalla: si no, reducir el zoom (por ejemplo tras pulsar varias veces
     //el boton de aumentar zoom, o con una configuracion guardada con un zoom demasiado grande,
     //la ventana se salia de la pantalla y no se podia recuperar)
+    //Zoom que quiere el usuario: el que tenia la ventana anterior, salvo que lo hayamos reducido nosotros
+    //para que cupiera. Asi, al cambiar a una maquina con pantalla mas pequena (por ejemplo de QL a Spectrum)
+    //se vuelve al zoom de antes, en vez de quedarse con el reducido
+    static int zoom_preferido=0;
+    static int zoom_aplicado=0;
+
+    if (zoom_preferido==0 || zoom_x!=zoom_aplicado) {
+        //Primera vez, o el zoom lo ha cambiado el usuario (o la configuracion)
+        zoom_preferido=zoom_x;
+    }
+    else if (zoom_x<zoom_preferido) {
+        zoom_x=zoom_y=zoom_preferido;
+        set_putpixel_zoom();
+    }
+
     if (!ventana_fullscreen && !scr_sdl_force_size.v) {
         SDL_Rect disponible;
         if (SDL_GetDisplayUsableBounds(0,&disponible)==0 && disponible.w>0 && disponible.h>0) {
@@ -109,8 +124,11 @@ int scrsdl_crea_ventana(void)
                 zoom_x--;
                 zoom_y--;
             }
+            set_putpixel_zoom();
         }
     }
+
+    zoom_aplicado=zoom_x;
 
 
     int ancho=screen_get_window_size_width_zoom_border_en();
