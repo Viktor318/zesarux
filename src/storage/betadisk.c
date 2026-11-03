@@ -69,7 +69,7 @@ char *betadisk_rom_file_name="trdos.rom";
 z80_bit trd_enabled={0};
 
 void betadisk_trdoshandler_read_write_sectors(void);
-void betadisk_show_activity(void);
+
 
 int trd_must_flush_to_disk=0;
 
@@ -692,7 +692,7 @@ void betadisk_enable(void)
 
         //En baseconf no queremos activar betadisk porque el propio sistema de baseconf ya intercepta las llamadas a betadisk
 
-    if (MACHINE_IS_BASECONF || MACHINE_IS_TSCONF || MACHINE_IS_SCORPION || MACHINE_IS_PENTAGON) return;
+    if (MACHINE_IS_BASECONF || MACHINE_IS_TSCONF || MACHINE_IS_SCORPION || MACHINE_IS_PENTAGON || MACHINE_IS_ATM_TURBO) return;
 
     if (betadisk_enabled.v) return;
 

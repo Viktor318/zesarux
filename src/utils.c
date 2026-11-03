@@ -179,6 +179,7 @@
 #include "scorpion.h"
 #include "didaktikgama.h"
 #include "hungarian_keyboard.h"
+#include "atmturbo.h"
 
 //Nota: funciones de simular teclas desde archivo de texto o portapapeles, los nombres
 //tienen el prefijo send_text_as_keystrokes_ o input_file_keyboard_ , son lo mismo, solo que el segundo es el nombre antiguo
@@ -679,6 +680,11 @@ char *string_machines_list_description=
     " Scorpiontp  Scorpion ZS-256 Turbo+\n"
     " Scorpiongmx Scorpion GMX\n"
 
+    " ATM1        ATM Turbo 1\n"
+    " ATM2        ATM Turbo 2\n"
+    " ATM2p       ATM Turbo 2+\n"
+    " ATM3        ATM Turbo 3\n"
+
     " Chloe140 Chloe 140 SE\n"
     " Chloe280 Chloe 280 SE\n"
 
@@ -777,10 +783,17 @@ struct s_machines_info machines_info[]={
 
     {"Sam Coupe", 			            MACHINE_ID_SAM,                     MACHINE_FAMILY_SPECTRUM,FABRICANTE_MILES_GORDON},
 
-    {"Pentagon",		                MACHINE_ID_PENTAGON,                MACHINE_FAMILY_SPECTRUM,FABRICANTE_PENTAGON},
+    {"Pentagon",		                MACHINE_ID_PENTAGON,                MACHINE_FAMILY_SPECTRUM,FABRICANTE_ATM_MICROART},
     {"Scorpion ZS-256",		            MACHINE_ID_SCORPION_ZS_256,                 MACHINE_FAMILY_SPECTRUM,FABRICANTE_SCORPION},
     {"Scorpion ZS-256 Turbo+",		    MACHINE_ID_SCORPION_ZS_256_TURBO_PLUS,      MACHINE_FAMILY_SPECTRUM,FABRICANTE_SCORPION},
     {"Scorpion GMX",		            MACHINE_ID_SCORPION_GMX,                    MACHINE_FAMILY_SPECTRUM,FABRICANTE_SCORPION},
+
+    {"ATM Turbo 1",		                MACHINE_ID_ATM_TURBO1,              MACHINE_FAMILY_SPECTRUM,FABRICANTE_ATM_MICROART},
+    {"ATM Turbo 2",		                MACHINE_ID_ATM_TURBO2,              MACHINE_FAMILY_SPECTRUM,FABRICANTE_ATM_MICROART},
+    {"ATM Turbo 2+",		            MACHINE_ID_ATM_TURBO2_PLUS,         MACHINE_FAMILY_SPECTRUM,FABRICANTE_MICROART},
+    {"ATM Turbo 3",		                MACHINE_ID_ATM_TURBO3,              MACHINE_FAMILY_SPECTRUM,FABRICANTE_NEDOPC},
+
+
     {"Chrome",                          MACHINE_ID_CHROME,                  MACHINE_FAMILY_SPECTRUM,FABRICANTE_MARIOPRATO},
     {"ZX-Evolution TS-Conf",            MACHINE_ID_TSCONF,                  MACHINE_FAMILY_SPECTRUM,FABRICANTE_TSLABS},
     {"ZX-Evolution BaseConf",           MACHINE_ID_BASECONF,                MACHINE_FAMILY_SPECTRUM,FABRICANTE_NEDOPC},
@@ -838,11 +851,12 @@ struct s_machines_info machines_info[]={
 
 };
 
-#define TOTAL_FABRICANTES_HOYKEY 25
+#define TOTAL_FABRICANTES_HOYKEY 26
 
 char *array_fabricantes_hotkey[TOTAL_FABRICANTES_HOYKEY]={
         "~~Amstrad",
         "Ascii C~~orp",
+        "ATM & MicroART",
         "Cam~~bridge Computers",
         "~~Chloe Corporation",
         "Coleco In~~dustries",
@@ -851,12 +865,12 @@ char *array_fabricantes_hotkey[TOTAL_FABRICANTES_HOYKEY]={
         "~~Investronica",
         "J~~upiter Cantab",
         "Ma~~rio Prato",
+        "MicroART",
         "~~Microdigital Eletronica",
         "Miles Gordon Technolog~~y",
         "N~~edoPC",
         "Ne~~w Horizons",
         "Ne~~xt Team",
-        "~~Pentagon",
         "Scie~~nce of Cambridge",
         "Scorpion",
         "Se~~ga",
@@ -869,7 +883,7 @@ char *array_fabricantes_hotkey[TOTAL_FABRICANTES_HOYKEY]={
 };
 
 //Si letra es espacio->no hay letra. spectravideo o timex computer o scorpion no hay letras libres
-char array_fabricantes_hotkey_letra[TOTAL_FABRICANTES_HOYKEY+1]="aobcd kiurmyewxpn gs  tlz";
+char array_fabricantes_hotkey_letra[TOTAL_FABRICANTES_HOYKEY+1]="ao bcd kiur myewxn gs  tlz";
 
 
 //Buscar el texto del nombre de familia. Si no encontrado, retorna siempre "Spectrum"
@@ -4125,6 +4139,8 @@ int get_rom_size(int machine)
 
     else if (MACHINE_IS_SCORPION) rom_size=65536;
 
+    else if (MACHINE_IS_ATM_TURBO) rom_size=65536;
+
     else if (MACHINE_IS_SPECTRUM_128_P2) rom_size=32768;
 
     else if (MACHINE_IS_SPECTRUM_P2A_P3) rom_size=65536;
@@ -4225,6 +4241,10 @@ int get_ram_size(void)
 
     else if (MACHINE_IS_SCORPION) {
         total_ram=256*1024;
+    }
+
+    else if (MACHINE_IS_ATM_TURBO) {
+        total_ram=ATM_TURBO_RAM_SIZE*1024;
     }
 
     else if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3 || MACHINE_IS_CPC_HAS_128K || MACHINE_IS_CHLOE_140SE) {
@@ -7126,7 +7146,7 @@ int quickload_continue(char *nombre) {
         }
 
         //En baseconf no queremos activar betadisk porque el propio sistema de baseconf ya intercepta las llamadas a betadisk
-        if (!MACHINE_IS_BASECONF && !MACHINE_IS_TSCONF && !MACHINE_IS_SCORPION) betadisk_enable();
+        if (!MACHINE_IS_BASECONF && !MACHINE_IS_TSCONF && !MACHINE_IS_SCORPION && !MACHINE_IS_PENTAGON && !MACHINE_IS_ATM_TURBO) betadisk_enable();
 
         //Si es scl, extraer el trd que se obtiene del scl e insertar el trd
         if (!util_compare_file_extension(nombre,"scl")) {
@@ -14346,6 +14366,12 @@ struct s_machines_short_names_id machines_short_names_id[]={
    {"Scorpion",MACHINE_ID_SCORPION_ZS_256,bitmap_button_ext_desktop_my_machine_scorpion},
    {"Scorpiontp",MACHINE_ID_SCORPION_ZS_256_TURBO_PLUS,bitmap_button_ext_desktop_my_machine_scorpion},
    {"Scorpiongmx",MACHINE_ID_SCORPION_GMX,bitmap_button_ext_desktop_my_machine_scorpion},
+
+   {"ATM1",MACHINE_ID_ATM_TURBO1,bitmap_button_ext_desktop_userdefined},
+   {"ATM2",MACHINE_ID_ATM_TURBO2,bitmap_button_ext_desktop_userdefined},
+   {"ATM2p",MACHINE_ID_ATM_TURBO2_PLUS,bitmap_button_ext_desktop_userdefined},
+   {"ATM3",MACHINE_ID_ATM_TURBO3,bitmap_button_ext_desktop_userdefined},
+
    {"Didaktik",MACHINE_ID_DIDAKTIKGAMA,bitmap_button_ext_desktop_my_machine_didaktikgama},
    {"Chrome",MACHINE_ID_CHROME,bitmap_button_ext_desktop_my_machine_generic},
    {"BaseConf",MACHINE_ID_BASECONF,bitmap_button_ext_desktop_my_machine_baseconf},
