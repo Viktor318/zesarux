@@ -3218,8 +3218,8 @@ void set_machine_params(void)
             screen_testados_linea=256;
 
 
-            //CBA Stereo
-            ay3_stereo_mode=4;
+            //El modo estereo lo decide el mezclador del AY (el usuario). Antes aqui se fijaba CBA, el de la
+            //salida estereo del CPC real (A derecha, B centro, C izquierda); se puede elegir en el mezclador
 
         break;
 

@@ -67,6 +67,7 @@
 #include "screen.h"
 #include "screen_fx.h"
 #include "ay38912.h"
+#include "ay_mixer.h"
 #include "mem128.h"
 #include "zx8081.h"
 #include "snap.h"
@@ -848,8 +849,11 @@ void zesarux_cmdline_help_expert(void)
     printf("\n"
         "--ay-autoenable                  Enable AY Chip automatically when it is needed\n"
         "--totalaychips  n                Number of ay chips. Default 1\n"
-        "--ay-stereo-mode n               Mode of AY stereo emulated: 0=Mono, 1=ACB, 2=ABC, 3=BAC, 4=Custom. Default Mono\n"
+        "--ay-stereo-mode n               Mode of AY stereo emulated: 0=Mono, 1=ACB, 2=ABC, 3=BAC, 4=CBA, 5=Custom, 6=BCA, 7=CAB. Default Mono\n"
         "--ay-stereo-channel X n          Position of AY channel X (A, B or C) in case of Custom Stereo Mode. 0=Left, 1=Center, 2=Right\n"
+        "--ay-channel-volume X n          Volume of AY channel X (A, B or C), 0-100 percent\n"
+        "--ay-channel-pan X n             Panorama of AY channel X (A, B or C): -100 left, 0 centre, 100 right. Default: where the stereo mode puts it\n"
+        "--ay-mixer-no-autoload           Do not load the AY mixer settings (.mix file) of each song of the AY Player\n"
         "--ql-qsound-enabled              Enable QL Qsound emulation\n"
         "--ql-qsound-rom f                Sets a custom QL Qsound ROM\n"
         "--enableaudiodac                 Enable DAC emulation. By default Specdrum\n"
@@ -6781,7 +6785,7 @@ int parse_cmdline_options(int desde_commandline)
                 siguiente_parametro_argumento();
                 valor=atoi(argv[puntero_parametro]);
 
-                if (valor>5 || valor<0) {
+                if (valor>=AY_STEREO_TOTAL_MODES || valor<0) {
                     debug_printf (VERBOSE_ERR,"Invalid ay stereo mode value");
 
                 }
@@ -6820,6 +6824,31 @@ int parse_cmdline_options(int desde_commandline)
                     }
                 }
 
+            }
+
+            else if (!strcmp(argv[puntero_parametro],"--ay-channel-volume") || !strcmp(argv[puntero_parametro],"--ay-channel-pan")) {
+                int es_volumen=!strcmp(argv[puntero_parametro],"--ay-channel-volume");
+                char canal;
+                siguiente_parametro_argumento();
+                canal=letra_mayuscula(argv[puntero_parametro][0]);
+                siguiente_parametro_argumento();
+                int valor=atoi(argv[puntero_parametro]);
+
+                if (canal!='A' && canal!='B' && canal!='C') {
+                    debug_printf (VERBOSE_ERR,"Invalid ay channel");
+                }
+                else if (es_volumen) {
+                    if (valor<0 || valor>100) debug_printf (VERBOSE_ERR,"Invalid ay channel volume value");
+                    else ay_mixer_volume[canal-'A']=valor;
+                }
+                else {
+                    if (valor<-100 || valor>100) debug_printf (VERBOSE_ERR,"Invalid ay channel panorama value");
+                    else ay_mixer_pan[canal-'A']=valor;
+                }
+            }
+
+            else if (!strcmp(argv[puntero_parametro],"--ay-mixer-no-autoload")) {
+                ay_mixer_auto_load.v=0;
             }
 
             else if (!strcmp(argv[puntero_parametro],"--ql-qsound-enabled")) {

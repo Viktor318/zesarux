@@ -82,6 +82,7 @@
 #include "operaciones.h"
 #include "zx8081.h"
 #include "ay38912.h"
+#include "ay_mixer.h"
 #include "autoselectoptions.h"
 #include "ulaplus.h"
 #include "textspeech.h"
@@ -5528,13 +5529,28 @@ int util_write_configfile(void)
 
     if (ay_retorna_numero_chips()>1)                ADD_STRING_CONFIG,"--totalaychips %d",ay_retorna_numero_chips() );
 
-    if (ay3_stereo_mode>0)                          ADD_STRING_CONFIG,"--ay-stereo-mode %d",ay3_stereo_mode);
+    //Mezclador del AY: los ajustes del usuario, no los de un .mix de una cancion
+    {
+        int mezcla_stereo,mezcla_custom[3],mezcla_volumen[3],mezcla_pan[3];
+        int canal;
+        ay_mixer_user_values(&mezcla_stereo,mezcla_custom,mezcla_volumen,mezcla_pan);
 
-    if (autoenable_ay_chip.v)                       ADD_STRING_CONFIG,"--ay-autoenable");
+        if (mezcla_stereo>0)                        ADD_STRING_CONFIG,"--ay-stereo-mode %d",mezcla_stereo);
 
-                                                    ADD_STRING_CONFIG,"--ay-stereo-channel A %d",ay3_custom_stereo_A);
-                                                    ADD_STRING_CONFIG,"--ay-stereo-channel B %d",ay3_custom_stereo_B);
-                                                    ADD_STRING_CONFIG,"--ay-stereo-channel C %d",ay3_custom_stereo_C);
+        if (autoenable_ay_chip.v)                   ADD_STRING_CONFIG,"--ay-autoenable");
+
+                                                    ADD_STRING_CONFIG,"--ay-stereo-channel A %d",mezcla_custom[0]);
+                                                    ADD_STRING_CONFIG,"--ay-stereo-channel B %d",mezcla_custom[1]);
+                                                    ADD_STRING_CONFIG,"--ay-stereo-channel C %d",mezcla_custom[2]);
+
+        for (canal=0;canal<3;canal++) {
+            if (mezcla_volumen[canal]!=100)         ADD_STRING_CONFIG,"--ay-channel-volume %c %d",'A'+canal,mezcla_volumen[canal]);
+            if (mezcla_pan[canal]>=-100 && mezcla_pan[canal]<=100)
+                                                    ADD_STRING_CONFIG,"--ay-channel-pan %c %d",'A'+canal,mezcla_pan[canal]);
+        }
+
+        if (!ay_mixer_auto_load.v)                  ADD_STRING_CONFIG,"--ay-mixer-no-autoload");
+    }
 
     if (ql_qsound_is_enabled)                       ADD_STRING_CONFIG,"--ql-qsound-enabled");
 

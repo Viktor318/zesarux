@@ -4423,3 +4423,50 @@ AY Player volume down (5%)	Az AY lejátszó halkítása (5%)	help
 AY Player volume up (5%)	Az AY lejátszó hangosítása (5%)	help
 Sound:	Hang:	window text
 First-use of the day	A nap tippje	window title
+AY Mixer	AY keverő	window title
+AY chip	AY chip	menu title
+Stereo:	Sztereó:	window text
+Place	Hely	window text
+Volume	Hangerő	window text
+Panorama	Panoráma	window text
+Left	Bal	item
+Centre	Közép	item
+Right	Jobb	item
+Mono	Mono	item
+L %d%%	B %d%%	item
+R %d%%	J %d%%	item
+Volume %c	%c hangereje	window title
+Panorama %c	%c panorámája	window title
+~~Save...	~~Mentés...	item
+~~Load...	~~Betöltés...	item
+AY ~~chip...	AY ~~chip...	item
+Settings:	Beállítások:	window text
+own	saját	window text
+[%c] ~~Automatic .mix of the songs	[%c] ~~Automatikus .mix a dalokhoz	item
+Mi~~xer	Keverő	item
+(off)	(ki)	window text
+Overwrite %s?	Felülírod: %s?	question
+Save %s?	Mentsem: %s?	question
+Save mixer settings	Keverő-beállítások mentése	window title
+Load mixer settings	Keverő-beállítások betöltése	window title
+OK. Mixer settings saved	Rendben. A keverő-beállítások elmentve	message
+Stereo mode of the AY chip	Az AY-chip sztereó módja	tooltip
+Stereo mode of the AY chip: which channel is heard on the left, in the centre and on the right. In Custom mode the place of each channel can be chosen. Changing the mode puts the panoramas where the mode puts the channels	Az AY-chip sztereó módja: melyik csatorna szól bal oldalon, középen és jobb oldalon. Egyéni módban minden csatorna helye megválasztható. Módváltáskor a panorámák oda kerülnek, ahová a mód a csatornákat teszi	help
+Turn the channel on or off	A csatorna be- vagy kikapcsolása	tooltip
+Turn the channel on or off (it is heard or muted)	A csatorna be- vagy kikapcsolása (szól vagy néma)	help
+Place of the channel in the Custom stereo mode	A csatorna helye Egyéni sztereó módban	tooltip
+Place of the channel in the Custom stereo mode: left, centre or right	A csatorna helye Egyéni sztereó módban: bal, közép vagy jobb	help
+Volume of the channel	A csatorna hangereje	tooltip
+Volume of the channel, 0-100%	A csatorna hangereje, 0–100%	help
+Panorama of the channel	A csatorna panorámája	tooltip
+Panorama of the channel: -100 left, 0 centre, 100 right. The side towards the panorama is heard at full level, the other one lower. Not used in Mono mode	A csatorna panorámája: -100 bal, 0 közép, 100 jobb. A panoráma felé eső oldal teljes hangerővel szól, a másik halkabban. Mono módban nincs hatása	help
+Volumes 100%, panoramas where the stereo mode puts the channels	Hangerők 100%, a panorámák ott, ahová a sztereó mód a csatornákat teszi	tooltip
+Volumes 100%, panoramas where the stereo mode puts the channels, all the channels on	Hangerők 100%, a panorámák ott, ahová a sztereó mód a csatornákat teszi, minden csatorna bekapcsolva	help
+Save the mixer settings to a .mix file	A keverő-beállítások mentése .mix fájlba	tooltip
+Save the mixer settings to a .mix file. While a song is playing, to the .mix file of the song (next to it, or in the zesarux_mix folder of your home folder if that one cannot be written). The .mix files are the same as in Fuse	A keverő-beállítások mentése .mix fájlba. Dal lejátszása közben a dal saját .mix fájljába (a dal mellé, vagy ha oda nem lehet írni, a saját mappádban lévő zesarux_mix mappába). A .mix fájlok ugyanazok, mint a Fuse-ban	help
+Load the mixer settings from a .mix file	A keverő-beállítások betöltése .mix fájlból	tooltip
+More AY chip settings: envelopes, speech, MIDI, channel filters	További AY-chip beállítások: burkológörbék, beszéd, MIDI, csatornaszűrők	tooltip
+Use the .mix file of each song of the AY Player	Az AY lejátszó minden dalánál a dal .mix fájlja érvényes	tooltip
+Use the .mix file of each song of the AY Player (Song.mix, or Song.3.mix for the song 3 of a file). Songs without one use your own settings. Your own settings are kept and saved, not those of a .mix file	Az AY lejátszó minden dalánál a dal .mix fájlja érvényes (Dal.mix, vagy egy fájl 3. dalánál Dal.3.mix). A .mix nélküli dalok a saját beállításaiddal szólnak. A saját beállításaid megmaradnak és ezek kerülnek mentésre, nem a .mix fájléi	help
+AY mixer: stereo, volume and panorama of the channels	AY keverő: sztereó, a csatornák hangereje és panorámája	help
+~~Defaults	Alap~~helyzet	item

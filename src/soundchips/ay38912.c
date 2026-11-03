@@ -574,6 +574,97 @@ ay3_custom_stereo_C
 En cada una de esas 3, si vale 0=Left. Si 1=Center, Si 2=Right
 */
 
+/* Mezclador del AY (como el del fork de Fuse): modo estereo, volumen y panorama de cada canal, y canales
+   silenciados. Lo usan el sonido clasico, el de alta calidad y el reproductor AY en hilo aparte
+
+   Modos (ay3_stereo_mode): 0 Mono, 1 ACB, 2 ABC, 3 BAC, 4 CBA, 5 Custom, 6 BCA, 7 CAB
+   El nombre indica que canal va a la izquierda, al centro y a la derecha */
+
+//Volumen de cada canal, en %
+int ay_mixer_volume[3]={100,100,100};
+
+//Panorama de cada canal: -100 izquierda, 0 centro, 100 derecha. AY_MIXER_PAN_MODE: donde lo pone el modo estereo
+int ay_mixer_pan[3]={AY_MIXER_PAN_MODE,AY_MIXER_PAN_MODE,AY_MIXER_PAN_MODE};
+
+//Canales silenciados
+int ay_mixer_mute[3]={0,0,0};
+
+//Donde pone el modo estereo actual a un canal: 0 izquierda, 1 centro, 2 derecha
+int ay_mixer_channel_position(int canal)
+{
+    //Posiciones de A, B y C en cada modo
+    static const int posiciones[AY_STEREO_TOTAL_MODES][3]={
+        {1,1,1},    //Mono
+        {0,2,1},    //ACB
+        {0,1,2},    //ABC
+        {1,0,2},    //BAC
+        {2,1,0},    //CBA
+        {0,1,2},    //Custom (ver abajo)
+        {2,0,1},    //BCA
+        {1,2,0}     //CAB
+    };
+
+    if (canal<0 || canal>2) return 1;
+
+    if (ay3_stereo_mode==5) {
+        int valor=(canal==0 ? ay3_custom_stereo_A : canal==1 ? ay3_custom_stereo_B : ay3_custom_stereo_C);
+        if (valor<0 || valor>2) valor=1;
+        return valor;
+    }
+
+    if (ay3_stereo_mode<0 || ay3_stereo_mode>=AY_STEREO_TOTAL_MODES) return 1;
+
+    return posiciones[ay3_stereo_mode][canal];
+}
+
+//Panorama efectivo de un canal: el fijado en el mezclador, o donde lo pone el modo estereo. En mono, 0
+int ay_mixer_channel_pan(int canal)
+{
+    if (canal<0 || canal>2 || ay3_stereo_mode==0) return 0;
+
+    int pan=ay_mixer_pan[canal];
+    if (pan>=-100 && pan<=100) return pan;
+
+    int posicion=ay_mixer_channel_position(canal);
+    if (posicion==0) return -100;
+    if (posicion==2) return 100;
+    return 0;
+}
+
+//Los panoramas vuelven a donde los pone el modo estereo (al cambiar de modo)
+void ay_mixer_pans_reset(void)
+{
+    int canal;
+    for (canal=0;canal<3;canal++) ay_mixer_pan[canal]=AY_MIXER_PAN_MODE;
+}
+
+//Nivel de un canal en cada lado (0 izquierdo, 1 derecho), con su volumen, panorama y silencio.
+//El lado hacia el que esta el panorama suena entero; el otro, mas bajo (como en Fuse)
+void ay_mixer_channel_levels(int canal,int valor,int lados[2])
+{
+    lados[0]=lados[1]=0;
+    if (canal<0 || canal>2) return;
+    if (ay_mixer_mute[canal]) return;
+
+    int volumen=ay_mixer_volume[canal];
+    if (volumen<0) volumen=0;
+    if (volumen>100) volumen=100;
+    valor=valor*volumen/100;
+
+    int pan=ay_mixer_channel_pan(canal);
+
+    lados[0]=(pan<=0 ? valor : valor*(100-pan)/100);
+    lados[1]=(pan>=0 ? valor : valor*(100+pan)/100);
+}
+
+//Nombre de un modo estereo
+const char *ay_mixer_stereo_name(int modo)
+{
+    static const char *nombres[AY_STEREO_TOTAL_MODES]={"Mono","ACB","ABC","BAC","CBA","Custom","BCA","CAB"};
+    if (modo<0 || modo>=AY_STEREO_TOTAL_MODES) return "Mono";
+    return nombres[modo];
+}
+
 void da_output_ay_3_canales(char *canal_A,char *canal_B, char *canal_C)
 {
     //char valor_enviar_ay=0;
@@ -628,77 +719,25 @@ void da_output_ay_izquierdo_derecho(char *iz, char *de)
 
     da_output_ay_3_canales(&canal_A,&canal_B,&canal_C);
 
+    //Mezclador: volumen, panorama y silencio de cada canal (los mismos que en el sonido de alta calidad)
+    int canales[3];
+    canales[0]=canal_A;
+    canales[1]=canal_B;
+    canales[2]=canal_C;
+
     int altavoz_izquierdo=0, altavoz_derecho=0;
+    int canal;
 
-    //Aplicar modo stereo AY
-    //int ay3_stereo_mode=0;
-    /*
-    0=Mono
-    1=ACB Stereo (Canal A=Izq,Canal C=Centro,Canal B=Der)
-    2=ABC Stereo (Canal A=Izq,Canal B=Centro,Canal C=Der)
-    3=BAC Stereo (Canal A=Centro,Canal B=Izquierdo,Canal C=Der)
-    4=CBA Stereo (Canal A=Der,Canal B=Centro, Canal C=Izq)
-    5=Custom. Depende de variables
-    ay3_custom_stereo_A
-    ay3_custom_stereo_B
-    ay3_custom_stereo_C
-    En cada una de esas 3, si vale 0=Left. Si 1=Center, Si 2=Right
-    */
-    switch (ay3_stereo_mode) {
+    for (canal=0;canal<3;canal++) {
+        int lados[2];
+        ay_mixer_channel_levels(canal,canales[canal],lados);
+        altavoz_izquierdo +=lados[0];
+        altavoz_derecho +=lados[1];
+    }
 
-        case 1:
-            altavoz_izquierdo=canal_A+canal_C;
-            altavoz_derecho=canal_B+canal_C;
-        break;
-
-        case 2:
-            altavoz_izquierdo=canal_A+canal_B;
-            altavoz_derecho=canal_C+canal_B;
-        break;
-
-        case 3:
-            altavoz_izquierdo=canal_B+canal_A;
-            altavoz_derecho=canal_C+canal_A;
-        break;
-
-        case 4:
-            altavoz_izquierdo=canal_C+canal_B;
-            altavoz_derecho=canal_A+canal_B;
-        break;
-
-        case 5:
-            //Left
-            if (ay3_custom_stereo_A==0) altavoz_izquierdo +=canal_A;
-            if (ay3_custom_stereo_B==0) altavoz_izquierdo +=canal_B;
-            if (ay3_custom_stereo_C==0) altavoz_izquierdo +=canal_C;
-
-            //Center
-            if (ay3_custom_stereo_A==1) {
-                altavoz_izquierdo +=canal_A;
-                altavoz_derecho +=canal_A;
-            }
-            if (ay3_custom_stereo_B==1) {
-                altavoz_izquierdo +=canal_B;
-                altavoz_derecho +=canal_B;
-            }
-            if (ay3_custom_stereo_C==1) {
-                altavoz_izquierdo +=canal_C;
-                altavoz_derecho +=canal_C;
-            }
-
-            //Right
-            if (ay3_custom_stereo_A==2) altavoz_derecho +=canal_A;
-            if (ay3_custom_stereo_B==2) altavoz_derecho +=canal_B;
-            if (ay3_custom_stereo_C==2) altavoz_derecho +=canal_C;
-
-        break;
-
-        default:
-            //Mono
-            altavoz_izquierdo=canal_A+canal_B+canal_C;
-            altavoz_derecho=altavoz_izquierdo;
-        break;
-
+    //Mono: como antes, la suma de los tres canales en los dos lados
+    if (ay3_stereo_mode==0) {
+        altavoz_derecho=altavoz_izquierdo;
     }
 
     *iz=altavoz_izquierdo;

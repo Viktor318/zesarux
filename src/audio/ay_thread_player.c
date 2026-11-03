@@ -243,31 +243,6 @@ static int tp_channel_output(struct tp_chip *c,int channel,int envelope_level,un
     return output;
 }
 
-//Lados de cada canal segun el modo estereo de ZEsarUX (como en audio_hq.c)
-static void tp_stereo_sides(int sides[TP_CHANNELS][2])
-{
-    int custom[TP_CHANNELS];
-    int i;
-
-    for (i=0;i<TP_CHANNELS;i++) sides[i][0]=sides[i][1]=1;
-
-    switch (ay3_stereo_mode) {
-        case 1: sides[0][1]=0; sides[1][0]=0; break;
-        case 2: sides[0][1]=0; sides[2][0]=0; break;
-        case 3: sides[1][1]=0; sides[2][0]=0; break;
-        case 4: sides[0][0]=0; sides[2][1]=0; break;
-        case 5:
-            custom[0]=ay3_custom_stereo_A;
-            custom[1]=ay3_custom_stereo_B;
-            custom[2]=ay3_custom_stereo_C;
-            for (i=0;i<TP_CHANNELS;i++) {
-                if (custom[i]==0) sides[i][1]=0;
-                if (custom[i]==2) sides[i][0]=0;
-            }
-        break;
-        default: break;
-    }
-}
 
 static void tp_chip_reset(struct tp_chip *c)
 {
@@ -327,15 +302,12 @@ static int tp_new_buffers(void)
 //Generar un frame de la cancion
 static void tp_render_frame(void)
 {
-    int sides[TP_CHANNELS][2];
     int count,position=0,channel,side;
     double step=(double)TP_CLOCK_DIVISOR*TP_CLOCK_RATE/TP_AY_FREQUENCY;
     double f;
     struct tp_chip *c=&tp_chip;
 
     count=ay_measure_run_frame(tp_machine,tp_writes,TP_MAX_WRITES);
-
-    tp_stereo_sides(sides);
 
     for (f=tp_next_tick;f<TP_FRAME_TSTATES;f+=step) {
         int at=(int)f;
@@ -356,8 +328,12 @@ static void tp_render_frame(void)
         for (channel=0;channel<TP_CHANNELS;channel++) {
             int output=tp_channel_output(c,channel,envelope_level,tone_count);
 
+            //Mezclador: volumen, panorama y silencio del canal
+            int levels[2];
+            ay_mixer_channel_levels(channel,output,levels);
+
             for (side=0;side<2;side++) {
-                int level=(sides[channel][side] ? output : 0);
+                int level=levels[side];
                 if (level!=c->previous[channel][side]) {
                     blip_synth_update(tp_synth[channel][side],at,level);
                     c->previous[channel][side]=level;

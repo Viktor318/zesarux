@@ -62,6 +62,7 @@
 #include "tape.h"
 #include "audio.h"
 #include "audio_ayplayer.h"
+#include "ay_mixer.h"
 #include "timer.h"
 #include "snap.h"
 #include "operaciones.h"
@@ -6375,6 +6376,10 @@ int ayplayer_force_refresh=0;
 
 void ayplayer_mostrar_volumen(zxvision_window *w);
 
+//Mezclador del AY (mas abajo)
+void menu_ay_channel_mixer_mute(MENU_ITEM_PARAMETERS);
+void menu_ay_channel_mixer(MENU_ITEM_PARAMETERS);
+
 void menu_audio_new_ayplayer_overlay(void)
 {
     zxvision_window *w=menu_audio_new_ayplayer_overlay_window;
@@ -6447,16 +6452,20 @@ void menu_audio_new_ayplayer_overlay(void)
 
         int canal;
         for (canal=0;canal<3;canal++) {
-            menu_string_volumen(volumen,registros_volumen[canal],previos[canal]);
-            zxvision_fill_width_spaces(w,linea);
-            sprintf(textovolumen,"%c:",'A'+canal);
-            zxvision_print_string_defaults(w,1,linea,textovolumen);
-            zxvision_print_string_defaults(w,columna_barra,linea,volumen);
+            //La etiqueta A:/B:/C: es una opcion del menu (encender/apagar el canal): no se borra aqui
+            //Solo el ancho de la barra (15): a la derecha esta el boton del mezclador
+            if (ay_mixer_mute[canal]) {
+                sprintf(textovolumen,"%-15s",menu_tr("(off)"));
+                zxvision_print_string_defaults(w,columna_barra,linea,textovolumen);
+            }
+            else {
+                menu_string_volumen(volumen,registros_volumen[canal],previos[canal]);
+                zxvision_print_string_defaults(w,columna_barra,linea,volumen);
+            }
             linea++;
         }
 
         menu_string_volumen(volumen,valor_escalado,ayplayer_previo_valor_escalado);
-        zxvision_fill_width_spaces(w,linea);
         zxvision_print_string_defaults(w,1,linea,etiqueta_salida);
         zxvision_print_string_defaults(w,columna_barra,linea,volumen);
     }
@@ -7327,7 +7336,24 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 
             if (menu_audio_new_ayplayer_si_mostrar() ) {
 
+                //Las etiquetas de los niveles de los canales: encender / apagar el canal
+                int canal_nivel;
+                for (canal_nivel=0;canal_nivel<3;canal_nivel++) {
+                    menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_ay_channel_mixer_mute,NULL,"%c:",'A'+canal_nivel);
+                    menu_add_item_menu_valor_opcion(array_menu_audio_new_ayplayer,canal_nivel);
+                    menu_add_item_menu_tooltip(array_menu_audio_new_ayplayer,"Turn the channel on or off");
+                    menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Turn the channel on or off (it is heard or muted)");
+                    menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,AYPLAYER_INICIO_LINEA_VU_METERS+canal_nivel);
+                }
+
                 zxvision_print_string_defaults(ventana,1,linea,"Track:");
+
+                //Mezclador: a la derecha de la linea de nivel de la salida
+                menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_ay_channel_mixer,NULL,"Mi~~xer");
+                menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'x');
+                menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"AY mixer: stereo, volume and panorama of the channels");
+                menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,ventana->visible_width-2-ayplayer_ancho_texto(menu_tr("Mi~~xer")),
+                    AYPLAYER_INICIO_LINEA_VU_METERS+3);
                 x=columna_botones;
                 AYPLAYER_BOTON(menu_audio_new_ayplayer_prev,"~~Prev",'p',"Previous song");
                 AYPLAYER_BOTON(menu_audio_new_ayplayer_pause,"Pa~~use",'u',"Pause song");
@@ -15611,9 +15637,7 @@ void menu_audio_ay_stereo_custom_C(MENU_ITEM_PARAMETERS)
 
 void menu_audio_ay_stereo(MENU_ITEM_PARAMETERS)
 {
-    ay3_stereo_mode++;
-
-    if (ay3_stereo_mode==6) ay3_stereo_mode=0;
+    ay_mixer_set_stereo((ay3_stereo_mode+1) % AY_STEREO_TOTAL_MODES);
 }
 
 
@@ -15653,50 +15677,7 @@ menu_item *array_menu_ay_mixer;
             "external midi device (enable it on Settings-> Audio-> Audio Chip to MIDI Output");
 
 
-        if (MACHINE_IS_SPECTRUM || MACHINE_IS_MSX || MACHINE_IS_SVI || MACHINE_IS_CPC || MACHINE_IS_QL) {
-
-
-            char ay3_stereo_string[16];
-            if (ay3_stereo_mode==1) strcpy(ay3_stereo_string,"ACB");
-            else if (ay3_stereo_mode==2) strcpy(ay3_stereo_string,"ABC");
-            else if (ay3_stereo_mode==3) strcpy(ay3_stereo_string,"BAC");
-            else if (ay3_stereo_mode==4) strcpy(ay3_stereo_string,"CBA");
-            else if (ay3_stereo_mode==5) strcpy(ay3_stereo_string,"Custom");
-            else strcpy(ay3_stereo_string,"Mono");
-            /*
-            CBA Es para Amstrad CPC:
-            Mono and Stereo Output
-            When using the CPC's external stereo jack,
-            channel A is output to the right, channel C is output left,
-            and channel B is output to both left and right,
-            in that case channel B is output through a bigger resistor to prevent that this channel appears loader than the others.
-
-            Otherwise (when using the built-in speaker), all three channels are mixed at the same intensity.
-            This signal appears to be also sent to the Tape output line also, so a connected Data Recorder could be used to record CPC music also.
-
-            */
-
-            menu_add_item_menu_format(array_menu_ay_mixer,MENU_OPCION_NORMAL,menu_audio_ay_stereo,menu_cond_ay_chip,"    AY S~~tereo: %s",
-                ay3_stereo_string);
-            menu_add_item_menu_shortcut(array_menu_ay_mixer,'t');
-
-            if (ay3_stereo_mode==5) {
-
-                menu_add_item_menu_format(array_menu_ay_mixer,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_A,menu_cond_ay_chip,
-                    "    Ch. A: %s",menu_stereo_positions[ay3_custom_stereo_A]);
-
-                menu_add_item_menu_format(array_menu_ay_mixer,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_B,menu_cond_ay_chip,
-                    "    Ch. B: %s",menu_stereo_positions[ay3_custom_stereo_B]);
-
-                menu_add_item_menu_format(array_menu_ay_mixer,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_C,menu_cond_ay_chip,
-                    "    Ch. C: %s",menu_stereo_positions[ay3_custom_stereo_C]);
-
-
-            }
-
-        }
-
-
+        //El modo estereo esta ahora en el mezclador del AY (menu_ay_channel_mixer)
 
             int chip;
 
@@ -15722,7 +15703,7 @@ menu_item *array_menu_ay_mixer;
                 //menu_add_item_menu(array_menu_ay_mixer,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
         menu_add_ESC_item(array_menu_ay_mixer);
 
-                retorno_menu=menu_dibuja_menu_no_title_lang(&ay_mixer_opcion_seleccionada,&item_seleccionado,array_menu_ay_mixer,"AY mixer" );
+                retorno_menu=menu_dibuja_menu_no_title_lang(&ay_mixer_opcion_seleccionada,&item_seleccionado,array_menu_ay_mixer,"AY chip" );
 
 
 
@@ -15738,6 +15719,328 @@ menu_item *array_menu_ay_mixer;
     } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 }
 
+
+
+
+/* ------------------------------------------------------------------------
+   Mezclador del AY (como en el fork de Fuse): modo estereo, y volumen,
+   panorama y silencio de cada canal. Archivos .mix de las canciones
+   ------------------------------------------------------------------------ */
+
+int ay_channel_mixer_opcion_seleccionada=0;
+
+extern char ay_player_filename_playing[];
+
+//"L 100%", "Centre", "R 40%" (traducidos)
+static void menu_ay_channel_mixer_pan_text(int pan,char *destino)
+{
+    if (pan<0) sprintf(destino,menu_tr("L %d%%"),-pan);
+    else if (pan>0) sprintf(destino,menu_tr("R %d%%"),pan);
+    else strcpy(destino,menu_tr("Centre"));
+}
+
+void menu_ay_channel_mixer_stereo(MENU_ITEM_PARAMETERS)
+{
+    ay_mixer_set_stereo((ay3_stereo_mode+1) % AY_STEREO_TOTAL_MODES);
+}
+
+void menu_ay_channel_mixer_mute(MENU_ITEM_PARAMETERS)
+{
+    int canal=valor_opcion;
+    if (canal<0 || canal>2) return;
+    ay_mixer_mute[canal] ^=1;
+}
+
+void menu_ay_channel_mixer_place(MENU_ITEM_PARAMETERS)
+{
+    int canal=valor_opcion;
+    int *lugar=(canal==0 ? &ay3_custom_stereo_A : canal==1 ? &ay3_custom_stereo_B : &ay3_custom_stereo_C);
+
+    *lugar=(*lugar+1) % 3;
+    //El panorama de este canal vuelve a donde lo pone su lugar
+    ay_mixer_pan[canal]=AY_MIXER_PAN_MODE;
+}
+
+void menu_ay_channel_mixer_volume(MENU_ITEM_PARAMETERS)
+{
+    int canal=valor_opcion;
+    if (canal<0 || canal>2) return;
+
+    char titulo[64];
+    sprintf(titulo,menu_tr("Volume %c"),'A'+canal);
+
+    //Cambia mientras se mueve el deslizador: se oye enseguida
+    menu_ventana_scanf_numero_enhanced_default_dynamic(titulo,&ay_mixer_volume[canal],4,+5,0,100,0,100);
+}
+
+void menu_ay_channel_mixer_pan(MENU_ITEM_PARAMETERS)
+{
+    int canal=valor_opcion;
+    if (canal<0 || canal>2) return;
+
+    //Por defecto: donde lo pone el modo estereo
+    int pan_modo;
+    int guardado=ay_mixer_pan[canal];
+    ay_mixer_pan[canal]=AY_MIXER_PAN_MODE;
+    pan_modo=ay_mixer_channel_pan(canal);
+    ay_mixer_pan[canal]=(guardado>=-100 && guardado<=100 ? guardado : pan_modo);
+
+    char titulo[64];
+    sprintf(titulo,menu_tr("Panorama %c"),'A'+canal);
+
+    menu_ventana_scanf_numero_enhanced_default_dynamic(titulo,&ay_mixer_pan[canal],5,+5,-100,100,0,pan_modo);
+}
+
+void menu_ay_channel_mixer_reset(MENU_ITEM_PARAMETERS)
+{
+    ay_mixer_reset();
+}
+
+void menu_ay_channel_mixer_save(MENU_ITEM_PARAMETERS)
+{
+    char archivo[PATH_MAX];
+
+    //Con una cancion sonando: su .mix, junto a ella (o en la carpeta de mezclas)
+    if (menu_audio_new_ayplayer_si_mostrar() && ay_player_filename_playing[0]) {
+        ay_mixer_default_path(ay_player_filename_playing,ay_player_pista_actual,ay_player_total_songs(),archivo);
+
+        char nombre[PATH_MAX];
+        char pregunta[PATH_MAX+64];
+        util_get_file_no_directory(archivo,nombre);
+
+        if (si_existe_archivo(archivo)) sprintf(pregunta,menu_tr("Overwrite %s?"),nombre);
+        else sprintf(pregunta,menu_tr("Save %s?"),nombre);
+
+        if (!menu_confirm_yesno(pregunta)) return;
+    }
+
+    else {
+        char *filtros[2];
+        filtros[0]="mix";
+        filtros[1]=0;
+        if (menu_filesel_save("Save mixer settings",filtros,archivo)!=1) return;
+        if (si_existe_archivo(archivo)) {
+            if (!menu_confirm_yesno_texto("File exists","Overwrite?")) return;
+        }
+    }
+
+    if (!ay_mixer_save(archivo)) menu_generic_message_splash("Save mixer settings","OK. Mixer settings saved");
+}
+
+void menu_ay_channel_mixer_load(MENU_ITEM_PARAMETERS)
+{
+    char archivo[PATH_MAX];
+    char *filtros[2];
+    filtros[0]="mix";
+    filtros[1]=0;
+
+    if (menu_filesel("Load mixer settings",filtros,archivo)!=1) return;
+
+    ay_mixer_load(archivo);
+}
+
+void menu_ay_channel_mixer_autoload(MENU_ITEM_PARAMETERS)
+{
+    ay_mixer_auto_load.v ^=1;
+
+    //Desactivada: vuelven los ajustes del usuario. Activada: el .mix de la cancion que suena
+    if (!ay_mixer_auto_load.v) ay_mixer_restore_user();
+    else if (menu_audio_new_ayplayer_si_mostrar() && ay_player_filename_playing[0]) {
+        ay_mixer_song_started(ay_player_filename_playing,ay_player_pista_actual,ay_player_total_songs());
+    }
+}
+
+void menu_ay_channel_mixer(MENU_ITEM_PARAMETERS)
+{
+    menu_espera_no_tecla();
+
+    zxvision_window ventana;
+
+    //Columnas, segun el ancho de los textos traducidos
+    int col_lugar=1+ayplayer_ancho_texto(menu_tr("[X] A"))+2;
+    int ancho_lugar=ayplayer_ancho_texto(menu_tr("Place"));
+    {
+        int i;
+        const char *lugares[3]={"Left","Centre","Right"};
+        for (i=0;i<3;i++) {
+            int a=ayplayer_ancho_texto(menu_tr(lugares[i]));
+            if (a>ancho_lugar) ancho_lugar=a;
+        }
+    }
+    int col_volumen=col_lugar+ancho_lugar+2;
+    //"100% ==========" o el titulo de la columna
+    int ancho_volumen=15;
+    if (ayplayer_ancho_texto(menu_tr("Volume"))>ancho_volumen) ancho_volumen=ayplayer_ancho_texto(menu_tr("Volume"));
+    int col_pan=col_volumen+ancho_volumen+2;
+    int ancho_pan=ayplayer_ancho_texto(menu_tr("Panorama"));
+    if (ancho_pan<7) ancho_pan=7;
+
+    int ancho_ventana=col_pan+ancho_pan+3;
+    {
+        //Que quepan la linea de botones y la de la carga automatica
+        int botones=1+ayplayer_ancho_texto(menu_tr("~~Defaults"))+2+ayplayer_ancho_texto(menu_tr("~~Save..."))+2+
+            ayplayer_ancho_texto(menu_tr("~~Load..."))+3;
+        //Linea del modo estereo, con el boton de los ajustes del chip a la derecha
+        int linea_stereo=1+ayplayer_ancho_texto(menu_tr("Stereo:"))+1+ayplayer_ancho_texto("[Custom]")+8+
+            ayplayer_ancho_texto(menu_tr("AY ~~chip..."))+2;
+        if (linea_stereo>botones) botones=linea_stereo;
+        int automatica=1+ayplayer_ancho_texto(menu_tr("[X] ~~Automatic .mix of the songs"))+3;
+        if (botones>ancho_ventana) ancho_ventana=botones;
+        if (automatica>ancho_ventana) ancho_ventana=automatica;
+    }
+    if (ancho_ventana>scr_get_menu_width()) ancho_ventana=scr_get_menu_width();
+
+    int alto_ventana=13;
+
+    int xventana=menu_center_x_from_width(ancho_ventana);
+    int yventana=menu_center_y()-alto_ventana/2;
+
+    zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"AY Mixer");
+    ventana.do_not_warn_tried_write_beyond_size=1;
+    zxvision_draw_window(&ventana);
+
+    menu_item *array_menu;
+    menu_item item_seleccionado;
+    int retorno_menu;
+
+    do {
+        int i;
+        for (i=0;i<alto_ventana-2;i++) zxvision_fill_width_spaces(&ventana,i);
+
+        char texto[256];
+        int linea=0;
+
+        menu_add_item_menu_inicial(&array_menu,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+        //Modo estereo
+        zxvision_print_string_defaults(&ventana,1,linea,"Stereo:");
+        menu_add_item_menu_format(array_menu,MENU_OPCION_NORMAL,menu_ay_channel_mixer_stereo,NULL,"[%s]",
+            menu_tr((char *)ay_mixer_stereo_name(ay3_stereo_mode)));
+        menu_add_item_menu_shortcut(array_menu,'t');
+        menu_add_item_menu_tooltip(array_menu,"Stereo mode of the AY chip");
+        menu_add_item_menu_ayuda(array_menu,"Stereo mode of the AY chip: which channel is heard on the left, in the centre and on the right. "
+            "In Custom mode the place of each channel can be chosen. Changing the mode puts the panoramas where the mode puts the channels");
+        menu_add_item_menu_tabulado(array_menu,1+ayplayer_ancho_texto(menu_tr("Stereo:"))+1,linea);
+
+        //Mas ajustes del chip, a la derecha de la misma linea
+        menu_add_item_menu_format(array_menu,MENU_OPCION_NORMAL,menu_ay_mixer,menu_cond_ay_chip,"AY ~~chip...");
+        menu_add_item_menu_shortcut(array_menu,'c');
+        menu_add_item_menu_tooltip(array_menu,"More AY chip settings: envelopes, speech, MIDI, channel filters");
+        menu_add_item_menu_ayuda(array_menu,"More AY chip settings: envelopes, speech, MIDI, channel filters");
+        menu_add_item_menu_tabulado(array_menu,ancho_ventana-2-ayplayer_ancho_texto(menu_tr("AY ~~chip...")),linea);
+        linea +=2;
+
+        //Titulos de las columnas
+        zxvision_print_string_defaults(&ventana,col_lugar,linea,"Place");
+        zxvision_print_string_defaults(&ventana,col_volumen,linea,"Volume");
+        zxvision_print_string_defaults(&ventana,col_pan,linea,"Panorama");
+        linea++;
+
+        int canal;
+        for (canal=0;canal<3;canal++) {
+            //Encendido / silenciado
+            menu_add_item_menu_format(array_menu,MENU_OPCION_NORMAL,menu_ay_channel_mixer_mute,NULL,"[%c] %c",
+                (ay_mixer_mute[canal] ? ' ' : 'X'),'A'+canal);
+            menu_add_item_menu_valor_opcion(array_menu,canal);
+            menu_add_item_menu_tooltip(array_menu,"Turn the channel on or off");
+            menu_add_item_menu_ayuda(array_menu,"Turn the channel on or off (it is heard or muted)");
+            menu_add_item_menu_tabulado(array_menu,1,linea);
+
+            //Lugar: solo se elige en el modo Custom
+            const char *lugares[3]={"Left","Centre","Right"};
+            int posicion=ay_mixer_channel_position(canal);
+            if (ay3_stereo_mode==5) {
+                menu_add_item_menu_format(array_menu,MENU_OPCION_NORMAL,menu_ay_channel_mixer_place,NULL,"%s",menu_tr(lugares[posicion]));
+                menu_add_item_menu_valor_opcion(array_menu,canal);
+                menu_add_item_menu_tooltip(array_menu,"Place of the channel in the Custom stereo mode");
+                menu_add_item_menu_ayuda(array_menu,"Place of the channel in the Custom stereo mode: left, centre or right");
+                menu_add_item_menu_tabulado(array_menu,col_lugar,linea);
+            }
+            else {
+                zxvision_print_string_defaults(&ventana,col_lugar,linea,(ay3_stereo_mode==0 ? "Centre" : (char *)lugares[posicion]));
+            }
+
+            //Volumen: porcentaje y barra
+            char barra[16];
+            int partes=ay_mixer_volume[canal]/10;
+            for (i=0;i<10;i++) barra[i]=(i<partes ? '=' : '-');
+            barra[10]=0;
+            menu_add_item_menu_format(array_menu,MENU_OPCION_NORMAL,menu_ay_channel_mixer_volume,NULL,"%3d%% %s",ay_mixer_volume[canal],barra);
+            menu_add_item_menu_valor_opcion(array_menu,canal);
+            menu_add_item_menu_tooltip(array_menu,"Volume of the channel");
+            menu_add_item_menu_ayuda(array_menu,"Volume of the channel, 0-100%");
+            menu_add_item_menu_tabulado(array_menu,col_volumen,linea);
+
+            //Panorama
+            char pan[32];
+            menu_ay_channel_mixer_pan_text(ay_mixer_channel_pan(canal),pan);
+            menu_add_item_menu_format(array_menu,MENU_OPCION_NORMAL,menu_ay_channel_mixer_pan,NULL,"%s",pan);
+            menu_add_item_menu_valor_opcion(array_menu,canal);
+            menu_add_item_menu_tooltip(array_menu,"Panorama of the channel");
+            menu_add_item_menu_ayuda(array_menu,"Panorama of the channel: -100 left, 0 centre, 100 right. "
+                "The side towards the panorama is heard at full level, the other one lower. Not used in Mono mode");
+            menu_add_item_menu_tabulado(array_menu,col_pan,linea);
+
+            linea++;
+        }
+        linea++;
+
+        //Botones
+        int x=1;
+        menu_add_item_menu_format(array_menu,MENU_OPCION_NORMAL,menu_ay_channel_mixer_reset,NULL,"~~Defaults");
+        menu_add_item_menu_shortcut(array_menu,'d');
+        menu_add_item_menu_tooltip(array_menu,"Volumes 100%, panoramas where the stereo mode puts the channels");
+        menu_add_item_menu_ayuda(array_menu,"Volumes 100%, panoramas where the stereo mode puts the channels, all the channels on");
+        menu_add_item_menu_tabulado(array_menu,x,linea);
+        x +=ayplayer_ancho_texto(menu_tr("~~Defaults"))+2;
+
+        menu_add_item_menu_format(array_menu,MENU_OPCION_NORMAL,menu_ay_channel_mixer_save,NULL,"~~Save...");
+        menu_add_item_menu_shortcut(array_menu,'s');
+        menu_add_item_menu_tooltip(array_menu,"Save the mixer settings to a .mix file");
+        menu_add_item_menu_ayuda(array_menu,"Save the mixer settings to a .mix file. While a song is playing, to the .mix file of the song "
+            "(next to it, or in the zesarux_mix folder of your home folder if that one cannot be written). "
+            "The .mix files are the same as in Fuse");
+        menu_add_item_menu_tabulado(array_menu,x,linea);
+        x +=ayplayer_ancho_texto(menu_tr("~~Save..."))+2;
+
+        menu_add_item_menu_format(array_menu,MENU_OPCION_NORMAL,menu_ay_channel_mixer_load,NULL,"~~Load...");
+        menu_add_item_menu_shortcut(array_menu,'l');
+        menu_add_item_menu_tooltip(array_menu,"Load the mixer settings from a .mix file");
+        menu_add_item_menu_ayuda(array_menu,"Load the mixer settings from a .mix file");
+        menu_add_item_menu_tabulado(array_menu,x,linea);
+        linea +=2;
+
+        //.mix en uso
+        if (ay_mixer_loaded_name()[0]) sprintf(texto,"%s %s",menu_tr("Settings:"),ay_mixer_loaded_name());
+        else sprintf(texto,"%s %s",menu_tr("Settings:"),menu_tr("own"));
+        zxvision_print_string_defaults(&ventana,1,linea,texto);
+        linea++;
+
+        menu_add_item_menu_format(array_menu,MENU_OPCION_NORMAL,menu_ay_channel_mixer_autoload,NULL,
+            "[%c] ~~Automatic .mix of the songs",(ay_mixer_auto_load.v ? 'X' : ' '));
+        menu_add_item_menu_shortcut(array_menu,'a');
+        menu_add_item_menu_tooltip(array_menu,"Use the .mix file of each song of the AY Player");
+        menu_add_item_menu_ayuda(array_menu,"Use the .mix file of each song of the AY Player (Song.mix, or Song.3.mix for the song 3 of a file). "
+            "Songs without one use your own settings. Your own settings are kept and saved, not those of a .mix file");
+        menu_add_item_menu_tabulado(array_menu,1,linea);
+
+        zxvision_draw_window_contents(&ventana);
+
+        retorno_menu=menu_dibuja_menu_no_title_lang(&ay_channel_mixer_opcion_seleccionada,&item_seleccionado,array_menu,"AY Mixer");
+
+        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+            if (item_seleccionado.menu_funcion!=NULL) {
+                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                //En menus tabulados, una accion con ESC no debe cerrar esta ventana
+                salir_todos_menus=0;
+            }
+        }
+
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+    cls_menu_overlay();
+    zxvision_destroy_window(&ventana);
+}
 
 void menu_i8049_mixer_pitch2(MENU_ITEM_PARAMETERS)
 {
@@ -34969,7 +35272,7 @@ void menu_audio(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_tiene_submenu(array_menu_audio);
         }
 
-        menu_add_item_menu_format(array_menu_audio,MENU_OPCION_NORMAL,menu_ay_mixer,menu_cond_ay_chip,"AY Mi~~xer");
+        menu_add_item_menu_format(array_menu_audio,MENU_OPCION_NORMAL,menu_ay_channel_mixer,menu_cond_ay_chip,"AY Mi~~xer");
         menu_add_item_menu_shortcut(array_menu_audio,'x');
         menu_add_item_menu_tiene_submenu(array_menu_audio);
 

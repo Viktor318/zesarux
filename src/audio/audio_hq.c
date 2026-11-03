@@ -544,50 +544,6 @@ static int hq_ay_channel_output(struct hq_ay_chip *c,int chip,int channel,int en
     return output;
 }
 
-//A que lados va cada canal segun el modo estereo de ZEsarUX. lados[canal][0]=izquierdo, [1]=derecho
-static void hq_ay_stereo_sides(int sides[HQ_AY_CHANNELS][2])
-{
-    int custom[HQ_AY_CHANNELS];
-    int i;
-
-    for (i=0;i<HQ_AY_CHANNELS;i++) sides[i][0]=sides[i][1]=1;
-
-    switch (ay3_stereo_mode) {
-        case 1: //ACB
-            sides[0][1]=0;
-            sides[1][0]=0;
-        break;
-
-        case 2: //ABC
-            sides[0][1]=0;
-            sides[2][0]=0;
-        break;
-
-        case 3: //BAC
-            sides[1][1]=0;
-            sides[2][0]=0;
-        break;
-
-        case 4: //CBA
-            sides[0][0]=0;
-            sides[2][1]=0;
-        break;
-
-        case 5: //Personalizado: 0 izquierdo, 1 centro, 2 derecho
-            custom[0]=ay3_custom_stereo_A;
-            custom[1]=ay3_custom_stereo_B;
-            custom[2]=ay3_custom_stereo_C;
-            for (i=0;i<HQ_AY_CHANNELS;i++) {
-                if (custom[i]==0) sides[i][1]=0;
-                if (custom[i]==2) sides[i][0]=0;
-            }
-        break;
-
-        default: //Mono
-        break;
-    }
-}
-
 static void hq_ay_reset_chip_state(struct hq_ay_chip *c)
 {
     int i;
@@ -717,15 +673,12 @@ static double hq_ay_tick_tstates(void)
 //Generar el sonido del AY hasta el final del frame
 static void hq_ay_render(int frame_tstates)
 {
-    int sides[HQ_AY_CHANNELS][2];
     int chips,chip,channel,side;
     int position=0;
     double step=hq_ay_tick_tstates();
     double f;
 
     if (step<1) step=1;
-
-    hq_ay_stereo_sides(sides);
 
     chips=ay_retorna_numero_chips();
     if (chips<1) chips=1;
@@ -757,8 +710,12 @@ static void hq_ay_render(int frame_tstates)
                 //Varios chips: dividir, como en el sonido clasico
                 output /=chips;
 
+                //Mezclador: volumen, panorama y silencio del canal
+                int levels[2];
+                ay_mixer_channel_levels(channel,output,levels);
+
                 for (side=0;side<2;side++) {
-                    int level=(sides[channel][side] ? output : 0);
+                    int level=levels[side];
                     if (level!=c->previous[channel][side]) {
                         blip_synth_update(c->synth[channel][side],audio_hq_time(at),level);
                         c->previous[channel][side]=level;

@@ -110,6 +110,18 @@ extern int ay3_custom_stereo_A;
 extern int ay3_custom_stereo_B;
 extern int ay3_custom_stereo_C;
 
+//Mezclador del AY: modo estereo, volumen y panorama de cada canal, y canales silenciados
+#define AY_STEREO_TOTAL_MODES 8
+#define AY_MIXER_PAN_MODE 999
+extern int ay_mixer_volume[3];
+extern int ay_mixer_pan[3];
+extern int ay_mixer_mute[3];
+extern int ay_mixer_channel_position(int canal);
+extern int ay_mixer_channel_pan(int canal);
+extern void ay_mixer_pans_reset(void);
+extern void ay_mixer_channel_levels(int canal,int valor,int lados[2]);
+extern const char *ay_mixer_stereo_name(int modo);
+
 extern z80_byte ay_retorna_mixer_register(int chip);
 
 extern z80_byte ay_filtros[];

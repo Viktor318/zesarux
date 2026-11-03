@@ -43,6 +43,7 @@
 #include "menu_filesel.h"
 #include "compileoptions.h"
 #include "ay_measure.h"
+#include "ay_mixer.h"
 #include "ay_thread_player.h"
 #include "audio_hq.h"
 
@@ -568,6 +569,9 @@ int audio_ay_player_play_song(z80_byte song)
 	}
 
 	z80_byte version=ay_player_version();
+
+    //Mezclador: el .mix de esta cancion, si tiene (y si no, los ajustes del usuario)
+    ay_mixer_song_started(ay_player_filename_playing,song,ay_player_total_songs());
 
     //Cancion de CPC: con el ajuste, o reconocida al probar unos frames
     ay_player_song_is_cpc=ay_player_cpc_mode.v;
@@ -1501,6 +1505,9 @@ void ay_player_playing_timer(void)
 
 void ay_player_stop_player(void)
 {
+    //Vuelven los ajustes del mezclador del usuario
+    ay_mixer_restore_user();
+
     ay_measure_stop();
     ay_player_measure_song=0;
 
