@@ -943,6 +943,79 @@ int zx8081_is_video_voltage_in_sync(void)
     return (zx8081_ula_video_in_sync ? 1 : 0);
 }
 
+/* Repeticion de teclas en ZX80/81 (solo en el emulador: la ROM de estas maquinas no repite teclas).
+   Si una tecla (no SHIFT) sigue pulsada mas de ZX8081_KEY_REPEAT_DELAY frames, cada ZX8081_KEY_REPEAT_RATE
+   frames la maquina la ve soltada durante ZX8081_KEY_REPEAT_RELEASE frames, y luego otra vez pulsada.
+   Tras 0,7 s, como la ROM del Spectrum, unas 8 veces por segundo. La ROM necesita ver la tecla soltada
+   al menos 4 frames para tomarla como una pulsacion nueva */
+
+z80_bit zx8081_key_repeat={0};
+
+#define ZX8081_KEY_REPEAT_DELAY 35
+#define ZX8081_KEY_REPEAT_RATE 2
+#define ZX8081_KEY_REPEAT_RELEASE 4
+
+//Frames que lleva pulsada la misma combinacion de teclas
+static int zx8081_key_repeat_counter=0;
+//Teclas pulsadas en el frame anterior
+static unsigned long long zx8081_key_repeat_previous=0;
+//Frames que quedan con las teclas vistas como soltadas
+static int zx8081_key_repeat_released=0;
+
+//Teclas pulsadas ahora (un bit por tecla), sin SHIFT
+static unsigned long long zx8081_key_repeat_pressed(void)
+{
+    z80_byte filas[8];
+    unsigned long long pulsadas=0;
+    int fila;
+
+    filas[0]=puerto_65278 | 1; //sin SHIFT
+    filas[1]=puerto_65022;
+    filas[2]=puerto_64510;
+    filas[3]=puerto_63486;
+    filas[4]=puerto_61438;
+    filas[5]=puerto_57342;
+    filas[6]=puerto_49150;
+    filas[7]=puerto_32766;
+
+    for (fila=0;fila<8;fila++) {
+        pulsadas |=((unsigned long long)((~filas[fila]) & 31))<<(fila*5);
+    }
+
+    return pulsadas;
+}
+
+//Llamado una vez por frame (50 Hz)
+void zx8081_key_repeat_timer(void)
+{
+    if (!zx8081_key_repeat.v || !MACHINE_IS_ZX8081) {
+        zx8081_key_repeat_counter=0;
+        zx8081_key_repeat_released=0;
+        return;
+    }
+
+    if (zx8081_key_repeat_released) {
+        zx8081_key_repeat_released--;
+        return;
+    }
+
+    unsigned long long pulsadas=zx8081_key_repeat_pressed();
+
+    if (!pulsadas || pulsadas!=zx8081_key_repeat_previous) {
+        zx8081_key_repeat_previous=pulsadas;
+        zx8081_key_repeat_counter=0;
+        return;
+    }
+
+    zx8081_key_repeat_counter++;
+
+    if (zx8081_key_repeat_counter>=ZX8081_KEY_REPEAT_DELAY) {
+        //Soltar un momento; luego la maquina la vera pulsada otra vez
+        zx8081_key_repeat_released=ZX8081_KEY_REPEAT_RELEASE;
+        zx8081_key_repeat_counter=ZX8081_KEY_REPEAT_DELAY-ZX8081_KEY_REPEAT_RATE;
+    }
+}
+
 int zx8081_read_port_a0_low(z80_byte puerto_h)
 {
 
@@ -1021,6 +1094,12 @@ int zx8081_read_port_a0_low(z80_byte puerto_h)
 
     //probamos a enviar lo mismo que con teclado de spectrum
     valor=lee_puerto_teclado(puerto_h);
+
+    //Repeticion de teclas: en este momento las teclas (menos SHIFT) se ven soltadas
+    if (zx8081_key_repeat_released) {
+        if ((puerto_h & 1)==0) valor=(valor & 1) | 30;
+        else valor |=31;
+    }
 
 /*
 Bit  Expl.

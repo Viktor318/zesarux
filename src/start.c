@@ -866,6 +866,7 @@ printf (
         "--audiovolume n                  Sets the audio output volume to percentage n\n"
         "--nagraaudio                     Enable Nagravision audio filter\n"
         "--zx8081vsyncsound               Enable vsync/tape sound on ZX80/81\n"
+        "--zx8081-key-repeat              Keys held down repeat on ZX80/81 (done by the emulator; the real machines do not repeat keys)\n"
         "--zx8081vsyncsounddetection      Enable vsync/tape sound detection on ZX80/81\n"
         "--ayplayer-add-dir d             Add directory containing AY files to playlist\n"
         "--ayplayer-load-playlist f       Load playlist file\n"
@@ -4802,6 +4803,10 @@ int parse_cmdline_options(int desde_commandline)
             }
 
 
+
+            else if (!strcmp(argv[puntero_parametro],"--zx8081-key-repeat")) {
+                zx8081_key_repeat.v=1;
+            }
 
             else if (!strcmp(argv[puntero_parametro],"--zx8081vsyncsound")) {
                 command_line_zx8081_vsync_sound.v=1;

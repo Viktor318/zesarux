@@ -177,6 +177,10 @@ extern void zx81_disable_nmi_generator(void);
 
 extern void zx8081_timer_vsync_detection(void);
 
+//Repeticion de teclas en ZX80/81 (solo en el emulador)
+extern z80_bit zx8081_key_repeat;
+extern void zx8081_key_repeat_timer(void);
+
 #define WAITMAP_SIZE 207
 extern int get_waitmap_value(int pos);
 

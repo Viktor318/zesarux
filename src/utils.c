@@ -5095,6 +5095,8 @@ int util_write_configfile(void)
 
     if (hungarian_keyboard.v)                       ADD_STRING_CONFIG,"--windows-layout");
 
+    if (zx8081_key_repeat.v)                        ADD_STRING_CONFIG,"--zx8081-key-repeat");
+
     if (!keyboard_alt_caps_shift.v)                 ADD_STRING_CONFIG,"--no-alt-caps-shift");
 
     if (autoload_snapshot_on_start.v)               ADD_STRING_CONFIG,"--autoloadsnap");

@@ -4470,3 +4470,6 @@ Use the .mix file of each song of the AY Player	Az AY lejátszó minden daláná
 Use the .mix file of each song of the AY Player (Song.mix, or Song.3.mix for the song 3 of a file). Songs without one use your own settings. Your own settings are kept and saved, not those of a .mix file	Az AY lejátszó minden dalánál a dal .mix fájlja érvényes (Dal.mix, vagy egy fájl 3. dalánál Dal.3.mix). A .mix nélküli dalok a saját beállításaiddal szólnak. A saját beállításaid megmaradnak és ezek kerülnek mentésre, nem a .mix fájléi	help
 AY mixer: stereo, volume and panorama of the channels	AY keverő: sztereó, a csatornák hangereje és panorámája	help
 ~~Defaults	Alap~~helyzet	item
+Key repeat on ZX80/81	Billentyűismétlés ZX80/81-en	item
+A key held down repeats, as on the Spectrum	A lenyomva tartott billentyű ismétel, mint a Spectrumon	tooltip
+A key held down repeats, as on the Spectrum: after 0.7 seconds, about 8 times a second. The ZX80 and the ZX81 do not repeat keys; this is done by the emulator, so it differs from the real machine. Disabled by default	A lenyomva tartott billentyű ismétel, mint a Spectrumon: 0,7 másodperc után másodpercenként kb. nyolcszor. A ZX80 és a ZX81 nem ismétli a billentyűket; ezt az emulátor végzi, így eltér a valódi géptől. Alapból kikapcsolva	help

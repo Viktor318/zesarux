@@ -7702,6 +7702,11 @@ int menu_keyboard_alt_caps_shift_cond(void)
     return 1;
 }
 
+void menu_keyboard_zx8081_key_repeat(MENU_ITEM_PARAMETERS)
+{
+    zx8081_key_repeat.v ^=1;
+}
+
 void menu_keyboard_alt_caps_shift(MENU_ITEM_PARAMETERS)
 {
     keyboard_alt_caps_shift.v ^=1;
@@ -7977,6 +7982,17 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
                 "1 EDIT, 2 CAPS LOCK, 3 TRUE VIDEO, 4 INV. VIDEO, 5-8 cursor keys, 9 GRAPHICS, 0 DELETE. "
                 "On ZX80 and ZX81, left Alt + any key works as SHIFT + that key (keywords like STOP, functions, EDIT, RUBOUT). "
                 "Not available on QL, where Alt is the ALT key of the QL. Only used with the sdl video driver by now");
+        }
+
+        //Repeticion de teclas en ZX80/81 (su ROM no repite teclas)
+        if (MACHINE_IS_ZX8081) {
+            menu_add_item_menu_en_es_ca(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_keyboard_zx8081_key_repeat,NULL,
+                "Key repeat on ZX80/81","Repetición de teclas en ZX80/81","Repetició de tecles a ZX80/81");
+            menu_add_item_menu_prefijo_format(array_menu_keyboard_settings,"[%c] ",(zx8081_key_repeat.v ? 'X' : ' ') );
+            menu_add_item_menu_tooltip(array_menu_keyboard_settings,"A key held down repeats, as on the Spectrum");
+            menu_add_item_menu_ayuda(array_menu_keyboard_settings,"A key held down repeats, as on the Spectrum: after 0.7 seconds, "
+                "about 8 times a second. The ZX80 and the ZX81 do not repeat keys; this is done by the emulator, so it differs from the real machine. "
+                "Disabled by default");
         }
 
         if (MACHINE_IS_SPECTRUM) {

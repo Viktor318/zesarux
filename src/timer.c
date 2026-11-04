@@ -1221,6 +1221,9 @@ void timer_check_interrupt(void)
         //Secuencias de teclas del teclado hungaro (simbolos del modo extendido)
         hungarian_keyboard_timer();
 
+        //Repeticion de teclas en ZX80/81
+        zx8081_key_repeat_timer();
+
         //Input file keyboard
         if (send_text_as_keystrokes_is_playing() ) {
             send_text_as_keystrokes_delay_counter++;
