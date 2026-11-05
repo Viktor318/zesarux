@@ -90,6 +90,9 @@ static volatile int tp_active=0;
 static volatile int tp_paused=0;
 static volatile long tp_samples_played=0;
 
+//Fundido al final de la cancion: termina en el frame tp_fade_end (0: sin fundido) y dura tp_fade_frames
+static volatile long tp_fade_end=0,tp_fade_frames=0;
+
 static struct ay_measure_machine *tp_machine=NULL;
 static struct ay_measure_write tp_writes[TP_MAX_WRITES];
 static struct tp_chip tp_chip;
@@ -392,6 +395,7 @@ int ay_tp_start(unsigned char *data,int size,int song,int cpc)
         tp_next_tick=0;
         tp_samples_count=tp_samples_position=0;
         tp_samples_played=0;
+        tp_fade_end=0;
         tp_dc_in[0]=tp_dc_in[1]=tp_dc_out[0]=tp_dc_out[1]=0;
         tp_paused=0;
         tp_active=1;
@@ -445,6 +449,22 @@ int ay_tp_seek(long frame)
     return 0;
 }
 
+//Fundido al final: la musica baja hasta el silencio en los frames fade_frames antes de end_frame (0: sin fundido)
+void ay_tp_set_fade(long end_frame,long fade_frames)
+{
+    tp_fade_frames=fade_frames;
+    tp_fade_end=end_frame;
+}
+
+//Cambiar el frame en que va la cancion, sin tocar la musica (cuando la musica vuelve a una vuelta anterior)
+void ay_tp_set_position(long frame)
+{
+    if (frame<0) frame=0;
+    TP_LOCK;
+    tp_samples_played=frame*TP_SAMPLE_RATE/50;
+    TP_UNLOCK;
+}
+
 void ay_tp_stop(void)
 {
     TP_LOCK;
@@ -491,8 +511,17 @@ void ay_tp_mix(short *destino,int frames)
     //Volumen general x volumen del reproductor, como mucho 100%
     double volume=ay_player_volume_effective()/100.0;
 
+    long fade_end=tp_fade_end,fade_frames=tp_fade_frames;
+
     for (i=0;i<frames;i++) {
         if (tp_samples_position>=tp_samples_count) tp_render_frame();
+
+        //Fundido al final de la cancion (de muestra en muestra)
+        double fundido=1.0;
+        if (fade_end>0 && fade_frames>0) {
+            double quedan=fade_end-tp_samples_played*50.0/TP_SAMPLE_RATE;
+            if (quedan<fade_frames) fundido=(quedan>0 ? quedan/fade_frames : 0);
+        }
 
         for (side=0;side<2;side++) {
             double in=0;
@@ -502,7 +531,7 @@ void ay_tp_mix(short *destino,int frames)
             tp_dc_in[side]=in;
             tp_dc_out[side]=out;
 
-            double v=*destino+out*volume;
+            double v=*destino+out*volume*fundido;
             if (v>32767) v=32767;
             if (v<-32768) v=-32768;
             *destino++=(short)v;

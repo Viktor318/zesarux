@@ -375,6 +375,56 @@ z80_bit ay_player_measure_lengths={1};
 //La duracion de la cancion actual es medida
 int ay_player_length_measured=0;
 
+/* Fundido al final, como en el fork de Fuse: las canciones cuya musica vuelve a empezar (da vueltas)
+   bajan hasta el silencio en los ultimos 3 segundos; las que no tienen duracion en el archivo (o se
+   cortan por el limite de duracion), en los ultimos 5. Las que terminan solas no lo necesitan.
+   En modo 1 cancion con repetir, una cancion que da vueltas sigue sonando sin cortes */
+#define AY_PLAYER_FADE_FRAMES (3*50)
+#define AY_PLAYER_FADE_FRAMES_DEFAULT (5*50)
+
+//Desde donde sigue la musica tras el final (-1: la musica termina)
+static long ay_player_song_loop=-1;
+//La duracion no es la de la musica: no hay en el archivo, o la corta el limite
+static int ay_player_length_default=0;
+
+//Despues de cambiar ay_song_length: si la corta el limite de duracion
+static void ay_player_apply_length_limit(void)
+{
+    if (ay_player_limit_any_track>0 && (ay_song_length>ay_player_limit_any_track || ay_song_length==0)) {
+        ay_song_length=ay_player_limit_any_track;
+        ay_player_length_default=1;
+    }
+}
+
+//Frames del fundido de la cancion actual (0: sin fundido)
+static long ay_player_fade_frames(void)
+{
+    if (ay_player_length_default) return AY_PLAYER_FADE_FRAMES_DEFAULT;
+    if (ay_player_song_loop>=0) return AY_PLAYER_FADE_FRAMES;
+    return 0;
+}
+
+//La musica sigue sin cortes al final (1 cancion con repetir, y la musica da vueltas)
+static int ay_player_loops_seamlessly(void)
+{
+    return ay_player_single_song.v && ay_player_repeat_file.v &&
+        !ay_player_length_default && ay_player_song_loop>=0 && ay_player_song_loop<ay_song_length;
+}
+
+//Avisar al reproductor en hilo aparte de donde termina el fundido (se llama en cada frame)
+static void ay_player_update_fade(void)
+{
+    long fin=0,frames=ay_player_fade_frames();
+
+    if (!ay_tp_active()) return;
+
+    if (ay_song_length>0 && frames>0 && !ay_player_loops_seamlessly()) {
+        fin=ay_song_length+ay_player_add_to_track*50;
+    }
+
+    ay_tp_set_fade(fin,frames);
+}
+
 static unsigned int ay_player_checksum(z80_byte *data,int length)
 {
     unsigned int crc=0xffffffff;
@@ -508,9 +558,9 @@ static void ay_player_measure_check(void)
         if (frames>65535) frames=65535;
         ay_song_length=frames;
         ay_player_length_measured=1;
-        if (ay_player_limit_any_track>0 && ay_song_length>ay_player_limit_any_track) {
-            ay_song_length=ay_player_limit_any_track;
-        }
+        ay_player_length_default=0;
+        ay_player_song_loop=(loop>=frames ? 0 : loop);
+        ay_player_apply_length_limit();
         ayplayer_force_refresh=1;
     }
     ay_player_measure_song=0;
@@ -541,9 +591,9 @@ static void ay_player_song_length_measured(z80_byte song)
             if (frames>65535) frames=65535;
             ay_song_length=frames;
             ay_player_length_measured=1;
-            if (ay_player_limit_any_track>0 && ay_song_length>ay_player_limit_any_track) {
-                ay_song_length=ay_player_limit_any_track;
-            }
+            ay_player_length_default=0;
+            ay_player_song_loop=(loop>=frames ? 0 : loop);
+            ay_player_apply_length_limit();
         }
     }
     else if (ay_player_measure_lengths.v) {
@@ -609,10 +659,11 @@ int audio_ay_player_play_song(z80_byte song)
         ay_player_set_footer(ay_player_file_song_name,ay_player_second_footer);
 
         ay_song_length=audio_ay_player_get_be_word(song_data+4);
+        //Sin duracion en el archivo: la de las canciones infinitas, y fundido al final
+        ay_player_length_default=(ay_song_length==0);
+        ay_player_song_loop=(ay_song_length==0 ? 0 : -1);
         if (ay_song_length==0) ay_song_length=ay_player_limit_infinite_tracks;
-        if (ay_player_limit_any_track>0) {
-            if (ay_song_length>ay_player_limit_any_track || ay_song_length==0) ay_song_length=ay_player_limit_any_track;
-        }
+        ay_player_apply_length_limit();
 
         ay_song_length_counter=0;
         ay_player_playing.v=1;
@@ -1454,6 +1505,14 @@ void ay_player_song_end(void)
 	if (audio_ay_player_mem==NULL) return;
 
     if (ay_player_single_song.v) {
+        //La musica da vueltas: sigue sonando, y el tiempo vuelve a donde empieza la vuelta
+        if (ay_tp_active() && ay_player_loops_seamlessly()) {
+            long posicion=ay_player_song_loop+ay_player_add_to_track*50;
+            ay_tp_set_position(posicion);
+            ay_song_length_counter=posicion;
+            return;
+        }
+
         if (ay_player_repeat_file.v) {
             audio_ay_player_play_song(ay_player_pista_actual);
             ayplayer_force_refresh=1;
@@ -1533,6 +1592,7 @@ void ay_player_playing_timer(void)
     if (ay_player_paused.v) return;
     //Medicion de la duracion terminada?
     ay_player_measure_check();
+    ay_player_update_fade();
 
     //Con el reproductor en hilo aparte, el tiempo es el de la musica escuchada
     //(la deteccion de silencio del emulador no sirve: la maquina no suena)

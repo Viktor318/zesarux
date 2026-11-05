@@ -31,6 +31,10 @@ extern void ay_tp_stop(void);
 //Ir al frame (1/50 s) indicado de la cancion que suena. Retorna 0 si ok
 extern int ay_tp_seek(long frame);
 extern void ay_tp_set_paused(int paused);
+//Fundido al final: la musica baja hasta el silencio en los fade_frames antes de end_frame (0: sin fundido)
+extern void ay_tp_set_fade(long end_frame,long fade_frames);
+//Cambiar el frame en que va la cancion, sin tocar la musica
+extern void ay_tp_set_position(long frame);
 extern int ay_tp_active(void);
 //Frames (1/50 s) que ya se han escuchado
 extern long ay_tp_frames_played(void);
