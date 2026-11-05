@@ -166,6 +166,7 @@
 #include "qsound.h"
 #include "zxevo.h"
 #include "scorpion.h"
+#include "atmturbo.h"
 
 #ifdef COMPILE_ALSA
 #include "audioalsa.h"
@@ -2759,6 +2760,15 @@ void menu_debug_tsconf_tbblue_msx_videoregisters_overlay(void)
             zxvision_print_string_defaults_fillspc_format(ventana,1,linea++,"Video mode: %02X. %s",baseconf_mode,baseconf_get_video_mode_string());
 
         }
+
+        if (MACHINE_IS_ATM_TURBO) {
+
+            z80_byte atm_mode=atmturbo_get_video_mode();
+
+            zxvision_print_string_defaults_fillspc_format(ventana,1,linea++,"Video mode: %02X. %s",atm_mode,atmturbo_get_video_mode_string());
+
+        }
+
 
         if (MACHINE_IS_SCORPION_GMX) {
 
@@ -11776,6 +11786,11 @@ int menu_debug_sprites_total_colors_mapped_palette(int paleta)
             return 16;
         break;
 
+        //ATM
+        case 22:
+            return 16;
+        break;
+
     }
 
     return 16;
@@ -11870,6 +11885,10 @@ int menu_debug_sprites_max_value_mapped_palette(int paleta)
             return PRISM_TOTAL_PALETTE_COLOURS;
         break;
 
+        case 22:
+            //ATM
+            return PRISM_TOTAL_PALETTE_COLOURS;
+        break;
 
     }
 
@@ -11882,6 +11901,7 @@ int menu_debug_sprites_return_index_palette(int paleta, z80_byte color)
 {
 
     z80_byte r,g,b;
+    int indice;
 
     switch (paleta) {
         case 0:
@@ -12001,6 +12021,21 @@ int menu_debug_sprites_return_index_palette(int paleta, z80_byte color)
             return baseconf_get_palette_entry(color);
         break;
 
+        case 22:
+            //ATM
+            indice=atm_get_palette_entry(color);
+            //printf("c %d i %d\n",color,indice);
+
+
+           //if (MACHINE_IS_ATM_TURBO3) indice -=PRISM_INDEX_FIRST_COLOR;
+           //else indice -=SPECTRA_INDEX_FIRST_COLOR;
+
+           return indice;
+
+
+
+        break;
+
 
     }
 
@@ -12086,6 +12121,11 @@ int menu_debug_sprites_return_color_palette(int paleta, z80_byte color)
         case 21:
             //BaseConf devuelve un índice RGB444 relativo dentro de la paleta Prism.
             return PRISM_INDEX_FIRST_COLOR+index;
+        break;
+
+        case 22:
+            //El color de la paleta ya va directo sin offset
+            return index;
         break;
 
     }
@@ -12194,6 +12234,10 @@ void menu_debug_sprites_get_palette_name(int paleta, char *s)
 
         case 21:
             strcpy(s,"BaseConf");
+        break;
+
+        case 22:
+            strcpy(s,"ATM Turbo");
         break;
 
         default:
@@ -22321,14 +22365,14 @@ void menu_debug_tsconf_tbblue_msx(MENU_ITEM_PARAMETERS)
 
 
 
-        if (!MACHINE_IS_CPC && !MACHINE_IS_BASECONF && !MACHINE_IS_SCORPION_GMX) {
+        if (!MACHINE_IS_CPC && !MACHINE_IS_BASECONF && !MACHINE_IS_SCORPION_GMX && !MACHINE_IS_ATM_TURBO) {
             //menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_tsconf_layer_settings,NULL,"Video ~~Layers");
             menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_video_layers,NULL,"Video ~~Layers");
             menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'l');
             menu_add_item_menu_add_flags(array_menu_debug_tsconf_tbblue_msx,MENU_ITEM_FLAG_GENERA_VENTANA | MENU_ITEM_FLAG_SE_CERRARA);
         }
 
-        if (!MACHINE_IS_CPC && !MACHINE_IS_BASECONF && !MACHINE_IS_SCORPION_GMX) {
+        if (!MACHINE_IS_CPC && !MACHINE_IS_BASECONF && !MACHINE_IS_SCORPION_GMX && !MACHINE_IS_ATM_TURBO) {
             menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx_spritenav,NULL,"~~Sprite navigator");
             menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'s');
             menu_add_item_menu_add_flags(array_menu_debug_tsconf_tbblue_msx,MENU_ITEM_FLAG_GENERA_VENTANA | MENU_ITEM_FLAG_SE_CERRARA);
@@ -37655,7 +37699,7 @@ void menu_debug_main(MENU_ITEM_PARAMETERS)
         menu_add_item_menu_es_avanzado(array_menu_debug);
 
 
-        if (MACHINE_IS_TSCONF || MACHINE_IS_BASECONF || MACHINE_IS_SCORPION_GMX || MACHINE_IS_TBBLUE || MACHINE_IS_CPC) {
+        if (MACHINE_IS_TSCONF || MACHINE_IS_BASECONF || MACHINE_IS_SCORPION_GMX || MACHINE_IS_TBBLUE || MACHINE_IS_CPC || MACHINE_IS_ATM_TURBO) {
             if (MACHINE_IS_TSCONF) {
                 menu_add_item_menu_format(array_menu_debug,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx,NULL,"~~TSConf");
                 menu_add_item_menu_shortcut(array_menu_debug,'t');
@@ -37667,6 +37711,10 @@ void menu_debug_main(MENU_ITEM_PARAMETERS)
             }
             if (MACHINE_IS_SCORPION_GMX) {
                 menu_add_item_menu_format(array_menu_debug,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx,NULL,"Scorpion GMX");
+                menu_add_item_menu_tiene_submenu(array_menu_debug);
+            }
+            if (MACHINE_IS_ATM_TURBO) {
+                menu_add_item_menu_format(array_menu_debug,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx,NULL,"ATM Turbo");
                 menu_add_item_menu_tiene_submenu(array_menu_debug);
             }
             if (MACHINE_IS_TBBLUE) {

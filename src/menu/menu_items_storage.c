@@ -159,6 +159,7 @@
 #include "scorpion.h"
 #include "baseconf.h"
 #include "zxevo.h"
+#include "atmturbo.h"
 
 
 //Opciones seleccionadas para cada menu
@@ -10720,59 +10721,69 @@ void menu_storage_trd_file(MENU_ITEM_PARAMETERS)
 
     trd_disable();
 
-        char *filtros[2];
+    char *filtros[3];
 
-        filtros[0]="trd";
-        filtros[1]=0;
+    filtros[0]="trd";
+    filtros[1]="scl";
+    filtros[2]=0;
 
-        //guardamos directorio actual
-        char directorio_actual[PATH_MAX];
-        getcwd(directorio_actual,PATH_MAX);
+    //guardamos directorio actual
+    char directorio_actual[PATH_MAX];
+    getcwd(directorio_actual,PATH_MAX);
 
-              //Obtenemos directorio de trd
-        //si no hay directorio, vamos a rutas predefinidas
-        if (trd_file_name[0]==0) menu_chdir_sharedfiles();
+    //Obtenemos directorio de trd
+    //si no hay directorio, vamos a rutas predefinidas
+    if (trd_file_name[0]==0) menu_chdir_sharedfiles();
 
-        else {
-                char directorio[PATH_MAX];
-                util_get_dir(trd_file_name,directorio);
-                //printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
+    else {
+        char directorio[PATH_MAX];
+        util_get_dir(trd_file_name,directorio);
+        //printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
 
-                //cambiamos a ese directorio, siempre que no sea nulo
-                if (directorio[0]!=0) {
-                        debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-                        zvfs_chdir(directorio);
-                }
+        //cambiamos a ese directorio, siempre que no sea nulo
+        if (directorio[0]!=0) {
+            debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
+            zvfs_chdir(directorio);
         }
+    }
 
 
-        int ret=menu_filesel("Select TRD File",filtros,trd_file_name);
-        //volvemos a directorio inicial
-        zvfs_chdir(directorio_actual);
+    int ret=menu_filesel("Select TRD/SCL File",filtros,trd_file_name);
+    //volvemos a directorio inicial
+    zvfs_chdir(directorio_actual);
 
-        if (ret==1) {
+    if (ret==1) {
         if (!si_existe_archivo(trd_file_name)) {
+
             if (menu_confirm_yesno_texto("File does not exist","Create?")==0) {
-                                trd_file_name[0]=0;
-                                return;
-                        }
+                trd_file_name[0]=0;
+                return;
+            }
+
+            if (!util_compare_file_extension(trd_file_name,"scl")) {
+                menu_error_message("Can not create new SCL file");
+                trd_file_name[0]=0;
+                return;
+            }
 
 
             //Crear archivo vacio
-                FILE *ptr_trdfile;
+            FILE *ptr_trdfile;
             ptr_trdfile=fopen(trd_file_name,"wb");
 
-                long long int totalsize=640*1024;
+            long long int totalsize=640*1024;
 
             z80_byte valor_grabar=0;
 
-                if (ptr_trdfile!=NULL) {
+            if (ptr_trdfile!=NULL) {
                 while (totalsize) {
                     fwrite(&valor_grabar,1,1,ptr_trdfile);
                     totalsize--;
                 }
-                        fclose(ptr_trdfile);
-                }
+                fclose(ptr_trdfile);
+            }
+
+            menu_generic_message_splash("Create new TRD","TRD file created");
 
         }
 
@@ -10780,14 +10791,15 @@ void menu_storage_trd_file(MENU_ITEM_PARAMETERS)
 
 
 
-        }
-        //Sale con ESC
-        else {
-                //Quitar nombre
-                trd_file_name[0]=0;
+    }
+
+    //Sale con ESC
+    else {
+            //Quitar nombre
+            trd_file_name[0]=0;
 
 
-        }
+    }
 }
 
 
@@ -10818,12 +10830,12 @@ void menu_betadisk(MENU_ITEM_PARAMETERS)
 
         menu_tape_settings_trunc_name(trd_file_name,string_trd_file_shown,17);
         menu_add_item_menu_en_es_ca_inicial(&array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_file,NULL,
-            "~~TRD File","Archivo ~~TRD","Arxiu ~~TRD");
+            "~~TRD/SCL File","Archivo ~~TRD/SCL","Arxiu ~~TRD/SCL");
         menu_add_item_menu_sufijo_format(array_menu_betadisk," [%s]",string_trd_file_shown);
         menu_add_item_menu_prefijo(array_menu_betadisk,"    ");
         menu_add_item_menu_shortcut(array_menu_betadisk,'t');
-        menu_add_item_menu_tooltip(array_menu_betadisk,"TRD Emulation file");
-        menu_add_item_menu_ayuda(array_menu_betadisk,"TRD Emulation file");
+        menu_add_item_menu_tooltip(array_menu_betadisk,"TRD/SCL Emulation file");
+        menu_add_item_menu_ayuda(array_menu_betadisk,"TRD/SCL Emulation file");
         menu_add_item_menu_add_flags(array_menu_betadisk,MENU_ITEM_FLAG_GENERA_VENTANA | MENU_ITEM_FLAG_SE_CERRARA);
 
 
@@ -10849,7 +10861,7 @@ void menu_betadisk(MENU_ITEM_PARAMETERS)
         menu_add_item_menu_tooltip(array_menu_betadisk,"Tells if TRD writes are saved to disk");
         menu_add_item_menu_ayuda(array_menu_betadisk,"Tells if TRD writes are saved to disk. "
         "Note: all writing operations to TRD are always saved to internal memory (unless you disable write permission), but this setting "
-        "tells if these changes are written to disk or not."
+        "tells if these changes are written to disk or not. Saving to SCL is not supported yet"
         );
 
 
@@ -12779,6 +12791,11 @@ void menu_storage_zxevo_nemo_ide(MENU_ITEM_PARAMETERS)
         zxevo_nemo_ide_enabled.v ^=1;
 }
 
+void menu_storage_ide_atm(MENU_ITEM_PARAMETERS)
+{
+    ide_atm_enabled.v ^=1;
+}
+
 
 int menu_storage_ide_emulation_cond(void)
 {
@@ -13116,6 +13133,16 @@ void menu_ide_divide(MENU_ITEM_PARAMETERS)
                 menu_add_item_menu_prefijo_format(array_menu_ide_divide,"[%c] ",(zxevo_nemo_ide_enabled.v ? 'X' : ' '));
                 menu_add_item_menu_tooltip(array_menu_ide_divide,"Emulate the Nemo IDE interface in BaseConf and TSConf");
                 menu_add_item_menu_ayuda(array_menu_ide_divide,"Emulate the Nemo IDE interface in BaseConf and TSConf. IDE Emulation above controls whether a hard disk is connected to it");
+            }
+
+            if (MACHINE_IS_ATM_TURBO2_FAMILY) {
+                menu_add_item_menu_separator(array_menu_ide_divide);
+
+                menu_add_item_menu_en_es_ca(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_ide_atm,NULL,
+                    "ATM IDE Enabled","ATM IDE Activado","ATM IDE Activat");
+                menu_add_item_menu_prefijo_format(array_menu_ide_divide,"[%c] ",(ide_atm_enabled.v ? 'X' : ' '));
+                menu_add_item_menu_tooltip(array_menu_ide_divide,"Emulate the IDE interface in ATM");
+                menu_add_item_menu_ayuda(array_menu_ide_divide,"Emulate the IDE interface in ATM. IDE Emulation above controls whether a hard disk is connected to it");
             }
 
 

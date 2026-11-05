@@ -3782,7 +3782,7 @@ TRD Emulation file	TRD emulációs fájl	tooltip
 TRD Emulation	TRD emuláció	tooltip
 If TRD disk is write protected	Írásvédett-e a TRD lemez	tooltip
 Tells if TRD writes are saved to disk	Megadja, hogy a TRD-írások lemezre mentődnek-e	tooltip
-Tells if TRD writes are saved to disk. Note: all writing operations to TRD are always saved to internal memory (unless you disable write permission), but this setting tells if these changes are written to disk or not.	Megadja, hogy a TRD-írások lemezre mentődnek-e. Megjegyzés: a TRD-re történő minden írás mindig a belső memóriába kerül (hacsak nem tiltod le az írási jogot), ez a beállítás azt határozza meg, hogy ezek a változások kiíródnak-e lemezre vagy sem.	help
+Tells if TRD writes are saved to disk. Note: all writing operations to TRD are always saved to internal memory (unless you disable write permission), but this setting tells if these changes are written to disk or not. Saving to SCL is not supported yet	Megadja, hogy a TRD-írások lemezre mentődnek-e. Megjegyzés: a TRD-re történő minden írás mindig a belső memóriába kerül (hacsak nem tiltod le az írási jogot), ez a beállítás azt határozza meg, hogy ezek a változások kiíródnak-e lemezre vagy sem. SCL-be mentés egyelőre nem támogatott.	help
 Enable betadisk	Betadisk bekapcsolása	tooltip
 Enable betadisk. Do a RANDOMIZE USR 15616 to open TR-DOS	Betadisk bekapcsolása. A TR-DOS megnyitásához add ki a RANDOMIZE USR 15616 parancsot	help
 Allow autoboot on 48k machines	Automatikus indítás engedélyezése 48k gépeken	tooltip
@@ -4473,3 +4473,12 @@ AY mixer: stereo, volume and panorama of the channels	AY keverő: sztereó, a cs
 Key repeat on ZX80/81	Billentyűismétlés ZX80/81-en	item
 A key held down repeats, as on the Spectrum	A lenyomva tartott billentyű ismétel, mint a Spectrumon	tooltip
 A key held down repeats, as on the Spectrum: after 0.7 seconds, about 8 times a second. The ZX80 and the ZX81 do not repeat keys; this is done by the emulator, so it differs from the real machine. Disabled by default	A lenyomva tartott billentyű ismétel, mint a Spectrumon: 0,7 másodperc után másodpercenként kb. nyolcszor. A ZX80 és a ZX81 nem ismétli a billentyűket; ezt az emulátor végzi, így eltér a valódi géptől. Alapból kikapcsolva	help
+~~TRD/SCL File	TRD/SCL ~~fájl	item
+TRD/SCL Emulation file	TRD/SCL emulációs fájl	tooltip
+Select TRD/SCL File	TRD/SCL fájl kiválasztása	window title
+Can not create new SCL file	Nem sikerült létrehozni az új SCL fájlt	message
+Create new TRD	Új TRD létrehozása	window title
+TRD file created	A TRD fájl elkészült	message
+ATM IDE Enabled	ATM IDE bekapcsolva	item
+Emulate the IDE interface in ATM	Az ATM IDE-csatolójának emulálása	tooltip
+Emulate the IDE interface in ATM. IDE Emulation above controls whether a hard disk is connected to it	Az ATM IDE-csatolójának emulálása. A fenti IDE-emuláció beállítás dönti el, hogy csatlakozik-e hozzá merevlemez	help

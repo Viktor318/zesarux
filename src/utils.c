@@ -792,7 +792,7 @@ struct s_machines_info machines_info[]={
     {"ATM Turbo 1",		                MACHINE_ID_ATM_TURBO1,              MACHINE_FAMILY_SPECTRUM,FABRICANTE_ATM_MICROART},
     {"ATM Turbo 2",		                MACHINE_ID_ATM_TURBO2,              MACHINE_FAMILY_SPECTRUM,FABRICANTE_ATM_MICROART},
     {"ATM Turbo 2+",		            MACHINE_ID_ATM_TURBO2_PLUS,         MACHINE_FAMILY_SPECTRUM,FABRICANTE_MICROART},
-    {"ATM Turbo 3",		                MACHINE_ID_ATM_TURBO3,              MACHINE_FAMILY_SPECTRUM,FABRICANTE_NEDOPC},
+    {"ATM Turbo 3",		                MACHINE_ID_ATM_TURBO3,              MACHINE_FAMILY_SPECTRUM,FABRICANTE_ZOREL},
 
 
     {"Chrome",                          MACHINE_ID_CHROME,                  MACHINE_FAMILY_SPECTRUM,FABRICANTE_MARIOPRATO},
@@ -852,9 +852,9 @@ struct s_machines_info machines_info[]={
 
 };
 
-#define TOTAL_FABRICANTES_HOYKEY 26
 
-char *array_fabricantes_hotkey[TOTAL_FABRICANTES_HOYKEY]={
+
+char *array_fabricantes_hotkey[TOTAL_FABRICANTES]={
         "~~Amstrad",
         "Ascii C~~orp",
         "ATM & MicroART",
@@ -880,11 +880,12 @@ char *array_fabricantes_hotkey[TOTAL_FABRICANTES_HOYKEY]={
         "Timex Computer",
         "~~Timex Sinclair",
         "TS ~~Labs",
+        "Zorel",
         "~~ZXUno Team"
 };
 
 //Si letra es espacio->no hay letra. spectravideo o timex computer o scorpion no hay letras libres
-char array_fabricantes_hotkey_letra[TOTAL_FABRICANTES_HOYKEY+1]="ao bcd kiur myewxn gs  tlz";
+char array_fabricantes_hotkey_letra[TOTAL_FABRICANTES+1]="ao bcd kiur myewxn gs  tl z";
 
 
 //Buscar el texto del nombre de familia. Si no encontrado, retorna siempre "Spectrum"
@@ -4140,6 +4141,8 @@ int get_rom_size(int machine)
 
     else if (MACHINE_IS_SCORPION) rom_size=65536;
 
+    else if (MACHINE_IS_ATM_TURBO2PLUS_TURBO3) rom_size=131072;
+
     else if (MACHINE_IS_ATM_TURBO) rom_size=65536;
 
     else if (MACHINE_IS_SPECTRUM_128_P2) rom_size=32768;
@@ -4244,8 +4247,20 @@ int get_ram_size(void)
         total_ram=256*1024;
     }
 
-    else if (MACHINE_IS_ATM_TURBO) {
-        total_ram=ATM_TURBO_RAM_SIZE*1024;
+    else if (MACHINE_IS_ATM_TURBO1) {
+        total_ram=ATM_TURBO1_RAM_SIZE*1024;
+    }
+
+    else if (MACHINE_IS_ATM_TURBO2) {
+        total_ram=ATM_TURBO2_RAM_SIZE*1024;
+    }
+
+    else if (MACHINE_IS_ATM_TURBO2_PLUS) {
+        total_ram=ATM_TURBO2_PLUS_RAM_SIZE*1024;
+    }
+
+    else if (MACHINE_IS_ATM_TURBO3) {
+        total_ram=ATM_TURBO3_RAM_SIZE*1024;
     }
 
     else if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3 || MACHINE_IS_CPC_HAS_128K || MACHINE_IS_CHLOE_140SE) {
@@ -7167,6 +7182,8 @@ int quickload_continue(char *nombre) {
         if (!MACHINE_IS_BASECONF && !MACHINE_IS_TSCONF && !MACHINE_IS_SCORPION && !MACHINE_IS_PENTAGON && !MACHINE_IS_ATM_TURBO) betadisk_enable();
 
         //Si es scl, extraer el trd que se obtiene del scl e insertar el trd
+        //Esto ya no hace falta pues ya permite insertar scl
+        /*
         if (!util_compare_file_extension(nombre,"scl")) {
             char nombre_sin_dir[PATH_MAX];
             util_get_file_no_directory(nombre,nombre_sin_dir);
@@ -7186,6 +7203,10 @@ int quickload_continue(char *nombre) {
         else {
             trd_insert_disk(nombre);
         }
+
+        */
+
+        trd_insert_disk(nombre);
 
 
         return 0;
@@ -9566,6 +9587,14 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
         if (tecla==UTIL_KEY_UP) baseconf_ps2_cursor_event(3,pressrelease);
         if (tecla>=UTIL_KEY_F1 && tecla<=UTIL_KEY_F10)
             baseconf_ps2_function_event(tecla-UTIL_KEY_F1+1,pressrelease);
+    }
+
+    /* ATM recibe las flechas como teclas XT independientes de la matriz ZX. */
+    if (MACHINE_IS_ATM_TURBO2_FAMILY) {
+        if (tecla==UTIL_KEY_LEFT) atmturbo2_cursor_event(0,pressrelease);
+        if (tecla==UTIL_KEY_RIGHT) atmturbo2_cursor_event(1,pressrelease);
+        if (tecla==UTIL_KEY_DOWN) atmturbo2_cursor_event(2,pressrelease);
+        if (tecla==UTIL_KEY_UP) atmturbo2_cursor_event(3,pressrelease);
     }
 
     switch (tecla) {

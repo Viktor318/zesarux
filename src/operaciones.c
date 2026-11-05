@@ -7085,7 +7085,23 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 	}
 
-    if ((MACHINE_IS_ATM_TURBO1 || MACHINE_IS_ATM_TURBO2) &&
+    /* #BF de ATM3 tiene decodificación de ocho bits y no depende de DOS. */
+    if (MACHINE_IS_ATM_TURBO3 && puerto_l==0xbf) return atmturbo3_read_port_bf();
+    if (MACHINE_IS_ATM_TURBO3 && puerto_l==0x1f && !atmturbo2_shadow_ports_enabled())
+        return get_kempston_value();
+
+    /* El IDE de ATM2/2+ ocupa los puertos de sombra terminados en #xF. */
+    if (MACHINE_IS_ATM_TURBO2_FAMILY && ide_enabled.v && ide_atm_enabled.v &&
+        atmturbo2_shadow_ports_enabled() &&
+        (puerto&0x1f)==0x0f) return atmturbo2_ide_read_port(puerto);
+
+    /* Estado del receptor XT en D7 de #7FFD y códigos serie en #7DFD. */
+    if (MACHINE_IS_ATM_TURBO2_FAMILY && (puerto & 0x8202)==0x0200)
+        return MACHINE_IS_ATM_TURBO2PLUS_TURBO3 ? atmturbo2plus_read_device_status() : atmturbo2_read_keyboard_status();
+    if (MACHINE_IS_ATM_TURBO2_FAMILY && (puerto & 0x8203)==0x0001)
+        return MACHINE_IS_ATM_TURBO2PLUS_TURBO3 ? 0xff : atmturbo2_read_keyboard_data();
+
+    if ((MACHINE_IS_ATM_TURBO1 || MACHINE_IS_ATM_TURBO2_FAMILY) &&
         atmturbo_fdc_is_active(puerto,1) &&
         (puerto_l==0x1f || puerto_l==0x3f || puerto_l==0x5f ||
          puerto_l==0x7f || puerto_l==0xff)) {
@@ -7643,7 +7659,8 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
                 z80_byte value=lee_puerto_spectrum_ula(puerto_h);
                 if (MACHINE_IS_ATM_TURBO1) value=atmturbo_read_port_fe(value);
-                if (MACHINE_IS_ATM_TURBO2) value=atmturbo2_read_port_fe(value);
+                if (MACHINE_IS_ATM_TURBO2_FAMILY) value=atmturbo2_read_port_fe(value);
+                if (MACHINE_IS_ATM_TURBO2PLUS_TURBO3) value=atmturbo2plus_read_port_fe(puerto,value);
 		return value;
 
         }
@@ -8957,7 +8974,7 @@ void out_port_spectrum_border(z80_int puerto,z80_byte value)
 {
     if (MACHINE_IS_ATM_TURBO1 && (puerto & 7)==6)
         atmturbo_out_port_fe(puerto,value);
-    if (MACHINE_IS_ATM_TURBO2)
+    if (MACHINE_IS_ATM_TURBO2_FAMILY)
         atmturbo2_out_port_fe(puerto,value);
 
     //Actualizar bit 6 de puerto feh segun si teclado issue 2 o 3
@@ -9201,11 +9218,23 @@ Port: 10-- ---- ---- --0-
 	}
 
 
-   if (MACHINE_IS_ATM_TURBO2 && puerto_l==0xff &&
-       atmturbo2_palette_port_enabled())
-       atmturbo2_out_port_ff(value);
+   if (MACHINE_IS_ATM_TURBO3 && puerto_l==0xbf) {
+       atmturbo3_out_port_bf(value);
+       return;
+   }
 
-   if ((MACHINE_IS_ATM_TURBO1 || MACHINE_IS_ATM_TURBO2) &&
+   if (MACHINE_IS_ATM_TURBO2_FAMILY && ide_enabled.v && ide_atm_enabled.v &&
+       atmturbo2_shadow_ports_enabled() &&
+       (puerto&0x1f)==0x0f) {
+       atmturbo2_ide_write_port(puerto,value);
+       return;
+   }
+
+   if (MACHINE_IS_ATM_TURBO2_FAMILY && puerto_l==0xff &&
+       atmturbo2_palette_port_enabled())
+       atmturbo2_out_port_ff(puerto,value);
+
+   if ((MACHINE_IS_ATM_TURBO1 || MACHINE_IS_ATM_TURBO2_FAMILY) &&
        atmturbo_fdc_is_active(puerto,0) &&
        (puerto_l==0x1f || puerto_l==0x3f || puerto_l==0x5f ||
         puerto_l==0x7f || puerto_l==0xff)) {
@@ -9298,13 +9327,14 @@ Port: 10-- ---- ---- --0-
 
     if (MACHINE_IS_ATM_TURBO)
     {
-        if (MACHINE_IS_ATM_TURBO2 && atmturbo2_shadow_ports_enabled()) {
+        if (MACHINE_IS_ATM_TURBO2_FAMILY && atmturbo2_shadow_ports_enabled()) {
             if (puerto_l==0x77) {
                 atmturbo2_out_port_77(puerto,value);
                 return;
             }
-            if (puerto_l==0xf7) {
-                atmturbo2_out_port_f7(puerto,value);
+            if (puerto_l==0xf7 || (MACHINE_IS_ATM_TURBO3 && puerto_l==0xe7)) {
+                if (MACHINE_IS_ATM_TURBO3) atmturbo3_out_port_mmu(puerto,value);
+                else atmturbo2_out_port_f7(puerto,value);
                 return;
             }
         }
@@ -9314,7 +9344,9 @@ Port: 10-- ---- ---- --0-
             return;
         }
 
-        if (puerto==32765) {
+        /* ATM2 decodifica parcialmente #7FFD; CP/M también escribe #52FD. */
+        if (puerto==32765 ||
+            (MACHINE_IS_ATM_TURBO2_FAMILY && (puerto & 0x8202)==0x0200)) {
 
 
 				atmturbo_out_port_32765(value);
