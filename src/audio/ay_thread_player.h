@@ -28,6 +28,8 @@
 //cpc: cancion de Amstrad CPC
 extern int ay_tp_start(unsigned char *data,int size,int song,int cpc);
 extern void ay_tp_stop(void);
+//Ir al frame (1/50 s) indicado de la cancion que suena. Retorna 0 si ok
+extern int ay_tp_seek(long frame);
 extern void ay_tp_set_paused(int paused);
 extern int ay_tp_active(void);
 //Frames (1/50 s) que ya se han escuchado

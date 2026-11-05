@@ -876,7 +876,8 @@ printf (
         "--ayplayer-no-measure-lengths    Do not measure the lengths of the songs when played first\n"
         "--ayplayer-volume n              AY Player volume in percent, relative to the general volume\n"
         "--ayplayer-end-exit              Exit emulator when end playing all ay files in playlist\n"
-        "--ayplayer-end-repeat            Repeat playing from the beginning when end playing current ay file\n"
+        "--ayplayer-end-repeat            Repeat: the same song in 1 song mode, the list from the beginning in list mode\n"
+        "--ayplayer-single-song           Play one song and stop (or repeat it), instead of the whole list\n"
         "--ayplayer-inf-length n          Limit to n seconds to ay tracks with infinite length\n"
         "--ayplayer-any-length n          Limit to n seconds to all ay tracks\n"
         "--ayplayer-add-to-track n        Add n seconds length to all tracks\n"
@@ -6959,6 +6960,10 @@ int parse_cmdline_options(int desde_commandline)
 
             else if (!strcmp(argv[puntero_parametro],"--ayplayer-end-repeat")) {
                 ay_player_repeat_file.v=1;
+            }
+
+            else if (!strcmp(argv[puntero_parametro],"--ayplayer-single-song")) {
+                ay_player_single_song.v=1;
             }
 
             else if (!strcmp(argv[puntero_parametro],"--ayplayer-inf-length")) {

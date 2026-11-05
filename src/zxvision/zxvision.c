@@ -22094,6 +22094,15 @@ int menu_dibuja_menu_stdout(int *opcion_inicial,menu_item *item_seleccionado,men
 }
 
 
+//Atajos que no son letras: numeros (menos 5-8, que son los cursores del Spectrum), coma y punto.
+//Las traducciones usan numeros como atajo, y el reproductor AY la coma y el punto
+int menu_tecla_atajo_extra(int tecla)
+{
+    if (tecla>='0' && tecla<='4') return 1;
+    if (tecla=='9' || tecla==',' || tecla=='.') return 1;
+    return 0;
+}
+
 //devuelve a que numero de opcion corresponde el atajo pulsado
 //-1 si a ninguno
 //NULL si a ninguno
@@ -23710,8 +23719,8 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
                 }
 
 
-                //teclas de atajos. De momento solo admitido entre a y z
-                else if ( (tecla_leida>='a' && tecla_leida<='z') || (tecla_leida>='A' && tecla_leida<='Z')) {
+                //teclas de atajos. Letras, y tambien numeros (no 5-8, que son cursores), coma y punto
+                else if ( (tecla_leida>='a' && tecla_leida<='z') || (tecla_leida>='A' && tecla_leida<='Z') || menu_tecla_atajo_extra(tecla_leida)) {
                     debug_printf (VERBOSE_DEBUG,"Read key: %c. Possibly shortcut",tecla_leida);
                     tecla=tecla_leida;
                 }
@@ -23988,8 +23997,8 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
             }
 
-            //teclas de atajos. De momento solo admitido entre a y z
-            if ( (tecla>='a' && tecla<='z') || (tecla>='A' && tecla<='Z')) {
+            //teclas de atajos. Letras, y tambien numeros (no 5-8, que son cursores), coma y punto
+            if ( (tecla>='a' && tecla<='z') || (tecla>='A' && tecla<='Z') || menu_tecla_atajo_extra(tecla)) {
                 //printf ("buscamos atajo\n");
 
                 int entrada_atajo;

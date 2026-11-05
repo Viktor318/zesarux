@@ -68,6 +68,9 @@ extern z80_int ay_player_limit_infinite_tracks;
 extern z80_int ay_player_limit_any_track;
 extern z80_int ay_player_add_to_track;
 extern z80_bit ay_player_repeat_file;
+extern z80_bit ay_player_single_song;
+extern void ay_player_song_end(void);
+extern void ay_player_seek_seconds(int segundos);
 
 extern z80_bit ay_player_cpc_mode;
 extern z80_bit ay_player_show_info_console;

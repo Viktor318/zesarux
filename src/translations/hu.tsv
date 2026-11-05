@@ -227,7 +227,7 @@ E~~dit	Sze~~rkesztés	item
 Pa~~use	~^Szünet	item
 ~~Next	~^Következő	item
 [%c] Shuffle	[%c] Véletlen sorrend	item
-[%c] Repeat	[%c] Ismétlés	item
+[%c] Repeat	[%c] Is~~métlés	item
 [%c] Exitend	[%c] Exitend	item
 [%c] CPC mode	[%c] CPC mód	item
 [%c] Console print	[%c] Kiírás a konzolra	item
@@ -4482,3 +4482,11 @@ TRD file created	A TRD fájl elkészült	message
 ATM IDE Enabled	ATM IDE bekapcsolva	item
 Emulate the IDE interface in ATM	Az ATM IDE-csatolójának emulálása	tooltip
 Emulate the IDE interface in ATM. IDE Emulation above controls whether a hard disk is connected to it	Az ATM IDE-csatolójának emulálása. A fenti IDE-emuláció beállítás dönti el, hogy csatlakozik-e hozzá merevlemez	help
+Mode:	Mód:	window text
+(%c) ~~1 song	(%c) ~~1 szám	item
+(%c) L~~ist	(%c) L~~ista	item
+Play one song: at the end stop, or with Repeat play it again	Egy szám lejátszása: a végén leáll, Ismétléssel újra kezdi	help
+Play the whole list: the next song, then the next file. After the last one stop, or with Repeat start again from the first one	A teljes lista lejátszása: a következő szám, aztán a következő fájl. Az utolsó után leáll, Ismétléssel az elsőtől kezdi újra	help
+Repeat: the same song in 1 song mode, the list from the beginning in list mode	Ismétlés: 1 szám módban ugyanazt a számot, lista módban a listát az elejétől	help
+Back 10 seconds (key ,)	Vissza 10 másodpercet (, billentyű)	help
+Forward 10 seconds (key .)	Előre 10 másodpercet (. billentyű)	help

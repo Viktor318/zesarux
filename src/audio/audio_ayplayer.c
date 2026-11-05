@@ -77,7 +77,11 @@ z80_int ay_player_add_to_track=0;
 
 //Ir a primera pista cuando se llega al final
 //En versiones previas a la 10.10 esto venia activado por defecto
+//Repetir (como en el fork de Fuse): en modo 1 cancion, la misma cancion; en modo lista, la lista desde el principio
 z80_bit ay_player_repeat_file={0};
+
+//Modo 1 cancion: al final de la cancion se para (o, con repetir, la misma otra vez). Si no, modo lista
+z80_bit ay_player_single_song={0};
 
 //Reproducir en modo cpc
 z80_bit ay_player_cpc_mode={0};
@@ -1420,6 +1424,7 @@ void ay_player_add_file(char *archivo)
 
 }
 
+//Siguiente cancion (boton): la siguiente del archivo, o el siguiente archivo
 void ay_player_next_track(void)
 {
 
@@ -1431,16 +1436,76 @@ void ay_player_next_track(void)
     }
 
 	else {
-			if (ay_player_repeat_file.v) ay_player_pista_actual=1;
-			else {
-				ay_player_next_file();
-				return;
-			}
+        ay_player_next_file();
+        return;
 	}
 
 	audio_ay_player_play_song(ay_player_pista_actual);
 
     ayplayer_force_refresh=1;
+}
+
+/* Final de la cancion (por su duracion o por silencio), como en el fork de Fuse:
+     1 cancion: parar; con repetir, la misma cancion otra vez
+     lista:     la siguiente cancion (del archivo, luego del siguiente archivo); tras la ultima parar,
+                o con repetir, otra vez desde la primera */
+void ay_player_song_end(void)
+{
+	if (audio_ay_player_mem==NULL) return;
+
+    if (ay_player_single_song.v) {
+        if (ay_player_repeat_file.v) {
+            audio_ay_player_play_song(ay_player_pista_actual);
+            ayplayer_force_refresh=1;
+        }
+        else {
+            ay_player_stop_player();
+            ayplayer_force_refresh=1;
+            if (ay_player_exit_emulator_when_finish.v) end_emulator_autosave_snapshot();
+        }
+        return;
+    }
+
+    //Lista: siguiente cancion del archivo
+    if (ay_player_pista_actual<ay_player_total_songs() ) {
+        ay_player_pista_actual++;
+        audio_ay_player_play_song(ay_player_pista_actual);
+        ayplayer_force_refresh=1;
+        return;
+    }
+
+    //Siguiente archivo
+    int total_elements=ay_player_playlist_get_total_elements();
+
+    if (ay_player_shuffle_mode.v || ay_player_playlist_item_actual<total_elements-1) {
+        ay_player_next_file();
+        return;
+    }
+
+    //Final de la lista
+    if (ay_player_repeat_file.v && total_elements>0) {
+        ay_player_playlist_item_actual=0;
+        ay_player_play_current_item();
+        ayplayer_force_refresh=1;
+        return;
+    }
+
+    ay_player_stop_player();
+    ayplayer_force_refresh=1;
+    if (ay_player_exit_emulator_when_finish.v) end_emulator_autosave_snapshot();
+}
+
+//Ir adelante o atras en la cancion (en segundos). Solo con el reproductor en hilo aparte
+void ay_player_seek_seconds(int segundos)
+{
+    if (audio_ay_player_mem==NULL || !ay_tp_active()) return;
+
+    long destino=ay_tp_frames_played()+segundos*50L;
+    if (destino<0) destino=0;
+    if (ay_song_length>0 && destino>=ay_song_length) destino=ay_song_length-1;
+
+    ay_tp_seek(destino);
+    ay_song_length_counter=destino;
 }
 
 
@@ -1488,7 +1553,7 @@ void ay_player_playing_timer(void)
 
        if (ay_player_silence_detection_counter>AYPLAYER_SILENCE_MAX_COUNTER*FRECUENCIA_SONIDO) {
         debug_printf(VERBOSE_INFO,"Jump to next track because there is silence");
-        ay_player_next_track();
+        ay_player_song_end();
        }
     }
 
@@ -1498,7 +1563,7 @@ void ay_player_playing_timer(void)
 	//printf ("Contador cancion: %d limite: %d  (%d s)\n",ay_song_length_counter,ay_song_length,ay_song_length/50);
 
 	if (ay_song_length_counter>ay_song_length+ay_player_add_to_track*50) {
-		ay_player_next_track();
+		ay_player_song_end();
 	}
 
 }

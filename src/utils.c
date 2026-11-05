@@ -5588,6 +5588,7 @@ int util_write_configfile(void)
     if (ay_player_measure_lengths.v==0)             ADD_STRING_CONFIG,"--ayplayer-no-measure-lengths");
     if (ay_player_volume!=100)                      ADD_STRING_CONFIG,"--ayplayer-volume %d",ay_player_volume);
     if (ay_player_repeat_file.v)                    ADD_STRING_CONFIG,"--ayplayer-end-repeat");
+    if (ay_player_single_song.v)                    ADD_STRING_CONFIG,"--ayplayer-single-song");
     if (ay_player_limit_infinite_tracks!=0)         ADD_STRING_CONFIG,"--ayplayer-inf-length %d",ay_player_limit_infinite_tracks/50);
     if (ay_player_limit_any_track!=0)               ADD_STRING_CONFIG,"--ayplayer-any-length %d",ay_player_limit_any_track/50);
     if (ay_player_add_to_track!=0)                  ADD_STRING_CONFIG,"--ayplayer-add-to-track %d",ay_player_add_to_track);

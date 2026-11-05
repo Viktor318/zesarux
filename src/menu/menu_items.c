@@ -6275,7 +6275,7 @@ zxvision_window *menu_audio_new_ayplayer_overlay_window;
 //lineas 0-4 informacion (archivo, titulo, autor, otros, cancion y tiempo), 5 separador,
 //6-9 indicadores de volumen, 10 separador, 11-13 botones
 #define AYPLAYER_ANCHO_VENTANA 44
-#define AYPLAYER_ALTO_VENTANA 17
+#define AYPLAYER_ALTO_VENTANA 18
 #define AYPLAYER_LINEA_ARCHIVO 0
 #define AYPLAYER_INICIO_LINEA_TRACK 4
 #define AYPLAYER_LINEA_SEPARADOR_1 5
@@ -6419,7 +6419,20 @@ void menu_audio_new_ayplayer_overlay(void)
 
         //Cancion a la izquierda, tiempo a la derecha
         sprintf(texto,"%d/%d",ay_player_pista_actual,ay_player_total_songs());
-        ayplayer_linea_info(w,AYPLAYER_INICIO_LINEA_TRACK,"Track:",texto);
+        {
+            //Etiqueta y numero de cancion, sin borrar los botones de atras/adelante que hay delante del tiempo
+            int columna=ayplayer_columna_valores();
+            int hasta=w->visible_width-2-19-6;
+            char linea_cancion[128];
+            int ancho=hasta;
+            if (ancho<1) ancho=1;
+            if (ancho>(int)sizeof(linea_cancion)-1) ancho=sizeof(linea_cancion)-1;
+            memset(linea_cancion,' ',ancho);
+            linea_cancion[ancho]=0;
+            zxvision_print_string_defaults(w,0,AYPLAYER_INICIO_LINEA_TRACK,linea_cancion);
+            zxvision_print_string_defaults(w,1,AYPLAYER_INICIO_LINEA_TRACK,menu_tr("Track:"));
+            if (columna<hasta) zxvision_print_string_defaults(w,columna,AYPLAYER_INICIO_LINEA_TRACK,texto);
+        }
 
         sprintf(tiempo,"%02d:%02d.%02d / %02d:%02d.%02d",minutos,segundos,decimas_segundo,
             minutos_total,segundos_total,decimas_segundo_total);
@@ -6578,6 +6591,28 @@ void menu_audio_new_ayplayer_repeat(MENU_ITEM_PARAMETERS)
 {
     ay_player_repeat_file.v ^=1;
 
+}
+
+//Modo 1 cancion / lista
+void menu_audio_new_ayplayer_single_song(MENU_ITEM_PARAMETERS)
+{
+    ay_player_single_song.v=1;
+}
+
+void menu_audio_new_ayplayer_whole_list(MENU_ITEM_PARAMETERS)
+{
+    ay_player_single_song.v=0;
+}
+
+//Atras / adelante 10 segundos
+void menu_audio_new_ayplayer_seek_back(MENU_ITEM_PARAMETERS)
+{
+    ay_player_seek_seconds(-10);
+}
+
+void menu_audio_new_ayplayer_seek_forward(MENU_ITEM_PARAMETERS)
+{
+    ay_player_seek_seconds(10);
 }
 
 
@@ -7130,9 +7165,7 @@ void menu_audio_new_ayplayer_settings(MENU_ITEM_PARAMETERS)
             (ay_player_shuffle_mode.v ? 'X' : ' '));
         menu_add_item_menu_ayuda(array_menu_common,"Random playlist playing");
 
-        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_repeat,NULL,"[%c] Repeat file",
-            (ay_player_repeat_file.v ? 'X' : ' '));
-        menu_add_item_menu_ayuda(array_menu_common,"Repeat file from the beginning when finished all tracks of a file");
+        //Repetir esta ahora en la ventana del reproductor (fila del modo)
 
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_exitend,NULL,"[%c] Exit ZEsarUX at the end",
             (ay_player_exit_emulator_when_finish.v ? 'X' : ' ') );
@@ -7316,8 +7349,8 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
             //uno tras otro segun el ancho de su texto (traducido), para que no se monten
             int columna_botones=0;
             {
-                char *etiquetas_filas[]={"Track:","File:","List:","Sound:"};
-                for (i=0;i<4;i++) {
+                char *etiquetas_filas[]={"Track:","File:","List:","Sound:","Mode:"};
+                for (i=0;i<5;i++) {
                     int ancho=ayplayer_ancho_texto(menu_tr(etiquetas_filas[i]));
                     if (ancho>columna_botones) columna_botones=ancho;
                 }
@@ -7357,6 +7390,20 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
                 }
 
                 zxvision_print_string_defaults(ventana,1,linea,"Track:");
+
+                //Atras / adelante 10 segundos: delante del tiempo (que mide siempre 19 caracteres)
+                {
+                    int columna_tiempo=ventana->visible_width-2-19;
+                    menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_seek_back,NULL,"<<");
+                    menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,',');
+                    menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Back 10 seconds (key ,)");
+                    menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,columna_tiempo-6,AYPLAYER_INICIO_LINEA_TRACK);
+
+                    menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_seek_forward,NULL,">>");
+                    menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'.');
+                    menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Forward 10 seconds (key .)");
+                    menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,columna_tiempo-3,AYPLAYER_INICIO_LINEA_TRACK);
+                }
 
                 //Mezclador: a la derecha de la linea de nivel de la salida
                 menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_ay_channel_mixer,NULL,"Mi~~xer");
@@ -7400,6 +7447,38 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
             ayplayer_columna_volumen=x;
             ayplayer_linea_volumen=linea;
             ayplayer_mostrar_volumen(ventana);
+            linea++;
+
+            //Modo: 1 cancion o lista, y repetir (como en el fork de Fuse). Separacion 1 para que quepa
+            zxvision_print_string_defaults(ventana,1,linea,"Mode:");
+            x=columna_botones;
+            {
+                int separacion_antes=separacion;
+                separacion=1;
+                menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_single_song,NULL,
+                    "(%c) ~~1 song",(ay_player_single_song.v ? '*' : ' '));
+                menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'1');
+                menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Play one song: at the end stop, or with Repeat play it again");
+                menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,x,linea);
+                x +=ayplayer_ancho_texto(menu_tr("(%c) ~~1 song"))-1+separacion; //%c ocupa 1
+
+                menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_whole_list,NULL,
+                    "(%c) L~~ist",(ay_player_single_song.v ? ' ' : '*'));
+                menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'i');
+                menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Play the whole list: the next song, then the next file. "
+                    "After the last one stop, or with Repeat start again from the first one");
+                menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,x,linea);
+                x +=ayplayer_ancho_texto(menu_tr("(%c) L~~ist"))-1+separacion; //%c ocupa 1
+
+                menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_repeat,NULL,
+                    "[%c] Repeat",(ay_player_repeat_file.v ? 'X' : ' '));
+                //Sin atajo en ingles (todas sus letras estan ocupadas). En hungaro el marcado con ~~
+                menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,0);
+                menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Repeat: the same song in 1 song mode, the list from the beginning in list mode");
+                menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,x,linea);
+
+                separacion=separacion_antes;
+            }
             linea++;
 
             if (!menu_audio_new_ayplayer_si_mostrar() && ay_player_playlist_get_total_elements()!=0) {

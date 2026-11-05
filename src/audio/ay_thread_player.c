@@ -365,9 +365,18 @@ static void tp_render_frame(void)
     tp_samples_position=0;
 }
 
+//Cancion que suena, para poder ir a otro punto de ella
+static unsigned char *tp_song_data=NULL;
+static int tp_song_size=0,tp_song_number=0,tp_song_cpc=0;
+
 int ay_tp_start(unsigned char *data,int size,int song,int cpc)
 {
     int error=0;
+
+    tp_song_data=data;
+    tp_song_size=size;
+    tp_song_number=song;
+    tp_song_cpc=cpc;
 
     TP_LOCK;
 
@@ -390,6 +399,50 @@ int ay_tp_start(unsigned char *data,int size,int song,int cpc)
 
     TP_UNLOCK;
     return error;
+}
+
+/* Ir al frame indicado de la cancion (como en el fork de Fuse): la cancion se ejecuta desde el principio
+   en un Z80 aparte, sin sonido, hasta ese frame (mientras sigue sonando la musica), y luego sustituye a la
+   que suena. El chip toma los registros que tiene la cancion en ese punto. Retorna 0 si ok */
+int ay_tp_seek(long frame)
+{
+    struct ay_measure_machine *nueva;
+    long i;
+    int reg;
+
+    if (!tp_active || tp_song_data==NULL) return 1;
+    if (frame<0) frame=0;
+
+    nueva=malloc(sizeof(struct ay_measure_machine));
+    if (nueva==NULL) return 1;
+
+    if (ay_measure_setup(nueva,tp_song_data,tp_song_size,tp_song_number,tp_song_cpc)) {
+        free(nueva);
+        return 1;
+    }
+
+    for (i=0;i<frame;i++) ay_measure_run_frame(nueva,NULL,0);
+
+    TP_LOCK;
+
+    if (!tp_active) {
+        TP_UNLOCK;
+        free(nueva);
+        return 1;
+    }
+
+    free(tp_machine);
+    tp_machine=nueva;
+
+    tp_chip_reset(&tp_chip);
+    for (reg=0;reg<14;reg++) tp_apply(&tp_chip,reg,tp_machine->ay_registers[reg]);
+
+    tp_next_tick=0;
+    tp_samples_count=tp_samples_position=0;
+    tp_samples_played=frame*TP_SAMPLE_RATE/50;
+
+    TP_UNLOCK;
+    return 0;
 }
 
 void ay_tp_stop(void)
