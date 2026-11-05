@@ -111,9 +111,10 @@ int scrsdl_crea_ventana(void)
     if (!ventana_fullscreen && !scr_sdl_force_size.v) {
         SDL_Rect disponible;
         if (SDL_GetDisplayUsableBounds(0,&disponible)==0 && disponible.w>0 && disponible.h>0) {
-            //Margen para el titulo y el borde de la ventana
-            int max_ancho=disponible.w-16;
-            int max_alto=disponible.h-48;
+            //Solo cuando la ventana se sale claramente de la pantalla (por ejemplo zoom 3 o mas con ZX Desktop).
+            //Una ventana que se pasa un poco (zoom 2 con un ZX Desktop alto) se deja como la ha configurado el usuario
+            int max_ancho=disponible.w+disponible.w/10;
+            int max_alto=disponible.h+disponible.h/10;
 
             while (zoom_x>1 && zoom_y>1) {
                 int ancho_total=screen_get_window_size_width_zoom_border_en()+screen_get_ext_desktop_width_zoom();
@@ -1835,10 +1836,24 @@ See the SDL documentation. Scancodes represent the physical position of the keys
             mouse_x=event.motion.x;
             mouse_y=event.motion.y;
 
+            //Si el sistema deja la ventana con otro tamano que la imagen (maximizada, o recortada por no caber
+            //en la pantalla), la imagen se estira a la ventana: pasar las coordenadas del raton a las de la imagen.
+            //Si no, el raton apuntaba a otro sitio que el que se veia
+            if (!ventana_fullscreen && window!=NULL) {
+                int ancho_ventana,alto_ventana;
+                int ancho_imagen=screen_get_window_size_width_zoom_border_en()+screen_get_ext_desktop_width_zoom();
+                int alto_imagen=screen_get_window_size_height_zoom_border_en()+screen_get_ext_desktop_height_zoom();
+                SDL_GetWindowSize(window,&ancho_ventana,&alto_ventana);
+                if (ancho_ventana>0 && alto_ventana>0 && (ancho_ventana!=ancho_imagen || alto_ventana!=alto_imagen)) {
+                    mouse_x=mouse_x*ancho_imagen/ancho_ventana;
+                    mouse_y=mouse_y*alto_imagen/alto_ventana;
+                }
+            }
+
             //printf("Mouse is at (%d,%d)\n", mouse_x, mouse_y);
 
-            lightgun_x=event.motion.x;
-            lightgun_y=event.motion.y;
+            lightgun_x=mouse_x;
+            lightgun_y=mouse_y;
             lightgun_x=lightgun_x/zoom_x;
             lightgun_y=lightgun_y/zoom_y;
 
