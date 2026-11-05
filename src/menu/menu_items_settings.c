@@ -1133,7 +1133,10 @@ void menu_change_video_driver_apply(MENU_ITEM_PARAMETERS)
     void (*previous_function)(void);
     int menu_antes;
 
+    //Cambio de driver: la ventana actual se cierra de verdad
+    screen_end_keep_window=0;
     screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
+    screen_end_keep_window=1;
 
 
 

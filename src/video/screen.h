@@ -112,6 +112,11 @@ extern int screen_ext_desktop_place_menu;
 
 extern int screen_get_ext_desktop_start_x(void);
 
+//Ventana principal de tamano libre (fork): ver screen.c
+extern int screen_end_keep_window;
+extern void screen_layout_fixed_gui_zoom(void);
+extern void screen_layout_fit_window(int ancho_ventana,int alto_ventana);
+
 extern void scr_return_margenxy_rainbow(int *margenx_izq,int *margeny_arr);
 
 extern void (*scr_putpixel_zoom) (int x,int y,unsigned color);

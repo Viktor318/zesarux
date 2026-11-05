@@ -69,6 +69,10 @@ SDL_Window *window=NULL;
 //la ventana se redimensiona
 int scrsdl_debe_redimensionar=0;
 
+//Ultimo tamano de ventana recibido en un evento de cambio de tamano
+static int scrsdl_ventana_ancho_anterior=0;
+static int scrsdl_ventana_alto_anterior=0;
+
 unsigned char *scrsdl_pixeles;
 
 SDL_Texture *scrsdl_texture;
@@ -83,55 +87,36 @@ void scrsdl_update_window_title(void)
 }
 
 
-int scrsdl_crea_ventana(void)
+/* Ventana principal (fork): se crea una sola vez, maximizada, y su tamano solo lo cambia el usuario
+   (arrastrando, maximizando, pantalla completa). Los cambios de maquina, zoom, border, footer, etc
+   ya no destruyen la ventana: se recalcula la distribucion (maquina + ZX Desktop que llena el resto)
+   y se reasignan la textura y los buffers. La escala del interfaz (menus, iconos, texto) es siempre la misma */
+
+//Tamano de la imagen (textura) actual
+static int scrsdl_imagen_ancho=0;
+static int scrsdl_imagen_alto=0;
+
+static void scrsdl_libera_imagen(void)
 {
-
-    Uint32 flags;
-
-    flags=SDL_WINDOW_RESIZABLE;
-
-    //Que la ventana quepa en la pantalla: si no, reducir el zoom (por ejemplo tras pulsar varias veces
-    //el boton de aumentar zoom, o con una configuracion guardada con un zoom demasiado grande,
-    //la ventana se salia de la pantalla y no se podia recuperar)
-    //Zoom que quiere el usuario: el que tenia la ventana anterior, salvo que lo hayamos reducido nosotros
-    //para que cupiera. Asi, al cambiar a una maquina con pantalla mas pequena (por ejemplo de QL a Spectrum)
-    //se vuelve al zoom de antes, en vez de quedarse con el reducido
-    static int zoom_preferido=0;
-    static int zoom_aplicado=0;
-
-    if (zoom_preferido==0 || zoom_x!=zoom_aplicado) {
-        //Primera vez, o el zoom lo ha cambiado el usuario (o la configuracion)
-        zoom_preferido=zoom_x;
+    if (scrsdl_texture!=NULL) {
+        SDL_DestroyTexture(scrsdl_texture);
+        scrsdl_texture=NULL;
     }
-    else if (zoom_x<zoom_preferido) {
-        zoom_x=zoom_y=zoom_preferido;
-        set_putpixel_zoom();
+    if (scrsdl_pixeles!=NULL) {
+        free(scrsdl_pixeles);
+        scrsdl_pixeles=NULL;
     }
+}
 
-    if (!ventana_fullscreen && !scr_sdl_force_size.v) {
-        SDL_Rect disponible;
-        if (SDL_GetDisplayUsableBounds(0,&disponible)==0 && disponible.w>0 && disponible.h>0) {
-            //Solo cuando la ventana se sale claramente de la pantalla (por ejemplo zoom 3 o mas con ZX Desktop).
-            //Una ventana que se pasa un poco (zoom 2 con un ZX Desktop alto) se deja como la ha configurado el usuario
-            int max_ancho=disponible.w+disponible.w/10;
-            int max_alto=disponible.h+disponible.h/10;
+//Distribuir la ventana segun su tamano actual y crear la imagen. Retorna 0 si ok
+static int scrsdl_ajusta_a_ventana(void)
+{
+    int ancho_ventana,alto_ventana;
 
-            while (zoom_x>1 && zoom_y>1) {
-                int ancho_total=screen_get_window_size_width_zoom_border_en()+screen_get_ext_desktop_width_zoom();
-                int alto_total=screen_get_window_size_height_zoom_border_en()+screen_get_ext_desktop_height_zoom();
-                if (ancho_total<=max_ancho && alto_total<=max_alto) break;
+    SDL_GetWindowSize(window,&ancho_ventana,&alto_ventana);
 
-                debug_printf(VERBOSE_INFO,"Window %d X %d does not fit on the screen (%d X %d): zoom %d -> %d",
-                    ancho_total,alto_total,disponible.w,disponible.h,zoom_x,zoom_x-1);
-                zoom_x--;
-                zoom_y--;
-            }
-            set_putpixel_zoom();
-        }
-    }
-
-    zoom_aplicado=zoom_x;
-
+    if (!scr_sdl_force_size.v) screen_layout_fit_window(ancho_ventana,alto_ventana);
+    else screen_layout_fixed_gui_zoom();
 
     int ancho=screen_get_window_size_width_zoom_border_en();
     ancho +=screen_get_ext_desktop_width_zoom();
@@ -144,33 +129,9 @@ int scrsdl_crea_ventana(void)
         alto=scr_sdl_force_size_height;
     }
 
-    debug_printf (VERBOSE_DEBUG,"Creating window %d X %d",ancho,alto );
+    debug_printf (VERBOSE_DEBUG,"Window %d X %d. Picture %d X %d",ancho_ventana,alto_ventana,ancho,alto);
 
-    if (SDL_CreateWindowAndRenderer(ancho,alto, flags, &window, &renderer)!=0) return 1;
-
-    if ( window == NULL ) {
-        return 1;
-    }
-
-    if (ventana_fullscreen) {
-        //Esto es necesario para que escale a pantalla completa manteniendo las proporciones
-        //A diferencia de SDL1, aqui es muy simple gestionar la pantalla completa. Solo SDL_RenderSetLogicalSize y SDL_SetWindowFullscreen
-        //y SDL2 ya lo gestiona todo correctamente
-	    SDL_RenderSetLogicalSize(renderer, ancho, alto);
-
-	    if (SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP) != 0) {
-		    debug_printf(VERBOSE_ERR,"Can not set fullscreen mode: %s", SDL_GetError());
-            ventana_fullscreen=0;
-		}
-    }
-
-
-    if (renderer==NULL) return 1;
-
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-    SDL_RenderClear(renderer);
-
-    scrsdl_update_window_title();
+    scrsdl_libera_imagen();
 
     if (scr_sdl_8bits_color.v) {
         scrsdl_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB332, SDL_TEXTUREACCESS_STATIC, ancho, alto);
@@ -180,14 +141,26 @@ int scrsdl_crea_ventana(void)
         scrsdl_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, ancho, alto);
     }
 
-    scrsdl_pixeles=malloc(ancho * alto *4);
+    scrsdl_pixeles=calloc(ancho * alto,4);
 
+    if (scrsdl_texture==NULL || scrsdl_pixeles==NULL) return 1;
 
-    if (scrsdl_pixeles==NULL) return 1;
+    scrsdl_imagen_ancho=ancho;
+    scrsdl_imagen_alto=alto;
 
     scr_reallocate_layers_menu(ancho,alto);
 
+    //Que la ventana no se pueda hacer mas pequena que la maquina emulada
+    if (!ventana_fullscreen && !scr_sdl_force_size.v) {
+        SDL_SetWindowMinimumSize(window,screen_get_window_size_width_zoom_border_en(),screen_get_window_size_height_zoom_border_en());
+    }
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+    SDL_RenderClear(renderer);
+
     if (mouse_pointer_shown.v==0) SDL_ShowCursor(0);
+
+    clear_putpixel_cache();
 
     modificado_border.v=1;
 
@@ -197,8 +170,47 @@ int scrsdl_crea_ventana(void)
 
     scr_set_pending_redraw_desktop_windows();
 
-
     return 0;
+}
+
+int scrsdl_crea_ventana(void)
+{
+
+    if (window==NULL) {
+        Uint32 flags=SDL_WINDOW_RESIZABLE;
+
+        //Al empezar, maximizada (menos con un tamano forzado o en pantalla completa)
+        if (!ventana_fullscreen && !scr_sdl_force_size.v) flags |=SDL_WINDOW_MAXIMIZED;
+
+        screen_layout_fixed_gui_zoom();
+
+        int ancho=screen_get_window_size_width_zoom_border_en();
+        ancho +=screen_get_ext_desktop_width_zoom();
+
+        int alto=screen_get_window_size_height_zoom_border_en();
+        alto +=screen_get_ext_desktop_height_zoom();
+
+        if (scr_sdl_force_size.v) {
+            ancho=scr_sdl_force_size_width;
+            alto=scr_sdl_force_size_height;
+        }
+
+        debug_printf (VERBOSE_DEBUG,"Creating window %d X %d",ancho,alto );
+
+        if (SDL_CreateWindowAndRenderer(ancho,alto, flags, &window, &renderer)!=0) return 1;
+
+        if (window==NULL || renderer==NULL) return 1;
+    }
+
+    //Pantalla completa: la misma distribucion, en toda la pantalla
+    if (SDL_SetWindowFullscreen(window, (ventana_fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0)) != 0) {
+        debug_printf(VERBOSE_ERR,"Can not set fullscreen mode: %s", SDL_GetError());
+        ventana_fullscreen=0;
+    }
+
+    scrsdl_update_window_title();
+
+    return scrsdl_ajusta_a_ventana();
 
 }
 
@@ -368,7 +380,6 @@ void scrsdl_set_fullscreen(void)
 {
 
     ventana_fullscreen=1;
-    scrsdl_destruye_ventana();
     scrsdl_crea_ventana();
 
 }
@@ -378,7 +389,6 @@ void scrsdl_reset_fullscreen(void)
 {
 
     ventana_fullscreen=0;
-    scrsdl_destruye_ventana();
     scrsdl_crea_ventana();
 
 }
@@ -417,7 +427,9 @@ void scrsdl_refresca_pantalla_solo_driver(void)
         SDL_UpdateTexture(scrsdl_texture, NULL, scrsdl_pixeles, ancho * 4);
     }
     SDL_RenderClear(renderer);
-    SDL_RenderCopy(renderer, scrsdl_texture, NULL, NULL);
+    //La imagen a tamano real arriba a la izquierda (sin estirarla): lo que sobra de la ventana queda negro
+    SDL_Rect destino={0,0,scrsdl_imagen_ancho,scrsdl_imagen_alto};
+    SDL_RenderCopy(renderer, scrsdl_texture, NULL, &destino);
     SDL_RenderPresent(renderer);
 }
 
@@ -563,7 +575,14 @@ void scrsdl_refresca_pantalla(void)
 
 void scrsdl_end(void)
 {
+    //Si se vuelve a abrir enseguida (cambio de maquina, border, footer...), la ventana se queda
+    if (screen_end_keep_window && window!=NULL) {
+        debug_printf (VERBOSE_INFO,"SDL2 video driver: keeping the window to be reused");
+        return;
+    }
+
     debug_printf (VERBOSE_INFO,"Closing SDL2 video driver");
+    scrsdl_libera_imagen();
     scrsdl_inicializado.v=0;
     scrsdl_destruye_ventana(); //Nota: Cuando se cambia de resolucion en maquina (por ejemplo de spectrum a prism),
     //se llama a _end y luego se vuelve a inicializar el driver
@@ -1491,62 +1510,46 @@ void scrsdl_deal_keys(int pressrelease,int tecla)
 
 void scrsdl_resize(int width,int height)
 {
+    //Mismo tamano: nada que hacer
+    if (width==scrsdl_ventana_ancho_anterior && height==scrsdl_ventana_alto_anterior) return;
+    scrsdl_ventana_ancho_anterior=width;
+    scrsdl_ventana_alto_anterior=height;
 
-    if (ventana_fullscreen) {
-        return ; //No hacer resizes cuando este en pantalla completa, sino nos metemos en un bucle de resizes continuos
+    debug_printf (VERBOSE_INFO,"Window resized to %d X %d",width,height);
+
+    int desktop_ancho_antes=zxdesktop_width;
+    int desktop_alto_antes=zxdesktop_height;
+
+    //No usar los layers mientras se reasignan
+    void (*previous_function)(void);
+    int menu_antes;
+    previous_function=menu_overlay_function;
+    menu_antes=menu_overlay_activo;
+    menu_overlay_activo=0;
+
+    scrsdl_ajusta_a_ventana();
+
+    menu_overlay_function=previous_function;
+    menu_overlay_activo=menu_antes;
+    if (menu_overlay_activo) scr_init_layers_menu();
+
+    //El ZX Desktop es mas pequeno: recolocar ventanas e iconos que se hayan quedado fuera
+    if (zxdesktop_width<desktop_ancho_antes || zxdesktop_height<desktop_alto_antes) {
+        zxvision_rearrange_background_windows(0,1);
+        zxvision_check_all_configurable_icons_positions();
     }
 
-    clear_putpixel_cache();
+    zxvision_reorder_configurable_icons_if_auto();
 
-    int zoom_x_calculado,zoom_y_calculado;
-
-    debug_printf (VERBOSE_INFO,"width: %d get_window_width: %d height: %d get_window_height: %d",width,screen_get_window_size_width_no_zoom_border_en(),height,screen_get_window_size_height_no_zoom_border_en());
-
-    //printf ("allocate layers menu\n");
-    scr_reallocate_layers_menu(width,height);
-
-    //zoom_x_calculado=width/screen_get_window_size_width_no_zoom_border_en();
-    zoom_x_calculado=width/(screen_get_window_size_width_no_zoom_border_en()+screen_get_ext_desktop_width_no_zoom() );
-    zoom_y_calculado=height/(screen_get_window_size_height_no_zoom_border_en()+screen_get_ext_desktop_height_no_zoom() );
-
-
-    if (!zoom_x_calculado) zoom_x_calculado=1;
-    if (!zoom_y_calculado) zoom_y_calculado=1;
-
-    debug_printf (VERBOSE_INFO,"scrsdl_resize: zoom_x: %d zoom_y: %d zoom_x_calculated: %d zoom_y_calculated: %d",zoom_x,zoom_y,zoom_x_calculado,zoom_y_calculado);
-
-    // Si no se permite valores de zoom_x y zoom_y diferentes
-    scr_adjust_zoom_equals(&zoom_x_calculado,&zoom_y_calculado);
-
-    if (zoom_x_calculado!=zoom_x || zoom_y_calculado!=zoom_y) {
-        //resize
-        debug_printf (VERBOSE_INFO,"Resizing window");
-
-        zoom_x=zoom_x_calculado;
-        zoom_y=zoom_y_calculado;
-        set_putpixel_zoom();
-
-
-    }
-
-    scrsdl_debe_redimensionar=1;
-    scrsdl_destruye_ventana();
-    scrsdl_crea_ventana();
-
-
-
-
+    cls_menu_overlay();
 }
 
 int scrsdl_recibido_resize(SDL_Event *event)
 {
 
-    if (ventana_fullscreen) {
-        return 0; //No avisar de resizes cuando este en pantalla completa, sino nos metemos en un bucle de resizes continuos
-    }
-
     if (event->type==SDL_WINDOWEVENT) {
-        if (event->window.event==SDL_WINDOWEVENT_RESIZED) return 1;
+        //Cualquier cambio de tamano: arrastrando, maximizando, restaurando, pantalla completa
+        if (event->window.event==SDL_WINDOWEVENT_SIZE_CHANGED) return 1;
     }
 
     return 0;
@@ -1735,19 +1738,6 @@ void scrsdl_actualiza_tablas_teclado(void)
 
 		//Si se ha dejado de redimensionar la ventana
 		//if (event.type!=SDL_WINDOWEVENT_SIZE_CHANGED) {
-        if (!scrsdl_recibido_resize(&event)) {
-            if (scrsdl_debe_redimensionar) {
-
-                //printf ("evento: %d\n",event.type);
-
-                debug_printf (VERBOSE_DEBUG,"Resizing windows due to a previous pending resize");
-
-                clear_putpixel_cache();
-                scrsdl_debe_redimensionar=0;
-                scrsdl_destruye_ventana();
-                scrsdl_crea_ventana();
-            }
-		}
 
 		if (event.type==SDL_WINDOWEVENT) {
 			//printf("SDL_WINDOWEVENT. event=%d\n",event.window.event);
@@ -1835,20 +1825,6 @@ See the SDL documentation. Scancodes represent the physical position of the keys
 		if (event.type==SDL_MOUSEMOTION) {
             mouse_x=event.motion.x;
             mouse_y=event.motion.y;
-
-            //Si el sistema deja la ventana con otro tamano que la imagen (maximizada, o recortada por no caber
-            //en la pantalla), la imagen se estira a la ventana: pasar las coordenadas del raton a las de la imagen.
-            //Si no, el raton apuntaba a otro sitio que el que se veia
-            if (!ventana_fullscreen && window!=NULL) {
-                int ancho_ventana,alto_ventana;
-                int ancho_imagen=screen_get_window_size_width_zoom_border_en()+screen_get_ext_desktop_width_zoom();
-                int alto_imagen=screen_get_window_size_height_zoom_border_en()+screen_get_ext_desktop_height_zoom();
-                SDL_GetWindowSize(window,&ancho_ventana,&alto_ventana);
-                if (ancho_ventana>0 && alto_ventana>0 && (ancho_ventana!=ancho_imagen || alto_ventana!=alto_imagen)) {
-                    mouse_x=mouse_x*ancho_imagen/ancho_ventana;
-                    mouse_y=mouse_y*alto_imagen/alto_ventana;
-                }
-            }
 
             //printf("Mouse is at (%d,%d)\n", mouse_x, mouse_y);
 

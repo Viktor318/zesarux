@@ -935,10 +935,12 @@ void cpu_panic(char *mensaje)
             }
 
 
+            screen_end_keep_window=0;
             scr_end_pantalla();
         }
 
         else {
+            screen_end_keep_window=0;
             scr_end_pantalla();
         }
     }

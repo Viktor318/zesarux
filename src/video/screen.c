@@ -3362,6 +3362,45 @@ int screen_get_total_alto_ventana_zoom(void)
 }
 
 
+/* Ventana principal de tamano libre (fork, driver SDL2):
+   - la escala del interfaz (menus, iconos, texto, ventanas) es siempre la misma: zoom_x * menu_gui_zoom = 2
+   - la ventana la dimensiona el usuario, y el ZX Desktop llena lo que deja la maquina emulada */
+
+//Al cerrar el driver de video para volver a abrirlo enseguida (cambio de maquina, border, footer...),
+//conservar la ventana. Se pone a 0 al salir del emulador o al cambiar de driver
+int screen_end_keep_window=1;
+
+//Zoom que da la escala fija del interfaz
+void screen_layout_fixed_gui_zoom(void)
+{
+    int zoom=(menu_gui_zoom>=2 ? 1 : 2);
+
+    if (zoom_x!=zoom || zoom_y!=zoom) {
+        debug_printf (VERBOSE_INFO,"Interface scale: zoom %d (gui zoom %d)",zoom,menu_gui_zoom);
+        zoom_x=zoom_y=zoom;
+        set_putpixel_zoom();
+    }
+}
+
+//El ZX Desktop llena lo que queda de la ventana (en pixeles) despues de la maquina emulada
+void screen_layout_fit_window(int ancho_ventana,int alto_ventana)
+{
+    screen_layout_fixed_gui_zoom();
+
+    if (!screen_ext_desktop_enabled || !scr_driver_can_ext_desktop()) return;
+
+    int unidad=menu_gui_zoom*zoom_x;
+
+    int ancho=(ancho_ventana-screen_get_window_size_width_zoom_border_en())/unidad;
+    int alto=(alto_ventana-screen_get_window_size_height_zoom_border_en())/unidad;
+
+    if (ancho<0) ancho=0;
+    if (alto<0) alto=0;
+
+    zxdesktop_width=ancho;
+    zxdesktop_height=alto;
+}
+
 int screen_get_ext_desktop_start_x(void)
 {
     return screen_get_emulated_display_width_zoom_border_en();

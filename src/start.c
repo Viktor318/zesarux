@@ -9824,6 +9824,8 @@ void end_emulator_saveornot_config(int saveconfig)
     }
 
 
+  //Ahora si: cerrar la ventana
+  screen_end_keep_window=0;
   scr_end_pantalla();
 
     //Borrar archivos de speech en Windows
