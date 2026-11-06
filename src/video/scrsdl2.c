@@ -106,6 +106,11 @@ static int scrsdl_imagen_alto=0;
 static int scrsdl_imagen_x=0;
 static int scrsdl_imagen_y=0;
 
+//Tamano con el que se muestra la imagen en la ventana. Igual que el de la imagen, menos en pantalla completa
+//sin ZX Desktop, donde se reduce (interpolacion lineal) para llenar la pantalla
+static int scrsdl_destino_ancho=0;
+static int scrsdl_destino_alto=0;
+
 static void scrsdl_libera_imagen(void)
 {
     if (scrsdl_texture!=NULL) {
@@ -147,6 +152,26 @@ static int scrsdl_ajusta_a_ventana(void)
 
     scrsdl_libera_imagen();
 
+    //Pantalla completa sin ZX Desktop: reducir la imagen para que llene la pantalla, manteniendo la proporcion
+    int llenar_pantalla=(ventana_fullscreen && !screen_ext_desktop_enabled && !scr_sdl_force_size.v);
+    int destino_ancho=ancho;
+    int destino_alto=alto;
+
+    if (llenar_pantalla && (ancho>ancho_ventana || alto>alto_ventana)) {
+        //el menor de los dos factores
+        if ((long long)ancho_ventana*alto <= (long long)alto_ventana*ancho) {
+            destino_ancho=ancho_ventana;
+            destino_alto=(int)(((long long)alto*ancho_ventana+ancho/2)/ancho);
+        }
+        else {
+            destino_alto=alto_ventana;
+            destino_ancho=(int)(((long long)ancho*alto_ventana+alto/2)/alto);
+        }
+    }
+
+    //Interpolacion lineal solo si se reduce la imagen; si no, pixeles tal cual
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY,(destino_ancho!=ancho || destino_alto!=alto ? "linear" : "nearest"));
+
     if (scr_sdl_8bits_color.v) {
         scrsdl_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB332, SDL_TEXTUREACCESS_STATIC, ancho, alto);
     }
@@ -155,6 +180,8 @@ static int scrsdl_ajusta_a_ventana(void)
         scrsdl_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, ancho, alto);
     }
 
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY,"nearest");
+
     scrsdl_pixeles=calloc(ancho * alto,4);
 
     if (scrsdl_texture==NULL || scrsdl_pixeles==NULL) return 1;
@@ -162,10 +189,13 @@ static int scrsdl_ajusta_a_ventana(void)
     scrsdl_imagen_ancho=ancho;
     scrsdl_imagen_alto=alto;
 
+    scrsdl_destino_ancho=destino_ancho;
+    scrsdl_destino_alto=destino_alto;
+
     scrsdl_imagen_x=scrsdl_imagen_y=0;
     if (ventana_fullscreen && !screen_ext_desktop_enabled) {
-        if (ancho_ventana>ancho) scrsdl_imagen_x=(ancho_ventana-ancho)/2;
-        if (alto_ventana>alto) scrsdl_imagen_y=(alto_ventana-alto)/2;
+        if (ancho_ventana>destino_ancho) scrsdl_imagen_x=(ancho_ventana-destino_ancho)/2;
+        if (alto_ventana>destino_alto) scrsdl_imagen_y=(alto_ventana-destino_alto)/2;
     }
 
     scr_reallocate_layers_menu(ancho,alto);
@@ -599,7 +629,7 @@ void scrsdl_refresca_pantalla_solo_driver(void)
     }
     SDL_RenderClear(renderer);
     //La imagen a tamano real arriba a la izquierda (sin estirarla): lo que sobra de la ventana queda negro
-    SDL_Rect destino={scrsdl_imagen_x,scrsdl_imagen_y,scrsdl_imagen_ancho,scrsdl_imagen_alto};
+    SDL_Rect destino={scrsdl_imagen_x,scrsdl_imagen_y,scrsdl_destino_ancho,scrsdl_destino_alto};
     SDL_RenderCopy(renderer, scrsdl_texture, NULL, &destino);
     SDL_RenderPresent(renderer);
 }
@@ -2000,6 +2030,14 @@ See the SDL documentation. Scancodes represent the physical position of the keys
             //La imagen puede estar centrada (pantalla completa sin ZX Desktop)
             mouse_x=event.motion.x-scrsdl_imagen_x;
             mouse_y=event.motion.y-scrsdl_imagen_y;
+
+            //Imagen reducida para llenar la pantalla: a coordenadas de la imagen
+            if (scrsdl_destino_ancho>0 && scrsdl_destino_ancho!=scrsdl_imagen_ancho) {
+                mouse_x=(int)(((long long)mouse_x*scrsdl_imagen_ancho)/scrsdl_destino_ancho);
+            }
+            if (scrsdl_destino_alto>0 && scrsdl_destino_alto!=scrsdl_imagen_alto) {
+                mouse_y=(int)(((long long)mouse_y*scrsdl_imagen_alto)/scrsdl_destino_alto);
+            }
 
             //printf("Mouse is at (%d,%d)\n", mouse_x, mouse_y);
 

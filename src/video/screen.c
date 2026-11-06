@@ -3479,20 +3479,22 @@ void screen_layout_fit_window(int ancho_ventana,int alto_ventana)
 {
     screen_layout_fixed_gui_zoom();
 
-    //Pantalla completa sin ZX Desktop: solo la maquina, lo mas grande posible con pixeles enteros
-    //(cada pixel de la maquina, un numero entero de pixeles de pantalla). El driver la centra
+    /* Pantalla completa sin ZX Desktop (fork): la maquina llena la pantalla (manteniendo la proporcion),
+       con "suavizado nitido": se dibuja con el menor multiplo entero de pixeles que llega a llenarla
+       (cada pixel de la maquina, un numero entero de pixeles), y el driver la reduce al tamano exacto con
+       interpolacion lineal. Asi los pixeles quedan todos iguales y nitidos, solo con un pixel de transicion
+       en los bordes. El driver la centra */
     if (ventana_fullscreen && !screen_ext_desktop_enabled) {
         int escala;
         screen_machine_scale=4;
-        for (escala=32;escala>4;escala--) {
+        for (escala=4;escala<=64;escala++) {
             //pixel de la maquina sin zoom = zoom_x*escala/4 pixeles de pantalla
             if ((zoom_x*escala)%4 || (zoom_y*escala)%4) continue;
             int ancho=screen_get_emulated_display_width_zoom_border_en()*escala/4;
             int alto=screen_get_emulated_display_height_zoom_border_en()*escala/4+WINDOW_FOOTER_SIZE*zoom_y;
-            if (ancho<=ancho_ventana && alto<=alto_ventana) {
-                screen_machine_scale=escala;
-                break;
-            }
+            screen_machine_scale=escala;
+            //Ya llena la pantalla en alguna direccion: el driver la reducira (o la deja igual)
+            if (ancho>=ancho_ventana || alto>=alto_ventana) break;
         }
         debug_printf (VERBOSE_INFO,"Full screen without ZX Desktop: machine picture scale %d/4",screen_machine_scale);
         return;
