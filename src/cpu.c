@@ -3443,6 +3443,9 @@ void post_set_machine_no_rom_load_reopen_window(void)
             zxvision_fit_background_windows_in_screen();
         }
 
+        //Ventana de tamano libre: los iconos que no quepan, se reordenan todos (no uno a uno, que se desperdigan)
+        if (screen_free_window_layout) zxvision_reorder_configurable_icons_if_invalid();
+
         zxvision_check_all_configurable_icons_positions();
 
     }

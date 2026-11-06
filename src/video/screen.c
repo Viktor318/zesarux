@@ -3461,7 +3461,8 @@ void screen_set_machine_scale(int escala)
 
     screen_restart_pantalla_restore_overlay(previous_function,menu_antes);
 
-    //Iconos que hayan quedado bajo la imagen de la maquina
+    //Iconos que hayan quedado bajo la imagen de la maquina: reordenarlos
+    zxvision_reorder_configurable_icons_if_invalid();
     zxvision_check_all_configurable_icons_positions();
     zxvision_reorder_configurable_icons_if_auto();
 

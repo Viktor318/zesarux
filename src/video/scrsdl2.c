@@ -205,6 +205,16 @@ int scrsdl_crea_ventana(void)
             alto=scr_sdl_force_size_height;
         }
 
+        //Al empezar maximizada: crearla ya del tamano de la pantalla, para que la primera distribucion
+        //(antes de que llegue el aviso de maximizada) sea la definitiva y no se recoloquen iconos
+        if (flags & SDL_WINDOW_MAXIMIZED) {
+            SDL_Rect disponible;
+            if (SDL_GetDisplayUsableBounds(0,&disponible)==0 && disponible.w>ancho && disponible.h>alto) {
+                ancho=disponible.w;
+                alto=disponible.h;
+            }
+        }
+
         debug_printf (VERBOSE_DEBUG,"Creating window %d X %d",ancho,alto );
 
         if (SDL_CreateWindowAndRenderer(ancho,alto, flags, &window, &renderer)!=0) return 1;
@@ -1567,12 +1577,13 @@ void scrsdl_resize(int width,int height)
     menu_overlay_activo=menu_antes;
     if (menu_overlay_activo) scr_init_layers_menu();
 
-    //El ZX Desktop es mas pequeno: recolocar ventanas que se hayan quedado fuera
+    //El ZX Desktop es mas pequeno: mover solo las ventanas que se hayan quedado fuera
     if (zxdesktop_width<desktop_ancho_antes || zxdesktop_height<desktop_alto_antes) {
-        zxvision_rearrange_background_windows(0,1);
+        zxvision_fit_background_windows_in_screen();
     }
 
-    //Iconos fuera de la ventana o bajo la imagen de la maquina (que puede haber crecido)
+    //Iconos fuera de la ventana o bajo la imagen de la maquina (que puede haber crecido): reordenarlos
+    zxvision_reorder_configurable_icons_if_invalid();
     zxvision_check_all_configurable_icons_positions();
 
     zxvision_reorder_configurable_icons_if_auto();

@@ -758,6 +758,26 @@ void zxvision_reorder_configurable_icons(void)
 }
 
 
+//Ventana de tamano libre (fork): si algun icono ha quedado en un sitio no valido (bajo la imagen de la maquina,
+//fuera de la ventana, sobre los botones), se reordenan todos en el ZX Desktop que queda
+void zxvision_reorder_configurable_icons_if_invalid(void)
+{
+    if (!zxdesktop_configurable_icons_enabled_and_visible()) return;
+
+    int i;
+    for (i=0;i<MAX_ZXDESKTOP_CONFIGURABLE_ICONS;i++) {
+        if (zxdesktop_configurable_icons_list[i].status==ZXDESKTOP_CUSTOM_ICON_EXISTS) {
+            int x=zxdesktop_configurable_icons_list[i].pos_x;
+            int y=zxdesktop_configurable_icons_list[i].pos_y;
+            if (!zxvision_if_configurable_icon_on_valid_position(x,y)) {
+                debug_printf(VERBOSE_INFO,"Icon %d on an invalid position %d,%d: reordering the icons",i,x,y);
+                zxvision_reorder_configurable_icons();
+                return;
+            }
+        }
+    }
+}
+
 void zxvision_reorder_configurable_icons_if_auto(void)
 {
     //Si desactivado zx desktop
@@ -5217,6 +5237,9 @@ void menu_ext_desktop_buttons_get_geometry(int *p_ancho_boton,int *p_alto_boton,
     //Maximo 64 pixeles
     if (ancho_boton>EXT_DESKTOP_BUTTONS_TOTAL_SIZE*2) ancho_boton=EXT_DESKTOP_BUTTONS_TOTAL_SIZE*2;
 
+    //Ventana de tamano libre (fork): los botones siempre del mismo tamano; si no caben, siguen en otra fila
+    if (screen_free_window_layout) ancho_boton=EXT_DESKTOP_BUTTONS_TOTAL_SIZE*2;
+
 
     int alto_boton=ancho_boton;
 
@@ -5226,8 +5249,15 @@ void menu_ext_desktop_buttons_get_geometry(int *p_ancho_boton,int *p_alto_boton,
 
     //no caben todos los botones
     if (xfinal_botones>xfinal_ventana) {
-        total_botones=ancho_zx_desktop/ancho_boton;
-        xfinal_botones=xinicio+total_botones*ancho_boton;
+        if (screen_free_window_layout) {
+            int por_fila=ancho_zx_desktop/ancho_boton;
+            if (por_fila<1) por_fila=1;
+            xfinal_botones=xinicio+por_fila*ancho_boton;
+        }
+        else {
+            total_botones=ancho_zx_desktop/ancho_boton;
+            xfinal_botones=xinicio+total_botones*ancho_boton;
+        }
     }
 
     if (p_ancho_boton!=NULL) *p_ancho_boton=ancho_boton;
@@ -5236,6 +5266,55 @@ void menu_ext_desktop_buttons_get_geometry(int *p_ancho_boton,int *p_alto_boton,
     if (p_inicio_botones!=NULL) *p_inicio_botones=xinicio;
     if (p_xfinal_botones!=NULL) *p_xfinal_botones=xfinal_botones;
 
+}
+
+//Botones superiores en varias filas (ventana de tamano libre): botones por fila
+int menu_ext_desktop_upper_buttons_per_row(void)
+{
+    int ancho_boton,total_botones,xinicio,xfinal;
+    menu_ext_desktop_buttons_get_geometry(&ancho_boton,NULL,&total_botones,&xinicio,&xfinal);
+
+    int por_fila=(xfinal-xinicio)/ancho_boton;
+    if (por_fila<1) por_fila=1;
+    if (por_fila>total_botones) por_fila=total_botones;
+    return por_fila;
+}
+
+//Alto de la franja de botones superiores (todas sus filas)
+int menu_ext_desktop_upper_buttons_band_height(void)
+{
+    int alto_boton,total_botones;
+    menu_ext_desktop_buttons_get_geometry(NULL,&alto_boton,&total_botones,NULL,NULL);
+
+    int por_fila=menu_ext_desktop_upper_buttons_per_row();
+    int filas=(total_botones+por_fila-1)/por_fila;
+    return filas*alto_boton;
+}
+
+//Esquina superior izquierda del boton superior n
+void menu_ext_desktop_upper_button_origin(int n,int *px,int *py)
+{
+    int ancho_boton,alto_boton,xinicio;
+    menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,NULL,&xinicio,NULL);
+
+    int por_fila=menu_ext_desktop_upper_buttons_per_row();
+    *px=xinicio+(n%por_fila)*ancho_boton;
+    *py=(n/por_fila)*alto_boton;
+}
+
+//Que boton superior hay en la posicion (en pixeles de ventana). -1 si ninguno
+int menu_ext_desktop_upper_button_at(int x,int y)
+{
+    int ancho_boton,alto_boton,total_botones,xinicio,xfinal;
+    menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,&xinicio,&xfinal);
+
+    if (x<xinicio || x>=xfinal || y<0) return -1;
+
+    int por_fila=menu_ext_desktop_upper_buttons_per_row();
+    int n=(y/alto_boton)*por_fila+(x-xinicio)/ancho_boton;
+
+    if (n>=total_botones) return -1;
+    return n;
 }
 
 
@@ -5333,6 +5412,14 @@ void menu_ext_desktop_lower_buttons_get_geometry(int *p_ancho_boton,int *p_alto_
     int alto_zx_desktop=screen_get_total_alto_ventana_zoom();
     int yinicio=alto_zx_desktop-alto_boton;
 
+    //Ventana de tamano libre (fork): si hay franja de ZX Desktop debajo de la maquina, centrados en la ventana
+    if (screen_free_window_layout && screen_get_ext_desktop_height_zoom()>=alto_boton) {
+        int ancho_total=screen_get_total_width_window_plus_zxdesktop();
+        xinicio=(ancho_total-total_botones*ancho_boton)/2;
+        if (xinicio<0) xinicio=0;
+        xfinal_botones=xinicio+total_botones*ancho_boton;
+    }
+
     //printf ("alto_boton: %d alto_zx_desktop: %d yinicio: %d\n",alto_boton,alto_zx_desktop,yinicio);
 
     if (p_ancho_boton!=NULL) *p_ancho_boton=ancho_boton;
@@ -5407,10 +5494,9 @@ void menu_draw_ext_desktop_one_button_background(int contador_boton,int pulsado)
     //if (ancho_boton>=(6+EXT_DESKTOP_BUTTONS_ANCHO*2)) nivel_zoom=2;
 
 
-        int xinicio=screen_get_ext_desktop_start_x();
+        int xinicio,yinicio;
 
-        xinicio +=contador_boton*ancho_boton;
-        int yinicio=0;
+        menu_ext_desktop_upper_button_origin(contador_boton,&xinicio,&yinicio);
 
     int x,y;
 
@@ -5477,7 +5563,8 @@ void menu_draw_ext_desktop_one_lower_icon_background(int contador_boton,int puls
 
     //printf ("zoom lower icons background: %d\n",nivel_zoom);
 
-        int xinicio=screen_get_ext_desktop_start_x();
+        int xinicio;
+        menu_ext_desktop_lower_buttons_get_geometry(NULL,NULL,NULL,&xinicio,NULL,NULL);
 
         xinicio +=contador_boton*ancho_boton;
 
@@ -5680,10 +5767,13 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
         int medio_boton_x=ancho_boton/2;
         int medio_boton_y=alto_boton/2;
 
-        int destino_x=xinicio+ancho_boton*numero_boton;
+        int origen_x,origen_y;
+        menu_ext_desktop_upper_button_origin(numero_boton,&origen_x,&origen_y);
+
+        int destino_x=origen_x;
         destino_x +=medio_boton_x-(EXT_DESKTOP_BUTTONS_ANCHO*nivel_zoom)/2;
 
-        int destino_y=yinicio;
+        int destino_y=yinicio+origen_y;
         destino_y +=medio_boton_y-(EXT_DESKTOP_BUTTONS_ALTO*nivel_zoom)/2;
 
 
@@ -5800,7 +5890,8 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
     //Quiza habria que estandarizar esto
     menu_draw_ext_desktop_one_lower_icon_background(numero_boton,pulsado);
 
-    int xinicio=screen_get_ext_desktop_start_x();
+    int xinicio;
+    menu_ext_desktop_lower_buttons_get_geometry(NULL,NULL,NULL,&xinicio,NULL,NULL);
 
 
 
@@ -8851,9 +8942,12 @@ void tooltips_mouse_timer_event(void)
                 menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,&xinicio_botones,&xfinal_botones);
 
 
-                tooltips_mouse_ultima_pos_y_tooltip=alto_boton/zoom_y/menu_gui_zoom;
+                int origen_x,origen_y;
+                menu_ext_desktop_upper_button_origin(tooltip.numero_boton,&origen_x,&origen_y);
 
-                tooltips_mouse_ultima_pos_x_tooltip=(xinicio_botones+tooltip.numero_boton*ancho_boton+ancho_boton/2)/zoom_y/menu_gui_zoom;
+                tooltips_mouse_ultima_pos_y_tooltip=(origen_y+alto_boton)/zoom_y/menu_gui_zoom;
+
+                tooltips_mouse_ultima_pos_x_tooltip=(origen_x+ancho_boton/2)/zoom_y/menu_gui_zoom;
 
             }
             else {
@@ -18075,14 +18169,10 @@ int zxvision_which_upper_button_is_mouse(void)
         int ancho_boton,alto_boton,total_botones,xinicio_botones,xfinal_botones;
         menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,&xinicio_botones,&xfinal_botones);
 
-        if (mouse_pixel_x>=xinicio_botones && mouse_pixel_x<xfinal_botones &&
-            mouse_pixel_y>=0 && mouse_pixel_y<alto_boton
-        ) {
+        int numero_boton=menu_ext_desktop_upper_button_at(mouse_pixel_x,mouse_pixel_y);
+
+        if (numero_boton>=0) {
             //printf ("Pulsado en zona botones del ext desktop\n");
-
-            //en que boton?
-            int numero_boton=(mouse_pixel_x-xinicio_botones)/ancho_boton;
-
             return numero_boton;
         }
     }
@@ -18338,6 +18428,7 @@ int zxvision_if_mouse_in_background(void)
     //Ver si en posicion de iconos superiores
     if (menu_zxdesktop_upper_buttons_enabled.v && zxvision_topbar_menu_enabled.v==0) {
         menu_ext_desktop_buttons_get_geometry(NULL,&alto_boton,NULL,&xinicio_botones,&xfinal_botones);
+        alto_boton=menu_ext_desktop_upper_buttons_band_height();
         if (mouse_pixel_y<=alto_boton && mouse_pixel_x>=xinicio_botones && mouse_pixel_x<=xfinal_botones) {
             //printf("On upper buttons\n");
             return 0;
@@ -19810,13 +19901,11 @@ void zxvision_handle_mouse_events(zxvision_window *w)
                 int ancho_boton,alto_boton,total_botones,xinicio_botones,xfinal_botones;
                 menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,&xinicio_botones,&xfinal_botones);
 
-                if (mouse_pixel_x>=xinicio_botones && mouse_pixel_x<xfinal_botones &&
-                    mouse_pixel_y>=0 && mouse_pixel_y<alto_boton
-                ) {
+                int numero_boton=menu_ext_desktop_upper_button_at(mouse_pixel_x,mouse_pixel_y);
+
+                if (numero_boton>=0) {
                     //printf ("Pulsado boton derecho en zona botones del ext desktop\n");
 
-                    //en que boton?
-                    int numero_boton=(mouse_pixel_x-xinicio_botones)/ancho_boton;
                     //printf("boton pulsado: %d\n",numero_boton);
                     menu_pressed_zxdesktop_button_which=numero_boton;
 
@@ -22799,6 +22888,7 @@ void menu_dibuja_submenu_get_menu_pos(int *xnormal,int *ynormal)
                 int alto_boton;
                 int ancho_boton;
                 menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,NULL,NULL,NULL);
+                alto_boton=menu_ext_desktop_upper_buttons_band_height();
 
                 //Ajustar coordenada y
                 int alto_texto=menu_char_height*menu_gui_zoom*zoom_y;
@@ -29300,6 +29390,7 @@ void menu_inicio_handle_button_pressed_set_next_menu_position(int cual_boton)
     int alto_boton;
     int ancho_boton;
     menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,NULL,NULL,NULL);
+    alto_boton=menu_ext_desktop_upper_buttons_band_height();
 
     //Ajustar coordenada y
     int alto_texto=menu_char_height*menu_gui_zoom*zoom_y;

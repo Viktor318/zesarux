@@ -162,7 +162,7 @@ int zxvision_get_minimum_y_icon_position(void)
 {
     //yinicial debajo de botones superiores
     int alto_boton;
-    menu_ext_desktop_buttons_get_geometry(NULL,&alto_boton,NULL,NULL,NULL);
+    alto_boton=menu_ext_desktop_upper_buttons_band_height();
     alto_boton /=zoom_y;
 
 
