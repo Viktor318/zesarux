@@ -102,6 +102,10 @@ static int scrsdl_maquina_alto=0;
 static int scrsdl_imagen_ancho=0;
 static int scrsdl_imagen_alto=0;
 
+//Posicion de la imagen en la ventana (centrada en pantalla completa sin ZX Desktop)
+static int scrsdl_imagen_x=0;
+static int scrsdl_imagen_y=0;
+
 static void scrsdl_libera_imagen(void)
 {
     if (scrsdl_texture!=NULL) {
@@ -157,6 +161,12 @@ static int scrsdl_ajusta_a_ventana(void)
 
     scrsdl_imagen_ancho=ancho;
     scrsdl_imagen_alto=alto;
+
+    scrsdl_imagen_x=scrsdl_imagen_y=0;
+    if (ventana_fullscreen && !screen_ext_desktop_enabled) {
+        if (ancho_ventana>ancho) scrsdl_imagen_x=(ancho_ventana-ancho)/2;
+        if (alto_ventana>alto) scrsdl_imagen_y=(alto_ventana-alto)/2;
+    }
 
     scr_reallocate_layers_menu(ancho,alto);
 
@@ -453,6 +463,121 @@ void scrsdl_refresca_border(void)
 }
 
 
+/* Suavizado de la imagen de la maquina (opcion): cuando la escala no da pixeles enteros (1,25x por ejemplo)
+   los pixeles de la maquina salen de anchos distintos. Con el suavizado, la zona de la maquina se rehace
+   con interpolacion bilineal desde los pixeles de la maquina (al zoom). Se hace sobre una copia, al
+   enviar la imagen; los menus y ventanas que haya encima de la maquina no se tocan */
+
+static Uint32 *scrsdl_pixeles_suave=NULL;
+static int scrsdl_pixeles_suave_tamanyo=0;
+
+//Para cada pixel de la zona de la maquina: los dos pixeles de origen (en coordenadas de la ventana) y el peso (0-256) del segundo
+static int *scrsdl_suave_x0=NULL,*scrsdl_suave_x1=NULL,*scrsdl_suave_wx=NULL;
+static int *scrsdl_suave_y0=NULL,*scrsdl_suave_y1=NULL,*scrsdl_suave_wy=NULL;
+static int scrsdl_suave_ancho=0,scrsdl_suave_alto=0,scrsdl_suave_escala=0,scrsdl_suave_maquina_ancho=0,scrsdl_suave_maquina_alto=0;
+
+static void scrsdl_suave_tabla(int destino,int origen,int **p0,int **p1,int **pw)
+{
+    free(*p0); free(*p1); free(*pw);
+    *p0=malloc(destino*sizeof(int));
+    *p1=malloc(destino*sizeof(int));
+    *pw=malloc(destino*sizeof(int));
+    if (*p0==NULL || *p1==NULL || *pw==NULL) return;
+
+    int i;
+    for (i=0;i<destino;i++) {
+        //Centro del pixel de destino en coordenadas de origen, en 1/256
+        int f=((2*i+1)*4*256)/(2*scrsdl_escala)-128;
+        if (f<0) f=0;
+        int o0=f>>8;
+        int w=f&255;
+        if (o0>=origen-1) { o0=origen-1; w=0; }
+        int o1=o0+1;
+        if (o1>=origen) o1=origen-1;
+        //Pixel de origen o -> esquina de su zona ampliada en la ventana
+        (*p0)[i]=o0*scrsdl_escala/4;
+        (*p1)[i]=o1*scrsdl_escala/4;
+        (*pw)[i]=w;
+    }
+}
+
+static Uint32 *scrsdl_aplica_suavizado(int ancho,int alto)
+{
+    if (!screen_machine_smooth || scr_sdl_8bits_color.v || scrsdl_escala==4) return NULL;
+
+    //Pixeles enteros: no hace falta
+    if ((zoom_x*scrsdl_escala)%4==0 && (zoom_y*scrsdl_escala)%4==0) return NULL;
+
+    int zona_ancho=scrsdl_maquina_ancho*scrsdl_escala/4;
+    int zona_alto=scrsdl_maquina_alto*scrsdl_escala/4;
+    if (zona_ancho>ancho) zona_ancho=ancho;
+    if (zona_alto>alto) zona_alto=alto;
+
+    if (scrsdl_pixeles_suave_tamanyo!=ancho*alto) {
+        free(scrsdl_pixeles_suave);
+        scrsdl_pixeles_suave=malloc(ancho*alto*4);
+        scrsdl_pixeles_suave_tamanyo=(scrsdl_pixeles_suave!=NULL ? ancho*alto : 0);
+        if (scrsdl_pixeles_suave==NULL) return NULL;
+    }
+
+    if (scrsdl_suave_ancho!=zona_ancho || scrsdl_suave_alto!=zona_alto || scrsdl_suave_escala!=scrsdl_escala ||
+        scrsdl_suave_maquina_ancho!=scrsdl_maquina_ancho || scrsdl_suave_maquina_alto!=scrsdl_maquina_alto) {
+        scrsdl_suave_tabla(zona_ancho,scrsdl_maquina_ancho,&scrsdl_suave_x0,&scrsdl_suave_x1,&scrsdl_suave_wx);
+        scrsdl_suave_tabla(zona_alto,scrsdl_maquina_alto,&scrsdl_suave_y0,&scrsdl_suave_y1,&scrsdl_suave_wy);
+        if (scrsdl_suave_x0==NULL || scrsdl_suave_x1==NULL || scrsdl_suave_wx==NULL ||
+            scrsdl_suave_y0==NULL || scrsdl_suave_y1==NULL || scrsdl_suave_wy==NULL) return NULL;
+        scrsdl_suave_ancho=zona_ancho;
+        scrsdl_suave_alto=zona_alto;
+        scrsdl_suave_escala=scrsdl_escala;
+        scrsdl_suave_maquina_ancho=scrsdl_maquina_ancho;
+        scrsdl_suave_maquina_alto=scrsdl_maquina_alto;
+    }
+
+    Uint32 *origen=(Uint32 *)scrsdl_pixeles;
+    Uint32 *destino=scrsdl_pixeles_suave;
+
+    memcpy(destino,origen,ancho*alto*4);
+
+    int hay_menu=(menu_overlay_activo && buffer_layer_menu!=NULL && ancho_layer_menu_machine==ancho);
+
+    int x,y;
+    for (y=0;y<zona_alto;y++) {
+        int wy=scrsdl_suave_wy[y];
+        Uint32 *fila0=origen+scrsdl_suave_y0[y]*ancho;
+        Uint32 *fila1=origen+scrsdl_suave_y1[y]*ancho;
+        for (x=0;x<zona_ancho;x++) {
+            int pos=y*ancho+x;
+
+            //Menus y ventanas encima de la maquina: tal cual
+            if (hay_menu && buffer_layer_menu[pos]!=SCREEN_LAYER_TRANSPARENT_MENU) continue;
+
+            int wx=scrsdl_suave_wx[x];
+            Uint32 a=fila0[scrsdl_suave_x0[x]];
+            Uint32 b=fila0[scrsdl_suave_x1[x]];
+            Uint32 c=fila1[scrsdl_suave_x0[x]];
+            Uint32 d=fila1[scrsdl_suave_x1[x]];
+
+            if (a==b && a==c && a==d) {
+                destino[pos]=a;
+                continue;
+            }
+
+            Uint32 resultado=0xFF000000;
+            int desplazamiento;
+            for (desplazamiento=0;desplazamiento<24;desplazamiento+=8) {
+                int ca=(a>>desplazamiento)&255,cb=(b>>desplazamiento)&255,cc=(c>>desplazamiento)&255,cd=(d>>desplazamiento)&255;
+                int arriba=ca*(256-wx)+cb*wx;
+                int abajo=cc*(256-wx)+cd*wx;
+                int valor=(arriba*(256-wy)+abajo*wy)>>16;
+                resultado |=((Uint32)valor)<<desplazamiento;
+            }
+            destino[pos]=resultado;
+        }
+    }
+
+    return destino;
+}
+
 void scrsdl_refresca_pantalla_solo_driver(void)
 {
 
@@ -468,11 +593,13 @@ void scrsdl_refresca_pantalla_solo_driver(void)
         SDL_UpdateTexture(scrsdl_texture, NULL, scrsdl_pixeles, ancho);
     }
     else {
-        SDL_UpdateTexture(scrsdl_texture, NULL, scrsdl_pixeles, ancho * 4);
+        Uint32 *suave=NULL;
+        if (!scr_sdl_force_size.v && ancho==scrsdl_imagen_ancho) suave=scrsdl_aplica_suavizado(scrsdl_imagen_ancho,scrsdl_imagen_alto);
+        SDL_UpdateTexture(scrsdl_texture, NULL, (suave!=NULL ? (void *)suave : (void *)scrsdl_pixeles), ancho * 4);
     }
     SDL_RenderClear(renderer);
     //La imagen a tamano real arriba a la izquierda (sin estirarla): lo que sobra de la ventana queda negro
-    SDL_Rect destino={0,0,scrsdl_imagen_ancho,scrsdl_imagen_alto};
+    SDL_Rect destino={scrsdl_imagen_x,scrsdl_imagen_y,scrsdl_imagen_ancho,scrsdl_imagen_alto};
     SDL_RenderCopy(renderer, scrsdl_texture, NULL, &destino);
     SDL_RenderPresent(renderer);
 }
@@ -1870,8 +1997,9 @@ See the SDL documentation. Scancodes represent the physical position of the keys
 
 		//mouse motion
 		if (event.type==SDL_MOUSEMOTION) {
-            mouse_x=event.motion.x;
-            mouse_y=event.motion.y;
+            //La imagen puede estar centrada (pantalla completa sin ZX Desktop)
+            mouse_x=event.motion.x-scrsdl_imagen_x;
+            mouse_y=event.motion.y-scrsdl_imagen_y;
 
             //printf("Mouse is at (%d,%d)\n", mouse_x, mouse_y);
 

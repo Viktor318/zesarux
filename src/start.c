@@ -646,6 +646,7 @@ void zesarux_cmdline_help(void)
         "--outtape file          Insert output standard tape file. Supported formats: Spectrum: .TAP, .TZX, .PZX -- ZX80: .O -- ZX81: .P\n"
 
         "--zoom n                Total Zoom Factor\n"
+        "--machine-smooth        Smooth the emulated machine picture when its size does not give whole pixels (125%% for example)\n"
         "--machine-scale n       Size of the emulated machine picture in percent: 100, 125, 150 or 200 (SDL2 video driver). Menus, icons and ZX Desktop keep their size\n"
         "--vo driver             Video output driver. Valid drivers: ");
 
@@ -4031,6 +4032,10 @@ int parse_cmdline_options(int desde_commandline)
                 else {
                     zoom_y=zoom_x=valor;
                 }
+            }
+
+            else if (!strcmp(argv[puntero_parametro],"--machine-smooth")) {
+                screen_machine_smooth=1;
             }
 
             else if (!strcmp(argv[puntero_parametro],"--machine-scale")) {

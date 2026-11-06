@@ -4493,3 +4493,6 @@ Forward 10 seconds (key .)	Előre 10 másodpercet (. billentyű)	help
 ~~Machine picture size [%d%%]	Gépkép ~~mérete [%d%%]	item
 Size of the emulated machine picture: 100%, 125%, 150% or 200%	Az emulált gép képének mérete: 100%, 125%, 150% vagy 200%	tooltip
 Size of the emulated machine picture: 100%, 125%, 150% or 200%. Menus, icons and ZX Desktop keep their size; ZX Desktop fills the rest of the window. If the picture does not fit in the window, a smaller size is used	Az emulált gép képének mérete: 100%, 125%, 150% vagy 200%. A menük, ikonok és a ZX Desktop mérete nem változik; a ZX Desktop kitölti az ablak többi részét. Ha a kép nem fér el az ablakban, a program kisebb méretet használ	help
+[%c] Smooth machine picture	[%c] Gépkép simítása	item
+Smooth the machine picture when its size does not give whole pixels	A gép képének simítása, ha a mérete nem ad egész pixeleket	tooltip
+When the size of the machine picture does not give whole pixels (125%, or 150% on 80 column modes), some pixels are wider than others. Smoothing makes them even, but a bit blurred	Ha a gép képének mérete nem ad egész pixeleket (125%, illetve 150% a 80 oszlopos módokban), egyes pixelek szélesebbek a többinél. A simítás egyenletessé teszi őket, de a kép kissé elmosódik	help

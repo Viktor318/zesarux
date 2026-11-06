@@ -4591,6 +4591,7 @@ int util_write_configfile(void)
 
 
     if (screen_machine_scale_requested!=4) ADD_STRING_CONFIG,"--machine-scale %d",screen_machine_scale_requested*100/4);
+    if (screen_machine_smooth)              ADD_STRING_CONFIG,"--machine-smooth");
 
     if (zoom_x==zoom_y) ADD_STRING_CONFIG,"--zoom %d",zoom_x);
     else {

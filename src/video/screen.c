@@ -3314,6 +3314,9 @@ int screen_get_ext_desktop_width_zoom(void)
 
 //La que pide el usuario
 int screen_machine_scale_requested=4;
+
+//Suavizar la imagen de la maquina cuando la escala no da pixeles enteros
+int screen_machine_smooth=0;
 //La que se usa: la pedida, o menos si no cabe en la ventana
 int screen_machine_scale=4;
 
@@ -3475,6 +3478,25 @@ void screen_set_machine_scale(int escala)
 void screen_layout_fit_window(int ancho_ventana,int alto_ventana)
 {
     screen_layout_fixed_gui_zoom();
+
+    //Pantalla completa sin ZX Desktop: solo la maquina, lo mas grande posible con pixeles enteros
+    //(cada pixel de la maquina, un numero entero de pixeles de pantalla). El driver la centra
+    if (ventana_fullscreen && !screen_ext_desktop_enabled) {
+        int escala;
+        screen_machine_scale=4;
+        for (escala=32;escala>4;escala--) {
+            //pixel de la maquina sin zoom = zoom_x*escala/4 pixeles de pantalla
+            if ((zoom_x*escala)%4 || (zoom_y*escala)%4) continue;
+            int ancho=screen_get_emulated_display_width_zoom_border_en()*escala/4;
+            int alto=screen_get_emulated_display_height_zoom_border_en()*escala/4+WINDOW_FOOTER_SIZE*zoom_y;
+            if (ancho<=ancho_ventana && alto<=alto_ventana) {
+                screen_machine_scale=escala;
+                break;
+            }
+        }
+        debug_printf (VERBOSE_INFO,"Full screen without ZX Desktop: machine picture scale %d/4",screen_machine_scale);
+        return;
+    }
 
     //La mayor escala, hasta la pedida, con la que la maquina cabe en la ventana (dejando una franja de ZX Desktop)
     int i;
