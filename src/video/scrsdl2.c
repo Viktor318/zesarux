@@ -55,6 +55,7 @@
 #include "scorpion.h"
 #include "hungarian_keyboard.h"
 #include "atmturbo.h"
+#include "menu_items.h"
 
 
 SDL_Window *window=NULL;
@@ -129,6 +130,10 @@ static int scrsdl_ajusta_a_ventana(void)
     int ancho_ventana,alto_ventana;
 
     SDL_GetWindowSize(window,&ancho_ventana,&alto_ventana);
+
+    //Tamano con el que se ha distribuido (para detectar cambios despues)
+    scrsdl_ventana_ancho_anterior=ancho_ventana;
+    scrsdl_ventana_alto_anterior=alto_ventana;
 
     if (!scr_sdl_force_size.v) screen_layout_fit_window(ancho_ventana,alto_ventana);
     else screen_layout_fixed_gui_zoom();
@@ -223,6 +228,31 @@ static int scrsdl_ajusta_a_ventana(void)
     return 0;
 }
 
+/* Despues de redistribuir la ventana con otro tamano (arrastrando, maximizando, entrando o saliendo de pantalla completa):
+   ventanas, iconos y el Ablakvalto (process switcher) a su sitio. Antes al entrar o salir de pantalla completa no se hacia,
+   y por ejemplo el Ablakvalto se quedaba fuera de la ventana, mas abajo (fork) */
+static void scrsdl_despues_de_redistribuir(int desktop_ancho_antes,int desktop_alto_antes)
+{
+    //El ZX Desktop es mas pequeno: mover solo las ventanas que se hayan quedado fuera
+    if (zxdesktop_width<desktop_ancho_antes || zxdesktop_height<desktop_alto_antes) {
+        zxvision_fit_background_windows_in_screen();
+    }
+
+    //Iconos fuera de la ventana o bajo la imagen de la maquina (que puede haber crecido): reordenarlos
+    zxvision_reorder_configurable_icons_if_invalid();
+    zxvision_check_all_configurable_icons_positions();
+
+    zxvision_reorder_configurable_icons_if_auto();
+
+    //Ablakvalto fijado abajo a la derecha: a la nueva esquina, tambien en pantalla completa
+    if (setting_process_switcher_force_left_bottom.v) process_switcher_sync_always_left_bottom_setting();
+
+    cls_menu_overlay();
+
+    //Redibujar las ventanas en su sitio nuevo
+    scr_set_pending_redraw_desktop_windows();
+}
+
 //Guardar la posicion y el tamano de la ventana principal (sin maximizar ni pantalla completa), para el siguiente arranque
 static void scrsdl_guarda_geometria_ventana(void)
 {
@@ -272,6 +302,11 @@ int scrsdl_crea_ventana(void)
 {
     //Creada ahora maximizada: su tamano aun puede no ser el definitivo, no guardarlo todavia
     int creada_maximizada=0;
+
+    //La ventana ya existia (pantalla completa activada o desactivada, reapertura del driver)
+    int ya_existia=(window!=NULL);
+    int desktop_ancho_antes=zxdesktop_width;
+    int desktop_alto_antes=zxdesktop_height;
 
     if (window==NULL) {
         Uint32 flags=SDL_WINDOW_RESIZABLE;
@@ -340,7 +375,11 @@ int scrsdl_crea_ventana(void)
 
     if (!creada_maximizada) scrsdl_guarda_geometria_ventana();
 
-    return scrsdl_ajusta_a_ventana();
+    int retorno=scrsdl_ajusta_a_ventana();
+
+    if (!retorno && ya_existia) scrsdl_despues_de_redistribuir(desktop_ancho_antes,desktop_alto_antes);
+
+    return retorno;
 
 }
 
@@ -1804,18 +1843,22 @@ void scrsdl_resize(int width,int height)
     menu_overlay_activo=menu_antes;
     if (menu_overlay_activo) scr_init_layers_menu();
 
-    //El ZX Desktop es mas pequeno: mover solo las ventanas que se hayan quedado fuera
-    if (zxdesktop_width<desktop_ancho_antes || zxdesktop_height<desktop_alto_antes) {
-        zxvision_fit_background_windows_in_screen();
+    scrsdl_despues_de_redistribuir(desktop_ancho_antes,desktop_alto_antes);
+}
+
+/* Comprobar si el tamano real de la ventana es otro que con el que se ha distribuido (fork).
+   Al salir de pantalla completa (por ejemplo a una ventana maximizada) a veces no llega el aviso
+   SDL_WINDOWEVENT_SIZE_CHANGED con el tamano final, y la imagen quedaba cortada por abajo */
+static void scrsdl_comprueba_tamano_ventana(void)
+{
+    if (window==NULL || scr_sdl_force_size.v) return;
+
+    int ancho,alto;
+    SDL_GetWindowSize(window,&ancho,&alto);
+
+    if (ancho>0 && alto>0 && (ancho!=scrsdl_ventana_ancho_anterior || alto!=scrsdl_ventana_alto_anterior)) {
+        scrsdl_resize(ancho,alto);
     }
-
-    //Iconos fuera de la ventana o bajo la imagen de la maquina (que puede haber crecido): reordenarlos
-    zxvision_reorder_configurable_icons_if_invalid();
-    zxvision_check_all_configurable_icons_positions();
-
-    zxvision_reorder_configurable_icons_if_auto();
-
-    cls_menu_overlay();
 }
 
 int scrsdl_recibido_resize(SDL_Event *event)
@@ -2002,6 +2045,8 @@ void scrsdl_actualiza_tablas_teclado(void)
     //El teclado hungaro necesita los eventos SDL_TEXTINPUT
     if (hungarian_keyboard.v && !SDL_IsTextInputActive()) SDL_StartTextInput();
 
+
+    scrsdl_comprueba_tamano_ventana();
 
     while( SDL_PollEvent( &event ) ){
 
