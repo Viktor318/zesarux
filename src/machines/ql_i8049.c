@@ -607,6 +607,11 @@ void ql_ipc_write_ipc_teclado(void)
                 ql_mantenido_pulsada_tecla_timer=0;
             }
 
+            //Tecla nueva sin haber soltado la anterior (escribiendo rapido): su retardo de repeticion empieza ahora (fork).
+            //Antes el temporizador seguia contando desde la primera tecla, y si se escribia rapido mas de un segundo
+            //seguido (siempre con alguna tecla pulsada), la tecla actual se repetia sin parar
+            if (pulsada_tecla_cambiada) ql_mantenido_pulsada_tecla_timer=0;
+
 
             /*if (ql_pressed_backspace) {
                 //CTRL + flecha izquierda
