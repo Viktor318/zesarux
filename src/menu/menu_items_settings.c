@@ -893,8 +893,10 @@ void menu_interface_fullscreen(MENU_ITEM_PARAMETERS)
 
 }
 
-//En milisegundos. 3 segundos
-#define SWITCH_FULLSCREEN_MINIMUM_BETWEEN_CHANGES 3000
+//En milisegundos. Antes 3 segundos, contados desde el inicio del cambio: un segundo clic (en el icono o la tecla F)
+//dentro de esos 3 segundos se ignoraba, y habia que pulsar varias veces (fork). Ahora medio segundo, contado
+//desde que ha terminado el cambio: sigue evitando los dos eventos muy seguidos del joystick
+#define SWITCH_FULLSCREEN_MINIMUM_BETWEEN_CHANGES 500
 
 //Y empezamos con ese valor en negativo para que nada mas iniciar se pueda conmutar
 int antes_menu_interface_switch_full_screen_timer=-SWITCH_FULLSCREEN_MINIMUM_BETWEEN_CHANGES;
@@ -908,6 +910,8 @@ void menu_interface_switch_full_screen(void)
         //printf("Cambio full screen\n");
         antes_menu_interface_switch_full_screen_timer=contador_segundo_infinito;
         menu_interface_fullscreen(0);
+        //Contar desde que ha terminado el cambio
+        antes_menu_interface_switch_full_screen_timer=contador_segundo_infinito;
     }
 }
 
