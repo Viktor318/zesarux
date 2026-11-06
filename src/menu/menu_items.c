@@ -24041,11 +24041,37 @@ void menu_help_keyboard_calculate_scale(zxvision_window *ventana,z80_byte *bmp)
     if (menu_help_keyboard_coord_scale<1) menu_help_keyboard_coord_scale=1;
 }
 
+/* Imagen del teclado ya escalada (fork): se calcula una vez (al abrir la ventana, al cambiar su tamano o de maquina)
+   en estos pixeles de la ventana, y en cada redibujado solo se copia. Antes se recalculaba entera desde el BMP
+   en cada redibujado */
+#define MENU_HELP_KEYBOARD_CACHE_VACIO 0xFFFF
+static z80_int *menu_help_keyboard_cache=NULL;
+static int menu_help_keyboard_cache_ancho=0;
+static int menu_help_keyboard_cache_alto=0;
+//Con que se calculo: si cambia algo, hay que volver a calcularla
+static z80_byte *menu_help_keyboard_cache_bmp=NULL;
+static int menu_help_keyboard_cache_escala=0;
+static int menu_help_keyboard_cache_maquina=-1;
+static int menu_help_keyboard_cache_zoom=0;
+//Escribiendo la imagen en la cache (y no en la ventana)
+static int menu_help_keyboard_cache_escribiendo=0;
+
+static void menu_help_keyboard_putpixel_ventana_o_cache(zxvision_window *ventana,int x,int y,int color)
+{
+    if (menu_help_keyboard_cache_escribiendo) {
+        if (x>=0 && y>=0 && x<menu_help_keyboard_cache_ancho && y<menu_help_keyboard_cache_alto) {
+            menu_help_keyboard_cache[y*menu_help_keyboard_cache_ancho+x]=color;
+        }
+        return;
+    }
+    zxvision_putpixel_no_zoom(ventana,x,y,color);
+}
+
 //Pixel drawn as a scaled block. escala in 1/256 units. Offset (in window pixels) added
 static void menu_help_keyboard_putpixel_escala(zxvision_window *ventana,int x,int y,int color,int escala,int offset_x,int offset_y)
 {
     if (escala==256) {
-        zxvision_putpixel_no_zoom(ventana,x+offset_x,y+offset_y,color);
+        menu_help_keyboard_putpixel_ventana_o_cache(ventana,x+offset_x,y+offset_y,color);
         return;
     }
 
@@ -24061,7 +24087,7 @@ static void menu_help_keyboard_putpixel_escala(zxvision_window *ventana,int x,in
     int px,py;
     for (py=y0;py<y1;py++) {
         for (px=x0;px<x1;px++) {
-            zxvision_putpixel_no_zoom(ventana,px+offset_x,py+offset_y,color);
+            menu_help_keyboard_putpixel_ventana_o_cache(ventana,px+offset_x,py+offset_y,color);
         }
     }
 }
@@ -24436,6 +24462,103 @@ void menu_help_keyboard_overlay_render_512k_pcw(z80_byte *mem,int indice_paleta_
 }
 
 
+//Calcular la imagen escalada del teclado (y el texto "512k" del PCW 8512) en la cache, si hace falta
+static void menu_help_keyboard_prepara_cache(zxvision_window *ventana)
+{
+    int ancho=((ventana->visible_width)-zxvision_get_minus_width_byscrollvbar(ventana))*menu_char_width*zoom_x;
+    int alto=((ventana->visible_height)-2)*menu_char_height*zoom_y;
+    if (ancho<=0 || alto<=0) return;
+
+    if (menu_help_keyboard_cache!=NULL && ancho==menu_help_keyboard_cache_ancho && alto==menu_help_keyboard_cache_alto &&
+        menu_help_keyboard_cache_bmp==help_keyboard_bmp_file_mem && menu_help_keyboard_cache_escala==menu_help_keyboard_scale &&
+        menu_help_keyboard_cache_maquina==current_machine_type && menu_help_keyboard_cache_zoom==zoom_x) return;
+
+    free(menu_help_keyboard_cache);
+    menu_help_keyboard_cache=malloc(ancho*alto*sizeof(z80_int));
+    if (menu_help_keyboard_cache==NULL) return;
+
+    int i;
+    for (i=0;i<ancho*alto;i++) menu_help_keyboard_cache[i]=MENU_HELP_KEYBOARD_CACHE_VACIO;
+
+    menu_help_keyboard_cache_ancho=ancho;
+    menu_help_keyboard_cache_alto=alto;
+    menu_help_keyboard_cache_bmp=help_keyboard_bmp_file_mem;
+    menu_help_keyboard_cache_escala=menu_help_keyboard_scale;
+    menu_help_keyboard_cache_maquina=current_machine_type;
+    menu_help_keyboard_cache_zoom=zoom_x;
+
+    debug_printf(VERBOSE_DEBUG,"Virtual keyboard: scaling the keyboard picture (%d X %d)",ancho,alto);
+
+    menu_help_keyboard_cache_escribiendo=1;
+
+    screen_render_bmpfile_function(help_keyboard_bmp_file_mem,BMP_SECOND_INDEX_FIRST_COLOR,ventana,zoom_x,0,0,-1,0,
+        menu_help_keyboard_render_bmp_putpixel);
+
+    //Sobreescribimos el texto "512k" encima
+    if (MACHINE_IS_PCW_8512) {
+        if (help_keyboard_text_512_pcw!=NULL) {
+            menu_help_keyboard_overlay_render_512k_pcw(help_keyboard_text_512_pcw,BMP_SECOND_INDEX_FIRST_COLOR,ventana,zoom_x,0,0,-1,0);
+        }
+    }
+
+    menu_help_keyboard_cache_escribiendo=0;
+}
+
+//Copiar la imagen escalada a la ventana. Como zxvision_putpixel_no_zoom, pero mirando solo una vez por
+//caracter si hay otra ventana encima
+static void menu_help_keyboard_dibuja_cache(zxvision_window *ventana)
+{
+    menu_help_keyboard_prepara_cache(ventana);
+    if (menu_help_keyboard_cache==NULL) return;
+
+    int ventana_inicio_x=(ventana->x)*menu_char_width*zoom_x;
+    int ventana_inicio_y=((ventana->y)+1)*menu_char_height*zoom_y;
+    int ventana_final_x=ventana_inicio_x+menu_help_keyboard_cache_ancho;
+    int ventana_final_y=ventana_inicio_y+menu_help_keyboard_cache_alto;
+
+    int inicio_x=ventana_inicio_x-(ventana->offset_x)*menu_char_width*zoom_x;
+    int inicio_y=ventana_inicio_y-(ventana->offset_y)*menu_char_height*zoom_y;
+
+    int ancho_caracter=menu_char_width*zoom_x;
+    int alto_caracter=menu_char_height*zoom_y;
+
+    int x,y;
+    int fila_caracter_anterior=-1;
+    //Por cada columna de caracter: 1 si hay otra ventana encima
+    static unsigned char tapado[OVERLAY_SCREEN_MAX_WIDTH*2];
+
+    for (y=0;y<menu_help_keyboard_cache_alto;y++) {
+        int yfinal=y+inicio_y;
+        if (yfinal<ventana_inicio_y || yfinal>=ventana_final_y) continue;
+        int fila_caracter=yfinal/alto_caracter;
+
+        if (fila_caracter!=fila_caracter_anterior) {
+            fila_caracter_anterior=fila_caracter;
+            int columna;
+            for (columna=0;columna<(int)sizeof(tapado);columna++) tapado[columna]=2; //sin mirar aun
+        }
+
+        z80_int *origen=&menu_help_keyboard_cache[y*menu_help_keyboard_cache_ancho];
+
+        for (x=0;x<menu_help_keyboard_cache_ancho;x++) {
+            z80_int color=origen[x];
+            if (color==MENU_HELP_KEYBOARD_CACHE_VACIO) continue;
+
+            int xfinal=x+inicio_x;
+            if (xfinal<ventana_inicio_x || xfinal>=ventana_final_x) continue;
+            int columna=xfinal/ancho_caracter;
+            if (columna<0 || columna>=(int)sizeof(tapado)) continue;
+
+            if (tapado[columna]==2) {
+                tapado[columna]=zxvision_coords_in_superior_windows(ventana,columna,fila_caracter);
+            }
+            if (tapado[columna]) continue;
+
+            menu_scr_putpixel_no_zoom(xfinal,yfinal,color);
+        }
+    }
+}
+
 void menu_help_keyboard_overlay(void)
 {
 
@@ -24520,15 +24643,8 @@ void menu_help_keyboard_overlay(void)
             //Scale the image to the window size
             menu_help_keyboard_calculate_scale(ventana,help_keyboard_bmp_file_mem);
 
-            screen_render_bmpfile_function(help_keyboard_bmp_file_mem,BMP_SECOND_INDEX_FIRST_COLOR,ventana,zoom_x,0,0,-1,0,
-                menu_help_keyboard_render_bmp_putpixel);
-
-            //Sobreescribimos el texto "512k" encima
-            if (MACHINE_IS_PCW_8512) {
-                if (help_keyboard_text_512_pcw!=NULL) {
-                    menu_help_keyboard_overlay_render_512k_pcw(help_keyboard_text_512_pcw,BMP_SECOND_INDEX_FIRST_COLOR,ventana,zoom_x,0,0,-1,0);
-                }
-            }
+            //La imagen ya escalada: calcularla si hace falta, y copiarla
+            menu_help_keyboard_dibuja_cache(ventana);
 
             ventana->has_been_drawn_contents=0;
 
