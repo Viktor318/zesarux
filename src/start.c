@@ -754,6 +754,9 @@ void zesarux_cmdline_help(void)
         "\n"
         "Any command line setting shown here or on experthelp can be written on a configuration file,\n"
         "this configuration file is on your home directory with name: " DEFAULT_ZESARUX_CONFIG_FILE "\n"
+#ifdef MINGW
+        "(on Windows: in the folder %%APPDATA%%\\ZEsarUX, that is Roaming\\ZEsarUX)\n"
+#endif
 
         "\n"
 

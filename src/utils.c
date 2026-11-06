@@ -4355,11 +4355,87 @@ int configfile_read_aux(char *configfile,char *mem)
 
 }
 
+#ifdef MINGW
+/* Windows (fork): la configuracion y los archivos que genera el emulador (.zesaruxrc, indice del menu,
+   duraciones de canciones AY, carpeta de mezclas...) van en %APPDATA%\ZEsarUX (Roaming\ZEsarUX),
+   y no en la carpeta del usuario. La primera vez, si un archivo o carpeta aun no esta alli pero si en
+   la carpeta del usuario (versiones anteriores), se copia */
+
+//Copiar una carpeta (solo sus archivos, sin subcarpetas)
+static void util_windows_copy_folder_files(char *origen,char *destino)
+{
+    char patron[PATH_MAX];
+    WIN32_FIND_DATAA datos;
+
+    CreateDirectoryA(destino,NULL);
+
+    snprintf(patron,sizeof(patron),"%s\\*",origen);
+    HANDLE busqueda=FindFirstFileA(patron,&datos);
+    if (busqueda==INVALID_HANDLE_VALUE) return;
+
+    do {
+        if (datos.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) continue;
+
+        char archivo_origen[PATH_MAX];
+        char archivo_destino[PATH_MAX];
+        snprintf(archivo_origen,sizeof(archivo_origen),"%s\\%s",origen,datos.cFileName);
+        snprintf(archivo_destino,sizeof(archivo_destino),"%s\\%s",destino,datos.cFileName);
+        CopyFileA(archivo_origen,archivo_destino,TRUE);
+    } while (FindNextFileA(busqueda,&datos));
+
+    FindClose(busqueda);
+}
+
+//Carpeta %APPDATA%\ZEsarUX (la crea si no existe). Retorna 0 si no hay APPDATA
+static int util_windows_get_settings_dir(char *carpeta,int longitud)
+{
+    char *appdata=getenv("APPDATA");
+    if (appdata==NULL || appdata[0]==0) return 0;
+
+    snprintf(carpeta,longitud,"%s\\ZEsarUX",appdata);
+
+    DWORD atributos=GetFileAttributesA(carpeta);
+    if (atributos==INVALID_FILE_ATTRIBUTES) {
+        if (!CreateDirectoryA(carpeta,NULL)) return 0;
+    }
+    else if (!(atributos & FILE_ATTRIBUTE_DIRECTORY)) return 0;
+
+    return 1;
+}
+#endif
+
 //Retorna ruta en destpath del archivo file_to_find, buscando en carpeta HOME, etc
+//En Windows: en %APPDATA%\ZEsarUX (fork)
 //Devuelve 1 si ok
 //0 si error
 int util_get_file_in_home_dir(char *destpath,char *file_to_find)
 {
+
+    #ifdef MINGW
+    {
+        char carpeta[PATH_MAX];
+        if (util_windows_get_settings_dir(carpeta,sizeof(carpeta))) {
+            sprintf(destpath,"%s\\%s",carpeta,file_to_find);
+
+            //Si aun no existe alli, traerlo de la carpeta del usuario (versiones anteriores)
+            if (GetFileAttributesA(destpath)==INVALID_FILE_ATTRIBUTES) {
+                char *homedrive=getenv("HOMEDRIVE");
+                char *homepath=getenv("HOMEPATH");
+                if (homedrive!=NULL && homepath!=NULL) {
+                    char anterior[PATH_MAX];
+                    snprintf(anterior,sizeof(anterior),"%s\\%s\\%s",homedrive,homepath,file_to_find);
+                    DWORD atributos=GetFileAttributesA(anterior);
+                    if (atributos!=INVALID_FILE_ATTRIBUTES) {
+                        if (atributos & FILE_ATTRIBUTE_DIRECTORY) util_windows_copy_folder_files(anterior,destpath);
+                        else CopyFileA(anterior,destpath,TRUE);
+                    }
+                }
+            }
+
+            return 1;
+        }
+    }
+    #endif
 
     #ifndef MINGW
         char *directorio_home;
