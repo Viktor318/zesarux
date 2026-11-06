@@ -2970,6 +2970,8 @@ void set_machine_params(void)
             lee_puerto=lee_puerto_spectrum;
             ay_chip_present.v=1;
 
+            //Fork: no se fija el modo estereo (ABC) en ATM; vale el modo elegido en el mezclador AY, como en CPC
+
             if (MACHINE_IS_ATM_TURBO2_FAMILY) {
                 if (last_machine_type!=current_machine_type) {
                     ide_atm_enabled.v=1;

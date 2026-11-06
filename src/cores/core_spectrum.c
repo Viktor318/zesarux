@@ -831,7 +831,7 @@ void core_spectrum_handle_interrupts(void)
         iff1.v=0;
         //printf ("Calling NMI with pc=0x%x\n",reg_pc);
 
-        //Otros 6 estados
+        //Otros 6 estados. Ajuste de T-estados. TODO: no sé si es correcto
         t_estados += 6;
 
         //Total NMI: NMI WAIT 14 estados + NMI CALL 12 estados
@@ -839,8 +839,8 @@ void core_spectrum_handle_interrupts(void)
 
         //printf ("generada nmi pc=%04XH\n",reg_pc);
 
-        //temp
 
+        //Ajuste de T-estados. TODO: no sé si es correcto
         t_estados -=15;
 
         if (superupgrade_enabled.v) {
@@ -851,21 +851,26 @@ void core_spectrum_handle_interrupts(void)
             superupgrade_set_memory_pages();
         }
 
+        /*
+
+        Esto no tiene sentido, es codigo historico incorrecto
+
+
 
         //Al recibir nmi tiene que poner paginacion normal. Luego ya saltara por autotrap de diviface
         if (diviface_enabled.v) {
             //Chapuza para el atic atac versión con sonido. Si ha saltado por nmi generada por registro 2, no cambiar mapeo actual
             //Esto sucede porque asumimos que todos los divmmc mapean en post, pero divmmc nmi desde tbblue puede mapear en pre
             //Si el bit 1 del registro BB esta activo
-            /*
-                0x02 (02) => Reset
-                bit 2 = Generate divmmc nmi (write zero to clear) **
 
-                0xBB (187) => Divmmc Entry Points 1
-                (R/W) (soft reset = 0xCD)
+            //    0x02 (02) => Reset
+            //    bit 2 = Generate divmmc nmi (write zero to clear) **
 
-                bit 1 = 1 to enable automap on address 0x0066 (instruction fetch + button, instant)
-            */
+            //    0xBB (187) => Divmmc Entry Points 1
+            //    (R/W) (soft reset = 0xCD)
+
+            //   bit 1 = 1 to enable automap on address 0x0066 (instruction fetch + button, instant)
+
             if (MACHINE_IS_TBBLUE && (tbblue_registers[2]&4)) {
             //if (MACHINE_IS_TBBLUE && (tbblue_registers[0xBB]&2)) {
             }
@@ -878,6 +883,10 @@ void core_spectrum_handle_interrupts(void)
 
             }
         }
+
+        */
+
+
 
         generate_nmi_prepare_fetch();
 

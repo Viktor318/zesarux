@@ -1728,6 +1728,8 @@ DSK does not exist	A DSK nem létezik	window title
 Tracks?	Sávok?	window title
 Sides?	Oldalak?	window title
 Sectors per track?	Szektor sávonként?	window title
+Sectors per track	Szektor sávonként	item
+Sets sectors per track	A sávonkénti szektorszám beállítása	tooltip
 Sector %d ST1: %02X ST2: %02X %s	%d. szektor ST1: %02X ST2: %02X %s	item
  Actual size: %d	 Tényleges méret: %d	item
 Track %02d Side %d. UNFORMATTED	%02d. sáv, %d. oldal: FORMÁZATLAN	item
