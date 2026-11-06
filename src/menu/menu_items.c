@@ -24151,7 +24151,6 @@ void menu_help_keyboard_show_speccy_pressed_keys(zxvision_window *ventana,int ke
 
             if (menu_help_keyboard_is_pressed_bit_key(valor)) {
                 tecla_encontrada=1;
-                menu_help_keyboard_overlay_force_draw=1;
             }
 
             //Tecla pulsada mantenida
@@ -24210,8 +24209,6 @@ void menu_help_keyboard_show_speccy_pressed_keys(zxvision_window *ventana,int ke
                 //teclas dobles siempre se asume que si pulsada, bit=0
                 if (valor1==0) {
                     tecla_encontrada=1;
-                    menu_help_keyboard_overlay_force_draw=1;
-                    //printf("force draw\n");
                 }
             }
 
@@ -24220,7 +24217,6 @@ void menu_help_keyboard_show_speccy_pressed_keys(zxvision_window *ventana,int ke
                 //teclas dobles siempre se asume que si pulsada, bit=0
                 if (valor1==0 && valor2==0) {
                     tecla_encontrada=1;
-                    menu_help_keyboard_overlay_force_draw=1;
                 }
             }
 
@@ -24464,6 +24460,38 @@ void menu_help_keyboard_overlay(void)
     if (menu_help_keyboard_overlay_window->is_minimized) return;
 
     //printf("Overlay help heyboard %d\n",contador_segundo);
+
+    /* Redibujar solo cuando cambian las teclas pulsadas (fork). Antes, mientras habia una tecla pulsada,
+       se redibujaba la imagen entera del teclado en cada frame, y la emulacion daba tirones */
+    {
+        static unsigned int firma_anterior=0;
+        unsigned int firma=2166136261U;
+        int total_columnas,total_filas,i;
+        z80_byte **puertos=get_keyboard_map_ports_table(&total_columnas,&total_filas);
+        if (puertos!=NULL) {
+            for (i=0;i<total_filas;i++) {
+                if (puertos[i]!=NULL) {
+                    firma ^=*puertos[i];
+                    firma *=16777619U;
+                }
+            }
+        }
+        keyboard_help_double_key *dobles=keyboard_help_return_double_keys();
+        if (dobles!=NULL) {
+            for (i=0;dobles[i].puerto1!=NULL;i++) {
+                firma ^=*dobles[i].puerto1;
+                firma *=16777619U;
+                if (dobles[i].puerto2!=NULL) {
+                    firma ^=*dobles[i].puerto2;
+                    firma *=16777619U;
+                }
+            }
+        }
+        if (firma!=firma_anterior) {
+            firma_anterior=firma;
+            menu_help_keyboard_overlay_force_draw=1;
+        }
+    }
 
 
     zxvision_window *ventana;
