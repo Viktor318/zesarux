@@ -4002,7 +4002,7 @@ void menu_settings_apps(MENU_ITEM_PARAMETERS)
         if (si_complete_video_driver() ) {
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_settings_apps_ay_piano_grafico,NULL,"    Piano Type");
             menu_add_item_menu_spanish_catalan(array_menu_common,"    Tipo Piano","    Tipus Piano");
-            menu_add_item_menu_sufijo_format(array_menu_common," [%s]",(setting_mostrar_ay_piano_grafico.v ? "Graphic" : "Text") );
+            menu_add_item_menu_sufijo_format(array_menu_common," [%s]",(setting_mostrar_ay_piano_grafico.v ? menu_tr("Graphic") : menu_tr("Text")) );
             menu_add_item_menu_tooltip(array_menu_common,"Shows AY/Beeper Piano window with graphic or with text");
             menu_add_item_menu_ayuda(array_menu_common,"Shows AY/Beeper Piano window with graphic or with text");
             menu_add_item_menu_es_avanzado(array_menu_common);
@@ -5297,7 +5297,7 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_en_es_ca(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_settings_visualmem_grafico,NULL,
                 "Visualmem type","Tipo Memoria Visual","Tipus Memoria Visual");
             menu_add_item_menu_prefijo_format(array_menu_settings_debug,"    ");
-            menu_add_item_menu_sufijo_format(array_menu_settings_debug," [%s]",(setting_mostrar_visualmem_grafico.v ? "Graphic" : "Text") );
+            menu_add_item_menu_sufijo_format(array_menu_settings_debug," [%s]",(setting_mostrar_visualmem_grafico.v ? menu_tr("Graphic") : menu_tr("Text")) );
 
 
             menu_add_item_menu_tooltip(array_menu_settings_debug,"Shows Visualmem menu with graphic or with text");
