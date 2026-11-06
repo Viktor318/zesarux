@@ -407,7 +407,7 @@ Empty trash	Kuka ürítése	question
 Empty Trash	Kuka ürítése	item
 Trash Can	Kuka	menu title
 Window name	Ablak neve	window title
-~~Process switcher	~~Folyamatváltó	item
+~~Process switcher	Ablak~~váltó	item
 ~~Cascade all windows	Minden ablak ~~lépcsőzetesen	item
 Rearrange all windows	Minden ablak elrendezése	item
 ~~Reduce all windows	Minden ablak ~~kicsinyítése	item
@@ -813,7 +813,7 @@ Calculator	Számológép	window title
 C~~alculator	Szá~~mológép	item
 C~~lock	Ó~~ra	item
 Extras	Extrák	menu title
-Process Switcher	Folyamatváltó	window title
+Process Switcher	Ablakváltó	window title
 Visual Casette Tape	Vizuális kazetta	window title
 [%c] ~~Slow movement	[%c] ~~Lassú mozgás	item
 Visual Cassette Tape	Vizuális kazetta	menu title
@@ -839,7 +839,7 @@ He~~lp	~~Súgó	item
 Close menu	Menü bezárása	item
 Main Menu	Főmenü	menu title
 Window title	Ablak címe	window title
-Process switcher immutable	Folyamatváltó rögzítve	item
+Process switcher immutable	Ablakváltó rögzítve	item
 Show fired breakp.	Kiváltott töréspont mutatása	item
 Template	Sablon	menu title
 Save configuration	Beállítások mentése	window title
@@ -997,9 +997,9 @@ B&W on menu+no multitask	Fekete-fehér menüben, nincs többfeladat	item
 Special FX Settings	Speciális effektek beállításai	menu title
 Ok charset to save to disk?	Mentsem a betűkészletet lemezre?	question
 Ok file saved	Fájl mentve	window title
-Process switcher always visible	Folyamatváltó mindig látható	item
-Process switcher force right-bottom	Folyamatváltó mindig jobb alul	item
-Process switcher one row	Folyamatváltó egy sorban	item
+Process switcher always visible	Ablakváltó mindig látható	item
+Process switcher force right-bottom	Ablakváltó mindig jobb alul	item
+Process switcher one row	Ablakváltó egy sorban	item
 Graphic	Grafikus	item
 Text	Szöveges	item
     Piano Type	    Zongora típusa	item
@@ -3003,7 +3003,7 @@ ZEsarUX Network Gaming protocol (ZENG) allows you to play to any emulated game, 
 Connect to a ZEsarUX Network Gaming Online server	Csatlakozás egy ZEsarUX Network Gaming Online szerverhez	tooltip
 ZEsarUX Network Gaming protocol Online (ZENG Online) allows you to play to any emulated game, using two or more ZEsarUX instances, located each one on any part of the world or in a local network.\nIt's similar to ZENG but uses a central online server\n	A ZEsarUX hálózati játék online protokollja (ZENG Online) lehetővé teszi, hogy bármelyik emulált játékkal játssz két vagy több ZEsarUX példánnyal, amelyek a világ bármely pontján vagy egy helyi hálózatban lehetnek.\nHasonló a ZENG-hez, de egy központi online szervert használ\n	help
 Get information about processes and manage them	Információk a folyamatokról és kezelésük	tooltip
-Process switcher	Folyamatváltó	tooltip
+Process switcher	Ablakváltó	tooltip
 Cascade all windows on the ZX Desktop	Az összes ablak lépcsőzetes elrendezése a ZX Desktopon	tooltip
 Rearrange all windows on the ZX Desktop	Az összes ablak átrendezése a ZX Desktopon	tooltip
 Reduce windows to maximum size 20x10	Az ablakok kicsinyítése legfeljebb 20x10 méretre	tooltip
@@ -3270,13 +3270,13 @@ Change automatically to Solarized Light/Dark GUI style depending on current hour
 How to mix menu and the layer below	Hogyan keveredjen a menü az alatta lévő réteggel	tooltip
 Transparency percentage to apply to menu	A menüre alkalmazott átlátszóság százalékban	tooltip
 Grayscale layer below menu when menu opened and multitask is disabled	A menü alatti réteg szürkeárnyalatos, ha a menü nyitva van és a többfeladatos mód ki van kapcsolva	tooltip
-Massive actions on menu Windows, like minimize all, cascade, etc, don't affect the Process switcher window	A menüablakokon végzett tömeges műveletek (például mind kis méretre, lépcsőzetes elrendezés stb.) nem érintik a Folyamatváltó ablakot	tooltip
-Process switcher is always visible (on top of all windows)	A Folyamatváltó mindig látható (minden ablak fölött)	tooltip
-Process switcher is always located on right-bottom	A Folyamatváltó mindig jobb alul helyezkedik el	tooltip
-Process switcher shows only one row of icons	A Folyamatváltó csak egy sor ikont mutat	tooltip
+Massive actions on menu Windows, like minimize all, cascade, etc, don't affect the Process switcher window	A menüablakokon végzett tömeges műveletek (például mind kis méretre, lépcsőzetes elrendezés stb.) nem érintik az Ablakváltó ablakot	tooltip
+Process switcher is always visible (on top of all windows)	Az Ablakváltó mindig látható (minden ablak fölött)	tooltip
+Process switcher is always located on right-bottom	Az Ablakváltó mindig jobb alul helyezkedik el	tooltip
+Process switcher shows only one row of icons	Az Ablakváltó csak egy sor ikont mutat	tooltip
 Shows AY/Beeper Piano window with graphic or with text	Az AY/Beeper zongora ablak grafikus vagy szöveges megjelenítése	tooltip
 Shows vertical percentage bar on the right of text windows and file browser	Függőleges százalékos sáv a szöveges ablakok és a fájlböngésző jobb oldalán	tooltip
-Hide minimized windows. Only minimized windows that are applications that can be backgrounded are hidden. Hidden minimized windows can be seen on the Process Switcher	Kis méretű ablakok elrejtése. Csak azok a kis méretű ablakok rejtődnek el, amelyek háttérben futtatható alkalmazások. Az elrejtett kis méretű ablakok a Folyamatváltóban láthatók	help
+Hide minimized windows. Only minimized windows that are applications that can be backgrounded are hidden. Hidden minimized windows can be seen on the Process Switcher	Kis méretű ablakok elrejtése. Csak azok a kis méretű ablakok rejtődnek el, amelyek háttérben futtatható alkalmazások. Az elrejtett kis méretű ablakok az Ablakváltóban láthatók	help
 Shows background button flashing on inactive windows	Háttér gomb villogása az inaktív ablakokon	tooltip
 Change frame window when mouse is over resize zone	Az ablakkeret megváltozik, ha az egér az átméretezési területen van	tooltip
 Restore all windows positions and sizes to their default values	Az összes ablak helyzetének és méretének visszaállítása az alapértékekre	tooltip
