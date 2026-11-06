@@ -24899,11 +24899,14 @@ void menu_help_keyboard_overlay(void)
 }
 
 
-//Virtual keyboard window size presets
-//1: original size (50%: as large as the original small image)
-//2: full size (100%: the image pixel by pixel)
-#define MENU_HELP_KEYBOARD_SIZE_ORIGINAL 1
-#define MENU_HELP_KEYBOARD_SIZE_FULL 2
+//Virtual keyboard window size presets, relative to the original (small) keyboard image (fork: 3 sizes).
+//The images are twice the original size, so 200% is the image pixel by pixel
+#define MENU_HELP_KEYBOARD_SIZE_100 1
+#define MENU_HELP_KEYBOARD_SIZE_150 2
+#define MENU_HELP_KEYBOARD_SIZE_200 3
+#define MENU_HELP_KEYBOARD_TOTAL_SIZES 3
+
+static const int menu_help_keyboard_size_percent[MENU_HELP_KEYBOARD_TOTAL_SIZES+1]={0,100,150,200};
 
 //Size requested from the menu, applied when the window is opened
 int menu_help_keyboard_pending_size=0;
@@ -24915,13 +24918,19 @@ int menu_help_keyboard_preset_scale(int preset)
 {
     int gui_zoom=(menu_gui_zoom>0 ? menu_gui_zoom : 1);
 
-    if (preset==MENU_HELP_KEYBOARD_SIZE_ORIGINAL) {
-        int factor=menu_help_keyboard_bmp_factor;
-        if (factor<1) factor=256;
-        return (256*256)/factor/gui_zoom;
-    }
-    return 256/gui_zoom;
+    if (preset<1 || preset>MENU_HELP_KEYBOARD_TOTAL_SIZES) preset=MENU_HELP_KEYBOARD_SIZE_100;
+
+    int factor=menu_help_keyboard_bmp_factor;
+    if (factor<1) factor=256;
+
+    //100%: the original image size
+    return (256*256*menu_help_keyboard_size_percent[preset]/100)/factor/gui_zoom;
 }
+
+//Last size set with a double click, and the window size it gave (it can be smaller if it does not fit on the screen)
+static int menu_help_keyboard_last_preset=0;
+static int menu_help_keyboard_last_preset_width=0;
+static int menu_help_keyboard_last_preset_height=0;
 
 void menu_help_keyboard_set_size(zxvision_window *w,int preset)
 {
@@ -24990,20 +24999,45 @@ void menu_help_keyboard_set_size(zxvision_window *w,int preset)
     util_add_window_geometry_compact(w);
 }
 
-//Double click on the title bar: full size, or original size if it is already at full size
+//Double click on the title bar: next size, 100% -> 150% -> 200% -> 100%
 void menu_help_keyboard_title_double_click(zxvision_window *w)
 {
-    int preset=MENU_HELP_KEYBOARD_SIZE_FULL;
+    int preset=MENU_HELP_KEYBOARD_SIZE_100;
 
     if (!w->is_maximized && !w->is_minimized) {
-        menu_help_keyboard_calculate_scale(w,help_keyboard_bmp_file_mem);
-        int escala_full=menu_help_keyboard_preset_scale(MENU_HELP_KEYBOARD_SIZE_FULL);
-        int escala_original=menu_help_keyboard_preset_scale(MENU_HELP_KEYBOARD_SIZE_ORIGINAL);
-        //Already near full size (or bigger): go to the original size
-        if (menu_help_keyboard_scale>=(escala_full+escala_original)/2) preset=MENU_HELP_KEYBOARD_SIZE_ORIGINAL;
+        int actual;
+
+        //The window is still as the last double click left it: that size (it may have been reduced to fit)
+        if (menu_help_keyboard_last_preset && w->visible_width==menu_help_keyboard_last_preset_width &&
+            w->visible_height==menu_help_keyboard_last_preset_height) {
+            actual=menu_help_keyboard_last_preset;
+        }
+
+        //Otherwise the size nearest to the current scale
+        else {
+            menu_help_keyboard_calculate_scale(w,help_keyboard_bmp_file_mem);
+            int i;
+            int diferencia_minima=0;
+            actual=MENU_HELP_KEYBOARD_SIZE_100;
+            for (i=1;i<=MENU_HELP_KEYBOARD_TOTAL_SIZES;i++) {
+                int diferencia=menu_help_keyboard_scale-menu_help_keyboard_preset_scale(i);
+                if (diferencia<0) diferencia=-diferencia;
+                if (i==1 || diferencia<diferencia_minima) {
+                    diferencia_minima=diferencia;
+                    actual=i;
+                }
+            }
+        }
+
+        preset=actual+1;
+        if (preset>MENU_HELP_KEYBOARD_TOTAL_SIZES) preset=MENU_HELP_KEYBOARD_SIZE_100;
     }
 
     menu_help_keyboard_set_size(w,preset);
+
+    menu_help_keyboard_last_preset=preset;
+    menu_help_keyboard_last_preset_width=w->visible_width;
+    menu_help_keyboard_last_preset_height=w->visible_height;
 }
 
 void menu_help_keyboard_create_window(zxvision_window *ventana,int x,int y,int ancho,int alto,int is_minimized,int is_maximized,
@@ -25013,7 +25047,7 @@ void menu_help_keyboard_create_window(zxvision_window *ventana,int x,int y,int a
 
     ventana->can_be_backgrounded=1;
 
-    //Double click on the title: switch between original size and full size
+    //Double click on the title: next size (100%, 150%, 200%)
     ventana->title_double_click_function=menu_help_keyboard_title_double_click;
 
     //Metemos todo el contenido de la ventana con caracter transparente, para que no haya parpadeo
@@ -25364,13 +25398,19 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS);
 
 void menu_help_show_keyboard_original_size(MENU_ITEM_PARAMETERS)
 {
-    menu_help_keyboard_pending_size=MENU_HELP_KEYBOARD_SIZE_ORIGINAL;
+    menu_help_keyboard_pending_size=MENU_HELP_KEYBOARD_SIZE_100;
+    menu_help_show_keyboard(valor_opcion);
+}
+
+void menu_help_show_keyboard_size_150(MENU_ITEM_PARAMETERS)
+{
+    menu_help_keyboard_pending_size=MENU_HELP_KEYBOARD_SIZE_150;
     menu_help_show_keyboard(valor_opcion);
 }
 
 void menu_help_show_keyboard_full_size(MENU_ITEM_PARAMETERS)
 {
-    menu_help_keyboard_pending_size=MENU_HELP_KEYBOARD_SIZE_FULL;
+    menu_help_keyboard_pending_size=MENU_HELP_KEYBOARD_SIZE_200;
     menu_help_show_keyboard(valor_opcion);
 }
 
@@ -34640,18 +34680,26 @@ void menu_help(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_genera_ventana(array_menu_common);
 
             menu_add_item_menu_en_es_ca(array_menu_common,MENU_OPCION_NORMAL,menu_help_show_keyboard_original_size,NULL,
-                "Virtual Keyboard 50%","Teclado Virtual 50%","Teclat Virtual 50%");
+                "Virtual Keyboard 100%","Teclado Virtual 100%","Teclat Virtual 100%");
             menu_add_item_menu_tooltip(array_menu_common,"Virtual keyboard at the original size");
-            menu_add_item_menu_ayuda(array_menu_common,"Displays the virtual keyboard at the original size (half the size of the image). "
-                "Double click on the window title switches between the two sizes.");
+            menu_add_item_menu_ayuda(array_menu_common,"Displays the virtual keyboard at the original size. "
+                "Double click on the window title switches between the sizes 100%, 150% and 200%.");
+            menu_add_item_menu_se_cerrara(array_menu_common);
+            menu_add_item_menu_genera_ventana(array_menu_common);
+
+            menu_add_item_menu_en_es_ca(array_menu_common,MENU_OPCION_NORMAL,menu_help_show_keyboard_size_150,NULL,
+                "Virtual Keyboard 150%","Teclado Virtual 150%","Teclat Virtual 150%");
+            menu_add_item_menu_tooltip(array_menu_common,"Virtual keyboard at one and a half times the original size");
+            menu_add_item_menu_ayuda(array_menu_common,"Displays the virtual keyboard at one and a half times the original size. "
+                "Double click on the window title switches between the sizes 100%, 150% and 200%.");
             menu_add_item_menu_se_cerrara(array_menu_common);
             menu_add_item_menu_genera_ventana(array_menu_common);
 
             menu_add_item_menu_en_es_ca(array_menu_common,MENU_OPCION_NORMAL,menu_help_show_keyboard_full_size,NULL,
-                "Virtual Keyboard 100%","Teclado Virtual 100%","Teclat Virtual 100%");
-            menu_add_item_menu_tooltip(array_menu_common,"Virtual keyboard at full size");
-            menu_add_item_menu_ayuda(array_menu_common,"Displays the virtual keyboard at full size (the image pixel by pixel). "
-                "Double click on the window title switches between the two sizes.");
+                "Virtual Keyboard 200%","Teclado Virtual 200%","Teclat Virtual 200%");
+            menu_add_item_menu_tooltip(array_menu_common,"Virtual keyboard at twice the original size");
+            menu_add_item_menu_ayuda(array_menu_common,"Displays the virtual keyboard at twice the original size (the image pixel by pixel). "
+                "Double click on the window title switches between the sizes 100%, 150% and 200%.");
             menu_add_item_menu_se_cerrara(array_menu_common);
             menu_add_item_menu_genera_ventana(array_menu_common);
 
