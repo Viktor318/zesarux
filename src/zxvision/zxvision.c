@@ -5412,11 +5412,10 @@ void menu_ext_desktop_lower_buttons_get_geometry(int *p_ancho_boton,int *p_alto_
     int alto_zx_desktop=screen_get_total_alto_ventana_zoom();
     int yinicio=alto_zx_desktop-alto_boton;
 
-    //Ventana de tamano libre (fork): si hay franja de ZX Desktop debajo de la maquina, centrados en la ventana
+    //Ventana de tamano libre (fork): si hay franja de ZX Desktop debajo de la maquina, a la izquierda de la ventana
+    //(antes centrados; a la izquierda se ven y se alcanzan mejor)
     if (screen_free_window_layout && screen_get_ext_desktop_height_zoom()>=alto_boton) {
-        int ancho_total=screen_get_total_width_window_plus_zxdesktop();
-        xinicio=(ancho_total-total_botones*ancho_boton)/2;
-        if (xinicio<0) xinicio=0;
+        xinicio=0;
         xfinal_botones=xinicio+total_botones*ancho_boton;
     }
 

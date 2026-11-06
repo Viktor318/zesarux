@@ -3317,6 +3317,16 @@ int screen_machine_scale_requested=4;
 
 //Suavizar la imagen de la maquina cuando la escala no da pixeles enteros
 int screen_machine_smooth=0;
+
+/* Posicion y tamano de la ventana principal (fork), para abrirla igual en el siguiente arranque.
+   x,y,ancho,alto: la ventana sin maximizar ni pantalla completa. ancho 0: no se sabe */
+int screen_main_window_x=0;
+int screen_main_window_y=0;
+int screen_main_window_width=0;
+int screen_main_window_height=0;
+int screen_main_window_maximized=0;
+//Si se ha leido de la configuracion (o se sabe de esta sesion)
+int screen_main_window_known=0;
 //La que se usa: la pedida, o menos si no cabe en la ventana
 int screen_machine_scale=4;
 

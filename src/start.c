@@ -646,6 +646,7 @@ void zesarux_cmdline_help(void)
         "--outtape file          Insert output standard tape file. Supported formats: Spectrum: .TAP, .TZX, .PZX -- ZX80: .O -- ZX81: .P\n"
 
         "--zoom n                Total Zoom Factor\n"
+        "--main-window x y w h m Position and size of the main window, and if it is maximized (m=1). Saved on exit (SDL2 video driver)\n"
         "--machine-smooth        Smooth the emulated machine picture when its size does not give whole pixels (125%% for example)\n"
         "--machine-scale n       Size of the emulated machine picture in percent: 100, 125, 150 or 200 (SDL2 video driver). Menus, icons and ZX Desktop keep their size\n"
         "--vo driver             Video output driver. Valid drivers: ");
@@ -4034,6 +4035,24 @@ int parse_cmdline_options(int desde_commandline)
                 }
                 else {
                     zoom_y=zoom_x=valor;
+                }
+            }
+
+            else if (!strcmp(argv[puntero_parametro],"--main-window")) {
+                //x y ancho alto maximizada
+                int valores[5];
+                int i;
+                for (i=0;i<5;i++) {
+                    siguiente_parametro_argumento();
+                    valores[i]=atoi(argv[puntero_parametro]);
+                }
+                if (valores[2]>=0 && valores[3]>=0) {
+                    screen_main_window_x=valores[0];
+                    screen_main_window_y=valores[1];
+                    screen_main_window_width=valores[2];
+                    screen_main_window_height=valores[3];
+                    screen_main_window_maximized=(valores[4] ? 1 : 0);
+                    screen_main_window_known=1;
                 }
             }
 

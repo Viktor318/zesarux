@@ -223,14 +223,64 @@ static int scrsdl_ajusta_a_ventana(void)
     return 0;
 }
 
+//Guardar la posicion y el tamano de la ventana principal (sin maximizar ni pantalla completa), para el siguiente arranque
+static void scrsdl_guarda_geometria_ventana(void)
+{
+    if (window==NULL || scr_sdl_force_size.v) return;
+
+    Uint32 estado=SDL_GetWindowFlags(window);
+
+    if (estado & (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_MINIMIZED)) return;
+
+    screen_main_window_maximized=(estado & SDL_WINDOW_MAXIMIZED ? 1 : 0);
+
+    if (!screen_main_window_maximized) {
+        SDL_GetWindowPosition(window,&screen_main_window_x,&screen_main_window_y);
+        SDL_GetWindowSize(window,&screen_main_window_width,&screen_main_window_height);
+    }
+
+    screen_main_window_known=1;
+}
+
+//Si la ventana guardada se veria en alguna pantalla (al menos una parte de su barra de titulo)
+static int scrsdl_geometria_guardada_visible(void)
+{
+    if (!screen_main_window_known || screen_main_window_width<=0 || screen_main_window_height<=0) return 0;
+
+    int pantallas=SDL_GetNumVideoDisplays();
+    int i;
+
+    for (i=0;i<pantallas;i++) {
+        SDL_Rect zona;
+        if (SDL_GetDisplayUsableBounds(i,&zona)!=0) continue;
+
+        //Franja de arriba de la ventana (donde esta la barra de titulo): al menos 100x20 pixeles en la pantalla
+        int x0=(screen_main_window_x>zona.x ? screen_main_window_x : zona.x);
+        int x1=screen_main_window_x+screen_main_window_width;
+        if (x1>zona.x+zona.w) x1=zona.x+zona.w;
+        int y0=(screen_main_window_y>zona.y ? screen_main_window_y : zona.y);
+        int y1=screen_main_window_y+20;
+        if (y1>zona.y+zona.h) y1=zona.y+zona.h;
+
+        if (x1-x0>=100 && y1-y0>=20) return 1;
+    }
+
+    return 0;
+}
+
 int scrsdl_crea_ventana(void)
 {
+    //Creada ahora maximizada: su tamano aun puede no ser el definitivo, no guardarlo todavia
+    int creada_maximizada=0;
 
     if (window==NULL) {
         Uint32 flags=SDL_WINDOW_RESIZABLE;
 
-        //Al empezar, maximizada (menos con un tamano forzado o en pantalla completa)
-        if (!ventana_fullscreen && !scr_sdl_force_size.v) flags |=SDL_WINDOW_MAXIMIZED;
+        //Ventana guardada del anterior arranque (fork): misma posicion y tamano, si se ve en alguna pantalla
+        int usar_guardada=(!scr_sdl_force_size.v && !screen_main_window_maximized && scrsdl_geometria_guardada_visible());
+
+        //Al empezar, maximizada (menos con un tamano forzado, en pantalla completa o con la ventana guardada)
+        if (!ventana_fullscreen && !scr_sdl_force_size.v && !usar_guardada) flags |=SDL_WINDOW_MAXIMIZED;
 
         screen_layout_fixed_gui_zoom();
 
@@ -255,11 +305,29 @@ int scrsdl_crea_ventana(void)
             }
         }
 
+        int posicion_x=SDL_WINDOWPOS_UNDEFINED;
+        int posicion_y=SDL_WINDOWPOS_UNDEFINED;
+
+        if (usar_guardada) {
+            ancho=screen_main_window_width;
+            alto=screen_main_window_height;
+            posicion_x=screen_main_window_x;
+            posicion_y=screen_main_window_y;
+        }
+
         debug_printf (VERBOSE_DEBUG,"Creating window %d X %d",ancho,alto );
 
-        if (SDL_CreateWindowAndRenderer(ancho,alto, flags, &window, &renderer)!=0) return 1;
+        window=SDL_CreateWindow("ZEsarUX",posicion_x,posicion_y,ancho,alto,flags);
+        if (window==NULL) return 1;
 
-        if (window==NULL || renderer==NULL) return 1;
+        if (flags & SDL_WINDOW_MAXIMIZED) creada_maximizada=1;
+
+        renderer=SDL_CreateRenderer(window,-1,0);
+        if (renderer==NULL) {
+            SDL_DestroyWindow(window);
+            window=NULL;
+            return 1;
+        }
     }
 
     //Pantalla completa: la misma distribucion, en toda la pantalla
@@ -269,6 +337,8 @@ int scrsdl_crea_ventana(void)
     }
 
     scrsdl_update_window_title();
+
+    if (!creada_maximizada) scrsdl_guarda_geometria_ventana();
 
     return scrsdl_ajusta_a_ventana();
 
@@ -1945,6 +2015,12 @@ void scrsdl_actualiza_tablas_teclado(void)
 
 		if (event.type==SDL_WINDOWEVENT) {
 			//printf("SDL_WINDOWEVENT. event=%d\n",event.window.event);
+
+            //Movida, cambiada de tamano, maximizada o restaurada: guardarlo para el siguiente arranque
+            if (event.window.event==SDL_WINDOWEVENT_MOVED || event.window.event==SDL_WINDOWEVENT_SIZE_CHANGED ||
+                event.window.event==SDL_WINDOWEVENT_MAXIMIZED || event.window.event==SDL_WINDOWEVENT_RESTORED) {
+                scrsdl_guarda_geometria_ventana();
+            }
 
 			if (event.window.event==SDL_WINDOWEVENT_FOCUS_LOST) {
 
