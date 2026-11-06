@@ -24462,6 +24462,208 @@ void menu_help_keyboard_overlay_render_512k_pcw(z80_byte *mem,int indice_paleta_
 }
 
 
+/* Remuestreo suavizado de la imagen del teclado a la cache (fork).
+   El pixel mas cercano, al reducir la imagen (por ejemplo al 84%), se salta columnas y filas enteras,
+   y las letras de las teclas quedan irregulares. Aqui cada pixel destino es la media (ponderada por area)
+   de los pixeles origen que cubre; al ampliar, interpolacion bilineal. El color resultante se busca
+   en la paleta de 256 colores del propio bmp (el mas cercano) */
+
+//Pesos en una dimension: para cada pixel destino, sus pixeles origen y pesos
+struct s_menu_help_keyboard_pesos {
+    int inicio;
+    int total;
+    float peso[40];
+};
+
+static struct s_menu_help_keyboard_pesos *menu_help_keyboard_calcula_pesos(int origen,int destino,int ignorar)
+{
+    struct s_menu_help_keyboard_pesos *tabla=malloc(destino*sizeof(struct s_menu_help_keyboard_pesos));
+    if (tabla==NULL) return NULL;
+
+    double relacion=(double)origen/(double)destino;
+    int i;
+
+    for (i=0;i<destino;i++) {
+        struct s_menu_help_keyboard_pesos *p=&tabla[i];
+        p->total=0;
+        p->inicio=0;
+
+        if (relacion>1.0) {
+            //Reducir: media del area cubierta
+            double a=i*relacion;
+            double b=(i+1)*relacion;
+            int s0=(int)a;
+            int s1=(int)b;
+            if (s1>=origen) s1=origen-1;
+            if (s1-s0+1>40) s1=s0+39;
+            p->inicio=s0;
+            int s;
+            double suma=0;
+            for (s=s0;s<=s1;s++) {
+                double ini=(s>a ? s : a);
+                double fin=(s+1<b ? s+1 : b);
+                double w=fin-ini;
+                if (w<0 || s<ignorar) w=0;
+                p->peso[s-s0]=w;
+                suma +=w;
+            }
+            p->total=s1-s0+1;
+            if (suma<=0) p->total=0;
+            else for (s=0;s<p->total;s++) p->peso[s] /=suma;
+        }
+
+        else {
+            //Ampliar: bilineal
+            double centro=(i+0.5)*relacion-0.5;
+            if (centro<ignorar) centro=ignorar;
+            if (centro>origen-1) centro=origen-1;
+            int s0=(int)centro;
+            double f=centro-s0;
+            if (s0>=origen-1) {
+                s0=origen-1;
+                f=0;
+            }
+            p->inicio=s0;
+            p->peso[0]=1.0-f;
+            p->peso[1]=f;
+            p->total=(s0+1<origen ? 2 : 1);
+            if (p->total==1) p->peso[0]=1.0;
+        }
+    }
+
+    return tabla;
+}
+
+//Color de la paleta del bmp mas cercano. Tabla con 6 bits por componente, se calcula al pedirla
+static z80_int *menu_help_keyboard_tabla_cercano=NULL;
+static z80_byte *menu_help_keyboard_tabla_cercano_bmp=NULL;
+
+static int menu_help_keyboard_color_cercano(z80_byte *paleta,int r,int g,int b)
+{
+    int clave=((r>>2)<<12)|((g>>2)<<6)|(b>>2);
+    z80_int valor=menu_help_keyboard_tabla_cercano[clave];
+    if (valor!=0xFFFF) return valor;
+
+    int mejor=0;
+    int mejor_distancia=0x7FFFFFFF;
+    int i;
+    for (i=0;i<256;i++) {
+        //Orden BGR0
+        int dr=paleta[i*4+2]-r;
+        int dg=paleta[i*4+1]-g;
+        int db=paleta[i*4]-b;
+        //Algo mas de peso al verde, como el ojo
+        int distancia=dr*dr*3+dg*dg*4+db*db*2;
+        if (distancia<mejor_distancia) {
+            mejor_distancia=distancia;
+            mejor=i;
+        }
+    }
+
+    menu_help_keyboard_tabla_cercano[clave]=mejor;
+    return mejor;
+}
+
+//Retorna 0 si no se ha podido (sin memoria)
+static int menu_help_keyboard_escala_bmp_suave(z80_byte *mem,int ignorar_x,int escala)
+{
+    if (mem==NULL) return 0;
+
+    int ancho=mem[18] + 256 * mem[19];
+    int alto=mem[22] + 256 * mem[23];
+    if (ancho<=0 || alto<=0) return 0;
+
+    int ancho_destino=(ancho*escala)>>8;
+    int alto_destino=(alto*escala)>>8;
+    if (ancho_destino<=0 || alto_destino<=0) return 0;
+
+    int offset_bmp=mem[10] + 256 * mem[11];
+    int ancho_calculo=ancho;
+    //Como screen_render_bmpfile_function
+    if ( (ancho_calculo % 2 ) !=0) ancho_calculo++;
+
+    z80_byte *paleta=&mem[14 + mem[14] + 256*mem[15]];
+
+    if (menu_help_keyboard_tabla_cercano==NULL) {
+        menu_help_keyboard_tabla_cercano=malloc(64*64*64*sizeof(z80_int));
+        if (menu_help_keyboard_tabla_cercano==NULL) return 0;
+        menu_help_keyboard_tabla_cercano_bmp=NULL;
+    }
+    if (menu_help_keyboard_tabla_cercano_bmp!=mem) {
+        memset(menu_help_keyboard_tabla_cercano,0xFF,64*64*64*sizeof(z80_int));
+        menu_help_keyboard_tabla_cercano_bmp=mem;
+    }
+
+    struct s_menu_help_keyboard_pesos *pesos_x=menu_help_keyboard_calcula_pesos(ancho,ancho_destino,ignorar_x);
+    struct s_menu_help_keyboard_pesos *pesos_y=menu_help_keyboard_calcula_pesos(alto,alto_destino,0);
+    //Primera pasada: horizontal, para todas las filas del bmp
+    float *horizontal=malloc((size_t)alto*ancho_destino*3*sizeof(float));
+
+    if (pesos_x==NULL || pesos_y==NULL || horizontal==NULL) {
+        free(pesos_x);
+        free(pesos_y);
+        free(horizontal);
+        return 0;
+    }
+
+    int x,y,i;
+
+    for (y=0;y<alto;y++) {
+        //lineas empiezan por la del final en un bmp
+        z80_byte *fila=&mem[(alto-1-y)*ancho_calculo+offset_bmp];
+        float *destino=&horizontal[(size_t)y*ancho_destino*3];
+
+        for (x=0;x<ancho_destino;x++) {
+            struct s_menu_help_keyboard_pesos *p=&pesos_x[x];
+            float r=0,g=0,b=0;
+            for (i=0;i<p->total;i++) {
+                z80_byte *c=&paleta[fila[p->inicio+i]*4];
+                float w=p->peso[i];
+                r +=c[2]*w;
+                g +=c[1]*w;
+                b +=c[0]*w;
+            }
+            destino[x*3]=r;
+            destino[x*3+1]=g;
+            destino[x*3+2]=b;
+        }
+    }
+
+    //Segunda pasada: vertical, y a la cache
+    for (y=0;y<alto_destino && y<menu_help_keyboard_cache_alto;y++) {
+        struct s_menu_help_keyboard_pesos *p=&pesos_y[y];
+
+        for (x=0;x<ancho_destino && x<menu_help_keyboard_cache_ancho;x++) {
+            if (pesos_x[x].total==0) continue;
+
+            float r=0,g=0,b=0;
+            for (i=0;i<p->total;i++) {
+                float *c=&horizontal[((size_t)(p->inicio+i)*ancho_destino+x)*3];
+                float w=p->peso[i];
+                r +=c[0]*w;
+                g +=c[1]*w;
+                b +=c[2]*w;
+            }
+
+            int ri=(int)(r+0.5);
+            int gi=(int)(g+0.5);
+            int bi=(int)(b+0.5);
+            if (ri>255) ri=255;
+            if (gi>255) gi=255;
+            if (bi>255) bi=255;
+
+            menu_help_keyboard_cache[y*menu_help_keyboard_cache_ancho+x]=
+                BMP_SECOND_INDEX_FIRST_COLOR+menu_help_keyboard_color_cercano(paleta,ri,gi,bi);
+        }
+    }
+
+    free(pesos_x);
+    free(pesos_y);
+    free(horizontal);
+
+    return 1;
+}
+
 //Calcular la imagen escalada del teclado (y el texto "512k" del PCW 8512) en la cache, si hace falta
 static void menu_help_keyboard_prepara_cache(zxvision_window *ventana)
 {
@@ -24491,8 +24693,12 @@ static void menu_help_keyboard_prepara_cache(zxvision_window *ventana)
 
     menu_help_keyboard_cache_escribiendo=1;
 
-    screen_render_bmpfile_function(help_keyboard_bmp_file_mem,BMP_SECOND_INDEX_FIRST_COLOR,ventana,zoom_x,0,0,-1,0,
-        menu_help_keyboard_render_bmp_putpixel);
+    //Imagen remuestreada con suavizado (promedio de area al reducir, bilineal al ampliar).
+    //Si no hay memoria, como antes: pixel mas cercano
+    if (!menu_help_keyboard_escala_bmp_suave(help_keyboard_bmp_file_mem,zoom_x,menu_help_keyboard_scale)) {
+        screen_render_bmpfile_function(help_keyboard_bmp_file_mem,BMP_SECOND_INDEX_FIRST_COLOR,ventana,zoom_x,0,0,-1,0,
+            menu_help_keyboard_render_bmp_putpixel);
+    }
 
     //Sobreescribimos el texto "512k" encima
     if (MACHINE_IS_PCW_8512) {
