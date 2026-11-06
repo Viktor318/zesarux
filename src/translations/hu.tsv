@@ -4490,3 +4490,6 @@ Play the whole list: the next song, then the next file. After the last one stop,
 Repeat: the same song in 1 song mode, the list from the beginning in list mode	Ismétlés: 1 szám módban ugyanazt a számot, lista módban a listát az elejétől	help
 Back 10 seconds (key ,)	Vissza 10 másodpercet (, billentyű)	help
 Forward 10 seconds (key .)	Előre 10 másodpercet (. billentyű)	help
+~~Machine picture size [%d%%]	Gépkép ~~mérete [%d%%]	item
+Size of the emulated machine picture: 100%, 125%, 150% or 200%	Az emulált gép képének mérete: 100%, 125%, 150% vagy 200%	tooltip
+Size of the emulated machine picture: 100%, 125%, 150% or 200%. Menus, icons and ZX Desktop keep their size; ZX Desktop fills the rest of the window. If the picture does not fit in the window, a smaller size is used	Az emulált gép képének mérete: 100%, 125%, 150% vagy 200%. A menük, ikonok és a ZX Desktop mérete nem változik; a ZX Desktop kitölti az ablak többi részét. Ha a kép nem fér el az ablakban, a program kisebb méretet használ	help

@@ -646,6 +646,7 @@ void zesarux_cmdline_help(void)
         "--outtape file          Insert output standard tape file. Supported formats: Spectrum: .TAP, .TZX, .PZX -- ZX80: .O -- ZX81: .P\n"
 
         "--zoom n                Total Zoom Factor\n"
+        "--machine-scale n       Size of the emulated machine picture in percent: 100, 125, 150 or 200 (SDL2 video driver). Menus, icons and ZX Desktop keep their size\n"
         "--vo driver             Video output driver. Valid drivers: ");
 
 #ifdef USE_COCOA
@@ -4029,6 +4030,18 @@ int parse_cmdline_options(int desde_commandline)
                 }
                 else {
                     zoom_y=zoom_x=valor;
+                }
+            }
+
+            else if (!strcmp(argv[puntero_parametro],"--machine-scale")) {
+                siguiente_parametro_argumento();
+                int valor=atoi(argv[puntero_parametro]);
+
+                if (valor!=100 && valor!=125 && valor!=150 && valor!=200) {
+                    debug_printf(VERBOSE_ERR,"Invalid value for machine scale: %d (100, 125, 150 or 200)",valor);
+                }
+                else {
+                    screen_machine_scale_requested=valor*4/100;
                 }
             }
 

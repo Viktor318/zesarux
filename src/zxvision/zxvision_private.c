@@ -195,7 +195,7 @@ void zxvision_get_start_valid_positions_icons(int *p_xinicial,int *p_xfinal,int 
     */
 
 
-    int inicio_x_zxdesktop=screen_get_emulated_display_width_no_zoom_border_en();
+    int inicio_x_zxdesktop=screen_get_machine_area_width_no_zoom();
 
 
     //Empezar a ubicarlos con algo de margen
@@ -361,7 +361,7 @@ void zxvision_if_mouse_in_lower_button_enlarge_reduce_zxdesktop_common(int *p_x,
 
     //donde esta el boton
     //int yboton=screen_get_emulated_display_height_no_zoom_border_en()/8;
-    int yboton=(screen_get_emulated_display_height_no_zoom_border_en()+screen_get_ext_desktop_height_no_zoom()) /8;
+    int yboton=(screen_get_machine_area_height_no_zoom()+screen_get_ext_desktop_height_no_zoom()) /8;
 
     int xboton=screen_get_window_size_width_no_zoom_border_en()/8-2; //justo 2 posicion menos
     //esta es la posicion x de los botones de +- ancho zx desktop

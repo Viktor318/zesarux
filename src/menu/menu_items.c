@@ -51232,11 +51232,14 @@ void menu_process_f_functions_by_action_name(int id_funcion,
         break;
 
         case F_FUNCION_ZOOM_IN:
-            if (!ventana_fullscreen && zoom_x<9 && zoom_y<9) screen_set_window_zoom(zoom_x+1,zoom_y+1);
+            //Ventana de tamano libre: solo cambia la imagen de la maquina
+            if (screen_free_window_layout) screen_set_machine_scale(screen_machine_scale_next(+1));
+            else if (!ventana_fullscreen && zoom_x<9 && zoom_y<9) screen_set_window_zoom(zoom_x+1,zoom_y+1);
         break;
 
         case F_FUNCION_ZOOM_OUT:
-            if (!ventana_fullscreen && zoom_x>1 && zoom_y>1) screen_set_window_zoom(zoom_x-1,zoom_y-1);
+            if (screen_free_window_layout) screen_set_machine_scale(screen_machine_scale_next(-1));
+            else if (!ventana_fullscreen && zoom_x>1 && zoom_y>1) screen_set_window_zoom(zoom_x-1,zoom_y-1);
         break;
 
         case F_FUNCION_SWITCH_ZXDESKTOP:

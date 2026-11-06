@@ -3308,10 +3308,41 @@ int screen_get_ext_desktop_width_zoom(void)
     return screen_get_ext_desktop_width_no_zoom()*zoom_x;
 }
 
+/* Escala de la imagen de la maquina emulada (fork, driver SDL2), en cuartos: 4=1x, 5=1,25x, 6=1,5x, 8=2x.
+   Solo cambia el tamano de la imagen de la maquina; los menus, iconos y el ZX Desktop no.
+   La maquina dibuja como siempre (a su zoom); el driver amplia cada pixel de la zona de la maquina */
+
+//La que pide el usuario
+int screen_machine_scale_requested=4;
+//La que se usa: la pedida, o menos si no cabe en la ventana
+int screen_machine_scale=4;
+
+//Ancho / alto de la zona de la maquina en la ventana, en pixeles
+int screen_get_machine_area_width(void)
+{
+    return screen_get_emulated_display_width_zoom_border_en()*screen_machine_scale/4;
+}
+
+int screen_get_machine_area_height(void)
+{
+    return screen_get_emulated_display_height_zoom_border_en()*screen_machine_scale/4;
+}
+
+//Lo mismo sin zoom (en las unidades de los menus y el ZX Desktop)
+int screen_get_machine_area_width_no_zoom(void)
+{
+    return screen_get_machine_area_width()/zoom_x;
+}
+
+int screen_get_machine_area_height_no_zoom(void)
+{
+    return screen_get_machine_area_height()/zoom_y;
+}
+
 //Total ancho de ventana en pixeles, contando maquina emulada + zxdesktop
 int screen_get_total_width_window_plus_zxdesktop(void)
 {
-    int ancho_no_zxdesktop=screen_get_emulated_display_width_zoom_border_en();
+    int ancho_no_zxdesktop=screen_get_machine_area_width();
     int ancho_zxdesktop=screen_get_ext_desktop_width_zoom();
 
     return ancho_no_zxdesktop+ancho_zxdesktop;
@@ -3321,7 +3352,7 @@ int screen_get_total_width_window_plus_zxdesktop(void)
 int screen_get_total_height_window_no_footer_plus_zxdesktop(void)
 {
     int alto_zxdesktop=screen_get_ext_desktop_height_zoom();
-    int alto_no_zxdesktop=screen_get_emulated_display_height_zoom_border_en();
+    int alto_no_zxdesktop=screen_get_machine_area_height();
 
     return alto_no_zxdesktop+alto_zxdesktop;
 }
@@ -3330,7 +3361,7 @@ int screen_get_total_height_window_no_footer_plus_zxdesktop(void)
 //Total ancho de ventana en pixeles pero sin zoom, contando maquina emulada + zxdesktop
 int screen_get_total_width_window_plus_zxdesktop_no_zoom(void)
 {
-    int ancho_no_zxdesktop=screen_get_emulated_display_width_no_zoom_border_en();
+    int ancho_no_zxdesktop=screen_get_machine_area_width_no_zoom();
     int ancho_zxdesktop=screen_get_ext_desktop_width_no_zoom();
 
     return ancho_no_zxdesktop+ancho_zxdesktop;
@@ -3340,7 +3371,7 @@ int screen_get_total_width_window_plus_zxdesktop_no_zoom(void)
 int screen_get_total_height_window_no_footer_plus_zxdesktop_no_zoom(void)
 {
     int alto_zxdesktop=screen_get_ext_desktop_height_no_zoom();
-    int alto_no_zxdesktop=screen_get_emulated_display_height_no_zoom_border_en();
+    int alto_no_zxdesktop=screen_get_machine_area_height_no_zoom();
 
     return alto_no_zxdesktop+alto_zxdesktop;
 }
@@ -3358,7 +3389,7 @@ int screen_get_ext_desktop_height_zoom(void)
 //Alto total considerando zoom y zx desktop y border
 int screen_get_total_alto_ventana_zoom(void)
 {
-    return screen_get_emulated_display_height_zoom_border_en()+screen_get_ext_desktop_height_zoom();
+    return screen_get_machine_area_height()+screen_get_ext_desktop_height_zoom();
 }
 
 
@@ -3383,9 +3414,86 @@ void screen_layout_fixed_gui_zoom(void)
 }
 
 //El ZX Desktop llena lo que queda de la ventana (en pixeles) despues de la maquina emulada
+//Escalas posibles, de mayor a menor
+static int screen_machine_scales[]={8,6,5,4};
+
+//El driver de video usa la ventana de tamano libre (SDL2): el zoom cambia la escala de la imagen de la maquina
+int screen_free_window_layout=0;
+
+//Escala siguiente (dir=1) o anterior (dir=-1) a la que se usa ahora. Si no hay, la misma
+int screen_machine_scale_next(int dir)
+{
+    int i;
+    if (dir>0) {
+        for (i=3;i>=0;i--) {
+            if (screen_machine_scales[i]>screen_machine_scale) return screen_machine_scales[i];
+        }
+    }
+    else {
+        for (i=0;i<4;i++) {
+            if (screen_machine_scales[i]<screen_machine_scale) return screen_machine_scales[i];
+        }
+    }
+    return screen_machine_scale;
+}
+
+//Cambiar la escala de la imagen de la maquina (en cuartos: 4, 5, 6 u 8)
+void screen_set_machine_scale(int escala)
+{
+    if (escala!=4 && escala!=5 && escala!=6 && escala!=8) return;
+
+    screen_machine_scale_requested=escala;
+
+    if (!screen_free_window_layout) return;
+
+    debug_printf (VERBOSE_INFO,"Machine picture scale: %d%%",escala*100/4);
+
+    //Como al cambiar el zoom: no usar los layers mientras se reasignan
+    void (*previous_function)(void);
+    int menu_antes;
+
+    screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
+
+    modificado_border.v=1;
+    screen_init_pantalla_and_others_and_realjoystick();
+
+    menu_init_footer();
+
+    screen_restart_pantalla_restore_overlay(previous_function,menu_antes);
+
+    //Iconos que hayan quedado bajo la imagen de la maquina
+    zxvision_check_all_configurable_icons_positions();
+    zxvision_reorder_configurable_icons_if_auto();
+
+    cls_menu_overlay();
+}
+
+//Ancho minimo del ZX Desktop que queda junto a la maquina (una columna de botones), en pixeles
+#define SCREEN_MIN_DESKTOP_WIDTH 72
+
 void screen_layout_fit_window(int ancho_ventana,int alto_ventana)
 {
     screen_layout_fixed_gui_zoom();
+
+    //La mayor escala, hasta la pedida, con la que la maquina cabe en la ventana (dejando una franja de ZX Desktop)
+    int i;
+    screen_machine_scale=4;
+    for (i=0;i<4;i++) {
+        int escala=screen_machine_scales[i];
+        if (escala>screen_machine_scale_requested) continue;
+        int ancho=screen_get_emulated_display_width_zoom_border_en()*escala/4;
+        int alto=screen_get_emulated_display_height_zoom_border_en()*escala/4+WINDOW_FOOTER_SIZE*zoom_y;
+        int margen=(screen_ext_desktop_enabled ? SCREEN_MIN_DESKTOP_WIDTH : 0);
+        if (escala==4 || (ancho+margen<=ancho_ventana && alto<=alto_ventana)) {
+            screen_machine_scale=escala;
+            break;
+        }
+    }
+
+    if (screen_machine_scale!=screen_machine_scale_requested) {
+        debug_printf (VERBOSE_INFO,"Machine picture scale %d/4 does not fit on the window: using %d/4",
+            screen_machine_scale_requested,screen_machine_scale);
+    }
 
     if (!screen_ext_desktop_enabled || !scr_driver_can_ext_desktop()) return;
 
@@ -3403,7 +3511,7 @@ void screen_layout_fit_window(int ancho_ventana,int alto_ventana)
 
 int screen_get_ext_desktop_start_x(void)
 {
-    return screen_get_emulated_display_width_zoom_border_en();
+    return screen_get_machine_area_width();
 }
 
 void scr_return_margenxy_rainbow(int *margenx_izq,int *margeny_arr)
@@ -3928,6 +4036,9 @@ void scr_putchar_footer_comun_zoom(z80_byte caracter,int x,int y,int tinta,int p
 
 
     y +=yorigen;
+
+    //La imagen de la maquina ampliada empuja el footer hacia abajo
+    y +=(screen_get_machine_area_height()-screen_get_emulated_display_height_zoom_border_en())/zoom_y;
 
     for (line=0;line<8;line++,y++) {
         byte_leido=*puntero++;
@@ -9674,6 +9785,8 @@ void screen_reset_scr_driver_params(void)
 {
     scr_tiene_colores=0;
 
+    screen_free_window_layout=0;
+
     screen_stdout_driver=0;
 
     screen_simpletext_driver=0;
@@ -12524,26 +12637,26 @@ int screen_get_emulated_display_height_zoom_border_en(void)
 //Suele ser el mismo tamanyo de la pantalla emulada pero sumando el margen inferior
 int screen_get_window_size_height_zoom_border_en(void)
 {
-    return screen_get_emulated_display_height_zoom_border_en()+WINDOW_FOOTER_SIZE*zoom_y;
+    return screen_get_machine_area_height()+WINDOW_FOOTER_SIZE*zoom_y;
 }
 
 //Tamanyo ventana contando border y multiplicando por zoom
 //Suele ser el mismo tamanyo de la pantalla emulada pero sumando el margen inferior
 int screen_get_window_size_width_zoom_border_en(void)
 {
-        return screen_get_emulated_display_width_zoom_border_en()+0;
+        return screen_get_machine_area_width()+0;
 }
 
 
 int screen_get_window_size_height_no_zoom_border_en(void)
 {
-        return screen_get_emulated_display_height_no_zoom_border_en()+WINDOW_FOOTER_SIZE;
+        return screen_get_machine_area_height_no_zoom()+WINDOW_FOOTER_SIZE;
 }
 
 
 int screen_get_window_size_width_no_zoom_border_en(void)
 {
-        return screen_get_emulated_display_width_no_zoom_border_en()+0;
+        return screen_get_machine_area_width_no_zoom()+0;
 }
 
 int screen_get_window_size_height_no_zoom(void)

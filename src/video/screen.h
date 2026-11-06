@@ -116,6 +116,15 @@ extern int screen_get_ext_desktop_start_x(void);
 extern int screen_end_keep_window;
 extern void screen_layout_fixed_gui_zoom(void);
 extern void screen_layout_fit_window(int ancho_ventana,int alto_ventana);
+extern int screen_machine_scale_requested;
+extern int screen_free_window_layout;
+extern int screen_machine_scale_next(int dir);
+extern void screen_set_machine_scale(int escala);
+extern int screen_machine_scale;
+extern int screen_get_machine_area_width(void);
+extern int screen_get_machine_area_height(void);
+extern int screen_get_machine_area_width_no_zoom(void);
+extern int screen_get_machine_area_height_no_zoom(void);
 
 extern void scr_return_margenxy_rainbow(int *margenx_izq,int *margeny_arr);
 

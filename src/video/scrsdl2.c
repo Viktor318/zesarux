@@ -92,6 +92,12 @@ void scrsdl_update_window_title(void)
    ya no destruyen la ventana: se recalcula la distribucion (maquina + ZX Desktop que llena el resto)
    y se reasignan la textura y los buffers. La escala del interfaz (menus, iconos, texto) es siempre la misma */
 
+//Escala de la imagen de la maquina (ver screen_machine_scale) y tamano de la maquina sin ampliar,
+//guardados al distribuir la ventana
+static int scrsdl_escala=4;
+static int scrsdl_maquina_ancho=0;
+static int scrsdl_maquina_alto=0;
+
 //Tamano de la imagen (textura) actual
 static int scrsdl_imagen_ancho=0;
 static int scrsdl_imagen_alto=0;
@@ -129,7 +135,11 @@ static int scrsdl_ajusta_a_ventana(void)
         alto=scr_sdl_force_size_height;
     }
 
-    debug_printf (VERBOSE_DEBUG,"Window %d X %d. Picture %d X %d",ancho_ventana,alto_ventana,ancho,alto);
+    scrsdl_escala=screen_machine_scale;
+    scrsdl_maquina_ancho=screen_get_emulated_display_width_zoom_border_en();
+    scrsdl_maquina_alto=screen_get_emulated_display_height_zoom_border_en();
+
+    debug_printf (VERBOSE_DEBUG,"Window %d X %d. Picture %d X %d. Machine scale %d/4",ancho_ventana,alto_ventana,ancho,alto,scrsdl_escala);
 
     scrsdl_libera_imagen();
 
@@ -285,8 +295,32 @@ void scrsdl_putpixel_final(int x,int y,unsigned int color)
 
 }
 
+static void scrsdl_putpixel_uno(int x,int y,unsigned int color)
+{
+    if (menu_overlay_activo==0) {
+        scrsdl_putpixel_final(x,y,color);
+        return;
+    }
+
+    buffer_layer_machine[y*ancho_layer_menu_machine+x]=color;
+    screen_putpixel_mix_layers(x,y);
+}
+
 void scrsdl_putpixel(int x,int y,unsigned int color)
 {
+    //Pixel de la maquina con la imagen ampliada: ocupa varios pixeles de la ventana
+    if (scrsdl_escala!=4 && x<scrsdl_maquina_ancho && y<scrsdl_maquina_alto && x>=0 && y>=0) {
+        int x0=x*scrsdl_escala/4;
+        int x1=(x+1)*scrsdl_escala/4;
+        int y0=y*scrsdl_escala/4;
+        int y1=(y+1)*scrsdl_escala/4;
+        int xx,yy;
+        for (yy=y0;yy<y1;yy++) {
+            for (xx=x0;xx<x1;xx++) scrsdl_putpixel_uno(xx,yy,color);
+        }
+        return;
+    }
+
     if (menu_overlay_activo==0) {
         //Putpixel con menu cerrado
         scrsdl_putpixel_final(x,y,color);
@@ -1533,11 +1567,13 @@ void scrsdl_resize(int width,int height)
     menu_overlay_activo=menu_antes;
     if (menu_overlay_activo) scr_init_layers_menu();
 
-    //El ZX Desktop es mas pequeno: recolocar ventanas e iconos que se hayan quedado fuera
+    //El ZX Desktop es mas pequeno: recolocar ventanas que se hayan quedado fuera
     if (zxdesktop_width<desktop_ancho_antes || zxdesktop_height<desktop_alto_antes) {
         zxvision_rearrange_background_windows(0,1);
-        zxvision_check_all_configurable_icons_positions();
     }
+
+    //Iconos fuera de la ventana o bajo la imagen de la maquina (que puede haber crecido)
+    zxvision_check_all_configurable_icons_positions();
 
     zxvision_reorder_configurable_icons_if_auto();
 
@@ -1833,8 +1869,12 @@ See the SDL documentation. Scancodes represent the physical position of the keys
             lightgun_x=lightgun_x/zoom_x;
             lightgun_y=lightgun_y/zoom_y;
 
-            kempston_mouse_x=mouse_x/zoom_x;
-            kempston_mouse_y=255-mouse_y/zoom_y;
+            //En la imagen ampliada de la maquina, a las coordenadas de la maquina
+            lightgun_x=lightgun_x*4/scrsdl_escala;
+            lightgun_y=lightgun_y*4/scrsdl_escala;
+
+            kempston_mouse_x=(mouse_x*4/scrsdl_escala)/zoom_x;
+            kempston_mouse_y=255-(mouse_y*4/scrsdl_escala)/zoom_y;
 
 
             debug_printf (VERBOSE_PARANOID,"Mouse motion. X: %d Y:%d kempston x: %d y: %d",mouse_x,mouse_y,kempston_mouse_x,kempston_mouse_y);
@@ -1927,7 +1967,7 @@ int scrsdl_get_menu_width(void)
 {
     //int max=screen_get_emulated_display_width_no_zoom_border_en()/menu_char_width/menu_gui_zoom;
 
-    int max=screen_get_emulated_display_width_no_zoom_border_en();
+    int max=screen_get_machine_area_width_no_zoom();
 
     max +=screen_get_ext_desktop_width_no_zoom();
 
@@ -1944,7 +1984,7 @@ int scrsdl_get_menu_width(void)
 
 int scrsdl_get_menu_height(void)
 {
-    int max=screen_get_emulated_display_height_no_zoom_border_en();
+    int max=screen_get_machine_area_height_no_zoom();
 
     max +=screen_get_ext_desktop_height_no_zoom();
 
@@ -2253,6 +2293,9 @@ int realjoystick_sdl_hit(void)
 int scrsdl_init (void) {
 
 	debug_printf (VERBOSE_INFO,"Init SDL2 Video Driver");
+
+    //Ventana de tamano libre: el zoom cambia la escala de la imagen de la maquina
+    screen_free_window_layout=1;
 
     //Esto tiene que ir al principio de inicializar driver para leer correctamente el tamaño de ventana
     screen_este_driver_permite_ext_desktop=1;

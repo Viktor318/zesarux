@@ -955,6 +955,18 @@ void menu_interface_zoom(MENU_ITEM_PARAMETERS)
 
 }
 
+//Ventana de tamano libre: 100% -> 125% -> 150% -> 200% -> 100%
+void menu_interface_machine_scale(MENU_ITEM_PARAMETERS)
+{
+    int escala=screen_machine_scale_requested;
+    if (escala==4) escala=5;
+    else if (escala==5) escala=6;
+    else if (escala==6) escala=8;
+    else escala=4;
+
+    screen_set_machine_scale(escala);
+}
+
 void menu_interface_zoom_width(MENU_ITEM_PARAMETERS)
 {
     //char string_zoom[2];
@@ -2863,6 +2875,18 @@ void menu_main_window_settings(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_SEPARADOR,NULL,NULL,
                 "--- Zoom ---","--- Zoom ---","--- Zoom ---");
 
+          //Ventana de tamano libre: el zoom solo cambia la imagen de la maquina
+          if (screen_free_window_layout) {
+            menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_machine_scale,NULL,
+                "~~Machine picture size [%d%%]",screen_machine_scale_requested*100/4);
+            menu_add_item_menu_shortcut(array_menu_window_settings,'m');
+            menu_add_item_menu_tooltip(array_menu_window_settings,"Size of the emulated machine picture: 100%, 125%, 150% or 200%");
+            menu_add_item_menu_ayuda(array_menu_window_settings,"Size of the emulated machine picture: 100%, 125%, 150% or 200%. "
+                "Menus, icons and ZX Desktop keep their size; ZX Desktop fills the rest of the window. "
+                "If the picture does not fit in the window, a smaller size is used");
+          }
+
+          else {
             menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_both_zoom_equals,NULL,
                 "Keep horizontal and vertical zoom equal","Mantener Zoom horizontal y vertical iguales","Mantenir Zoom horitzontal i vertical iguals");
             menu_add_item_menu_prefijo_format(array_menu_window_settings,"[%c] ",(screen_keep_both_zoom_equals.v ? 'X' : ' '));
@@ -2905,6 +2929,7 @@ void menu_main_window_settings(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_es_avanzado(array_menu_window_settings);
             menu_add_item_menu_tooltip(array_menu_window_settings,"Autochange to zoom 1 when switching to machine with large display (Next, QL, CPC, ...)");
             menu_add_item_menu_ayuda(array_menu_window_settings,"Autochange to zoom 1 when switching to machine with large display (Next, QL, CPC, ...)");
+          }
         }
 
         menu_add_item_menu_separator(array_menu_window_settings);

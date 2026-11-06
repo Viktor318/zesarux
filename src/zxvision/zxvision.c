@@ -526,8 +526,8 @@ int zxvision_if_configurable_icon_on_valid_position(int x,int y)
 
 
     //Ver si icono en posicion de pantalla emulada
-    int ancho_maquina=screen_get_emulated_display_width_no_zoom_border_en();
-    int alto_maquina=screen_get_emulated_display_height_no_zoom_border_en();
+    int ancho_maquina=screen_get_machine_area_width_no_zoom();
+    int alto_maquina=screen_get_machine_area_height_no_zoom();
 
     if (x<ancho_maquina && y<alto_maquina) {
         //printf("Check icon position: %d,%d on emulated machine display\n",x,y);
@@ -609,7 +609,7 @@ void zxvision_get_next_free_icon_position(int *p_x,int *p_y)
 
 /*
 
-    int inicio_x_zxdesktop=screen_get_emulated_display_width_no_zoom_border_en();
+    int inicio_x_zxdesktop=screen_get_machine_area_width_no_zoom();
 
 
     //Empezar a ubicarlos con algo de margen
@@ -690,7 +690,7 @@ void zxvision_reorder_configurable_icons(void)
 
 
 /*
-    int inicio_x_zxdesktop=screen_get_emulated_display_width_no_zoom_border_en();
+    int inicio_x_zxdesktop=screen_get_machine_area_width_no_zoom();
 
     //Empezar a ubicarlos con algo de margen
     int xinicial=inicio_x_zxdesktop+24;
@@ -4334,7 +4334,8 @@ void menu_put_switch_zxdesktop_footer(void)
         //printf("Escribir boton\n");
 
         //ancho total del footer
-        int xancho_total_footer=screen_get_window_size_width_no_zoom_border_en()/8;
+        //(el ancho de la maquina sin ampliar: el footer se dibuja con la cache de putpixel de la maquina)
+        int xancho_total_footer=screen_get_emulated_display_width_no_zoom_border_en()/8;
 
         //printf("xancho_total_footer: %d\n",xancho_total_footer);
         int xorigen=xancho_total_footer;
@@ -5162,8 +5163,8 @@ void menu_draw_ext_desktop_putpixel_bitmap(z80_int *destino GCC_UNUSED,int x,int
     if (x<0 || x>=total_width || y<0 || y>=total_height) return;
 
     //Ver si icono en posicion de pantalla emulada
-    int ancho_maquina=screen_get_emulated_display_width_zoom_border_en();
-    int alto_maquina=screen_get_emulated_display_height_zoom_border_en();
+    int ancho_maquina=screen_get_machine_area_width();
+    int alto_maquina=screen_get_machine_area_height();
 
     if (x<ancho_maquina && y<alto_maquina) {
         //printf("Retorno %d %d\n",x,y);
@@ -5183,8 +5184,8 @@ void menu_draw_ext_desktop_putpixel_bitmap_icon_text(z80_int *destino GCC_UNUSED
     if (x<0 || x>=total_width || y<0 || y>=total_height) return;
 
     //Ver si icono en posicion de pantalla emulada
-    int ancho_maquina=screen_get_emulated_display_width_zoom_border_en();
-    int alto_maquina=screen_get_emulated_display_height_zoom_border_en();
+    int ancho_maquina=screen_get_machine_area_width();
+    int alto_maquina=screen_get_machine_area_height();
 
     if (x<ancho_maquina && y<alto_maquina) {
         //printf("Retorno %d %d\n",x,y);
@@ -6306,8 +6307,8 @@ void menu_draw_ext_desktop_one_configurable_icon_background(int xinicio,int yini
     int total_width=screen_get_total_width_window_plus_zxdesktop();
     int total_height=screen_get_total_height_window_no_footer_plus_zxdesktop();
 
-    int ancho_maquina=screen_get_emulated_display_width_zoom_border_en();
-    int alto_maquina=screen_get_emulated_display_height_zoom_border_en();
+    int ancho_maquina=screen_get_machine_area_width();
+    int alto_maquina=screen_get_machine_area_height();
 
     int x,y;
 
@@ -6793,7 +6794,7 @@ void menu_draw_ext_desktop_footer(void)
     // De momento solo dibujarlo en color de fondo y ya
     int x,y;
     int xinicio=screen_get_ext_desktop_start_x();
-    int yinicio=screen_get_emulated_display_height_zoom_border_en()+screen_get_ext_desktop_height_zoom();
+    int yinicio=screen_get_machine_area_height()+screen_get_ext_desktop_height_zoom();
 
     int ancho=screen_get_ext_desktop_width_zoom();
     int alto=WINDOW_FOOTER_SIZE*zoom_y;
@@ -6840,7 +6841,7 @@ void old_menu_draw_ext_desktop(void)
         int yinicio=0;
 
         int ancho=screen_get_ext_desktop_width_zoom();
-        int alto=screen_get_emulated_display_height_zoom_border_en();
+        int alto=screen_get_machine_area_height();
 
         int x,y;
 
@@ -7347,12 +7348,12 @@ void menu_draw_ext_desktop_background(int xstart_zxdesktop)
     //int ancho=screen_get_emulated_display_width_zoom_border_en()+screen_get_ext_desktop_width_zoom();
 
     int ancho_zxdesktop=screen_get_ext_desktop_width_zoom();
-    int ancho_no_zxdesktop=screen_get_emulated_display_width_zoom_border_en();
+    int ancho_no_zxdesktop=screen_get_machine_area_width();
     int xfinal=ancho_no_zxdesktop+ancho_zxdesktop;
     //int alto=screen_get_ext_desktop_height_zoom(); //screen_get_emulated_display_height_zoom_border_en();
 
     int alto_zxdesktop=screen_get_ext_desktop_height_zoom();
-    int alto_no_zxdesktop=screen_get_emulated_display_height_zoom_border_en();
+    int alto_no_zxdesktop=screen_get_machine_area_height();
 
     int alto=alto_no_zxdesktop+alto_zxdesktop;
 
@@ -18290,8 +18291,8 @@ int zxvision_mouse_in_emulated_machine(void)
     mouse_pixel_y *=zoom_y;
 
     //si esta dentro de pantalla emulada
-    int ancho_maquina=screen_get_emulated_display_width_zoom_border_en();
-    int alto_maquina=screen_get_emulated_display_height_zoom_border_en();
+    int ancho_maquina=screen_get_machine_area_width();
+    int alto_maquina=screen_get_machine_area_height();
 
     if (mouse_pixel_x<ancho_maquina && mouse_pixel_y<alto_maquina) {
         return 1;
@@ -18324,8 +18325,8 @@ int zxvision_if_mouse_in_background(void)
     }
 
     //si esta dentro de pantalla emulada
-    int ancho_maquina=screen_get_emulated_display_width_zoom_border_en();
-    int alto_maquina=screen_get_emulated_display_height_zoom_border_en();
+    int ancho_maquina=screen_get_machine_area_width();
+    int alto_maquina=screen_get_machine_area_height();
 
     if (mouse_pixel_x<ancho_maquina && mouse_pixel_y<alto_maquina) {
         return 0;
