@@ -46,6 +46,7 @@
 
 
 #include "cpu.h"
+#include "ay_thread_player.h"
 #include "start.h"
 #include "scrnull.h"
 #include "operaciones.h"
@@ -1295,7 +1296,9 @@ util_stats_init();
 
     if (zxmmcplus_enabled.v) zxmmcplus_reset();
 
-    ay_player_playing.v=0;
+    //El reproductor AY que usa la maquina emulada se para con el reset. El que va en un hilo aparte
+    //no depende de la maquina: la cancion sigue (tambien al cambiar de maquina)
+    if (!ay_tp_active()) ay_player_playing.v=0;
 
     if (multiface_enabled.v) {
         multiface_lockout=0;
