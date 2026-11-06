@@ -1554,6 +1554,14 @@ void ay_player_song_end(void)
     if (ay_player_exit_emulator_when_finish.v) end_emulator_autosave_snapshot();
 }
 
+//El reproductor usa la maquina emulada (no el reproductor en hilo aparte): la maquina esta tomada por la cancion
+//(por ejemplo, en el CPC las interrupciones pasan a ser de 50 Hz). Con el reproductor en hilo aparte la maquina
+//sigue como siempre
+int ay_player_uses_machine(void)
+{
+    return ay_player_playing.v && !ay_tp_active();
+}
+
 //Ir adelante o atras en la cancion (en segundos). Solo con el reproductor en hilo aparte
 void ay_player_seek_seconds(int segundos)
 {

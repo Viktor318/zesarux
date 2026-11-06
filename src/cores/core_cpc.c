@@ -67,7 +67,7 @@ void core_cpc_final_frame(void)
 
 
     //Con ay player, interrupciones a 50 Hz
-    if (ay_player_playing.v==1) {
+    if (ay_player_uses_machine()) {
         if (iff1.v==1) {
             //printf ("Generamos interrupcion en scanline: %d cpc_scanline_counter: %d\n",t_scanline,cpc_scanline_counter);
             interrupcion_maskable_generada.v=1;
@@ -299,7 +299,7 @@ void core_cpc_end_scanline_stuff(void)
 
 
     //Con ay player, interrupciones a 50 Hz
-    if (cpc_scanline_counter>=52 && ay_player_playing.v==0) {
+    if (cpc_scanline_counter>=52 && !ay_player_uses_machine()) {
         cpc_crt_pending_interrupt.v=1;
 
         //printf ("Llega interrupcion crtc del Z80 en counter: %d cpc_crtc_contador_scanline: %d t: %d scanline_draw: %d\n",

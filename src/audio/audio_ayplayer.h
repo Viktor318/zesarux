@@ -69,6 +69,9 @@ extern z80_int ay_player_limit_any_track;
 extern z80_int ay_player_add_to_track;
 extern z80_bit ay_player_repeat_file;
 extern z80_bit ay_player_single_song;
+
+//El reproductor usa la maquina emulada (no el reproductor en hilo aparte): la maquina esta tomada por la cancion
+extern int ay_player_uses_machine(void);
 extern void ay_player_song_end(void);
 extern void ay_player_seek_seconds(int segundos);
 

@@ -230,7 +230,7 @@ void core_pcw_end_scanline_stuff(void)
     //Con ay player, interrupciones a 50 Hz
 
 
-    if (pcw_scanline_counter>=52 && ay_player_playing.v==0) {
+    if (pcw_scanline_counter>=52 && !ay_player_uses_machine()) {
         pcw_pending_interrupt.v=1;
 
         //printf ("Llega interrupcion crtc del Z80 en counter: %d pcw_crtc_contador_scanline: %d t: %d scanline_draw: %d\n",
