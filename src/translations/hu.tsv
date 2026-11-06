@@ -4496,3 +4496,8 @@ Size of the emulated machine picture: 100%, 125%, 150% or 200%. Menus, icons and
 [%c] Smooth machine picture	[%c] Gépkép simítása	item
 Smooth the machine picture when its size does not give whole pixels	A gép képének simítása, ha a mérete nem ad egész pixeleket	tooltip
 When the size of the machine picture does not give whole pixels (125%, or 150% on 80 column modes), some pixels are wider than others. Smoothing makes them even, but a bit blurred	Ha a gép képének mérete nem ad egész pixeleket (125%, illetve 150% a 80 oszlopos módokban), egyes pixelek szélesebbek a többinél. A simítás egyenletessé teszi őket, de a kép kissé elmosódik	help
+[%c] Main	[%c] Fő	item
+Main volume	Fő hangerő	window text
+Turn the main volume on or off	A fő hangerő be- vagy kikapcsolása	tooltip
+Turn the main volume on or off: all the sound of the emulator. When it is turned on again, it comes back to the volume it had	A fő hangerő be- vagy kikapcsolása: az emulátor teljes hangja. Visszakapcsoláskor a korábbi hangerő tér vissza	help
+Main volume: all the sound of the emulator, 0-100%. The same as Settings > Audio > Volume, and the one the AY Player music depends on	Fő hangerő: az emulátor teljes hangja, 0-100%. Ugyanaz, mint a Beállítások > Hang > Hangerő, és ettől függ az AY lejátszó zenéje is	help

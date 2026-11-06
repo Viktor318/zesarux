@@ -6275,12 +6275,14 @@ zxvision_window *menu_audio_new_ayplayer_overlay_window;
 //lineas 0-4 informacion (archivo, titulo, autor, otros, cancion y tiempo), 5 separador,
 //6-9 indicadores de volumen, 10 separador, 11-13 botones
 #define AYPLAYER_ANCHO_VENTANA 44
-#define AYPLAYER_ALTO_VENTANA 18
+#define AYPLAYER_ALTO_VENTANA 19
 #define AYPLAYER_LINEA_ARCHIVO 0
 #define AYPLAYER_INICIO_LINEA_TRACK 4
 #define AYPLAYER_LINEA_SEPARADOR_1 5
 #define AYPLAYER_INICIO_LINEA_VU_METERS 6
 #define AYPLAYER_LINEA_SEPARADOR_2 10
+//Debajo de las lineas de volumen y modo
+#define AYPLAYER_LINEA_SEPARADOR_3 (AYPLAYER_INICIO_LINEA_MENU+2)
 #define AYPLAYER_INICIO_LINEA_MENU 11
 
 //Ancho en pantalla de un texto: los caracteres UTF-8 cuentan uno, las marcas de atajo (~~ y ~^) nada
@@ -6542,6 +6544,7 @@ void menu_audio_new_ayplayer_overlay(void)
 
             ayplayer_separador(w,AYPLAYER_LINEA_SEPARADOR_1);
             ayplayer_separador(w,AYPLAYER_LINEA_SEPARADOR_2);
+            ayplayer_separador(w,AYPLAYER_LINEA_SEPARADOR_3);
         }
 
         else {
@@ -6549,6 +6552,7 @@ void menu_audio_new_ayplayer_overlay(void)
             for (linea=0;linea<AYPLAYER_INICIO_LINEA_MENU;linea++) zxvision_fill_width_spaces(w,linea);
             zxvision_print_string_defaults_fillspc(w,1,0,"No song playing");
             ayplayer_separador(w,AYPLAYER_LINEA_SEPARADOR_2);
+            ayplayer_separador(w,AYPLAYER_LINEA_SEPARADOR_3);
         }
     }
 
@@ -7377,6 +7381,52 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,x,linea); \
             x +=ayplayer_ancho_texto(menu_tr(texto))+separacion;
 
+            //Volumen propio del reproductor
+            zxvision_print_string_defaults(ventana,1,linea,"Sound:");
+            x=columna_botones;
+            AYPLAYER_BOTON(menu_ayplayer_volume_down,"~~Quieter",'q',"AY Player volume down (5%)");
+            AYPLAYER_BOTON(menu_ayplayer_volume_up,"~~Louder",'l',"AY Player volume up (5%)");
+            ayplayer_columna_volumen=x;
+            ayplayer_linea_volumen=linea;
+            ayplayer_mostrar_volumen(ventana);
+            linea++;
+
+            //Modo: 1 cancion o lista, y repetir (como en el fork de Fuse). Separacion 1 para que quepa
+            zxvision_print_string_defaults(ventana,1,linea,"Mode:");
+            x=columna_botones;
+            {
+                int separacion_antes=separacion;
+                separacion=1;
+                menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_single_song,NULL,
+                    "(%c) ~~1 song",(ay_player_single_song.v ? '*' : ' '));
+                menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'1');
+                menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Play one song: at the end stop, or with Repeat play it again");
+                menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,x,linea);
+                x +=ayplayer_ancho_texto(menu_tr("(%c) ~~1 song"))-1+separacion; //%c ocupa 1
+
+                menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_whole_list,NULL,
+                    "(%c) L~~ist",(ay_player_single_song.v ? ' ' : '*'));
+                menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'i');
+                menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Play the whole list: the next song, then the next file. "
+                    "After the last one stop, or with Repeat start again from the first one");
+                menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,x,linea);
+                x +=ayplayer_ancho_texto(menu_tr("(%c) L~~ist"))-1+separacion; //%c ocupa 1
+
+                menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_repeat,NULL,
+                    "[%c] Repeat",(ay_player_repeat_file.v ? 'X' : ' '));
+                //Sin atajo en ingles (todas sus letras estan ocupadas). En hungaro el marcado con ~~
+                menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,0);
+                menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Repeat: the same song in 1 song mode, the list from the beginning in list mode");
+                menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,x,linea);
+
+                separacion=separacion_antes;
+            }
+            linea++;
+
+            //Separador entre volumen/modo y los botones de cancion, archivo y lista
+            ayplayer_separador(ventana,AYPLAYER_LINEA_SEPARADOR_3);
+            linea++;
+
             if (menu_audio_new_ayplayer_si_mostrar() ) {
 
                 //Las etiquetas de los niveles de los canales: encender / apagar el canal
@@ -7439,47 +7489,6 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
             AYPLAYER_BOTON(menu_audio_new_ayplayer_settings,"Se~~ttings",'t',"Player settings");
             linea++;
 
-            //Volumen propio del reproductor
-            zxvision_print_string_defaults(ventana,1,linea,"Sound:");
-            x=columna_botones;
-            AYPLAYER_BOTON(menu_ayplayer_volume_down,"~~Quieter",'q',"AY Player volume down (5%)");
-            AYPLAYER_BOTON(menu_ayplayer_volume_up,"~~Louder",'l',"AY Player volume up (5%)");
-            ayplayer_columna_volumen=x;
-            ayplayer_linea_volumen=linea;
-            ayplayer_mostrar_volumen(ventana);
-            linea++;
-
-            //Modo: 1 cancion o lista, y repetir (como en el fork de Fuse). Separacion 1 para que quepa
-            zxvision_print_string_defaults(ventana,1,linea,"Mode:");
-            x=columna_botones;
-            {
-                int separacion_antes=separacion;
-                separacion=1;
-                menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_single_song,NULL,
-                    "(%c) ~~1 song",(ay_player_single_song.v ? '*' : ' '));
-                menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'1');
-                menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Play one song: at the end stop, or with Repeat play it again");
-                menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,x,linea);
-                x +=ayplayer_ancho_texto(menu_tr("(%c) ~~1 song"))-1+separacion; //%c ocupa 1
-
-                menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_whole_list,NULL,
-                    "(%c) L~~ist",(ay_player_single_song.v ? ' ' : '*'));
-                menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'i');
-                menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Play the whole list: the next song, then the next file. "
-                    "After the last one stop, or with Repeat start again from the first one");
-                menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,x,linea);
-                x +=ayplayer_ancho_texto(menu_tr("(%c) L~~ist"))-1+separacion; //%c ocupa 1
-
-                menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_repeat,NULL,
-                    "[%c] Repeat",(ay_player_repeat_file.v ? 'X' : ' '));
-                //Sin atajo en ingles (todas sus letras estan ocupadas). En hungaro el marcado con ~~
-                menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,0);
-                menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Repeat: the same song in 1 song mode, the list from the beginning in list mode");
-                menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,x,linea);
-
-                separacion=separacion_antes;
-            }
-            linea++;
 
             if (!menu_audio_new_ayplayer_si_mostrar() && ay_player_playlist_get_total_elements()!=0) {
                 x=columna_botones;
@@ -15914,6 +15923,34 @@ void menu_ay_channel_mixer_pan(MENU_ITEM_PARAMETERS)
     menu_ventana_scanf_numero_enhanced_default_dynamic(titulo,&ay_mixer_pan[canal],5,+5,-100,100,0,pan_modo);
 }
 
+/* Volumen principal (el general del emulador, como en Ajustes > Audio y en el reproductor AY).
+   Silenciarlo es lo mismo que la accion de silencio: el volumen pasa a 0 y se recuerda el anterior */
+extern int audiovolume_before_silence;
+extern void menu_audio_volume(MENU_ITEM_PARAMETERS);
+
+void menu_ay_channel_mixer_main_mute(MENU_ITEM_PARAMETERS)
+{
+    if (audiovolume==0) {
+        audiovolume=audiovolume_before_silence;
+        if (audiovolume<=0) audiovolume=100;
+    }
+    else {
+        audiovolume_before_silence=audiovolume;
+        audiovolume=0;
+    }
+    ay_player_volume_limit();
+}
+
+void menu_ay_channel_mixer_main_volume(MENU_ITEM_PARAMETERS)
+{
+    //Silenciado: se ajusta el volumen que tenia, y deja de estar silenciado
+    if (audiovolume==0 && audiovolume_before_silence>0) audiovolume=audiovolume_before_silence;
+
+    //La misma ventana que Ajustes > Audio > Volumen
+    menu_audio_volume(0);
+    ay_player_volume_limit();
+}
+
 void menu_ay_channel_mixer_reset(MENU_ITEM_PARAMETERS)
 {
     ay_mixer_reset();
@@ -15981,6 +16018,11 @@ void menu_ay_channel_mixer(MENU_ITEM_PARAMETERS)
 
     //Columnas, segun el ancho de los textos traducidos
     int col_lugar=1+ayplayer_ancho_texto(menu_tr("[X] A"))+2;
+    {
+        //La fila del volumen principal: su etiqueta tambien antes de la columna del lugar
+        int ancho_principal=1+ayplayer_ancho_texto(menu_tr("[%c] Main"))-1+2;
+        if (ancho_principal>col_lugar) col_lugar=ancho_principal;
+    }
     int ancho_lugar=ayplayer_ancho_texto(menu_tr("Place"));
     {
         int i;
@@ -16013,7 +16055,7 @@ void menu_ay_channel_mixer(MENU_ITEM_PARAMETERS)
     }
     if (ancho_ventana>scr_get_menu_width()) ancho_ventana=scr_get_menu_width();
 
-    int alto_ventana=13;
+    int alto_ventana=14;
 
     int xventana=menu_center_x_from_width(ancho_ventana);
     int yventana=menu_center_y()-alto_ventana/2;
@@ -16103,6 +16145,31 @@ void menu_ay_channel_mixer(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_ayuda(array_menu,"Panorama of the channel: -100 left, 0 centre, 100 right. "
                 "The side towards the panorama is heard at full level, the other one lower. Not used in Mono mode");
             menu_add_item_menu_tabulado(array_menu,col_pan,linea);
+
+            linea++;
+        }
+
+        //Volumen principal: el general del emulador (el mismo que en Ajustes > Audio y en el reproductor AY)
+        {
+            int silenciado=(audiovolume==0);
+            int volumen=(silenciado && audiovolume_before_silence>0 ? audiovolume_before_silence : audiovolume);
+
+            menu_add_item_menu_format(array_menu,MENU_OPCION_NORMAL,menu_ay_channel_mixer_main_mute,NULL,"[%c] Main",
+                (silenciado ? ' ' : 'X'));
+            menu_add_item_menu_tooltip(array_menu,"Turn the main volume on or off");
+            menu_add_item_menu_ayuda(array_menu,"Turn the main volume on or off: all the sound of the emulator. "
+                "When it is turned on again, it comes back to the volume it had");
+            menu_add_item_menu_tabulado(array_menu,1,linea);
+
+            char barra[16];
+            int partes=volumen/10;
+            for (i=0;i<10;i++) barra[i]=(i<partes ? '=' : '-');
+            barra[10]=0;
+            menu_add_item_menu_format(array_menu,MENU_OPCION_NORMAL,menu_ay_channel_mixer_main_volume,NULL,"%3d%% %s",volumen,barra);
+            menu_add_item_menu_tooltip(array_menu,"Main volume");
+            menu_add_item_menu_ayuda(array_menu,"Main volume: all the sound of the emulator, 0-100%. "
+                "The same as Settings > Audio > Volume, and the one the AY Player music depends on");
+            menu_add_item_menu_tabulado(array_menu,col_volumen,linea);
 
             linea++;
         }
