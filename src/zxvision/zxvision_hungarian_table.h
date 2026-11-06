@@ -3824,6 +3824,7 @@ static const struct s_hungarian_string hungarian_strings[]={
     {"Volume %c","%c hangereje"},
     {"Volume bit 1 range","1-es bit hanger\305\221-tartom\303\241nya"},
     {"Volume bit 1 starting range value","Az 1-es bit tartom\303\241ny\303\241nak kezd\305\221 hanger\305\221\303\251rt\303\251ke"},
+    {"Volume in %","Kimeneti hanger\305\221 (%)"},
     {"Volume of the channel","A csatorna hangereje"},
     {"Volume of the channel, 0-100%","A csatorna hangereje, 0\342\200\223100%"},
     {"Volume range","Hanger\305\221-tartom\303\241ny"},
