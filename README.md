@@ -1,517 +1,122 @@
-ZEsarUX - ZX Second-Emulator And Released for UniX 
+# ZEsarUX – Hungarian edition
 
-Created by Cesar Hernandez Baño
+**English** | [Magyar](README.hu.md)
 
-https://github.com/chernandezba/zesarux
+This is a fork of [ZEsarUX](https://github.com/chernandezba/zesarux), the
+ZX Second-Emulator And Released for UniX by César Hernández Bañó, made mainly
+for using it on Windows, in Hungarian or English. It adds a Hungarian user
+interface, typing with the Windows keyboard layout, high quality sound made
+the way [Fuse](https://fuse-emulator.sourceforge.net/) makes it, a reworked
+AY music player with an AY mixer, a main window that keeps its size with a
+freely sized machine picture, and several fixes.
 
+The emulation itself is the original ZEsarUX. The original documentation is
+in [src/README](src/README) (in Hungarian: [src/README_hu](src/README_hu)),
+the original change log in [src/Changelog](src/Changelog). The changes of
+this fork are listed in [CHANGELOG-fork.md](CHANGELOG-fork.md).
 
-It's a ZX Machines Emulator for UNIX based operating systems (and Windows), including all the Sinclair computers:
+This is not an official ZEsarUX release: please report problems of this
+edition here, not to the original project.
 
-* MK14
-* ZX80
-* ZX81
-* ZX Spectrum
-* QL
-* Z88
 
-And also:
+## Download
 
-* Microdigital TK80, TK82, TK82C, TK83, TK85, TK90X (Portuguese and Spanish, Ferranti and Microdigital ULA), TK95 (Portuguese and Spanish)
-* Czerweny CZ 1000, CZ 1500, CZ 2000, CZ 1000 Plus, CZ 1500 Plus, CZ Spectrum, CZ Spectrum Plus
-* Timex Sinclair 1000, 1500, 2068
-* Timex Computer 2048, 2068
-* Inves Spectrum +
-* Sam Coupe
-* Pentagon 
-* Scorpion ZS-256, Scorpion ZS-256 Turbo+, Scorpion GMX
-* ATM Turbo 1, ATM Turbo 2, ATM Turbo 2+, ATM Turbo 3
-* Didaktik Gama
-* Chloe 140 SE, 280 SE
-* Chrome
-* Prism
-* ZX-Uno
-* ZX-Evolution BaseConf
-* ZX-Evolution TS-Conf
-* ZX Spectrum Next
-* Jupiter Ace
-* Amstrad CPC 464, CPC 4128, CPC 664, CPC 6128
-* Amstrad PCW 8256, PCW 8512
-* MSX1 
-* Spectravideo 318/328
-* Colecovision
-* Sega SG1000
-* Sega Master System
-
-ZEsarUX source code and binaries are distributed under GNU GPL license. 
-ZEsarUX also includes a folder, "my_soft", which has some programs, games and data created by me and other members of my family. The entire folder is also covered by the GNU GPL license.
-
-ZEsarUX also includes third-party roms, media, programs and games NOT covered by this license.
-
-This is my second ZX Spectrum emulator after ZXSpectr
-https://github.com/chernandezba/zxspectr
+Download `ZEsarUX-13.1-SN-hu.1-windows.zip` from the
+[Releases](https://github.com/Viktor318/zesarux/releases) page, unpack it
+into a folder of your choice and start `zesarux.exe`. Nothing has to be
+installed.
 
-I recommend you to read FEATURES, INSTALL and HISTORY files, as well as other documents in this emulator.
-You can open them from the help menu or from an external viewer.
+The fork is based on ZEsarUX 13.1-SN, the development snapshot ("SN") of the
+coming ZEsarUX 13.1; hence the version name 13.1-SN-hu.1.
 
+## First steps
 
-ZEsarUX distributed under GNU GENERAL PUBLIC LICENSE v3. You may read it on the LICENSE file.
+- **F5** (or the ZEsarUX button) opens the menu.
+- **Hungarian menus**: *Settings > General > Language > Magyar*, or start it
+  with `--language hu`.
+- **Typing with the Windows keyboard layout**: *Settings > Hardware >
+  Keyboard > Use Windows keyboard layout*.
+- The settings are saved in `%APPDATA%\ZEsarUX` (Roaming\ZEsarUX).
 
-Please read the other licenses used in ZEsarUX, from the menu Help->Licenses or just open files from folder licenses/
+## What this edition adds
 
+### Hungarian user interface
 
-Available releases for [download](https://github.com/chernandezba/zesarux/releases):
-* Source code
-* Binary compiled versions:
-* GNU/Linux 32/64 Bits
-* FreeBSD 64 Bits
-* Haiku OS
-* macOS Silicon/Intel
-* Windows
-* Raspberry pi (raspbian)
+Every menu, window title, message, help text and tooltip is translated; the
+menu hotkeys are letters of the Hungarian words, and the menu fonts have the
+Hungarian accented letters.
 
-Other by 3rd party:
-* Arch Linux
-* Slackware
-* Retropie/EmulationStation
-* Open Pandora
-* PocketCHIP
-* MorhpOS
+### Keyboard
 
-Also tested on:
-* AROS Research Operating System (Amiga Compatible)
-* FiwixOS
-* Minix3
-* Sortix
+- **Windows keyboard layout** (Spectrum, ZX80, ZX81, QL and Amstrad CPC):
+  what you type appears on the emulated machine, whatever the layout of your
+  keyboard. On a Hungarian keyboard Shift+2 types `"`, AltGr+V types `@`;
+  the key combination of the machine is pressed automatically.
+- **Left Alt + number keys = Caps Shift + number** (EDIT, cursor keys,
+  DELETE...).
+- The numeric keypad works on machines without one; optional key repeat on
+  the ZX80 and ZX81.
 
-Also a [Docker image](https://hub.docker.com/r/chernandezba/zesarux)
+### Sound
 
-If you have a Pebble watch, you may also try the ZEsarUX watchface, from [Rebble Store](https://apps.rebble.io/en_US/application/692644f5703cec0009a280fd) and [Repebble store](https://apps.repebble.com/cdfec388a4a74aa89c27e51b)
+- **High quality sound** (on by default): 48 kHz, 16 bit, band limited, made
+  the way Fuse makes it (exact beeper timing, the Fuse AY generator and
+  filters), on the Spectrums, the Amstrad CPC, the ZX80, the ZX81, the QL
+  and with the DACs.
+- The Sinclair and Amstrad Spectrums run at their real frame rate.
+- Fixes in the SDL sound output (doubled short sounds, dropouts on Windows).
 
+### AY music player and AY mixer
 
-ZEsarUX has won the "Best Emulator" award from Retrogaming Total blog on 2015 and 2017
+- The player plays `.ay` music on a Z80 and an AY chip of its own, apart from
+  the emulated machine, which keeps running. Song lengths are measured and
+  kept, songs fade out at the end, seeking ±10 seconds, *1 song / List /
+  Repeat* modes.
+- The **AY mixer**: stereo mode (eight modes, with custom places), volume,
+  panorama and on/off switch of each channel, main volume; settings can be
+  saved for each song in `.mix` files (the same format as in the Fuse fork).
 
+### Window and full screen
 
+- The main window keeps its size, place and maximized state between runs;
+  ZX Desktop fills the space beside and below the machine.
+- **Machine picture size** 100%, 125%, 150% or 200%, with optional
+  smoothing; the menus and icons keep their size.
+- **Full screen** with ZX Desktop, or the machine picture alone filling the
+  screen with sharp, even pixels.
 
+### Virtual keyboard
 
-__DONATE__
+High resolution keyboard pictures in three sizes (100%, 150%, 200%; a double
+click on the title steps between them), and pressing its keys no longer slows
+down the emulation.
 
-ZEsarUX is free software and you don't need to pay to use it. 
-ZEsarUX will always cost you nothing to use, but that doesn't mean it costs me nothing to make.
-So if you want to demonstrate your appreciation to it and also help me cover the costs of my development servers, you can donate using Paypal.
-All donors will appear in the DONORS file.
+See [CHANGELOG-fork.md](CHANGELOG-fork.md) for the full list.
 
-Just click:
 
-[ZEsarUX donation](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=E5RSRST8N7KWS&lc=ES&item_name=Donativo%20ZEsarUX&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
+## Building
 
+- **Linux**: as the original ZEsarUX, see [src/INSTALL](src/INSTALL)
+  (`./configure`, `make` in `src`).
+- **Windows**, cross-built from Linux or WSL with MinGW-w64:
+  `src/build-windows-cross.sh` (the comments at its start list the needed
+  packages); `src/build-windows-cross.sh --release` makes the release
+  package.
 
-Thanks!
+The development branch is `hungarian-ui`; `main` follows the original
+project.
 
 
-__FEATURES__
+## Licence and credits
 
-* Runs on any UNIX based operating system and Windows: tested on GNU/Linux x86, GNU/Linux x86_64, GNU/Linux Raspbian, GNU/Linux RetroPie, FreeBSD x86_64, Haiku, Mac OS X, Windows native, Windows + Cygwin
+ZEsarUX is © César Hernández Bañó, licensed under the GNU General Public
+License version 3 (see [src/LICENSE](src/LICENSE) and
+[src/LICENSES_info](src/LICENSES_info)).
 
-* Emulates:
-    * Science of Cambridge MK14
-    * Sinclair ZX80
-    * Sinclair ZX81
-    * Sinclair ZX Spectrum models: 16k, 48k (English and Spanish), 48k+ (English and Spanish), Spectrum 128k (English and Spanish), Spectrum +2 (English, Spanish and French), Spectrum +2A (English and Spanish), Spectrum +3 (English and Spanish)
-    * Sinclair QL
-    * Cambridge Z88
-    * Microdigital TK80, TK82, TK82C, TK83, TK85, TK90X (Portuguese and Spanish, Ferranti and Microdigital ULA), TK95 (Portuguese and Spanish)
-    * Czerweny CZ 1000, CZ 1500, CZ 1000 Plus, CZ 1500 Plus, CZ 2000, CZ Spectrum, CZ Spectrum Plus
-    * Timex Sinclair 1000, 1500, 2068
-    * Timex Computer 2048, 2068
-    * Inves Spectrum +
-    * Sam Coupe
-    * Pentagon
-    * Scorpion ZS-256, Scorpion ZS-256 Turbo+, Scorpion GMX
-    * ATM Turbo 1, ATM Turbo 2, ATM Turbo 2+, ATM Turbo 3
-    * Didaktik Gama
-    * Chloe 140 SE, 280 SE
-    * Chrome
-    * Prism
-    * ZX-Uno
-    * ZX-Evolution BaseConf
-    * ZX-Evolution TS-Conf
-    * ZX Spectrum Next
-    * Jupiter Ace
-    * Amstrad CPC 464, CPC 4128, CPC 664, CPC 6128
-    * Amstrad PCW 8256, PCW 8512
-    * MSX1
-    * Spectravideo 318/328
-    * Colecovision
-    * Sega SG1000
-    * Sega Master System
+This fork uses, besides ZEsarUX:
 
-* Is the only emulator for machines: Chloe 140/280, Prism and Chrome
-
-* Almost perfect emulation of timing of all Spectrum machines
-
-* Supports 60 Hz modes on Master System, SG1000, MSX, Colecovision, Spectravideo and Timex Sinclair 2068
-
-* Emulates undocumented Z80 flags, features, and MEMPTR register
-
-* Emulates idle bus port, contended memory, ULA early/late timings
-
-* Emulates Motorola CPU 68008 (Sinclair QL)
-
-* Emulates SC/MP CPU - INS8060 (MK14)
-
-* Emulates perfect ZX Spectrum 16k/48k colour palette
-
-* Emulates ULAplus: Standard 64 colour palette, linear modes with 16 colours per pixel: Radastan Mode: 128x96, ZEsarUX modes: 256x96, 128x192, 256x192
-
-* Emulates Flash Color mode (128 colors)
-
-* Emulates Chroma81 ZX81 Colour mode
-
-* Emulates Spectra Video Modes
-
-* Emulates Amstrad PCW Colour Video Modes
-
-* Emulates Timex Video modes (Mode 0 standard, 1 dual screen, 2 hires colour 8x1, 6 512x192 monochrome)
-
-* Emulates Pentagon 16C mode
-
-* Emulates All Video modes from Prism machine
-
-* Emulates ZGX Sprite Chip
-
-* Emulates snow effect on Spectrum models
-
-* Emulates interlaced, scanlines and Gigascreen effects
-
-* Emulates hi-res modes on ZX Spectrum (rainbow effects and others) and ZX80/ZX81 (UDG, CHR$128, WRX, HRG and some other hi-res modes)
-
-* Supports lots of video effects:
-    - Reduce, Unsteady, Flip Vertical, Flip Horizontal, Rotate, Twirl, Interferences, Sea, Waves, Magnetic Field, Shear, Lens, Radar
-    - Zoom, Zoom Mouse, Pixelate, Blur, Shader Border, LED, LED RGB, Hsync lost, Vsync lost, Scroll Horizontal, Scroll Vertical, Fade In, Fade Out, Fade InOut
-    - Scanlines, Sepia, Red, RGB, Decolorize, Persistence, Contrast, Brightness, Nagravision, Random Lines, Decode Nagravision, Sortalike, Logo Rebound
-    - Restore Original, Copy to buffer, Mix from Buffer, Load BMP
-
-* Can generate Anaglyph images for 3D glasses (red-blue glasses)
-
-* Uses its own powerful window environment (ZX Vision) inside the program application window, having the same GUI style on all plattforms. Allows to have an extended display to hold menus and multitask windows in the GUI (ZX Desktop)
-
-* Partial support for Spanish and Catalan language on menus
-
-* Can be used with joystick and environments without keyboard, like Raspiboy / Retropie
-
-* Emulates all the oddities of the Inves Spectrum +: 64 KB RAM, RAM initialization with FF00H pattern, OUT ula AND RAM, EAR and MIC XOR, no contended memory, snow in border, colour ula delay, interrupt starts at end of top border (not at the beginning of the border), corrupt memory on every interrupt, no idle bus
-
-* Uses Video drivers: X-Windows, SDL, Cocoa (Mac OS X), Framebuffer, ncurses, aalib, cacalib, stdout(console), simpletext(console)
-
-* Uses Audio Drivers: PulseAudio, Alsa, SDL, DSP(OSS), One Bit Speaker (PC Speaker and Raspberry Pi GPIO speaker, without any kind of sound card), CoreAudio (Mac OS X).
-
-* Supports dumping audio & video to file
-
-* Allows to save screen to formats: SCR, PBM, BMP, TXT, STL (3D Model)
-
-* Supports loading from real tape (any external audio source, like tape player, mp3 player, etc), with tools to view the tape waveform and frequency spectrum and to help adjust the azimuth
-
-* Supports real tape loading of file formats: RWA, SMP, WAV, TZX, PZX, CDT, TAP, P, P81, O. It handles loading of turbo load tapes or any type of tape loading for standard/non standard loading routines
-
-* Handles binary tape format files (TAP, TZX, PZX, O, P, P81, CDT, CAS) on standard ROM routines for ZX Spectrum, ZX80, ZX81, Amstrad CPC, Jupiter Ace, MSX, Spectravideo
-
-* Handles real audio loading (RWA, SMP, WAV) on standard ROM routines for ZX Spectrum, ZX80, ZX81, Amstrad CPC, Jupiter Ace
-
-* Converts ZX81 tape audio recordings to P/P81 files, with a waveform view of decoded pulses, bits and bytes
-
-* Simulates real tape loading on standard ROM routines for ZX Spectrum, ZX80, ZX81
-
-* Supports tape save traps for Super Tape Copier and Lao Copy 2
-
-* Handles snapshot formats: ZSF, ZX, Z80, SP, SPG, NEX, SNA, P, P81, O, Z81, ACE
-
-* Handles microdrive formats: MDR, RMD and MDV
-
-* Handles floppy disk formats: DSK
-
-* Handles MMC/SD card formats: HDF, IMG, RAW (.MMC)
-
-* Handles IDE hard disk formats: RAW (.IDE)
-
-* Handles cartridge formats: DCK, ROM, COL, SG
-
-* Supports MSX cartridges with ASCII 8 KB and 16 KB, Konami (with or without SCC), and R-Type memory mappers
-
-* Handles RZX playback
-
-* Emulates the following Copy Interfaces: Defcon, Dinamid3, Hilow Barbanegra, Interface007, Microhobby Pokeador Automatico, Multiface (One, 128 and Three), Phoenix, Ramjet, Spec-Mate, Transtape
-
-* Emulates Dinamic SD1
-
-* Emulates Datagear/MB02 DMA, ZX-Uno DMA
-
-* Emulates Nec PD765 floppy disk controller, used on Spectrum +3, CPC 664, CPC 6128, PCW
-
-* Emulates ZX Microdrive on ZX Spectrum and QL: on ZX Spectrum supports MDR (standard file system format) and raw format (extension RMD), including tape gaps, sync bytes and bad sectors. On QL is simulated by rom traps, accessing files from your computer and also from MDV (QLAY format)
-
-* Emulates Betadisk/TR-DOS. Direct support for .trd files. scl files can be smartloaded or converted from file selector pressing space
-
-* Emulates ZX Spectrum MMC Interfaces: ZXMMC, ZXMMC+, DivMMC
-
-* Emulates ZX Spectrum IDE Interfaces: DivIDE, 8-bit simple
-
-* Emulates ZX Spectrum ESXDOS file access using files from your computer
-
-* Emulates Sam Coupe IDE Interface: Atom Lite
-
-* Emulates ZXPand MMC Interface on ZX80 and ZX81
-
-* Emulates ZX Dandanator! Mini, CPC Dandanator! Mini
-
-* Emulates Speccy Superupgrade
-
-* Emulates Kartusho, iFrom interfaces by Antonio Villena
-
-* Emulates SamRam interface by Gerton Lunter (author of famous Z80 emulator)
-
-* Emulates LEC Memory extension
-
-* Emulates HiLow DataDrive
-
-* Handles RAM, EPROM, Intel Flash and Hybrid (RAM+EPROM) cards on Z88
-
-* Handles QL microdrive/floppy file access using files from your computer, MDV, QDOS QL5A/QL5B IMG and WIN images, and a second floppy drive. Allows reading Q-emuLator file headers, EXECuting files without headers and smartloading boot, BASIC and executable files
-
-* Emulates QL QIMI mouse, additional ROMs, configurable video aspect ratio and Vision-QL palette, and selectable real-time clock source and timezone
-
-* Handles compressed formats zip (with internal decompressor), and tar, rar, gz through external utilities
-
-* Emulates AY Audio Chip, Turbosound (2 AY Channels), 3 AY Channels, MIDI channels, different DAC: Specdrum, Covox, ACB/ABC/BAC/CBA Stereo
-
-* Allows selecting Beeper and MIC audio on Spectrum
-
-* Emulates General Sound
-
-* Emulates SN76489AN Audio Chip
-
-* Emulates Quicksilva, ZON-X81, and VSYNC-based sound on ZX80/81
-
-* Emulates Speaker and Soundbox sound on Jupiter Ace
-
-* Experimental simulation of the Sam Coupe Audio Chip (SAA1099)
-
-* Emulates i8049 and Qsound on QL
-
-* Simulates Nagravision Audio effect
-
-* Supports RAM size up to 1024 KB on Spectrum and Pentagon
-
-* Supports RAM packs on ZX80/81 up to 56 KB
-
-* Supports RAM packs on Jupiter Ace up to 51 KB
-
-* Joystick emulation with real joystick and keyboard cursors: Kempston, Sinclair 1&2, Cursor Joystick, Cursor & Shift, OPQA, Fuller, Zebra, Mikro-Gen, ZXPand, SAM Coupe Cursors, CPC, MSX, Spectravideo, Cascade, DKTronics. Autofire function too
-
-* Joystick buttons can trigger configurable F-function actions, such as CPU reset, NMI or opening a window
-
-* Allow to use a steering wheel joystick on Spectrum racing games as an analog controller
-
-* On Screen keyboard useful when playing with joystick, two types: one with keyboard letters, and another with words, useful for playing Text Adventures. Also a tool to extract words from text adventures (Daad, Paws, Quill and Gac)
-
-* Emulates Spectrum keyboard ghosting error feature
-
-* ZX Spectrum Recreated keyboard support
-
-* Emulates native turbo modes on ZX-Uno, Chloe, Prism and ZX Spectrum Next, and manual for other machines
-
-* ZX Printer emulation
-
-* Optical Input emulation: Emulates Gunstick from MHT Ingenieros S.L, Magnum Light Phaser, Stack Light Rifle, Defender Light Gun, Trojan Light Pen, Datel Lightwriter, Spectrum Doodler Lightpen
-
-* Kempston mouse emulation
-
-* Supports Network gaming using its own protocol (ZEsarUX Network Gaming protocol - ZENG), which allows you to play in two different ways: using two or more (up to 16) ZEsarUX instances, located each one on any part of the world or in a local network, or with a central server (ZENG Online). Games doesn't have to be modified, you can use any existing game
-
-* Uart bridge emulation: allows you to use a real uart-wifi device connected to your computer, on GNU/Linux only (Windows, Mac can simulate it)
-
-* Can browse online ZX81 games
-
-* Can browse online Spectrum games
-
-* Supports Send Text as keystrokes, reading from a text file or the system clipboard on systems: Mac, Windows, GNU/Linux (SDL2, Xwindow)
-
-* Supports drag & drop on systems: Mac, Windows, GNU/Linux (SDL2, Xwindow)
-
-* Supports reading Pokes from .POK files
-
-* Audio Chip Tools: For the 3 emulated audio chips (AY-3-8912, SN76489AN, QL i8049): Sheet, Piano, Registers, export music to midi (.mid) files
-
-* Real Time playback from Audio Chip Sound (AY-3-8912, SN76489AN, QL i8049) to external MIDI device
-
-* AY Player: allowing to play music from .AY files
-
-* AY Mixer
-
-* Visual Real Tape: you have an audio render of your tape, see tape blocks and rewind or move forward the cassette player
-
-* Visual Casette Tape: allow to see a real tape and the movement when loading a game
-
-* Visual Floppy: allow to see floppy activity: disk movement, reads, writes, head seek, etc
-
-* Visual Microdrive: allow to see microdrive activity
-
-* Supports ZEsarUX remote command protocol (ZRCP). This is a powerful communications protocol between a client and ZEsarUX, using a simple telnet client. One of the things you can do it is enhanced debugging on ZEsarUX from Visual Studio Code (see https://github.com/maziac/DeZog)
-
-* Can use a reduced Spectrum core, with some features disabled, useful on slow devices, like Raspberry Pi 1/Zero
-
-* Can generate Automatic Snapshots to RAM and also do a Rewind operation
-
-* Powerful debug features: Reverse Debugging, CPU History, Assembler, Registers, Dissassemble, Conditional Breakpoints using text expressions, Watches, Step-to-step, Step-over, Runto, Show TV electron position, Load source code, Hexadecimal Editor, View Sprites, View Tiles, Find bytes, Infinite lives finder, CPU Transaction log, View BASIC, View BASIC variables, View BASIC GOSUB stack, verbose messages on console
-
-* Text adventure debugger: On a Quill/Paws/Daad/Gac text adventure you can Step to Step condact, watch flags/objects, list messages (objects, user/system messages, locations, compressed tokens, vocabulary), connections, Text Adventure Map. Can also view graphics from a Quill, Paws, Daad or Gac aventure.
-
-* Use artificial intelligence to get realistic images for location description on Text Adventure games
-
-* File utilities menu: Allowing to view, expand and convert some common file formats: tap, tzx, pzx, trd, dsk, mdv, hdf, ddh, Hobeta files, etc. Can also browse inside file system images (.mmc, .img, etc)
-
-* Accessibility support: Print char traps allows to capture generated text from almost any program or game, using standard ROM calls (RST 10H) or even non standard print character routines. Can send generated text from a game to a text-to-speech program. It's ready for text to speech support for blind or visually impaired people. Menu emulator can also be read by a text-to-speech program.
-
-* Translation support: Can translate text from almost any program or game using external scripts
-
-* Memory Cheat: useful to find counters of energy, bombs, ammo or any other cheat in a game
-
-* Simulates upper RAM memory refresh on Spectrum 48Kb, losing its contents when changing R register very quickly
-
-* Supports command line settings, configuration file settings and per-game configuration settings
-
-* Supports execution on Docker, tested on Debian, Ubuntu and Fedora containers
-
-* Other features: Visualmem menu, CPU Statistics, Toys ZXeyes, ZXlife, Clive and Simon, Clock, Calculator, Ascii Table, Sensors
-
-* Includes seven easter eggs. Can you find them? :)
-
-
-__Some screenshots__
-
-ZX Desktop, running multitask windows, on Solarized Dark GUI Style, running ZX Spectrum OverScan demo
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_zxdesktop_multitask.png "ZX Desktop")
-
-
-ZEsarUX 11.0, running multitask windows, ZEsarUX Plus GUI Style, running Sound Tracker 20th anniversary demo, some Multitask windows
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_zesarux_11_0.png "ZEsarUX 11.0")
-
-
-Default clean ZX Desktop starting from ZEsarUX version 10.2
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_zxdesktop_default.png "ZX Desktop default")
-
-
-ZX Desktop, running demo ny17 from TSConf, showing some windows opened
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_zxdesktop_example_windows.png "ZX Desktop example several windows")
-
-
-ZX Spectrum Overscan demo
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_overscan.jpg "Overscan demo")
-
-
-ZX-81 Mazogs
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_mazogs.png "Mazogs")
-
-
-Sinclair QL
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_ql.png "QL")
-
-
-Cambridge Z88
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_z88.png "Z88")
-
-
-ZX Spectrum Sir Fred running on curses (text) driver
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_sirfred_curses.png "Sirfred curses")
-
-
-ZX Spectrum The Great Escape running on curses (text) driver + utf8 extensions
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_greatescape_curses.png "The Great Escape curses")
-
-
-ZX81 Mazogs running on curses (text) driver + utf8 extensions
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_mazogs_curses.png "Mazogs curses")
-
-
-ZX-Uno
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_zxuno.png "ZX-Uno")
-
-
-ZX-Evolution TSConf
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_tsconf.jpeg "ZX-Evolution TSConf")
-
-
-ZX Spectrum Next
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_tbblue.png "TBBlue/ZX Spectrum Next")
-
-
-Prism 512
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_prism.png "Prism 512")
-
-
-Chloe 280SE
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_chloe280se.png "Chloe 280SE")
-
-
-CPC 464
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_cpc.png "CPC 464")
-
-
-MSX
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_msx.png "MSX")
-
-
-Colecovision
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_coleco.png "Colecovision")
-
-
-Sega SG-1000
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_sg1000.png "Sega SG-1000")
-
-
-Sega Master System
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/screenshot_sms.png "Sega Master System")
-
-
-ZEsarUX running on alternative Unix versions:
-
-
-ZEsarUX on AROS
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/ZEsarUX_aros.png "ZEsarUX on AROS")
-
-ZEsarUX on FiwixOS
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/ZEsarUX_fiwixos.png "ZEsarUX on FiwixOS")
-
-ZEsarUX on Sortix
-
-![alt text](https://github.com/chernandezba/zesarux/raw/main/screenshots/ZEsarUX_sortix.png "ZEsarUX on FiwixOS")
-
-
-
-Do you want to know how ZEsarUX looked like in the past? See this:
-[PREVIOUS_SCREENSHOTS](https://github.com/chernandezba/zesarux/blob/master/PREVIOUS_SCREENSHOTS.md)
-
-
-You can find some ZEsarUX videos on my [Youtube channel](https://www.youtube.com/user/chernandezba)
+- from [Fuse](https://fuse-emulator.sourceforge.net/): the sound filters and
+  the AY sound generator (GPL), and the band limited sound buffer
+  (Blip_Buffer by Shay Green, LGPL);
+- the [chips](https://github.com/floooh/chips) Z80 emulator by Andre
+  Weissflog (zlib licence) for the AY player.

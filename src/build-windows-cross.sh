@@ -6,8 +6,10 @@
 # Uso / Használat:
 #   sudo apt install gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64 zip curl
 #   ./build-windows-cross.sh
+#   ./build-windows-cross.sh --release     (paquete de version / kiadási csomag)
 #
 # El resultado queda en / Az eredmény helye:  ~/zesarux-windows/ZEsarUX_windows-<rama>.zip
+# Con --release / --release mellett:          ~/zesarux-windows/ZEsarUX-<version>-windows.zip
 #
 # No modifica la compilacion de Linux: compila sobre una copia del codigo fuente
 # A Linuxos fordítást nem érinti: a forrás egy másolatán dolgozik
@@ -23,6 +25,13 @@ OUTDIR="${ZESARUX_WINDOWS_OUT:-$HOME/zesarux-windows}"
 
 RAMA=$(git -C "$SRCDIR" rev-parse --abbrev-ref HEAD 2>/dev/null || echo build)
 NOMBRE="ZEsarUX_windows-$RAMA"
+
+# Paquete de version: nombre con la version del fork (cpu.h) / Kiadási csomag: a fork verziójával
+if [ "$1" = "--release" ]; then
+    VERSION=$(sed -n 's/^#define EMULATOR_VERSION "\(.*\)"/\1/p' "$SRCDIR/cpu.h")
+    FORK=$(sed -n 's/^#define EMULATOR_FORK_VERSION "\(.*\)"/\1/p' "$SRCDIR/cpu.h")
+    NOMBRE="ZEsarUX-$VERSION-$FORK-windows"
+fi
 
 for programa in $HOST-gcc $HOST-windres zip curl; do
     if ! command -v $programa >/dev/null 2>&1; then
@@ -90,6 +99,11 @@ cp -a ACKNOWLEDGEMENTS LICENSE LICENSES_info Changelog Cambios TODO* README HIST
     *.odt mantransfev3.bin *.rom zxuno.flash zxmmcplus.flash tbblue.mmc pcw_8x_boot*dsk zesarux.mp3 \
     zesarux.xcf editionnamegame.* keyboards alternate_roms z88_shortcuts.bmp zesarux.pdf docs licenses \
     zesarux.exe SDL2.dll libwinpthread-1.dll "$NOMBRE"/
+
+# Documentacion del fork / A fork leírásai
+for doc in README.md README.hu.md CHANGELOG-fork.md CHANGELOG-fork.hu.md; do
+    if [ -f "$SRCDIR/../$doc" ]; then cp "$SRCDIR/../$doc" "$NOMBRE"/; fi
+done
 
 mkdir -p "$OUTDIR"
 rm -rf "$OUTDIR/$NOMBRE" "$OUTDIR/$NOMBRE.zip"

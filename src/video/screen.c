@@ -16375,7 +16375,7 @@ void set_window_title(char *texto)
 {
     //char buf_prefijo[100];
     if (texto[0]!=0) {
-        strcpy(zesarux_window_title,"ZEsarUX " EMULATOR_VERSION " - ");
+        strcpy(zesarux_window_title,"ZEsarUX " EMULATOR_DISPLAY_VERSION " - ");
         int longitud=strlen(zesarux_window_title);
         //strncpy(&zesarux_window_title[longitud],texto,ZESARUX_MAX_WINDOW_TITLE-longitud);
 
@@ -16394,7 +16394,7 @@ void set_window_title(char *texto)
         zesarux_window_title[destino]=0;
     }
     else {
-        strcpy(zesarux_window_title,"ZEsarUX " EMULATOR_VERSION);
+        strcpy(zesarux_window_title,"ZEsarUX " EMULATOR_DISPLAY_VERSION);
     }
 
 

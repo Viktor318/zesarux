@@ -26716,7 +26716,7 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
     char mensaje_about[3][200];
 
 
-    sprintf (mensaje_about[0],"ZEsarUX " EMULATOR_VERSION " (" EMULATOR_SHORT_DATE ")");
+    sprintf (mensaje_about[0],"ZEsarUX " EMULATOR_DISPLAY_VERSION " (" EMULATOR_FORK_DATE ")");
     sprintf (mensaje_about[1],EMULATOR_EDITION_NAME);
     sprintf (mensaje_about[2],"(C) 2013 César Hernández Bañó");
 
@@ -33580,9 +33580,10 @@ void menu_about_about(MENU_ITEM_PARAMETERS)
         //letra_o_acentuada='o';
     }
 
-    sprintf (mensaje_about,"ZEsarUX " EMULATOR_VERSION " (" EMULATOR_SHORT_DATE ")\n"
+    sprintf (mensaje_about,"ZEsarUX " EMULATOR_DISPLAY_VERSION " (" EMULATOR_FORK_DATE ")\n"
         EMULATOR_EDITION_NAME
         "\n"
+        "Hungarian edition: github.com/Viktor318/zesarux\n"
         "(C) 2013 Cesar Hernandez Ba%co\n"
         //"(C) 2013 C%csar Hern%cndez Ba%c%c\n"
 
