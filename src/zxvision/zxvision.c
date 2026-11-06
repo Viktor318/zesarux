@@ -20579,12 +20579,12 @@ void zxvision_rearrange_background_windows(int si_cascada,int si_aplicar_a_inmut
 
         int forzar_process_switcher=0;
 
-        //Si es process switcher, ajustar abajo a la izquierda
+        //Si es process switcher, ajustar abajo a la derecha (fork; antes a la izquierda)
         if (setting_process_switcher_force_left_bottom.v) {
             if (!strcasecmp(ventana->geometry_name,"processswitcher")) {
                 forzar_process_switcher=1;
                 //printf("Es process switcher\n");
-                x=0;
+                x=scr_get_menu_width()-ventana->visible_width;
                 y=scr_get_menu_height()-ventana->visible_height;
             }
         }

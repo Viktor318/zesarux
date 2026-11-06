@@ -49019,7 +49019,10 @@ void process_switcher_sync_always_left_bottom_setting(void)
     if (ventana!=NULL) {
         debug_printf(VERBOSE_DEBUG,"Found process switcher window, so syncing left-bottom setting");
         if (setting_process_switcher_force_left_bottom.v) {
-            zxvision_set_x_position(ventana,0);
+            //Abajo a la derecha (fork; antes abajo a la izquierda, donde ahora estan los botones inferiores del ZX Desktop)
+            int x=scr_get_menu_width()-ventana->visible_width;
+            if (x<0) x=0;
+            zxvision_set_x_position(ventana,x);
             zxvision_set_y_position(ventana,scr_get_menu_height()-ventana->visible_height);
             //ventana->x=0;
             //ventana->y=scr_get_menu_height()-ventana->visible_height-0;

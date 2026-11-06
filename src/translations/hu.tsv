@@ -998,7 +998,7 @@ Special FX Settings	Speciális effektek beállításai	menu title
 Ok charset to save to disk?	Mentsem a betűkészletet lemezre?	question
 Ok file saved	Fájl mentve	window title
 Process switcher always visible	Folyamatváltó mindig látható	item
-Process switcher force left-bottom	Folyamatváltó mindig bal alul	item
+Process switcher force right-bottom	Folyamatváltó mindig jobb alul	item
 Process switcher one row	Folyamatváltó egy sorban	item
     Piano Type	    Zongora típusa	item
 Apps Settings	Alkalmazások beállításai	menu title
@@ -3270,7 +3270,7 @@ Transparency percentage to apply to menu	A menüre alkalmazott átlátszóság s
 Grayscale layer below menu when menu opened and multitask is disabled	A menü alatti réteg szürkeárnyalatos, ha a menü nyitva van és a többfeladatos mód ki van kapcsolva	tooltip
 Massive actions on menu Windows, like minimize all, cascade, etc, don't affect the Process switcher window	A menüablakokon végzett tömeges műveletek (például mind kis méretre, lépcsőzetes elrendezés stb.) nem érintik a Folyamatváltó ablakot	tooltip
 Process switcher is always visible (on top of all windows)	A Folyamatváltó mindig látható (minden ablak fölött)	tooltip
-Process switcher is always located on left-bottom	A Folyamatváltó mindig bal alul helyezkedik el	tooltip
+Process switcher is always located on right-bottom	A Folyamatváltó mindig jobb alul helyezkedik el	tooltip
 Process switcher shows only one row of icons	A Folyamatváltó csak egy sor ikont mutat	tooltip
 Shows AY/Beeper Piano window with graphic or with text	Az AY/Beeper zongora ablak grafikus vagy szöveges megjelenítése	tooltip
 Shows vertical percentage bar on the right of text windows and file browser	Függőleges százalékos sáv a szöveges ablakok és a fájlböngésző jobb oldalán	tooltip
