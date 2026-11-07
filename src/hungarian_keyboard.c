@@ -257,6 +257,20 @@ static unsigned int hungarian_keyboard_quitar_acento(unsigned int c)
 }
 
 
+//Caracter para los menus y campos de texto (fork): ASCII imprimible, las letras acentuadas sin acento.
+//Retorna 0 si no tiene equivalente
+int hungarian_keyboard_menu_char(unsigned int codepoint)
+{
+    unsigned int c=hungarian_keyboard_quitar_acento(codepoint);
+
+    //Libra: en los menus es el caracter 96, como con Symbol shift+X
+    if (c==0xA3) return 96;
+
+    if (c>=32 && c<127) return c;
+
+    return 0;
+}
+
 //Retorna 1 si el caracter tiene equivalente en el Spectrum, y rellena la tecla base y los shifts
 int hungarian_keyboard_char_to_spectrum(unsigned int codepoint,z80_byte *tecla_base,int *necesita_caps,int *necesita_symbol)
 {
@@ -509,6 +523,13 @@ unsigned int hungarian_keyboard_utf8_decode(const char *texto)
     return 0;
 }
 
+
+//Con el menu abierto, los caracteres van a los menus y campos de texto (fork)
+int hungarian_keyboard_menu_is_active(void)
+{
+    if (hungarian_keyboard.v==0) return 0;
+    return (menu_abierto && zxvision_current_window!=&menu_help_show_keyboard_ventana);
+}
 
 //Si esta habilitado y aplica a la situacion actual
 int hungarian_keyboard_is_active(void)

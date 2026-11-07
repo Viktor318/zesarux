@@ -3498,6 +3498,64 @@ z80_byte menu_inject_da_todas_teclas(void)
 }
 
 
+/* Caracteres tecleados con la distribucion de teclado del sistema (fork, opcion Windowsos billentyuzetkiosztas):
+   con el menu abierto, el driver pone aqui el caracter que genera el sistema (por ejemplo Shift+2 = comillas en un
+   teclado hungaro), y los menus y campos de texto lo leen como una tecla pulsada y luego soltada */
+#define MENU_TECLEADO_MAX 64
+static z80_byte menu_tecleado_cola[MENU_TECLEADO_MAX];
+static int menu_tecleado_inicio=0;
+static int menu_tecleado_total=0;
+//Caracter que se esta "pulsando" ahora (0 si ninguno)
+static z80_byte menu_tecleado_actual=0;
+static int menu_tecleado_lecturas=0;
+static int menu_tecleado_consultas=0;
+//Tras soltar un caracter, una lectura sin tecla, para que el siguiente se vea como una pulsacion nueva
+static int menu_tecleado_hueco=0;
+
+void menu_tecleado_agregar(z80_byte caracter)
+{
+    if (menu_tecleado_total>=MENU_TECLEADO_MAX) return;
+    menu_tecleado_cola[(menu_tecleado_inicio+menu_tecleado_total)%MENU_TECLEADO_MAX]=caracter;
+    menu_tecleado_total++;
+}
+
+void menu_tecleado_vaciar(void)
+{
+    menu_tecleado_total=0;
+    menu_tecleado_actual=0;
+    menu_tecleado_hueco=0;
+}
+
+//Caracter tecleado pulsado ahora, o 0. leer=1 desde menu_get_pressed_key, 0 desde menu_da_todas_teclas.
+//El caracter se suelta tras leerlo y comprobar un par de veces si sigue pulsado (o tras tres lecturas)
+static z80_byte menu_tecleado_paso(int leer)
+{
+    if (menu_tecleado_hueco) {
+        menu_tecleado_hueco=0;
+        return 0;
+    }
+
+    if (!menu_tecleado_actual) {
+        if (!menu_tecleado_total) return 0;
+        menu_tecleado_actual=menu_tecleado_cola[menu_tecleado_inicio];
+        menu_tecleado_inicio=(menu_tecleado_inicio+1)%MENU_TECLEADO_MAX;
+        menu_tecleado_total--;
+        menu_tecleado_lecturas=0;
+        menu_tecleado_consultas=0;
+    }
+
+    if (leer) menu_tecleado_lecturas++;
+    else if (menu_tecleado_lecturas) menu_tecleado_consultas++;
+
+    if (menu_tecleado_lecturas>=3 || (menu_tecleado_lecturas>=1 && menu_tecleado_consultas>=2)) {
+        menu_tecleado_actual=0;
+        menu_tecleado_hueco=1;
+        return 0;
+    }
+
+    return menu_tecleado_actual;
+}
+
 z80_bit menu_symshift={0};
 z80_bit menu_capshift={0};
 z80_bit menu_backspace={0};
@@ -3530,6 +3588,12 @@ z80_byte menu_get_pressed_key(void)
 
             return tecla_buffer;
         }
+    }
+
+    //Caracter tecleado con la distribucion de teclado del sistema
+    {
+        z80_byte tecleado=menu_tecleado_paso(1);
+        if (tecleado) return tecleado;
     }
 
     //printf("menu_get_pressed_key\n");
@@ -21196,6 +21260,9 @@ z80_byte menu_da_todas_teclas_si_reset_mouse_movido(int reset_mouse_movido,int a
     if (menu_inject_teclas_estado) {
         return menu_inject_da_todas_teclas();
     }
+
+    //Caracter tecleado con la distribucion de teclado del sistema: hay tecla pulsada
+    if (menu_tecleado_paso(0)) return 254;
 
 
     //if (mouse_movido) printf("mouse movido en menu_da_todas_teclas 1: %d\n",mouse_movido);

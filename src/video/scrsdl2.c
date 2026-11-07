@@ -1873,6 +1873,41 @@ int scrsdl_recibido_resize(SDL_Event *event)
 }
 
 
+/* Windowsos billentyuzetkiosztas con el menu abierto (fork): las teclas que generan un caracter imprimible
+   (letras, numeros, signos, tambien con Shift o AltGr) se pasan a los menus y campos de texto como el caracter
+   que genera el sistema, no como la tecla del Spectrum. Enter, Esc, borrar, cursores, tabulador, teclas F,
+   y las combinaciones con Ctrl o Alt izquierdo siguen por la gestion normal.
+   Retorna 1 si el evento se ha gestionado */
+static int scrsdl_hungarian_keyboard_menu_event(SDL_Event *event)
+{
+    if (event->type!=SDL_KEYDOWN) return 0;
+
+    SDL_Keysym keysym=event->key.keysym;
+    int sym=keysym.sym;
+
+    //AltGr solo, en Windows (LCtrl+RAlt) o en Linux
+    if (sym==SDLK_RALT || sym==SDLK_MODE) return 1;
+
+    if (sym<=32 || sym==SDLK_DELETE || (sym & SDLK_SCANCODE_MASK)) return 0;
+
+    int altgr=( (keysym.mod & (KMOD_RALT|KMOD_MODE)) ? 1 : 0);
+    if (!altgr && (keysym.mod & (KMOD_CTRL|KMOD_LALT))) return 0;
+
+    SDL_Event siguiente;
+    if (SDL_PeepEvents(&siguiente,1,SDL_PEEKEVENT,SDL_FIRSTEVENT,SDL_LASTEVENT)==1 && siguiente.type==SDL_TEXTINPUT) {
+        SDL_PeepEvents(&siguiente,1,SDL_GETEVENT,SDL_TEXTINPUT,SDL_TEXTINPUT);
+        int caracter=hungarian_keyboard_menu_char(hungarian_keyboard_utf8_decode(siguiente.text.text));
+        if (caracter) menu_tecleado_agregar(caracter);
+        //Sin equivalente: se ignora
+        return 1;
+    }
+
+    //Sin texto con AltGr: tecla muerta. Se absorbe
+    if (altgr) return 1;
+
+    return 0;
+}
+
 //Teclado hungaro: gestiona un evento de tecla usando el caracter que genera el sistema operativo
 //(evento SDL_TEXTINPUT que llega justo despues del SDL_KEYDOWN).
 //Retorna 1 si el evento se ha gestionado y no debe pasar por la gestion normal
@@ -1915,6 +1950,11 @@ static int scrsdl_hungarian_keyboard_event(SDL_Event *event)
 
     //Al soltar, liberar siempre lo que hayamos pulsado nosotros, aunque ya no este activo
     if (event->type==SDL_KEYUP) return hungarian_keyboard_release(keyid,host_mods);
+
+    //Menu abierto (fork): el caracter que genera el sistema va a los menus y campos de texto
+    if (hungarian_keyboard_menu_is_active()) {
+        return scrsdl_hungarian_keyboard_menu_event(event);
+    }
 
     if (!hungarian_keyboard_is_active()) return 0;
 

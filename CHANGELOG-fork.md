@@ -6,6 +6,18 @@ Changes of this fork on top of ZEsarUX 13.1-SN (the development snapshot of
 the upstream `main` branch). The changes of ZEsarUX itself are in
 [src/Changelog](src/Changelog) (in Hungarian: [src/Changelog_hu](src/Changelog_hu)).
 
+## Unreleased
+
+### Keyboard
+
+- **Windows keyboard layout also in the menus**: with the option on, the
+  menus and the text fields (file names, search, numbers...) get the
+  character the system types, like the emulated machine does. On a
+  Hungarian keyboard Shift+2 types `"` and AltGr+V types `@` in a file name
+  too; accented letters are typed without the accent. Enter, Esc, Backspace,
+  the cursor keys, Tab, the F keys and the Ctrl or left Alt combinations
+  work as before.
+
 ## v13.1-SN-hu.1 – 2026-11-06
 
 First release of the fork.

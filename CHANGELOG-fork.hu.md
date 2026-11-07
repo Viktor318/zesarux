@@ -7,6 +7,18 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
 [src/Changelog_hu](src/Changelog_hu) fájlban vannak (angolul:
 [src/Changelog](src/Changelog)).
 
+## Kiadatlan
+
+### Billentyűzet
+
+- **Windowsos billentyűzetkiosztás a menükben is**: bekapcsolt beállítás
+  mellett a menük és a szövegmezők (fájlnevek, keresés, számok...) azt a
+  karaktert kapják, amit a rendszer ír, ahogy az emulált gép is. Magyar
+  billentyűzeten a Shift+2 fájlnévben is `"`-t, az AltGr+V `@`-t ír; az
+  ékezetes betűk ékezet nélkül mennek át. Az Enter, az Esc, a Backspace, a
+  kurzorbillentyűk, a Tab, az F-billentyűk és a Ctrl vagy bal Alt
+  kombinációk ugyanúgy működnek, mint eddig.
+
 ## v13.1-SN-hu.1 – 2026-11-06
 
 A fork első kiadása.
