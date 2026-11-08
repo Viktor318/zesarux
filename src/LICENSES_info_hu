@@ -12,6 +12,10 @@ http://www.slack.net/~ant/
 Copyright (c) 2021 Andre Weissflog. A zlib/libpng licenc alatt terjesztve, a licencet a LICENSE_chips_z80 fájlban olvashatod
 https://github.com/floooh/chips
 
+-Pro Tracker 3 lejátszó (audio/pt3player.c, pt3text.c, aymodule.c), a Viktor318/fuse forkból, a ZXTune alapján
+Copyright (c) Vitamin/CAIG. A GNU LESSER GENERAL PUBLIC LICENSE v3 alatt terjesztve, a licencet a LICENSE_zxtune fájlban olvashatod
+https://zxtune.bitbucket.io/
+
 -DOS betűkészlet, néhány felületstílus használja.
 Copyright Neil Roy. A CC BY-SA 3.0 licenc alatt terjesztve, a licencet a LICENSE_DOS_font fájlban olvashatod
 https://opengameart.org/content/dos-8x8-font

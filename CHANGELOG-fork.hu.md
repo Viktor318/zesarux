@@ -21,6 +21,15 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
 
 ### AY lejátszó és AY keverő
 
+- **Pro Tracker 3 modulok** (`.pt3`, és a Vortex Tracker II szövegmodulok:
+  `.vt2`) az AY lejátszóban, ugyanúgy, mint az `.ay` fájlok: a lejátszó
+  saját szálán, bármelyik gépen, címmel, szerzővel, pontos hosszal és az
+  ismétlés helyével, elhalkulással, tekeréssel, a keverővel, a hangchip
+  ablakokkal és `.mid` felvétellel. Okos betöltéssel megnyithatók,
+  felvehetők a lejátszási listába (mappával is), és szerepelnek a
+  fájlszűrőkben. A lejátszó a Fuse forkból jön (a ZXTune alapján). A
+  TurboSound modulokból egyelőre csak az első chip szól. Jó minőségű hang
+  kell hozzájuk.
 - Az **AY keverő** minden gépen megnyitható (*Hang > AY keverő*), azokon is,
   amelyekben nincs AY chip (48K, ZX81...): az AY lejátszó bármelyik gépen
   szól, és a zenéje a keverőn megy át.

@@ -116,12 +116,31 @@ static long ay_measure_find(unsigned int *hash,unsigned char *silent,long n,long
     }
 }
 
+void ay_measure_release(struct ay_measure_machine *m)
+{
+    if (m==NULL) return;
+    if (m->module!=NULL) aymodule_free(m->module);
+    m->module=NULL;
+}
+
+int ay_measure_is_module(unsigned char *data,int size)
+{
+    if (size>=8 && !memcmp(data,"ZXAYEMUL",8)) return 0;
+    aymodule *module=aymodule_load(data,size);
+    if (module==NULL) return 0;
+    aymodule_free(module);
+    return 1;
+}
+
 //Preparar la memoria y el Z80 para la cancion (desde 1), como audio_ay_player_play_song.
-//Retorna 0 si ok
+//Un modulo de musica (Pro Tracker 3...) se carga en su reproductor (cancion 1). Retorna 0 si ok.
+//La maquina debe estar a cero (calloc) o liberada con ay_measure_release
 int ay_measure_setup(struct ay_measure_machine *m,unsigned char *data,int size,int song,int cpc)
 {
     struct ay_measure_file file={data,size};
     struct ay_measure_file *f=&file;
+
+    ay_measure_release(m);
 
     memset(m->ay_registers,0,sizeof(m->ay_registers));
     m->ay_selected=0;
@@ -131,7 +150,17 @@ int ay_measure_setup(struct ay_measure_machine *m,unsigned char *data,int size,i
     m->frame_tstates=(cpc ? AY_MEASURE_FRAME_TSTATES_CPC : AY_MEASURE_FRAME_TSTATES);
     m->ay_frequency=(cpc ? AY_MEASURE_AY_FREQUENCY_CPC : AY_MEASURE_AY_FREQUENCY);
 
-    if (size<20 || memcmp(data,"ZXAYEMUL",8)) return 1;
+    //Modulo de musica: como un Spectrum (50 Hz, AY a 1,7734 MHz)
+    if (size<8 || memcmp(data,"ZXAYEMUL",8)) {
+        m->cpc=0;
+        m->frame_tstates=AY_MEASURE_FRAME_TSTATES;
+        m->ay_frequency=AY_MEASURE_AY_FREQUENCY;
+        if (song!=1) return 1;
+        m->module=aymodule_load(data,size);
+        return (m->module==NULL);
+    }
+
+    if (size<20) return 1;
     if (song<1 || song>ay_measure_byte(f,16)+1) return 1;
 
     //Datos de la cancion
@@ -323,8 +352,29 @@ static uint8_t ay_measure_cpc_in(struct ay_measure_machine *m,uint16_t port,long
 
 //Ejecutar un frame. Si writes no es NULL, se guardan ahi las escrituras en el
 //primer chip AY con su t-estado (como mucho max_writes). Retorna cuantas
+//Frame de un modulo de musica: los registros del primer chip que escribe su reproductor, al principio del frame
+static int ay_measure_run_module_frame(struct ay_measure_machine *m,struct ay_measure_write *writes,int max_writes)
+{
+    unsigned char registros[AYMODULE_CHIPS][AYMODULE_REGISTERS];
+    unsigned int mascara[AYMODULE_CHIPS];
+    int reg,count=0;
+
+    memset(registros,0,sizeof(registros));
+    memset(mascara,0,sizeof(mascara));
+    aymodule_frame(m->module,registros,mascara);
+
+    for (reg=0;reg<AYMODULE_REGISTERS;reg++) {
+        if (mascara[0] & (1U<<reg)) {
+            count=ay_measure_ay_write(m,reg,registros[0][reg],0,writes,max_writes,count);
+        }
+    }
+    return count;
+}
+
 int ay_measure_run_frame(struct ay_measure_machine *m,struct ay_measure_write *writes,int max_writes)
 {
+    if (m->module!=NULL) return ay_measure_run_module_frame(m,writes,max_writes);
+
     z80_t *cpu=&m->cpu;
     uint64_t pins=m->pins;
     unsigned char *mem=m->mem;
@@ -404,11 +454,12 @@ static long ay_measure_probe(struct ay_measure_machine *m,unsigned char *data,in
    Se ejecutan unos frames de la cancion como cada maquina */
 int ay_measure_is_cpc(unsigned char *data,int size,int song)
 {
-    struct ay_measure_machine *m=malloc(sizeof(struct ay_measure_machine));
+    struct ay_measure_machine *m=calloc(1,sizeof(struct ay_measure_machine));
     int cpc=0;
 
     if (m==NULL) return 0;
     if (ay_measure_probe(m,data,size,song,0)==0 && ay_measure_probe(m,data,size,song,1)>0) cpc=1;
+    ay_measure_release(m);
     free(m);
     return cpc;
 }
@@ -423,14 +474,29 @@ long ay_measure_song(unsigned char *data,int size,int song,int cpc,long *loop,vo
 
     *loop=0;
 
-    m=malloc(sizeof(struct ay_measure_machine));
+    m=calloc(1,sizeof(struct ay_measure_machine));
     hash=malloc(AY_MEASURE_MAX_FRAMES*sizeof(unsigned int));
     silent=malloc(AY_MEASURE_MAX_FRAMES);
     if (m==NULL || hash==NULL || silent==NULL || ay_measure_setup(m,data,size,song,cpc)) {
-        free(m);
+        ay_measure_release(m);
+    free(m);
         free(hash);
         free(silent);
         return 0;
+    }
+
+    //Modulo de musica que sabe su duracion exacta (hasta el final de la ultima posicion): no hace falta medir
+    if (m->module!=NULL) {
+        long lazo;
+        long exacta=aymodule_exact_length(m->module,&lazo);
+        if (exacta>0) {
+            *loop=lazo;
+            ay_measure_release(m);
+            free(m);
+            free(hash);
+            free(silent);
+            return exacta;
+        }
     }
 
     while (frames<AY_MEASURE_MAX_FRAMES) {
@@ -458,6 +524,7 @@ long ay_measure_song(unsigned char *data,int size,int song,int cpc,long *loop,vo
         }
     }
 
+    ay_measure_release(m);
     free(m);
     free(hash);
     free(silent);

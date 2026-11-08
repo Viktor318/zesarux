@@ -6840,6 +6840,8 @@ int quickload_valid_extension(char *nombre) {
         || !util_compare_file_extension(nombre,"dck")
         || !util_compare_file_extension(nombre,"cdt")
     || !util_compare_file_extension(nombre,"ay")
+    || !util_compare_file_extension(nombre,"pt3")
+    || !util_compare_file_extension(nombre,"vt2")
     || !util_compare_file_extension(nombre,"scr")
     || !util_compare_file_extension(nombre,"rzx")
     || !util_compare_file_extension(nombre,"rom")
@@ -7393,9 +7395,10 @@ int quickload_continue(char *nombre) {
     }
 
 
-    //Archivos ay
+    //Archivos ay, y modulos Pro Tracker 3 y Vortex Tracker II (fork)
     else if (
-        !util_compare_file_extension(nombre,"ay")
+        !util_compare_file_extension(nombre,"ay") || !util_compare_file_extension(nombre,"pt3") ||
+        !util_compare_file_extension(nombre,"vt2")
     ) {
         ay_player_add_file(nombre);
         //ay_player_load_and_play(nombre);

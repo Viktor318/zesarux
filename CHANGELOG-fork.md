@@ -20,6 +20,14 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
 
 ### AY music player and AY mixer
 
+- **Pro Tracker 3 modules** (`.pt3`, also Vortex Tracker II text modules:
+  `.vt2`) play in the AY player, like the `.ay` files: on the player's own
+  thread, on any machine, with title, author, the exact length and where
+  the music repeats, fade-out, seeking, the mixer, the audio chip windows
+  and `.mid` recording. They can be opened with smart load, added to the
+  playlist (also with a folder) and are in the file filters. The player
+  comes from the Fuse fork (based on ZXTune). Of a TurboSound module only
+  the first chip is heard for now. They need the high quality sound.
 - The **AY mixer** can be opened on every machine (*Audio > AY Mixer*), also
   on those without an AY chip (48K, ZX81...): the AY player plays on any
   machine and its music goes through the mixer.

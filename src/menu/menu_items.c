@@ -6105,11 +6105,13 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 void menu_ay_player_load(MENU_ITEM_PARAMETERS)
 {
-    char *filtros[2];
+    char *filtros[4];
 
+    //Tambien modulos Pro Tracker 3 y Vortex Tracker II (fork)
     filtros[0]="ay";
-
-    filtros[1]=0;
+    filtros[1]="pt3";
+    filtros[2]="vt2";
+    filtros[3]=0;
 
     //guardamos directorio actual
     char directorio_actual[PATH_MAX];
@@ -6827,10 +6829,12 @@ void menu_ayplayer_edit_playlist_action(MENU_ITEM_PARAMETERS)
 
 void menu_ayplayer_add_directory_playlist(MENU_ITEM_PARAMETERS)
 {
-    char *filtros[2];
+    char *filtros[4];
 
     filtros[0]="ay";
-    filtros[1]=0;
+    filtros[1]="pt3";
+    filtros[2]="vt2";
+    filtros[3]=0;
 
 
     //guardamos directorio actual
@@ -49622,7 +49626,7 @@ void menu_smartload(MENU_ITEM_PARAMETERS)
     menu_first_aid("smartload");
 
     char *filtros[]={
-        "63", "80", "81", "ace","ay",   "bin",  "cas","cdt",
+        "63", "80", "81", "ace","ay",   "bin",  "cas","cdt",  "pt3", "vt2",
         "col","dck","dsk","epr","eprom","flash","m3u","nex","o",
         "p",  "p81", "pok","pzx","rom","rwa",  "rzx",  "scl", "scr",
         "sg", "smp","sms","sna","snx","sp",   "spg",  "tap",

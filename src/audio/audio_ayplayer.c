@@ -43,6 +43,7 @@
 #include "menu_filesel.h"
 #include "compileoptions.h"
 #include "ay_measure.h"
+#include "aymodule.h"
 #include "ay_mixer.h"
 #include "ay_thread_player.h"
 #include "audio_hq.h"
@@ -158,24 +159,42 @@ int audio_ay_player_get_abs_index(int initial_index)
 	return final_index;
 }
 
+/* Modulos de musica (fork, del fork de Fuse): Pro Tracker 3 (.pt3) y Vortex Tracker II en texto (.vt2, .txt).
+   No son archivos AY: sus registros los calcula su reproductor (aymodule.c), sin Z80. Suenan en el
+   reproductor en hilo aparte (necesitan la salida de sonido de alta calidad). Tienen una sola cancion */
+int ay_player_file_is_module=0;
+//Formato del modulo ("PT3"...), para la informacion
+static char ay_player_module_format[32]="";
+
 z80_byte ay_player_total_songs(void)
 {
+    if (ay_player_file_is_module) return 1;
 	return audio_ay_player_mem[16]+1;
 }
 
 z80_byte ay_player_first_song(void)
 {
+    if (ay_player_file_is_module) return 1;
 	return audio_ay_player_mem[17]+1;
 }
 
 z80_byte ay_player_version(void)
 {
+    if (ay_player_file_is_module) return 0;
 	return audio_ay_player_mem[9];
 }
 
 z80_byte ay_player_release_file_version(void)
 {
+    if (ay_player_file_is_module) return 0;
 	return audio_ay_player_mem[8];
+}
+
+//Extensiones de los archivos que abre el reproductor
+int ay_player_file_extension_supported(char *filename)
+{
+    return (!util_compare_file_extension(filename,"ay") || !util_compare_file_extension(filename,"pt3") ||
+        !util_compare_file_extension(filename,"vt2"));
 }
 
 int ay_player_size(void)
@@ -220,8 +239,8 @@ int audio_ay_player_load(char *filename)
     //Validar extension, si por error se carga otro archivo de diferente extension
     //(por ejemplo por error al seleccionar Recent Files), puede petar el emulador
 
-    if (util_compare_file_extension(filename,"ay")) {
-        debug_printf(VERBOSE_ERR,"AY file does not have .ay extension");
+    if (!ay_player_file_extension_supported(filename) && util_compare_file_extension(filename,"txt")) {
+        debug_printf(VERBOSE_ERR,"AY file does not have .ay, .pt3 or .vt2 extension");
         return 1;
     }
 
@@ -262,6 +281,35 @@ int audio_ay_player_load(char *filename)
     fclose(ptr_ayfile);
 
     ay_player_file_crc=ay_player_checksum(audio_ay_player_mem,leidos);
+
+    //Modulo de musica (Pro Tracker 3, Vortex Tracker II en texto)
+    ay_player_file_is_module=0;
+    if (leidos<8 || memcmp(audio_ay_player_mem,"ZXAYEMUL",8)) {
+        aymodule *modulo=aymodule_load(audio_ay_player_mem,leidos);
+        if (modulo==NULL) {
+            debug_printf(VERBOSE_ERR,"Unknown music file format");
+            free(audio_ay_player_mem);
+            audio_ay_player_mem=NULL;
+            return 1;
+        }
+        ay_player_file_is_module=1;
+        audio_ay_player_file_size=leidos;
+        snprintf(ay_player_module_format,sizeof(ay_player_module_format),"%s",aymodule_format_of(modulo)->name);
+        snprintf(ay_player_file_song_name,sizeof(ay_player_file_song_name),"%s",aymodule_title(modulo));
+        snprintf(ay_player_file_author,sizeof(ay_player_file_author),"%s",aymodule_author(modulo));
+        if (aymodule_comment(modulo)[0]) {
+            snprintf(ay_player_file_misc,sizeof(ay_player_file_misc),"%s",aymodule_comment(modulo));
+        }
+        else {
+            snprintf(ay_player_file_misc,sizeof(ay_player_file_misc),"%s",ay_player_module_format);
+        }
+        //Sin titulo: el nombre del archivo
+        if (!ay_player_file_song_name[0]) util_get_file_no_directory(filename,ay_player_file_song_name);
+        aymodule_free(modulo);
+
+        debug_printf(VERBOSE_INFO,"Music module %s: %s - %s",ay_player_module_format,ay_player_file_song_name,ay_player_file_author);
+        return 0;
+    }
 
     //Mostrar información de la canción
 	int indice_autor=audio_ay_player_get_abs_index(12);
@@ -626,6 +674,41 @@ int audio_ay_player_play_song(z80_byte song)
 
     //Mezclador: el .mix de esta cancion, si tiene (y si no, los ajustes del usuario)
     ay_mixer_song_started(ay_player_filename_playing,song,ay_player_total_songs());
+
+    //Modulo de musica: solo en el reproductor en hilo aparte
+    if (ay_player_file_is_module) {
+        ay_tp_stop();
+        ay_player_song_is_cpc=0;
+
+        if (!audio_hq_fifo_in_use) {
+            debug_printf(VERBOSE_ERR,"%s modules play only with the high quality sound (Settings > Audio)",ay_player_module_format);
+            return 1;
+        }
+
+        sprintf (ay_player_second_footer,"%s - %s",ay_player_file_author,ay_player_file_misc);
+        ay_player_set_footer(ay_player_file_song_name,ay_player_second_footer);
+
+        //Duracion: la exacta del modulo, si la sabe; si no, se mide
+        ay_song_length=0;
+        ay_player_length_default=1;
+        ay_player_song_loop=-1;
+        ay_song_length=ay_player_limit_infinite_tracks;
+        ay_player_apply_length_limit();
+
+        ay_song_length_counter=0;
+        ay_player_playing.v=1;
+        ay_player_paused.v=0;
+
+        if (ay_tp_start(audio_ay_player_mem,audio_ay_player_file_size,1,0)==0) {
+            debug_printf(VERBOSE_INFO,"%s module played on the separate AY player",ay_player_module_format);
+            ay_player_song_length_measured(1);
+            return 0;
+        }
+
+        ay_player_playing.v=0;
+        debug_printf(VERBOSE_ERR,"Can not start the AY player thread");
+        return 1;
+    }
 
     //Cancion de CPC: con el ajuste, o reconocida al probar unos frames
     ay_player_song_is_cpc=ay_player_cpc_mode.v;
@@ -1734,7 +1817,7 @@ int ay_player_add_directory_playlist_filter_func(const struct dirent *d GCC_UNUS
 		return 0;
 	}
 
-    if (!util_compare_file_extension((char *)d->d_name,"ay")) return 1;
+    if (ay_player_file_extension_supported((char *)d->d_name)) return 1;
 
     return 0;
 }

@@ -385,7 +385,7 @@ int ay_tp_start(unsigned char *data,int size,int song,int cpc)
 
     tp_active=0;
 
-    if (tp_machine==NULL) tp_machine=malloc(sizeof(struct ay_measure_machine));
+    if (tp_machine==NULL) tp_machine=calloc(1,sizeof(struct ay_measure_machine));
     if (tp_machine==NULL || ay_measure_setup(tp_machine,data,size,song,cpc) || tp_new_buffers()) {
         error=1;
     }
@@ -417,10 +417,11 @@ int ay_tp_seek(long frame)
     if (!tp_active || tp_song_data==NULL) return 1;
     if (frame<0) frame=0;
 
-    nueva=malloc(sizeof(struct ay_measure_machine));
+    nueva=calloc(1,sizeof(struct ay_measure_machine));
     if (nueva==NULL) return 1;
 
     if (ay_measure_setup(nueva,tp_song_data,tp_song_size,tp_song_number,tp_song_cpc)) {
+        ay_measure_release(nueva);
         free(nueva);
         return 1;
     }
@@ -431,10 +432,12 @@ int ay_tp_seek(long frame)
 
     if (!tp_active) {
         TP_UNLOCK;
+        ay_measure_release(nueva);
         free(nueva);
         return 1;
     }
 
+    ay_measure_release(tp_machine);
     free(tp_machine);
     tp_machine=nueva;
 

@@ -1924,7 +1924,9 @@ Error opening MIDI in raw mode. %s	Hiba a MIDI nyers módú megnyitásakor. %s	e
 Error opening MIDI Output	Hiba a MIDI kimenet megnyitásakor	error
 External Audio Source buffer is full, a fragment of %d ms has been lost	A külső hangforrás puffere megtelt, egy %d ms-os részlet elveszett	error
 Error reading directory contents: %s	Hiba a mappa tartalmának olvasásakor: %s	error
-AY file does not have .ay extension	Az AY fájl kiterjesztése nem .ay	error
+AY file does not have .ay, .pt3 or .vt2 extension	A zenefájl kiterjesztése nem .ay, .pt3 vagy .vt2	error
+Unknown music file format	Ismeretlen zenefájl-formátum	error
+%s modules play only with the high quality sound (Settings > Audio)	A(z) %s modulok csak jó minőségű hanggal szólnak (beállítások > Hang)	error
 Unable to open ay file	Nem sikerült megnyitni az ay fájlt	error
 Error reading ay file	Hiba az ay fájl olvasásakor	error
 File version>3 not supported yet (file version: %d)	A 3-nál újabb fájlverzió még nem támogatott (fájlverzió: %d)	error

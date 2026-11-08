@@ -72,7 +72,8 @@ megvannak a magyar ékezetes betűk.
 
 ### AY zenelejátszó és AY keverő
 
-- A lejátszó az `.ay` zenéket saját Z80-on és saját AY chipen játssza le, az
+- A lejátszó az `.ay` zenéket és a Pro Tracker 3 modulokat (`.pt3`, `.vt2`)
+  saját Z80-on és saját AY chipen játssza le, az
   emulált géptől függetlenül, ami közben fut tovább. A dalok hosszát megméri
   és megjegyzi, a dalok a végükön elhalkulnak, ±10 másodperces tekerés,
   *1 szám / Lista / Ismétlés* módok.

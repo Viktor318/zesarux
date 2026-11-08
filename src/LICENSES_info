@@ -12,6 +12,10 @@ http://www.slack.net/~ant/
 Copyright (c) 2021 Andre Weissflog. Distributed under zlib/libpng license, you may read it on the LICENSE_chips_z80 file
 https://github.com/floooh/chips
 
+-Pro Tracker 3 player (audio/pt3player.c, pt3text.c, aymodule.c), from the Viktor318/fuse fork, based on ZXTune
+Copyright (c) Vitamin/CAIG. Distributed under GNU LESSER GENERAL PUBLIC LICENSE v3, you may read it on the LICENSE_zxtune file
+https://zxtune.bitbucket.io/
+
 -DOS font, used on some GUI styles.
 Copyright Neil Roy. Distributed under CC BY-SA 3.0 license, you may read it on the LICENSE_DOS_font file
 https://opengameart.org/content/dos-8x8-font

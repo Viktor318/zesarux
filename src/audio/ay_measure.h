@@ -43,6 +43,7 @@ extern int ay_measure_running(void);
 //Un Spectrum 48K (o un Amstrad CPC) reducido: solo memoria, Z80 y puertos del AY
 //(tambien lo usa el reproductor en hilo aparte)
 #include "chips_z80.h"
+#include "aymodule.h"
 
 //t-estados de un frame
 #define AY_MEASURE_FRAME_TSTATES 69888
@@ -65,6 +66,9 @@ struct ay_measure_machine {
     //t-estados de un frame y frecuencia del AY de la maquina
     long frame_tstates;
     long ay_frequency;
+    //Modulo de musica (Pro Tracker 3...) en vez de un archivo AY: sus registros salen de su reproductor,
+    //no del Z80 (fork). NULL: archivo AY
+    aymodule *module;
 };
 
 struct ay_measure_write {
@@ -73,6 +77,10 @@ struct ay_measure_write {
 };
 
 extern int ay_measure_setup(struct ay_measure_machine *m,unsigned char *data,int size,int song,int cpc);
+//Liberar lo que tenga la maquina (el modulo), antes de free() o de otro ay_measure_setup
+extern void ay_measure_release(struct ay_measure_machine *m);
+//Los datos son un modulo de musica (no un archivo AY)? Retorna 1 si se puede reproducir
+extern int ay_measure_is_module(unsigned char *data,int size);
 extern int ay_measure_run_frame(struct ay_measure_machine *m,struct ay_measure_write *writes,int max_writes);
 
 //Cancion (desde 1) de Amstrad CPC? Se prueban unos frames como Spectrum y como CPC

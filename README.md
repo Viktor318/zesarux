@@ -68,7 +68,8 @@ Hungarian accented letters.
 
 ### AY music player and AY mixer
 
-- The player plays `.ay` music on a Z80 and an AY chip of its own, apart from
+- The player plays `.ay` music and Pro Tracker 3 modules (`.pt3`, `.vt2`) on
+  a Z80 and an AY chip of its own, apart from
   the emulated machine, which keeps running. Song lengths are measured and
   kept, songs fade out at the end, seeking ±10 seconds, *1 song / List /
   Repeat* modes.
