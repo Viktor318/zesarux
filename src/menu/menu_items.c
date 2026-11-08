@@ -167,6 +167,7 @@
 #include "zxevo.h"
 #include "scorpion.h"
 #include "atmturbo.h"
+#include "screen_fx.h"
 
 #ifdef COMPILE_ALSA
 #include "audioalsa.h"
@@ -20670,14 +20671,18 @@ void menu_video_output_overlay(void)
 
         int offset_x=menu_char_width;
 
-        int x,y,xmax,ymax;
-        xmax=get_total_ancho_rainbow();
-        ymax=get_total_alto_rainbow();
+        int x,y,ancho,alto;
+        ancho=get_total_ancho_rainbow();
+        alto=get_total_alto_rainbow();
         z80_int *puntero;
         puntero=rainbow_buffer;
 
-        for (y=0;y<ymax;y++) {
-            for (x=0;x<xmax;x++) {
+
+        //Efectos especiales (FX)
+        puntero=screen_rainbow_effects(puntero,ancho,alto);
+
+        for (y=0;y<alto;y++) {
+            for (x=0;x<ancho;x++) {
                 zxvision_putpixel(menu_video_output_window,x+offset_x,y,*puntero);
                 puntero++;
             }
@@ -20697,6 +20702,19 @@ void menu_video_output_overlay(void)
 //Almacenar la estructura de ventana aqui para que se pueda referenciar desde otros sitios
 zxvision_window zxvision_window_video_output;
 
+
+int ventana_video_output_activa=0;
+int ventana_video_output_abierta=0;
+
+int ventana_video_output_esta_activa(void)
+{
+    return ventana_video_output_activa;
+}
+
+int ventana_video_output_esta_abierta(void)
+{
+    return ventana_video_output_abierta;
+}
 
 void menu_video_output(MENU_ITEM_PARAMETERS)
 {
@@ -20754,6 +20772,8 @@ void menu_video_output(MENU_ITEM_PARAMETERS)
     //cambio overlay
     zxvision_set_window_overlay(ventana,menu_video_output_overlay);
 
+    ventana_video_output_abierta=1;
+
 
     //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
     //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
@@ -20761,6 +20781,8 @@ void menu_video_output(MENU_ITEM_PARAMETERS)
             //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
             return;
     }
+
+    ventana_video_output_activa=1;
 
     if (rainbow_enabled.v==0) {
         zxvision_print_string_defaults_fillspc(ventana,1,0,"Real video not enabled");
@@ -20796,6 +20818,9 @@ void menu_video_output(MENU_ITEM_PARAMETERS)
 
     } while (salir==0);
 
+    ventana_video_output_activa=0;
+
+
 
     util_add_window_geometry_compact(ventana);
 
@@ -20806,6 +20831,7 @@ void menu_video_output(MENU_ITEM_PARAMETERS)
     else {
 
         zxvision_destroy_window(ventana);
+        ventana_video_output_abierta=0;
     }
 
 

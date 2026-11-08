@@ -5193,6 +5193,9 @@ void screen_add_watermark_no_rainbow(void)
 void scr_refresca_pantalla_rainbow_comun(void)
 {
 
+    //Si ventana video output abierta, no renderizamos desde aqui
+    if (ventana_video_output_esta_abierta()) return;
+
     int ancho,alto;
 
     ancho=get_total_ancho_rainbow();
@@ -5439,6 +5442,8 @@ BITS INK PAPER BORDER
 //Refresco pantalla con rainbow
 void scr_refresca_pantalla_rainbow_comun_spectrum(void)
 {
+
+    if (ventana_video_output_esta_abierta()) return;
 
     if (gigascreen_enabled.v) {
         if (screen_special_effects_enabled.v) {

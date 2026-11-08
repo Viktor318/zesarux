@@ -48,6 +48,7 @@
 #include "utils.h"
 #include "debug.h"
 #include "zxvision.h"
+#include "menu_items.h"
 #include "ql_i8049.h"
 #include "cpc.h"
 
@@ -528,6 +529,8 @@ unsigned int hungarian_keyboard_utf8_decode(const char *texto)
 int hungarian_keyboard_menu_is_active(void)
 {
     if (hungarian_keyboard.v==0) return 0;
+    //La ventana Videokimenet (Video Output) activa tambien envia las teclas a la maquina
+    if (ventana_video_output_esta_activa()) return 0;
     return (menu_abierto && zxvision_current_window!=&menu_help_show_keyboard_ventana);
 }
 
@@ -541,7 +544,8 @@ int hungarian_keyboard_is_active(void)
     //Con el menu abierto, las teclas las gestiona el menu como siempre. Excepto si la ventana activa
     //es el teclado virtual: esa ventana deja pasar las teclas a la maquina, y entonces tambien
     //debe valer la distribucion de teclado del sistema
-    if (menu_abierto && zxvision_current_window!=&menu_help_show_keyboard_ventana) return 0;
+    //Tambien la ventana Videokimenet (Video Output) activa, que tambien envia las teclas a la maquina
+    if (menu_abierto && zxvision_current_window!=&menu_help_show_keyboard_ventana && !ventana_video_output_esta_activa()) return 0;
 
     //Chloe tiene su propio teclado completo, y en modo raw se leen posiciones fisicas
     if (chloe_keyboard.v) return 0;
