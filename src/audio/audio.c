@@ -1424,7 +1424,10 @@ void envio_audio(void)
 
         }
 
+	//Con el reproductor AY en hilo aparte, se graba su chip (fork)
+	ay_player_vista_inicio();
 	mid_frame_event();
+	ay_player_vista_fin();
 
 	midi_output_frame_event();
 
@@ -3236,8 +3239,8 @@ void mid_frame_event(void)
 				//Si canales no suenan como tono, o volumen 0 meter cadena vacia en nota
 				int suena_nota=0;
 
-                //tema de ruido solo con chip AY
-                if (ay_chip_present.v) {
+                //tema de ruido solo con chip AY (tambien el del reproductor AY en hilo aparte)
+                if (ay_chip_present.v || ay_player_shows_own_chip()) {
 
                         //TODO: no mirar tono aqui
                     //int reg_vol;

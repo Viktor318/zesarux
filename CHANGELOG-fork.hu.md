@@ -27,6 +27,8 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
 - A **hangchip ablakok** (regiszterek, zongora, kotta, a chip adatai) AY chip
   nélküli gépen is megnyithatók, amíg az AY lejátszóban van dal; ilyenkor a
   lejátszó chipjét mutatják.
+- A **Hangchipből .mid** az AY lejátszó zenéjét is rögzíti, AY chip nélküli
+  gépen is: amíg a lejátszóban van dal, annak a chipjét rögzíti.
 
 ## v13.1-SN-hu.1 – 2026-11-06
 

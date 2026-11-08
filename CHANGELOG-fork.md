@@ -26,6 +26,9 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
 - The **audio chip windows** (registers, piano, sheet, chip info) can be
   opened also without an AY chip in the machine while the AY player has a
   song; while it has one, they show the chip of the player.
+- **Audio Chip to .mid** records the music of the AY player too, also on
+  machines without an AY chip: while the player has a song, its chip is
+  recorded.
 
 ## v13.1-SN-hu.1 – 2026-11-06
 

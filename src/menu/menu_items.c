@@ -15114,12 +15114,12 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
                     menu_add_item_menu_inicial(&array_menu_record_mid,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
                     if (mid_is_recording.v==0) {
-                        menu_add_item_menu_en_es_ca(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_start,menu_cond_ay_or_sn_chip,
+                        menu_add_item_menu_en_es_ca(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_start,menu_cond_ay_or_sn_chip_or_ay_player,
                             "Start Recording","Iniciar Grabacion","Iniciar Gravacio");
                     }
 
                     else {
-                        menu_add_item_menu_en_es_ca(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_stop,menu_cond_ay_or_sn_chip,
+                        menu_add_item_menu_en_es_ca(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_stop,menu_cond_ay_or_sn_chip_or_ay_player,
                             "Stop Recording","Detener Grabacion","Aturar Gravacio");
                     }
 
@@ -15131,12 +15131,12 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
                     if (mid_is_recording.v) {
 
                         if (mid_is_paused.v==0) {
-                            menu_add_item_menu_en_es_ca(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_pause_unpause,menu_cond_ay_or_sn_chip,
+                            menu_add_item_menu_en_es_ca(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_pause_unpause,menu_cond_ay_or_sn_chip_or_ay_player,
                                 "Pause Recording","Pausar Grabacion","Pausar Gravacio");
                         }
 
                         else {
-                            menu_add_item_menu_en_es_ca(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_pause_unpause,menu_cond_ay_or_sn_chip,
+                            menu_add_item_menu_en_es_ca(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_pause_unpause,menu_cond_ay_or_sn_chip_or_ay_player,
                                 "Resume Recording","Continuar Grabacion","Continuar Gravacio");
                         }
 
@@ -15147,7 +15147,7 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
                     //No dejamos grabar hasta que no se haga stop
                     //porque el flush del final mete cabeceras de final de pistas y ya no se puede reaprovechar
                     if (mid_has_been_initialized() && mid_notes_recorded && mid_is_recording.v==0) {
-                        menu_add_item_menu_en_es_ca(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_save,menu_cond_ay_or_sn_chip,
+                        menu_add_item_menu_en_es_ca(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_save,menu_cond_ay_or_sn_chip_or_ay_player,
                             "Save .MID file","Grabar archivo .MID","Gravar arxiu .MID");
                     }
 
@@ -35923,7 +35923,7 @@ void menu_audio(MENU_ITEM_PARAMETERS)
         menu_add_item_menu_tiene_submenu(array_menu_audio);
 
 
-        menu_add_item_menu_en_es_ca(array_menu_audio,MENU_OPCION_NORMAL,menu_record_mid,menu_cond_ay_or_sn_chip,
+        menu_add_item_menu_en_es_ca(array_menu_audio,MENU_OPCION_NORMAL,menu_record_mid,menu_cond_ay_or_sn_chip_or_ay_player,
             "Audio Chip to .~~mid","Audio Chip a .~~mid","Audio Xip a .~~mid");
         menu_add_item_menu_tooltip(array_menu_audio,"Saves music from the AY Chip to a .mid file");
         menu_add_item_menu_ayuda(array_menu_audio,"Saves music from the AY Chip to a .mid file");
