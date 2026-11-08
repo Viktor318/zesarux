@@ -18,6 +18,15 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
   the cursor keys, Tab, the F keys and the Ctrl or left Alt combinations
   work as before.
 
+### AY music player and AY mixer
+
+- The **AY mixer** can be opened on every machine (*Audio > AY Mixer*), also
+  on those without an AY chip (48K, ZX81...): the AY player plays on any
+  machine and its music goes through the mixer.
+- The **audio chip windows** (registers, piano, sheet, chip info) can be
+  opened also without an AY chip in the machine while the AY player has a
+  song; while it has one, they show the chip of the player.
+
 ## v13.1-SN-hu.1 – 2026-11-06
 
 First release of the fork.

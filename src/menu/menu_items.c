@@ -2028,7 +2028,7 @@ static char *ay_envelope_shape[16] = {
     "/____"    // 15 - Attack, hold low
 };
 
-void menu_ay_registers_overlay(void)
+static void menu_ay_registers_overlay_contenido(void)
 {
 
     //NOTA: //Hemos de suponer que current window es esta de ay registers
@@ -2530,6 +2530,14 @@ M1-M0= mode bits:
     zxvision_draw_window_contents(menu_ay_registers_overlay_window);
 
 
+}
+
+//Con el reproductor AY en hilo aparte, se muestra su chip (fork)
+void menu_ay_registers_overlay(void)
+{
+    ay_player_vista_inicio();
+    menu_ay_registers_overlay_contenido();
+    ay_player_vista_fin();
 }
 
 
@@ -14552,7 +14560,7 @@ void menu_ay_partitura_draw_state(int chip,int canal)
 
 int menu_ay_partitura_chip=0;
 
-void menu_ay_partitura_overlay(void)
+static void menu_ay_partitura_overlay_contenido(void)
 {
 
 
@@ -14701,6 +14709,14 @@ void menu_ay_partitura_overlay(void)
 
     zxvision_draw_window_contents(menu_ay_partitura_overlay_window);
 
+}
+
+//Con el reproductor AY en hilo aparte, se muestra su chip (fork)
+void menu_ay_partitura_overlay(void)
+{
+    ay_player_vista_inicio();
+    menu_ay_partitura_overlay_contenido();
+    ay_player_vista_fin();
 }
 
 
@@ -15078,6 +15094,13 @@ int menu_cond_ay_or_sn_chip(void)
 {
     if (ay_chip_present.v || sn_chip_present.v || i8049_chip_present ) return 1;
     else return 0;
+}
+
+//Ventanas del chip de sonido: tambien sin AY en la maquina, si el reproductor AY en hilo aparte tiene cancion (fork)
+int menu_cond_ay_or_sn_chip_or_ay_player(void)
+{
+    if (menu_cond_ay_or_sn_chip()) return 1;
+    return ay_player_shows_own_chip();
 }
 
 void menu_record_mid(MENU_ITEM_PARAMETERS)
@@ -21539,7 +21562,7 @@ zxvision_window *menu_ay_pianokeyboard_overlay_window;
 
 int menu_audiochip_piano_last_offset_window_x=0;
 
-void menu_ay_pianokeyboard_overlay(void)
+static void menu_ay_pianokeyboard_overlay_contenido(void)
 {
 
 
@@ -21645,6 +21668,14 @@ void menu_ay_pianokeyboard_overlay(void)
 
     zxvision_draw_window_contents(menu_ay_pianokeyboard_overlay_window);
 
+}
+
+//Con el reproductor AY en hilo aparte, se muestra su chip (fork)
+void menu_ay_pianokeyboard_overlay(void)
+{
+    ay_player_vista_inicio();
+    menu_ay_pianokeyboard_overlay_contenido();
+    ay_player_vista_fin();
 }
 
 
@@ -35745,7 +35776,7 @@ void menu_audio(MENU_ITEM_PARAMETERS)
 
 
 
-        menu_add_item_menu_inicial(&array_menu_audio,"Audio Chip ~~Registers",MENU_OPCION_NORMAL,menu_ay_registers,menu_cond_ay_or_sn_chip);
+        menu_add_item_menu_inicial(&array_menu_audio,"Audio Chip ~~Registers",MENU_OPCION_NORMAL,menu_ay_registers,menu_cond_ay_or_sn_chip_or_ay_player);
         menu_add_item_menu_spanish_catalan(array_menu_audio,"~~Registros del Chip de Audio","~~Registres del Xip d'Audio");
         menu_add_item_menu_shortcut(array_menu_audio,'r');
         menu_add_item_menu_se_cerrara(array_menu_audio);
@@ -35753,7 +35784,7 @@ void menu_audio(MENU_ITEM_PARAMETERS)
         if_zxvision_topbar_menu_will_not_have_title(array_menu_audio);
 
 
-        menu_add_item_menu_en_es_ca(array_menu_audio,MENU_OPCION_NORMAL,menu_ay_pianokeyboard,menu_cond_ay_or_sn_chip,
+        menu_add_item_menu_en_es_ca(array_menu_audio,MENU_OPCION_NORMAL,menu_ay_pianokeyboard,menu_cond_ay_or_sn_chip_or_ay_player,
             "Audio Chip P~~iano","P~~iano del Chip de Audio","P~~iano del Xip d'Audio");
         menu_add_item_menu_shortcut(array_menu_audio,'i');
         menu_add_item_menu_tooltip(array_menu_audio,"Shows a piano keyboard with the notes being played on the AY Chip");
@@ -35763,7 +35794,7 @@ void menu_audio(MENU_ITEM_PARAMETERS)
 
 
         if (si_complete_video_driver() ) {
-                menu_add_item_menu_en_es_ca(array_menu_audio,MENU_OPCION_NORMAL,menu_ay_partitura,menu_cond_ay_or_sn_chip,
+                menu_add_item_menu_en_es_ca(array_menu_audio,MENU_OPCION_NORMAL,menu_ay_partitura,menu_cond_ay_or_sn_chip_or_ay_player,
                     "Audio Chip ~~Sheet","Partitura~~s del Chip de Audio","Partiture~~s del Xip d'Audio");
                 menu_add_item_menu_shortcut(array_menu_audio,'s');
                 menu_add_item_menu_se_cerrara(array_menu_audio);
@@ -35772,7 +35803,7 @@ void menu_audio(MENU_ITEM_PARAMETERS)
 
         //En el caso de sam coupe se cumple condicion menu_cond_ay_or_sn_chip porque realmente estamos
         //simulando el chip SAA con el AY
-        menu_add_item_menu_en_es_ca(array_menu_audio,MENU_OPCION_NORMAL,menu_audio_chip_info,menu_cond_ay_or_sn_chip,
+        menu_add_item_menu_en_es_ca(array_menu_audio,MENU_OPCION_NORMAL,menu_audio_chip_info,menu_cond_ay_or_sn_chip_or_ay_player,
             "Audio Chip Info","Info del Chip de Audio","Info del Xip d'Audio");
         menu_add_item_menu_se_cerrara(array_menu_audio);
         menu_add_item_menu_genera_ventana(array_menu_audio);
@@ -35887,7 +35918,7 @@ void menu_audio(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_tiene_submenu(array_menu_audio);
         }
 
-        menu_add_item_menu_format(array_menu_audio,MENU_OPCION_NORMAL,menu_ay_channel_mixer,menu_cond_ay_chip,"AY Mi~~xer");
+        menu_add_item_menu_format(array_menu_audio,MENU_OPCION_NORMAL,menu_ay_channel_mixer,NULL,"AY Mi~~xer");
         menu_add_item_menu_shortcut(array_menu_audio,'x');
         menu_add_item_menu_tiene_submenu(array_menu_audio);
 

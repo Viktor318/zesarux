@@ -19,6 +19,15 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
   kurzorbillentyűk, a Tab, az F-billentyűk és a Ctrl vagy bal Alt
   kombinációk ugyanúgy működnek, mint eddig.
 
+### AY lejátszó és AY keverő
+
+- Az **AY keverő** minden gépen megnyitható (*Hang > AY keverő*), azokon is,
+  amelyekben nincs AY chip (48K, ZX81...): az AY lejátszó bármelyik gépen
+  szól, és a zenéje a keverőn megy át.
+- A **hangchip ablakok** (regiszterek, zongora, kotta, a chip adatai) AY chip
+  nélküli gépen is megnyithatók, amíg az AY lejátszóban van dal; ilyenkor a
+  lejátszó chipjét mutatják.
+
 ## v13.1-SN-hu.1 – 2026-11-06
 
 A fork első kiadása.

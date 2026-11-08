@@ -72,6 +72,9 @@ extern z80_bit ay_player_single_song;
 
 //El reproductor usa la maquina emulada (no el reproductor en hilo aparte): la maquina esta tomada por la cancion
 extern int ay_player_uses_machine(void);
+extern int ay_player_shows_own_chip(void);
+extern void ay_player_vista_inicio(void);
+extern void ay_player_vista_fin(void);
 extern void ay_player_song_end(void);
 extern void ay_player_seek_seconds(int segundos);
 

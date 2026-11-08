@@ -1562,6 +1562,39 @@ int ay_player_uses_machine(void)
     return ay_player_playing.v && !ay_tp_active();
 }
 
+/* Ventanas del chip de sonido (registros, piano, partitura) con el reproductor en hilo aparte (fork):
+   mientras tiene una cancion, muestran su chip AY (como chip 1), en cualquier maquina, aunque no tenga AY.
+   Se copian sus registros en los del chip 1 de la maquina mientras se dibuja la ventana, y despues se
+   restauran (todo en el hilo principal, sin que la emulacion corra entre medias) */
+int ay_player_shows_own_chip(void)
+{
+    return ay_tp_active();
+}
+
+static z80_byte ay_player_vista_guardado[16];
+static int ay_player_vista_activa=0;
+
+void ay_player_vista_inicio(void)
+{
+    if (ay_player_vista_activa || !ay_player_shows_own_chip()) return;
+
+    int i;
+    for (i=0;i<16;i++) {
+        ay_player_vista_guardado[i]=ay_3_8912_registros[0][i];
+        ay_3_8912_registros[0][i]=ay_tp_register(i);
+    }
+    ay_player_vista_activa=1;
+}
+
+void ay_player_vista_fin(void)
+{
+    if (!ay_player_vista_activa) return;
+
+    int i;
+    for (i=0;i<16;i++) ay_3_8912_registros[0][i]=ay_player_vista_guardado[i];
+    ay_player_vista_activa=0;
+}
+
 //Ir adelante o atras en la cancion (en segundos). Solo con el reproductor en hilo aparte
 void ay_player_seek_seconds(int segundos)
 {
