@@ -20684,48 +20684,25 @@ void menu_text_adventure_tools(MENU_ITEM_PARAMETERS)
 
 zxvision_window *menu_video_output_window;
 
-//Simple render obteniendo imagen del rainbow buffer, usado por varias maquinas
-void menu_video_output_render_alternativo(void)
+
+//sin putpixel cache: render normal: 40% cpu. render ventana: 56% cpu
+//con putpixel cache: render normal: 26% cpu. render ventana: 56% cpu
+
+
+z80_int *menu_video_output_overlay_putpixel_cache=NULL;
+
+int menu_video_output_overlay_putpixel_cache_ancho=-1;
+int menu_video_output_overlay_putpixel_cache_alto=-1;
+
+void menu_video_output_clear_putpixel_cache(void)
 {
 
+    int tamanyo=menu_video_output_overlay_putpixel_cache_ancho*menu_video_output_overlay_putpixel_cache_alto;
+    //para poder hacer putpixel cache con zoom y*2 y interlaced, doble de tamanyo
+    tamanyo *=2; //*2 porque es z80_int
 
-    int ancho,alto;
-
-    ancho=get_total_ancho_rainbow();
-    alto=get_total_alto_rainbow();
-
-    int x,y;
-
-    z80_int color_pixel;
-    z80_int *puntero;
-
-    puntero=rainbow_buffer;
-
-    //Reduccion de pantalla y otros efectos
-    puntero=screen_rainbow_effects(puntero,ancho,alto);
-
-    int offset_x=menu_char_width*menu_video_output_window->x;
-    int offset_y=menu_char_height*menu_video_output_window->y;
-
-
-    for (y=0;y<alto;y++) {
-        for (x=0;x<ancho;x++) {
-            color_pixel=*puntero++;
-            scr_putpixel_zoom_rainbow(x+offset_x,y+offset_y,color_pixel);
-        }
-    }
-
-    //Rellenar la parte de pantalla no usada por debajo en modos 60 HZ
-    if (machine_60hz.v) {
-        for (;y<rainbow_buffer_current_height;y++) {
-
-            for (x=0;x<ancho;x++) {
-                scr_putpixel_zoom_rainbow(x+offset_x,y+offset_y,0);
-            }
-
-
-        }
-    }
+    //llenar todo con 65535
+    memset(menu_video_output_overlay_putpixel_cache,255,tamanyo);
 }
 
 
@@ -21019,6 +20996,46 @@ void menu_video_output_dibuja_escalado(zxvision_window *w,z80_int *origen,int an
     }
 }
 
+
+//Upstream: cache de putpixel para su dibujado 1:1. El fork dibuja con menu_video_output_dibuja_escalado,
+//que salta los pixeles que ya estan en la capa del menu; esta funcion se mantiene para facilitar las fusiones
+void menu_video_output_alloc_putpixel_cache(void)
+{
+
+    int ancho=screen_get_window_size_width_no_zoom();
+    int alto=screen_get_window_size_height_no_zoom();
+
+    //asignar si ha cambiado tamaño o si no esta asignado
+    if (ancho!=menu_video_output_overlay_putpixel_cache_ancho ||
+        alto!=menu_video_output_overlay_putpixel_cache_alto ||
+        menu_video_output_overlay_putpixel_cache==NULL) {
+
+        //liberar si existe previo
+        if (menu_video_output_overlay_putpixel_cache!=NULL) free (menu_video_output_overlay_putpixel_cache);
+
+        menu_video_output_overlay_putpixel_cache_ancho=ancho;
+        menu_video_output_overlay_putpixel_cache_alto=alto;
+
+
+
+        //El tamanyo depende del footer. Pero no del border (siempre se incluye con border)
+
+
+        int tamanyo=ancho*alto;
+
+        int putpixel_cache_size=tamanyo*2; //*2 porque es z80_int
+
+        //TODO: parece que la memoria que asignamos es mayor de la que luego usamos en clear_putpixel_cache
+        //normal? o es un error?
+        //De todas maneras, asignar mas memoria de la que usamos no provoca fallos, es un desperdicio, si,
+        //pero no generará ningun segfault ni nada parecido
+
+
+        menu_video_output_overlay_putpixel_cache=util_malloc(putpixel_cache_size,"Can not allocate memory for putpixel cache on window emulated display");
+
+        menu_video_output_clear_putpixel_cache();
+    }
+}
 
 void menu_video_output_overlay(void)
 {
