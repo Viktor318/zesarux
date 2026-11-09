@@ -9,6 +9,11 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
 
 ## Kiadatlan
 
+### Magyar felület
+
+- Az upstream új *Emulált kijelző* beállításai (a gépkép a bal felső sarokba
+  rögzítve vagy külön ablakban; korábban *Videókimenet*) magyarul.
+
 ### Billentyűzet
 
 - **Windowsos billentyűzetkiosztás a menükben is**: bekapcsolt beállítás

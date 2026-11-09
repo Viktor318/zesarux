@@ -8,6 +8,12 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
 
 ## Unreleased
 
+### Hungarian user interface
+
+- The new upstream *Emulated Display* settings (the machine picture docked
+  to the top left corner or in a window; formerly *Video Output*) in
+  Hungarian.
+
 ### Keyboard
 
 - **Windows keyboard layout also in the menus**: with the option on, the
