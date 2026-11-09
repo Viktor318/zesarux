@@ -112,6 +112,10 @@ static int scrsdl_imagen_y=0;
 static int scrsdl_destino_ancho=0;
 static int scrsdl_destino_alto=0;
 
+//Si la pantalla emulada estaba en una ventana (Emulated Display) al distribuir la ventana: cuando cambia,
+//hay que volver a distribuirla, porque entonces la zona de la maquina no se amplia
+static int scrsdl_pantalla_en_ventana=0;
+
 static void scrsdl_libera_imagen(void)
 {
     if (scrsdl_texture!=NULL) {
@@ -134,6 +138,8 @@ static int scrsdl_ajusta_a_ventana(void)
     //Tamano con el que se ha distribuido (para detectar cambios despues)
     scrsdl_ventana_ancho_anterior=ancho_ventana;
     scrsdl_ventana_alto_anterior=alto_ventana;
+
+    scrsdl_pantalla_en_ventana=ventana_video_output_esta_abierta();
 
     if (!scr_sdl_force_size.v) screen_layout_fit_window(ancho_ventana,alto_ventana);
     else screen_layout_fixed_gui_zoom();
@@ -1857,6 +1863,14 @@ static void scrsdl_comprueba_tamano_ventana(void)
     SDL_GetWindowSize(window,&ancho,&alto);
 
     if (ancho>0 && alto>0 && (ancho!=scrsdl_ventana_ancho_anterior || alto!=scrsdl_ventana_alto_anterior)) {
+        scrsdl_resize(ancho,alto);
+    }
+
+    //La pantalla emulada ha pasado a una ventana o ha vuelto a su sitio: volver a distribuir con el mismo tamano
+    else if (ancho>0 && alto>0 && ventana_video_output_esta_abierta()!=scrsdl_pantalla_en_ventana) {
+        debug_printf (VERBOSE_INFO,"Emulated display %s: redistributing the window",
+            (scrsdl_pantalla_en_ventana ? "docked" : "on a window"));
+        scrsdl_ventana_ancho_anterior=-1;
         scrsdl_resize(ancho,alto);
     }
 }

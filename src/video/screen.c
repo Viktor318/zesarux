@@ -3496,7 +3496,11 @@ void screen_layout_fit_window(int ancho_ventana,int alto_ventana)
        (cada pixel de la maquina, un numero entero de pixeles), y el driver la reduce al tamano exacto con
        interpolacion lineal. Asi los pixeles quedan todos iguales y nitidos, solo con un pixel de transicion
        en los bordes. El driver la centra */
-    if (ventana_fullscreen && !screen_ext_desktop_enabled) {
+    /* Con la pantalla emulada en una ventana (Emulated Display en modo ventana), la zona de la maquina
+       la ocupa el ZX Desktop: no ampliarla (escala 1x), o se verian ampliados los iconos y botones que caen ahi */
+    int pantalla_en_ventana=ventana_video_output_esta_abierta();
+
+    if (ventana_fullscreen && !screen_ext_desktop_enabled && !pantalla_en_ventana) {
         int escala;
         screen_machine_scale=4;
         for (escala=4;escala<=64;escala++) {
@@ -3518,6 +3522,7 @@ void screen_layout_fit_window(int ancho_ventana,int alto_ventana)
     for (i=0;i<4;i++) {
         int escala=screen_machine_scales[i];
         if (escala>screen_machine_scale_requested) continue;
+        if (pantalla_en_ventana && escala!=4) continue;
         int ancho=screen_get_emulated_display_width_zoom_border_en()*escala/4;
         int alto=screen_get_emulated_display_height_zoom_border_en()*escala/4+WINDOW_FOOTER_SIZE*zoom_y;
         int margen=(screen_ext_desktop_enabled ? SCREEN_MIN_DESKTOP_WIDTH : 0);
@@ -3527,7 +3532,7 @@ void screen_layout_fit_window(int ancho_ventana,int alto_ventana)
         }
     }
 
-    if (screen_machine_scale!=screen_machine_scale_requested) {
+    if (screen_machine_scale!=screen_machine_scale_requested && !pantalla_en_ventana) {
         debug_printf (VERBOSE_INFO,"Machine picture scale %d/4 does not fit on the window: using %d/4",
             screen_machine_scale_requested,screen_machine_scale);
     }

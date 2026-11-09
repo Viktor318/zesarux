@@ -44,6 +44,13 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
   machines without an AY chip: while the player has a song, its chip is
   recorded.
 
+### Window and machine picture
+
+- With the emulated display on a window, the machine picture size no
+  longer enlarges the ZX Desktop icons and buttons in the top left corner
+  (where the machine picture is): while the display is on a window that
+  area is at 100%, and the chosen size comes back when it is docked again.
+
 ## v13.1-SN-hu.1 – 2026-11-06
 
 First release of the fork.

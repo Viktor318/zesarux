@@ -44,6 +44,13 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
 - A **Hangchipből .mid** az AY lejátszó zenéjét is rögzíti, AY chip nélküli
   gépen is: amíg a lejátszóban van dal, annak a chipjét rögzíti.
 
+### Ablak és gépkép
+
+- Ha az emulált kijelző külön ablakban van, a gépkép mérete nem nagyítja
+  fel a ZX Desktop ikonjait és gombjait a bal felső sarokban (a gépkép
+  helyén): amíg a kijelző ablakban van, az a terület 100%-os, és a kijelző
+  visszarögzítésekor visszaáll a beállított méret.
+
 ## v13.1-SN-hu.1 – 2026-11-06
 
 A fork első kiadása.
