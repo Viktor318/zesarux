@@ -60,6 +60,10 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
   maradt a kép (a ZX Desktop kikapcsolása bezárta az ablakot, de a program
   ablakosnak hitte a kijelzőt); most ilyenkor a gépkép tölti ki a
   képernyőt, és visszatéréskor az ablak újra megnyílik.
+- Az ablakban lévő emulált kijelző nem lassítja felére a gépet: eddig minden
+  képkockában az egész képet újrarajzolta, és ettől az emuláció a fele
+  sebességre esett vissza (lassú gépelés, elvesző billentyűk, lassú
+  billentyűismétlés). Most csak a megváltozott pontokat rajzolja.
 
 ## v13.1-SN-hu.1 – 2026-11-06
 

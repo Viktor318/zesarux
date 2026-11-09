@@ -61,6 +61,10 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
   (switching ZX Desktop off closed the window, but the display was still
   taken as windowed); now the machine picture fills the screen, and the
   window opens again when leaving full screen.
+- The emulated display on a window no longer slows the machine down to half
+  speed: it drew the whole picture again on every frame, and the emulation
+  fell to half speed (slow typing, lost keys, slow key repeat). Now only the
+  changed pixels are drawn.
 
 ## v13.1-SN-hu.1 – 2026-11-06
 

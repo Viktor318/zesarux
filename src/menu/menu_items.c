@@ -20943,6 +20943,10 @@ void menu_video_output_dibuja_escalado(zxvision_window *w,z80_int *origen,int an
     int origen_x=inicio_x+ancho_caracter-(w->offset_x)*ancho_caracter;
     int origen_y=inicio_y-(w->offset_y)*alto_caracter;
 
+    //Con el modo de mezcla de capas con transparencia, el resultado depende tambien de la capa de la maquina:
+    //entonces no se puede saltar un pixel aunque en la capa del menu ya este ese color
+    int comparar_capa=(buffer_layer_menu!=NULL && (screen_menu_mix_method & 3)!=2);
+
     //Columnas de caracteres tapadas por otras ventanas, para la fila de caracteres actual
     int total_columnas=scr_get_menu_width()+1;
     char tapado[total_columnas];
@@ -21003,6 +21007,12 @@ void menu_video_output_dibuja_escalado(zxvision_window *w,z80_int *origen,int an
                     color=TSCONF_INDEX_FIRST_COLOR+(componentes[0]<<10)+(componentes[1]<<5)+componentes[2];
                 }
             }
+
+            //Solo los pixeles que cambian (como la cache de putpixel de la maquina en su sitio): redibujar la
+            //imagen entera en cada frame, mezclando las capas pixel a pixel, reducia la emulacion a la mitad
+            //de velocidad (y con ella la escritura y la repeticion de teclas)
+            if (comparar_capa && xfinal<ancho_layer_menu_machine && yfinal<alto_layer_menu_machine &&
+                buffer_layer_menu[yfinal*ancho_layer_menu_machine+xfinal]==color) continue;
 
             scr_putpixel_layer_menu_no_zoom(xfinal,yfinal,color);
         }
