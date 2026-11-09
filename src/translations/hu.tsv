@@ -4511,3 +4511,10 @@ Turn the main volume on or off	A fő hangerő be- vagy kikapcsolása	tooltip
 Turn the main volume on or off: all the sound of the emulator. When it is turned on again, it comes back to the volume it had	A fő hangerő be- vagy kikapcsolása: az emulátor teljes hangja. Visszakapcsoláskor a korábbi hangerő tér vissza	help
 Main volume: all the sound of the emulator, 0-100%. The same as Settings > Audio > Volume, and the one the AY Player music depends on	Fő hangerő: az emulátor teljes hangja, 0-100%. Ugyanaz, mint a Beállítások > Hang > Hangerő, és ettől függ az AY lejátszó zenéje is	help
 Volume in %	Kimeneti hangerő (%)	window text
+Emulated Display	Emulált kijelző	window title
+Emulated Display	Emulált kijelző	item
+--- Emulated Display ---	--- Emulált kijelző ---	item
+Windowed	Ablakban	item
+Docked	Rögzítve	item
+FX	Effektek	item
+If the emulated display is docked to top-left corner or is rendered on a window	Az emulált kijelző a bal felső sarokba van rögzítve, vagy külön ablakban jelenik meg	tooltip

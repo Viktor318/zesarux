@@ -20684,6 +20684,50 @@ void menu_text_adventure_tools(MENU_ITEM_PARAMETERS)
 
 zxvision_window *menu_video_output_window;
 
+//Simple render obteniendo imagen del rainbow buffer, usado por varias maquinas
+void menu_video_output_render_alternativo(void)
+{
+
+
+    int ancho,alto;
+
+    ancho=get_total_ancho_rainbow();
+    alto=get_total_alto_rainbow();
+
+    int x,y;
+
+    z80_int color_pixel;
+    z80_int *puntero;
+
+    puntero=rainbow_buffer;
+
+    //Reduccion de pantalla y otros efectos
+    puntero=screen_rainbow_effects(puntero,ancho,alto);
+
+    int offset_x=menu_char_width*menu_video_output_window->x;
+    int offset_y=menu_char_height*menu_video_output_window->y;
+
+
+    for (y=0;y<alto;y++) {
+        for (x=0;x<ancho;x++) {
+            color_pixel=*puntero++;
+            scr_putpixel_zoom_rainbow(x+offset_x,y+offset_y,color_pixel);
+        }
+    }
+
+    //Rellenar la parte de pantalla no usada por debajo en modos 60 HZ
+    if (machine_60hz.v) {
+        for (;y<rainbow_buffer_current_height;y++) {
+
+            for (x=0;x<ancho;x++) {
+                scr_putpixel_zoom_rainbow(x+offset_x,y+offset_y,0);
+            }
+
+
+        }
+    }
+}
+
 
 void menu_video_output_overlay(void)
 {
@@ -20695,6 +20739,10 @@ void menu_video_output_overlay(void)
 
 
     if (rainbow_enabled.v) {
+
+        //menu_video_output_render_alternativo();
+
+
 
         int offset_x=menu_char_width;
 
@@ -20714,6 +20762,8 @@ void menu_video_output_overlay(void)
                 puntero++;
             }
         }
+
+
 
     }
 
@@ -20738,8 +20788,10 @@ int ventana_video_output_esta_activa(void)
     return ventana_video_output_activa;
 }
 
+//Dice si la ventana esta abierta y funcional
 int ventana_video_output_esta_abierta(void)
 {
+    if (rainbow_enabled.v==0) return 0;
     return ventana_video_output_abierta;
 }
 
@@ -20764,7 +20816,7 @@ void menu_video_output(MENU_ITEM_PARAMETERS)
     if (!zxvision_if_window_already_exists(ventana)) {
         int xventana,yventana,ancho_ventana,alto_ventana,is_minimized,is_maximized,ancho_antes_minimize,alto_antes_minimize;
 
-        if (!util_find_window_geometry("videooutput",&xventana,&yventana,&ancho_ventana,&alto_ventana,&is_minimized,&is_maximized,&ancho_antes_minimize,&alto_antes_minimize)) {
+        if (!util_find_window_geometry("emulateddisplay",&xventana,&yventana,&ancho_ventana,&alto_ventana,&is_minimized,&is_maximized,&ancho_antes_minimize,&alto_antes_minimize)) {
             ancho_ventana=30;
             alto_ventana=20;
 
@@ -20773,8 +20825,8 @@ void menu_video_output(MENU_ITEM_PARAMETERS)
         }
 
 
-        zxvision_new_window_gn_cim(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"Video Output",
-            "videooutput",is_minimized,is_maximized,ancho_antes_minimize,alto_antes_minimize);
+        zxvision_new_window_gn_cim(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"Emulated Display",
+            "emulateddisplay",is_minimized,is_maximized,ancho_antes_minimize,alto_antes_minimize);
 
         ventana->can_be_backgrounded=1;
 
@@ -20799,7 +20851,12 @@ void menu_video_output(MENU_ITEM_PARAMETERS)
     //cambio overlay
     zxvision_set_window_overlay(ventana,menu_video_output_overlay);
 
-    ventana_video_output_abierta=1;
+
+    //Si se acaba de hacer activa, refrescar el zx desktop para que se vea que ya no está la pantalla emulada en modo Docked
+    if (!ventana_video_output_abierta) {
+        ventana_video_output_abierta=1;
+        menu_draw_ext_desktop();
+    }
 
 
     //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
@@ -20812,8 +20869,9 @@ void menu_video_output(MENU_ITEM_PARAMETERS)
     ventana_video_output_activa=1;
 
     if (rainbow_enabled.v==0) {
-        zxvision_print_string_defaults_fillspc(ventana,1,0,"Real video not enabled");
-        zxvision_print_string_defaults_fillspc(ventana,1,1,"Enable it on Setttings->Display");
+        enable_rainbow();
+        //zxvision_print_string_defaults_fillspc(ventana,1,0,"Real video not enabled");
+        //zxvision_print_string_defaults_fillspc(ventana,1,1,"Enable it on Setttings->Display");
     }
     else {
         zxvision_cls(ventana);
@@ -20918,12 +20976,6 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
 
 
 
-        //Todavia no tengo claro del todo para que servira esto, pero de momento renderiza la pantalla
-        //cuando real video esta activado
-        menu_add_item_menu_en_es_ca(array_menu_display_settings,MENU_OPCION_NORMAL,menu_video_output,NULL,
-            "Video Output","Salida de Video","Sortida de Video");
-        menu_add_item_menu_genera_ventana(array_menu_display_settings);
-        menu_add_item_menu_se_cerrara(array_menu_display_settings);
 
 
         menu_add_item_menu_en_es_ca(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_total_palette,NULL,

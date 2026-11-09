@@ -6969,232 +6969,7 @@ void menu_draw_ext_desktop_footer(void)
 
 }
 
-/*
-void old_menu_draw_ext_desktop(void)
-{
 
-    //Si no escritorio extendido, salir
-    if (!screen_ext_desktop_enabled || !scr_driver_can_ext_desktop() ) return;
-
-
-        //Los putpixel que hacemos aqui son sin zoom. Se podrian hacer con zoom, pero habria que
-        //usar scr_putpixel_zoom_rainbow y scr_putpixel_zoom dependiendo del caso, y sumar margenes en el caso de rainbow,
-        //pero no vale la pena, con una sola funcion scr_putpixel vale para todos los casos
-        //Con zoom se habria hecho asi:
-        //
-        //	int margenx_izq;
-        //	int margeny_arr;
-        //	scr_return_margenxy_rainbow(&margenx_izq,&margeny_arr);
-        //	if (rainbow_enabled.v==1) scr_putpixel_zoom_rainbow(x+margenx_izq,y+margenx_der,color);
-        //	else scr_putpixel_zoom(x,y,color);
-        //
-        //	Y considerando el espacio de coordenadas x e y con zoom
-
-
-        int xinicio=screen_get_ext_desktop_start_x();
-        int yinicio=0;
-
-        int ancho=screen_get_ext_desktop_width_zoom();
-        int alto=screen_get_machine_area_height();
-
-        int x,y;
-
-
-
-        //Color solido
-        if (menu_ext_desktop_fill==0) {
-
-            int color=menu_ext_desktop_fill_first_color;
-
-            for (y=yinicio;y<yinicio+alto;y++) {
-                for (x=xinicio;x<xinicio+ancho;x++) {
-                    scr_putpixel(x,y,color);
-                }
-            }
-
-        }
-
-        //Rayas diagonales de colores, fijas o movibles
-        if (menu_ext_desktop_fill==1 || menu_ext_desktop_fill==2) {
-
-            int grueso_lineas=8*zoom_x*menu_gui_zoom; //Para que coincida el color con rainbow de titulo de ventanas
-             int total_colores=5;
-
-            int contador_color;
-
-            //En el caso de barras fijas, offset es 0
-            if (menu_ext_desktop_fill==1) menu_ext_desktop_fill_rainbow_counter=0;
-
-            for (y=yinicio;y<yinicio+alto;y++) {
-                contador_color=y; //Para dar un aspecto de rayado
-
-                for (x=xinicio;x<xinicio+ancho;x++) {
-                    int indice_color=((contador_color/grueso_lineas)+menu_ext_desktop_fill_rainbow_counter) % total_colores;
-                    int color=screen_colores_rainbow_nobrillo[indice_color];
-                    scr_putpixel(x,y,color);
-
-                    contador_color++;
-                }
-            }
-
-            menu_ext_desktop_fill_rainbow_counter++;
-
-        }
-
-        //punteado
-        if (menu_ext_desktop_fill==3) {
-
-            int color;
-
-            for (y=yinicio;y<yinicio+alto;y++) {
-                for (x=xinicio;x<xinicio+ancho;x++) {
-
-                    int suma=x+y;
-                    color=(suma & 1 ? menu_ext_desktop_fill_first_color : menu_ext_desktop_fill_second_color);
-
-                    scr_putpixel(x,y,color);
-                }
-            }
-
-        }
-
-        //ajedrez
-        if (menu_ext_desktop_fill==4) {
-
-            int color;
-
-            for (y=yinicio;y<yinicio+alto;y++) {
-                for (x=xinicio;x<xinicio+ancho;x++) {
-
-                    //Tamaño de 32x32 cada cuadrado
-                    int suma=(x/32)+(y/32);
-
-                    //Blanco 7 para que no sea tan brillante
-                    color=(suma & 1 ? menu_ext_desktop_fill_first_color : menu_ext_desktop_fill_second_color);
-
-                    scr_putpixel(x,y,color);
-                }
-            }
-
-        }
-
-        //grid
-        if (menu_ext_desktop_fill==5) {
-
-            int color;
-
-            for (y=yinicio;y<yinicio+alto;y++) {
-                for (x=xinicio;x<xinicio+ancho;x++) {
-
-                    //Tamaño de 32x32 cada cuadrado
-                    int suma=(x/32)*(y/32);
-
-                    //Blanco 7 para que no sea tan brillante
-                    color=(suma & 1 ? menu_ext_desktop_fill_first_color : menu_ext_desktop_fill_second_color);
-
-                    scr_putpixel(x,y,color);
-                }
-            }
-
-        }
-
-        //Random
-        if (menu_ext_desktop_fill==6) {
-
-            for (y=yinicio;y<yinicio+alto;y++) {
-
-
-                for (x=xinicio;x<xinicio+ancho;x++) {
-
-                    ay_randomize(0);
-
-                    //randomize_noise es valor de 16 bits. sacar uno de 8 bits
-                    int color=value_16_to_8h(randomize_noise[0]) % EMULATOR_TOTAL_PALETTE_COLOURS;
-
-                    scr_putpixel(x,y,color);
-
-                }
-            }
-
-        }
-
-        //Degraded
-        if (menu_ext_desktop_fill==7) {
-
-            for (y=yinicio;y<yinicio+alto;y++) {
-
-
-                //usamos esa paleta de colores de 5 bits por componente, por tanto, 32 colores maximo por componente
-                int offset_y=y-yinicio;
-                //dividir alto total en 32 segmentos
-                int divisor=alto/32;
-
-                int posicion_color=offset_y/divisor; //ahi tenemos un valor entre 0 y 31
-
-
-                //multiplicar por el color deseado. pillar color primario del setting menu_ext_desktop_fill_first_color
-                //de la lista de 8 colores del spectrum (paleta grb), ignorando brillos
-
-                int color_basico=menu_ext_desktop_fill_first_color & 7;
-
-                //en el caso particular del color 0 negro, hacemos que se comporte como 7 blanco... si no, que degradado habria de negro??
-                if (color_basico==0) color_basico=7;
-
-                int componente_r=(color_basico>>1)&1;
-                int componente_g=(color_basico>>2)&1;
-                int componente_b=color_basico&1;
-
-                componente_r *=posicion_color;
-                componente_g *=posicion_color;
-                componente_b *=posicion_color;
-
-                //cada componente maximo 5 bits (valor 31). sucede que con el calculo anterior, puede llegar a ser mayor que 31,
-                //por ejemplo con maquina jupiter ace (debido al tamaño de ventana de dicha máquina)
-                if (componente_r>31) componente_r=31;
-                if (componente_g>31) componente_g=31;
-                if (componente_b>31) componente_b=31;
-
-                //poner cada componente en su posicion final
-                int color_tsconf=(componente_b)|(componente_g<<5)|(componente_r<<10);
-
-                int color=TSCONF_INDEX_FIRST_COLOR+color_tsconf;
-
-                for (x=xinicio;x<xinicio+ancho;x++) {
-
-                    scr_putpixel(x,y,color);
-
-                }
-            }
-
-        }
-
-
-    //Agregamos logo ZEsarUX en esquina inferior derecha, con margen, solo si menu esta abierto
-
-    //if (menu_abierto) {
-    //	int xfinal;
-    //	int yfinal;
-    //	//xfinal=xinicio+ancho-ZESARUX_ASCII_LOGO_ANCHO-ZESARUX_WATERMARK_LOGO_MARGIN;
-    //	//yfinal=alto-ZESARUX_ASCII_LOGO_ALTO-ZESARUX_WATERMARK_LOGO_MARGIN;
-    //
-    //	menu_ext_desktop_get_logo_coords(&xfinal,&yfinal);
-    //
-    //	//El ancho y el puntero dan igual, no los vamos a usar
-    //	screen_put_watermark_generic(NULL,xfinal,yfinal,0, menu_draw_ext_desktop_putpixel_bitmap);
-    //}
-
-
-    //Dibujar botones si están activados (por defecto)
-    if (menu_zxdesktop_buttons_enabled.v) {
-        menu_draw_ext_desktop_buttons(xinicio);
-    }
-
-    //Dibujar footer del zxdesktop
-    menu_draw_ext_desktop_footer();
-
-}
-
-*/
 
 //si habilitado fondo scr
 int zxdesktop_draw_scrfile_enabled=0;
@@ -7597,7 +7372,7 @@ void menu_draw_ext_desktop_background(int xstart_zxdesktop)
         //Si estamos en zona por arriba de donde empieza el zxdesktop vertical, "saltar" toda esa zona, para que
         //el contador parezca que ha recorrido esa zona. Esto da continuidad en las franjas en cuanto vamos a la zona de zxdesktop vertical
 
-        if (y<alto_no_zxdesktop) {
+        if (y<alto_no_zxdesktop && !ventana_video_output_esta_abierta() ) {
             contador_color_rainbow +=ancho_no_zxdesktop;
 
             //Y el modo random igual, esa zona de la izquierda generamos color random tantas veces como ancho tenga
@@ -11286,6 +11061,7 @@ zxvision_known_window_names zxvision_known_window_names_array[]={
     {"debugdma",            "debug dma",menu_debug_dma,bitmap_button_ext_desktop_debugdma},
     {"debugioports",        "debug i/o",    menu_debug_ioports,bitmap_button_ext_desktop_ioports},
     {"displaypalettes",     "dis palett",menu_display_total_palette,bitmap_button_ext_desktop_colour_palettes},
+    {"emulateddisplay",     "emul disp",   menu_video_output,bitmap_button_ext_desktop_videooutput},
     {"externalaudiosource", "ext audio",    menu_realtape_record_input,bitmap_button_ext_desktop_record_input},
     {"audiogensound",       "gen sound",    menu_audio_general_sound,bitmap_button_ext_desktop_geneneralsoundregisters},
     {"helpshowkeyboard",    "helpkeybrd",   menu_help_show_keyboard,bitmap_button_ext_desktop_helpkeyboard},
@@ -11312,7 +11088,6 @@ zxvision_known_window_names zxvision_known_window_names_array[]={
     {"timemachine",         "timemachine", menu_snapshot_in_ram_browse,bitmap_button_ext_desktop_snapinrambrowse},
     {"videoinfo",           "videoinfo",menu_debug_tsconf_tbblue_msx_videoregisters,bitmap_button_ext_desktop_videoinfo},
     {"videolayers",         "videolayer",   menu_video_layers,bitmap_button_ext_desktop_videolayers},
-    {"videooutput",         "video outp",   menu_video_output,bitmap_button_ext_desktop_videooutput},
     {"viewbasiclisting",    "view basic",   menu_view_basic_listing,bitmap_button_ext_desktop_view_basic},
     {"viewbasicvariables",  "view varia",   menu_view_basic_variables,bitmap_button_ext_desktop_view_basic_variables},
     {"viewgosubstack",      "view gosub",   menu_view_gosub_stack,bitmap_button_ext_desktop_view_gosub_stack},
@@ -18483,7 +18258,7 @@ int zxvision_if_mouse_in_background(void)
     int ancho_maquina=screen_get_machine_area_width();
     int alto_maquina=screen_get_machine_area_height();
 
-    if (mouse_pixel_x<ancho_maquina && mouse_pixel_y<alto_maquina) {
+    if (mouse_pixel_x<ancho_maquina && mouse_pixel_y<alto_maquina && !ventana_video_output_esta_abierta()) {
         return 0;
     }
 

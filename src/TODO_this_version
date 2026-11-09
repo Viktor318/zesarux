@@ -362,11 +362,12 @@ Idea para que la ventana de vídeo output lea pulsaciones de teclado de la máqu
 
 ok - Que la función de zxvision_send_keys diga que se envían también cuando el foco está en esa ventana
 
-Luego opción para decir que render solo irá a esa ventana: los render de buffer rainbow a pantalla no se harán. Y para modos no real video, deberían escribir (los que no tengan) modo no-rainbow  en buffer rainbow
+Luego opción para decir que render solo irá a esa ventana: los render de buffer rainbow a pantalla no se harán. Y para modos no real video, deberían escribir
+(los que no tengan) modo no-rainbow  en buffer rainbow
 
 Luego también hacer que dicha ventana se redimensione cuando haya cambios de máquinas
 
-Luego si se cierra ventana, que vuelva al render normal
+ok Luego si se cierra ventana, que vuelva al render normal
 
 ok Función que dibuja el fondo de ZX desktop no omita la parte de la pantalla emulada cuando se ha conmutado a ventana.
 ok Lo mismo para el dibujado de iconos y arrastre de iconos
@@ -381,6 +382,20 @@ No hay ZX desktop
 -renombrado de nombre de ventana "video output" por otro
 
 -forzar real video al abrir ventana de video output
+
+-si se cierra ventana de emulated display desde zxvision_window_delete_this_window (process switcher o process management)
+no se finaliza normalmente y por tanto no se pone ventana_video_output_abierta a cero
+Lo mismo pasa con cerrar todas las ventanas
+Quiza hace falta una funcion en zxvision_window que se llame al cerrar ventanas
+
+-sin zxdesktop y con ventana emulated display activa, que ponemos en el fondo ? o no permitimos emulated display window si el zx desktop no esta activado?
+
+-al iniciar ZEsarUX, que de por validos iconos en zona de pantalla emulada si ventana emulated display esta abierta
+
+-si emulated display window abierta, que al maximizar ventanas considere posicion arriba izquierda como inicial
+
+-diferencia de uso de cpu entre docked y windowed? parece que usa mucha cpu mas
+
 
 ---
 
