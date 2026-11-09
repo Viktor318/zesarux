@@ -50,6 +50,16 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
   fel a ZX Desktop ikonjait és gombjait a bal felső sarokban (a gépkép
   helyén): amíg a kijelző ablakban van, az a terület 100%-os, és a kijelző
   visszarögzítésekor visszaáll a beállított méret.
+- **Az ablakban lévő emulált kijelző mérete** külön beállítás: 100%, 125%,
+  150% vagy 200% (*Főablak > Méret ablakban*, `--emulated-display-scale`),
+  a rögzített gépkép méretétől függetlenül. Amíg a kijelző ablakban van, a
+  nagyítógombok ezt állítják, és az ablak a képhez igazodik; nagyobb méretre
+  csak akkor vált, ha az ablak elfér. A nem egész pixeleket adó méreteket a
+  *Gépkép simítása* simítja.
+- Ha a kijelző ablakban volt, a ZX Desktop nélküli teljes képernyőn fekete
+  maradt a kép (a ZX Desktop kikapcsolása bezárta az ablakot, de a program
+  ablakosnak hitte a kijelzőt); most ilyenkor a gépkép tölti ki a
+  képernyőt, és visszatéréskor az ablak újra megnyílik.
 
 ## v13.1-SN-hu.1 – 2026-11-06
 

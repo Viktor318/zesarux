@@ -964,6 +964,18 @@ void menu_interface_machine_smooth(MENU_ITEM_PARAMETERS)
     screen_machine_smooth ^=1;
 }
 
+//Pantalla emulada en ventana (fork): 100% -> 125% -> 150% -> 200% -> 100%
+void menu_interface_emulated_display_scale(MENU_ITEM_PARAMETERS)
+{
+    int escala=screen_emulated_display_scale;
+    if (escala==4) escala=5;
+    else if (escala==5) escala=6;
+    else if (escala==6) escala=8;
+    else escala=4;
+
+    menu_video_output_set_scale(escala);
+}
+
 //Ventana de tamano libre: 100% -> 125% -> 150% -> 200% -> 100%
 void menu_interface_machine_scale(MENU_ITEM_PARAMETERS)
 {
@@ -3149,6 +3161,19 @@ void menu_main_window_settings(MENU_ITEM_PARAMETERS)
         }
         menu_add_item_menu_tooltip(array_menu_window_settings,"If the emulated display is docked to top-left corner or is rendered on a window");
         menu_add_item_menu_ayuda(array_menu_window_settings,"If the emulated display is docked to top-left corner or is rendered on a window");
+
+        //Fork: tamano de la pantalla emulada en ventana, aparte del de la imagen de la maquina en su sitio
+        if (screen_free_window_layout) {
+            menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_emulated_display_scale,NULL,
+                "Size on a ~~window [%d%%]",screen_emulated_display_scale*100/4);
+            menu_add_item_menu_prefijo(array_menu_window_settings,"    ");
+            menu_add_item_menu_shortcut(array_menu_window_settings,'w');
+            menu_add_item_menu_tooltip(array_menu_window_settings,"Size of the emulated display on a window: 100%, 125%, 150% or 200%");
+            menu_add_item_menu_ayuda(array_menu_window_settings,"Size of the emulated display on a window: 100%, 125%, 150% or 200%. "
+                "It is kept apart from the size of the docked machine picture. While the emulated display is on a window, "
+                "the zoom buttons change this size");
+            menu_add_item_menu_es_avanzado(array_menu_window_settings);
+        }
         menu_add_item_menu_es_avanzado(array_menu_window_settings);
 
 

@@ -20729,6 +20729,287 @@ void menu_video_output_render_alternativo(void)
 }
 
 
+/* Pantalla emulada en ventana con tamano propio (fork): 100%, 125%, 150% o 200% (en cuartos: 4, 5, 6, 8),
+   independiente del tamano de la imagen de la maquina en su sitio (screen_machine_scale_requested).
+   El 100% es el mismo tamano que la maquina en su sitio al 100%: cada pixel de la maquina son zoom_x pixeles
+   de pantalla. Se dibuja en pixeles de pantalla (sin el zoom del menu), y con escalas que no dan pixeles
+   enteros se suaviza (interpolacion bilineal) si esta activado el suavizado de la imagen de la maquina */
+
+extern zxvision_window zxvision_window_video_output;
+extern void scr_putpixel_layer_menu_no_zoom(int x,int y,int color);
+
+//Tamano en pixeles de pantalla de la imagen de la maquina en la ventana
+static void menu_video_output_tamano_imagen(int *p_ancho,int *p_alto)
+{
+    int escala=screen_emulated_display_scale;
+    *p_ancho=get_total_ancho_rainbow()*zoom_x*escala/4;
+    *p_alto=get_total_alto_rainbow()*zoom_y*escala/4;
+}
+
+//Tamano de ventana (en caracteres) para que quepa la imagen entera
+static void menu_video_output_tamano_ventana(int *p_ancho,int *p_alto)
+{
+    int ancho_imagen,alto_imagen;
+    menu_video_output_tamano_imagen(&ancho_imagen,&alto_imagen);
+
+    int ancho_caracter=menu_char_width*menu_gui_zoom*zoom_x;
+    int alto_caracter=menu_char_height*menu_gui_zoom*zoom_y;
+
+    //Un caracter de margen a la izquierda, la columna de la barra de scroll a la derecha,
+    //y la linea de titulo y la de abajo
+    *p_ancho=1+(ancho_imagen+ancho_caracter-1)/ancho_caracter+1;
+    *p_alto=(alto_imagen+alto_caracter-1)/alto_caracter+2;
+}
+
+//Ajustar la ventana al tamano de la imagen, moviendola si no cabe, y sin pasar del tamano de la pantalla
+void menu_video_output_ajusta_ventana(void)
+{
+    zxvision_window *w=&zxvision_window_video_output;
+    if (!zxvision_if_window_already_exists(w)) return;
+
+    int ancho,alto;
+    menu_video_output_tamano_ventana(&ancho,&alto);
+
+    int limite_y=(zxvision_topbar_menu_enabled.v ? 1 : 0);
+
+    int ancho_maximo=scr_get_menu_width();
+    int alto_maximo=scr_get_menu_height()-limite_y;
+    if (ancho>ancho_maximo) ancho=ancho_maximo;
+    if (alto>alto_maximo) alto=alto_maximo;
+
+    int x=w->x;
+    int y=w->y;
+    if (x+ancho>scr_get_menu_width()) x=scr_get_menu_width()-ancho;
+    if (y+alto>scr_get_menu_height()) y=scr_get_menu_height()-alto;
+    if (x<0) x=0;
+    if (y<limite_y) y=limite_y;
+
+    debug_printf(VERBOSE_INFO,"Emulated display window size: %d%% (%d X %d characters)",screen_emulated_display_scale*100/4,ancho,alto);
+
+    //Primero hacerla pequena, despues moverla y despues darle el tamano, para que nunca salga de la pantalla
+    if (ancho<w->visible_width) zxvision_set_visible_width(w,ancho);
+    if (alto<w->visible_height) zxvision_set_visible_height(w,alto);
+    zxvision_set_xy_position(w,x,y);
+    zxvision_set_visible_width(w,ancho);
+    zxvision_set_visible_height(w,alto);
+
+    //El contenido es la imagen, que ya cabe: sin barras de scroll
+    zxvision_set_total_width(w,ancho-1);
+    zxvision_set_total_height(w,alto-2);
+
+    w->offset_x=0;
+    w->offset_y=0;
+
+    zxvision_draw_window(w);
+    zxvision_draw_window_contents(w);
+}
+
+//Cambiar el tamano de la pantalla emulada en ventana
+void menu_video_output_set_scale(int escala)
+{
+    if (escala!=4 && escala!=5 && escala!=6 && escala!=8) return;
+
+    screen_emulated_display_scale=escala;
+
+    menu_video_output_ajusta_ventana();
+}
+
+//Siguiente (dir=1) o anterior (dir=-1) tamano. Si no hay, el mismo
+int menu_video_output_scale_next(int dir)
+{
+    int escalas[]={4,5,6,8};
+    int i;
+    if (dir>0) {
+        for (i=0;i<4;i++) {
+            if (escalas[i]>screen_emulated_display_scale) {
+                //Solo si la ventana cabe en la pantalla con ese tamano
+                int antes=screen_emulated_display_scale;
+                int ancho,alto;
+                screen_emulated_display_scale=escalas[i];
+                menu_video_output_tamano_ventana(&ancho,&alto);
+                screen_emulated_display_scale=antes;
+
+                int limite_y=(zxvision_topbar_menu_enabled.v ? 1 : 0);
+                if (ancho>scr_get_menu_width() || alto>scr_get_menu_height()-limite_y) {
+                    debug_printf(VERBOSE_INFO,"Emulated display window at %d%% does not fit on the screen",escalas[i]*100/4);
+                    return screen_emulated_display_scale;
+                }
+
+                return escalas[i];
+            }
+        }
+    }
+    else {
+        for (i=3;i>=0;i--) {
+            if (escalas[i]<screen_emulated_display_scale) return escalas[i];
+        }
+    }
+    return screen_emulated_display_scale;
+}
+
+//Tablas del dibujado: para cada pixel de destino, los dos pixeles de origen y el peso (0-256) del segundo
+static int *menu_video_output_tabla_x0=NULL,*menu_video_output_tabla_x1=NULL,*menu_video_output_tabla_wx=NULL;
+static int *menu_video_output_tabla_y0=NULL,*menu_video_output_tabla_y1=NULL,*menu_video_output_tabla_wy=NULL;
+static int menu_video_output_tabla_ancho=0,menu_video_output_tabla_alto=0;
+static int menu_video_output_tabla_origen_ancho=0,menu_video_output_tabla_origen_alto=0;
+
+static int menu_video_output_tabla(int destino,int origen,int **p0,int **p1,int **pw)
+{
+    free(*p0); free(*p1); free(*pw);
+    *p0=malloc(destino*sizeof(int));
+    *p1=malloc(destino*sizeof(int));
+    *pw=malloc(destino*sizeof(int));
+    if (*p0==NULL || *p1==NULL || *pw==NULL) return 0;
+
+    int i;
+    for (i=0;i<destino;i++) {
+        //Centro del pixel de destino en coordenadas de origen, en 1/256
+        int f=(int)( ((long long)(2*i+1)*origen*256)/(2*destino) )-128;
+        if (f<0) f=0;
+        int o0=f>>8;
+        int w=f&255;
+        if (o0>=origen-1) { o0=origen-1; w=0; }
+        int o1=o0+1;
+        if (o1>=origen) o1=origen-1;
+        (*p0)[i]=o0;
+        (*p1)[i]=o1;
+        (*pw)[i]=w;
+    }
+
+    return 1;
+}
+
+//Color de 8 bits -> componente de 5 bits de la paleta de 15 bits (la de TSConf) mas cercana
+static int menu_video_output_inversa_5bits[256];
+
+static void menu_video_output_calcula_inversa(void)
+{
+    int v,c;
+    for (v=0;v<256;v++) {
+        int mejor=0,mejor_distancia=9999;
+        for (c=0;c<32;c++) {
+            int valor=(spectrum_colortable_normal[TSCONF_INDEX_FIRST_COLOR+(c<<10)]>>16)&255;
+            int distancia=valor-v;
+            if (distancia<0) distancia=-distancia;
+            if (distancia<mejor_distancia) {
+                mejor_distancia=distancia;
+                mejor=c;
+            }
+        }
+        menu_video_output_inversa_5bits[v]=mejor;
+    }
+}
+
+void menu_video_output_dibuja_escalado(zxvision_window *w,z80_int *origen,int ancho,int alto)
+{
+    if (ancho<1 || alto<1) return;
+
+    int ancho_destino,alto_destino;
+    menu_video_output_tamano_imagen(&ancho_destino,&alto_destino);
+
+    if (ancho_destino<1 || alto_destino<1) return;
+
+    if (ancho_destino!=menu_video_output_tabla_ancho || alto_destino!=menu_video_output_tabla_alto ||
+        ancho!=menu_video_output_tabla_origen_ancho || alto!=menu_video_output_tabla_origen_alto) {
+
+        menu_video_output_tabla_ancho=menu_video_output_tabla_alto=0;
+
+        if (!menu_video_output_tabla(ancho_destino,ancho,&menu_video_output_tabla_x0,&menu_video_output_tabla_x1,&menu_video_output_tabla_wx)) return;
+        if (!menu_video_output_tabla(alto_destino,alto,&menu_video_output_tabla_y0,&menu_video_output_tabla_y1,&menu_video_output_tabla_wy)) return;
+
+        menu_video_output_tabla_ancho=ancho_destino;
+        menu_video_output_tabla_alto=alto_destino;
+        menu_video_output_tabla_origen_ancho=ancho;
+        menu_video_output_tabla_origen_alto=alto;
+    }
+
+    //Pixeles enteros: el pixel de origen que toca. Si no, suavizar si esta activado
+    int pixeles_enteros=( (ancho_destino%ancho)==0 && (alto_destino%alto)==0 );
+    int suavizar=(screen_machine_smooth && !pixeles_enteros);
+
+    if (suavizar) menu_video_output_calcula_inversa();
+
+    //Zona de la ventana en pixeles de pantalla
+    int ancho_caracter=menu_char_width*menu_gui_zoom*zoom_x;
+    int alto_caracter=menu_char_height*menu_gui_zoom*zoom_y;
+
+    int inicio_x=(w->x)*ancho_caracter;
+    int inicio_y=((w->y)+1)*alto_caracter;
+
+    int final_x=inicio_x+((w->visible_width)-zxvision_get_minus_width_byscrollvbar(w))*ancho_caracter;
+    int final_y=inicio_y+((w->visible_height)-2)*alto_caracter;
+
+    //Un caracter de margen a la izquierda, como antes
+    int origen_x=inicio_x+ancho_caracter-(w->offset_x)*ancho_caracter;
+    int origen_y=inicio_y-(w->offset_y)*alto_caracter;
+
+    //Columnas de caracteres tapadas por otras ventanas, para la fila de caracteres actual
+    int total_columnas=scr_get_menu_width()+1;
+    char tapado[total_columnas];
+    int fila_caracter_actual=-1;
+
+    int x,y;
+    for (y=0;y<alto_destino;y++) {
+        int yfinal=origen_y+y;
+        if (yfinal<inicio_y) continue;
+        if (yfinal>=final_y) break;
+
+        int fila_caracter=yfinal/alto_caracter;
+        if (fila_caracter!=fila_caracter_actual) {
+            int col;
+            for (col=0;col<total_columnas;col++) tapado[col]=zxvision_coords_in_superior_windows(w,col,fila_caracter);
+            fila_caracter_actual=fila_caracter;
+        }
+
+        int wy=menu_video_output_tabla_wy[y];
+        z80_int *fila0=origen+menu_video_output_tabla_y0[y]*ancho;
+        z80_int *fila1=origen+menu_video_output_tabla_y1[y]*ancho;
+        z80_int *fila_cercana=(wy<128 ? fila0 : fila1);
+
+        for (x=0;x<ancho_destino;x++) {
+            int xfinal=origen_x+x;
+            if (xfinal<inicio_x) continue;
+            if (xfinal>=final_x) break;
+
+            int col=xfinal/ancho_caracter;
+            if (col<total_columnas && tapado[col]) continue;
+
+            int color;
+            int wx=menu_video_output_tabla_wx[x];
+
+            if (!suavizar) {
+                //Pixel mas cercano
+                color=fila_cercana[wx<128 ? menu_video_output_tabla_x0[x] : menu_video_output_tabla_x1[x]];
+            }
+            else {
+                int a=fila0[menu_video_output_tabla_x0[x]];
+                int b=fila0[menu_video_output_tabla_x1[x]];
+                int c=fila1[menu_video_output_tabla_x0[x]];
+                int d=fila1[menu_video_output_tabla_x1[x]];
+
+                if (a==b && a==c && a==d) color=a;
+                else {
+                    int ra=spectrum_colortable_normal[a],rb=spectrum_colortable_normal[b];
+                    int rc=spectrum_colortable_normal[c],rd=spectrum_colortable_normal[d];
+                    int componentes[3];
+                    int i;
+                    for (i=0;i<3;i++) {
+                        int desplazamiento=16-i*8;
+                        int ca=(ra>>desplazamiento)&255,cb=(rb>>desplazamiento)&255,cc=(rc>>desplazamiento)&255,cd=(rd>>desplazamiento)&255;
+                        int arriba=ca*(256-wx)+cb*wx;
+                        int abajo=cc*(256-wx)+cd*wx;
+                        componentes[i]=menu_video_output_inversa_5bits[(arriba*(256-wy)+abajo*wy)>>16];
+                    }
+                    color=TSCONF_INDEX_FIRST_COLOR+(componentes[0]<<10)+(componentes[1]<<5)+componentes[2];
+                }
+            }
+
+            scr_putpixel_layer_menu_no_zoom(xfinal,yfinal,color);
+        }
+    }
+}
+
+
 void menu_video_output_overlay(void)
 {
 
@@ -20742,11 +21023,7 @@ void menu_video_output_overlay(void)
 
         //menu_video_output_render_alternativo();
 
-
-
-        int offset_x=menu_char_width;
-
-        int x,y,ancho,alto;
+        int ancho,alto;
         ancho=get_total_ancho_rainbow();
         alto=get_total_alto_rainbow();
         z80_int *puntero;
@@ -20756,14 +21033,8 @@ void menu_video_output_overlay(void)
         //Efectos especiales (FX)
         puntero=screen_rainbow_effects(puntero,ancho,alto);
 
-        for (y=0;y<alto;y++) {
-            for (x=0;x<ancho;x++) {
-                zxvision_putpixel(menu_video_output_window,x+offset_x,y,*puntero);
-                puntero++;
-            }
-        }
-
-
+        //Fork: dibujar con el tamano elegido para la pantalla emulada en ventana
+        menu_video_output_dibuja_escalado(menu_video_output_window,puntero,ancho,alto);
 
     }
 
@@ -20792,6 +21063,16 @@ int ventana_video_output_esta_activa(void)
 int ventana_video_output_esta_abierta(void)
 {
     if (rainbow_enabled.v==0) return 0;
+
+    //Fork: la ventana se puede cerrar sin pasar por aqui (al desactivar el ZX Desktop, por ejemplo al pasar a
+    //pantalla completa sin ZX Desktop, o desde el Ablakvalto), y la variable se quedaba a 1: la maquina no se
+    //dibujaba en su sitio y la pantalla quedaba negra. Comprobar que la ventana sigue existiendo
+    if (ventana_video_output_abierta && !zxvision_if_window_already_exists(&zxvision_window_video_output)) {
+        debug_printf(VERBOSE_DEBUG,"Emulated display window no longer exists: docked again");
+        ventana_video_output_abierta=0;
+        ventana_video_output_activa=0;
+    }
+
     return ventana_video_output_abierta;
 }
 
@@ -20817,8 +21098,10 @@ void menu_video_output(MENU_ITEM_PARAMETERS)
         int xventana,yventana,ancho_ventana,alto_ventana,is_minimized,is_maximized,ancho_antes_minimize,alto_antes_minimize;
 
         if (!util_find_window_geometry("emulateddisplay",&xventana,&yventana,&ancho_ventana,&alto_ventana,&is_minimized,&is_maximized,&ancho_antes_minimize,&alto_antes_minimize)) {
-            ancho_ventana=30;
-            alto_ventana=20;
+            //Fork: del tamano de la imagen (sin pasar del de la pantalla)
+            menu_video_output_tamano_ventana(&ancho_ventana,&alto_ventana);
+            if (ancho_ventana>scr_get_menu_width()) ancho_ventana=scr_get_menu_width();
+            if (alto_ventana>scr_get_menu_height()-1) alto_ventana=scr_get_menu_height()-1;
 
             xventana=menu_center_x()-ancho_ventana/2;
             yventana=menu_center_y()-alto_ventana/2;
@@ -51815,12 +52098,15 @@ void menu_process_f_functions_by_action_name(int id_funcion,
 
         case F_FUNCION_ZOOM_IN:
             //Ventana de tamano libre: solo cambia la imagen de la maquina
-            if (screen_free_window_layout) screen_set_machine_scale(screen_machine_scale_next(+1));
+            //Con la pantalla emulada en una ventana, el tamano de esa ventana
+            if (screen_free_window_layout && ventana_video_output_esta_abierta()) menu_video_output_set_scale(menu_video_output_scale_next(+1));
+            else if (screen_free_window_layout) screen_set_machine_scale(screen_machine_scale_next(+1));
             else if (!ventana_fullscreen && zoom_x<9 && zoom_y<9) screen_set_window_zoom(zoom_x+1,zoom_y+1);
         break;
 
         case F_FUNCION_ZOOM_OUT:
-            if (screen_free_window_layout) screen_set_machine_scale(screen_machine_scale_next(-1));
+            if (screen_free_window_layout && ventana_video_output_esta_abierta()) menu_video_output_set_scale(menu_video_output_scale_next(-1));
+            else if (screen_free_window_layout) screen_set_machine_scale(screen_machine_scale_next(-1));
             else if (!ventana_fullscreen && zoom_x>1 && zoom_y>1) screen_set_window_zoom(zoom_x-1,zoom_y-1);
         break;
 

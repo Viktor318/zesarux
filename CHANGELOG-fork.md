@@ -50,6 +50,17 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
   longer enlarges the ZX Desktop icons and buttons in the top left corner
   (where the machine picture is): while the display is on a window that
   area is at 100%, and the chosen size comes back when it is docked again.
+- **Size of the emulated display on a window** as a setting of its own:
+  100%, 125%, 150% or 200% (*Main Window > Size on a window*,
+  `--emulated-display-scale`), apart from the docked machine picture size.
+  While the display is on a window, the zoom buttons change it and the
+  window follows the picture; a larger size is used only if the window
+  fits. Sizes that do not give whole pixels are smoothed by *Smooth machine
+  picture*.
+- With the display on a window, full screen without ZX Desktop stayed black
+  (switching ZX Desktop off closed the window, but the display was still
+  taken as windowed); now the machine picture fills the screen, and the
+  window opens again when leaving full screen.
 
 ## v13.1-SN-hu.1 – 2026-11-06
 

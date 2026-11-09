@@ -649,6 +649,7 @@ void zesarux_cmdline_help(void)
         "--main-window x y w h m Position and size of the main window, and if it is maximized (m=1). Saved on exit (SDL2 video driver)\n"
         "--machine-smooth        Smooth the emulated machine picture when its size does not give whole pixels (125%% for example)\n"
         "--machine-scale n       Size of the emulated machine picture in percent: 100, 125, 150 or 200 (SDL2 video driver). Menus, icons and ZX Desktop keep their size\n"
+        "--emulated-display-scale n  Size of the emulated display on a window in percent: 100, 125, 150 or 200 (SDL2 video driver)\n"
         "--vo driver             Video output driver. Valid drivers: ");
 
 #ifdef USE_COCOA
@@ -4058,6 +4059,18 @@ int parse_cmdline_options(int desde_commandline)
 
             else if (!strcmp(argv[puntero_parametro],"--machine-smooth")) {
                 screen_machine_smooth=1;
+            }
+
+            else if (!strcmp(argv[puntero_parametro],"--emulated-display-scale")) {
+                siguiente_parametro_argumento();
+                int valor=atoi(argv[puntero_parametro]);
+
+                if (valor!=100 && valor!=125 && valor!=150 && valor!=200) {
+                    debug_printf(VERBOSE_ERR,"Invalid value for emulated display scale: %d (100, 125, 150 or 200)",valor);
+                }
+                else {
+                    screen_emulated_display_scale=valor*4/100;
+                }
             }
 
             else if (!strcmp(argv[puntero_parametro],"--machine-scale")) {

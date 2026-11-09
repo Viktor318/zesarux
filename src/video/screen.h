@@ -117,6 +117,7 @@ extern int screen_end_keep_window;
 extern void screen_layout_fixed_gui_zoom(void);
 extern void screen_layout_fit_window(int ancho_ventana,int alto_ventana);
 extern int screen_machine_scale_requested;
+extern int screen_emulated_display_scale;
 extern int screen_machine_smooth;
 extern int screen_main_window_x;
 extern int screen_main_window_y;

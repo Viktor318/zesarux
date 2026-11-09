@@ -3317,6 +3317,9 @@ int screen_get_ext_desktop_width_zoom(void)
 //La que pide el usuario
 int screen_machine_scale_requested=4;
 
+//Tamano de la pantalla emulada en una ventana (Emulated Display en modo ventana), en cuartos como la anterior
+int screen_emulated_display_scale=4;
+
 //Suavizar la imagen de la maquina cuando la escala no da pixeles enteros
 int screen_machine_smooth=0;
 

@@ -4518,3 +4518,6 @@ Windowed	Ablakban	item
 Docked	Rögzítve	item
 FX	Effektek	item
 If the emulated display is docked to top-left corner or is rendered on a window	Az emulált kijelző a bal felső sarokba van rögzítve, vagy külön ablakban jelenik meg	tooltip
+Size on a ~~window [%d%%]	Méret ~~ablakban [%d%%]	item
+Size of the emulated display on a window: 100%, 125%, 150% or 200%	Az ablakban lévő emulált kijelző mérete: 100%, 125%, 150% vagy 200%	tooltip
+Size of the emulated display on a window: 100%, 125%, 150% or 200%. It is kept apart from the size of the docked machine picture. While the emulated display is on a window, the zoom buttons change this size	Az ablakban lévő emulált kijelző mérete: 100%, 125%, 150% vagy 200%. Külön tárolódik a rögzített gépkép méretétől. Amíg az emulált kijelző ablakban van, a nagyítógombok ezt a méretet állítják	help

@@ -64,6 +64,10 @@ extern void menu_debug_assemble(MENU_ITEM_PARAMETERS);
 
 extern int ventana_video_output_esta_activa(void);
 extern int ventana_video_output_esta_abierta(void);
+extern void menu_video_output_ajusta_ventana(void);
+extern void menu_video_output_set_scale(int escala);
+extern int menu_video_output_scale_next(int dir);
+extern void menu_video_output_dibuja_escalado(zxvision_window *w,z80_int *origen,int ancho,int alto);
 
 extern int ventana_video_output_abierta;
 extern int ventana_video_output_activa;
