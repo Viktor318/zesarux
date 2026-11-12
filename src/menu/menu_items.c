@@ -20771,8 +20771,10 @@ void menu_video_output_ajusta_ventana(void)
     w->offset_x=0;
     w->offset_y=0;
 
-    zxvision_draw_window(w);
-    zxvision_draw_window_contents(w);
+    //Redibujar todas las ventanas, no solo esta: al cambiar tamano y posicion, zxvision solo redibuja esta ventana
+    //y las que tiene debajo, y borraba las que tiene encima (por ejemplo la ventana de splash que sale al cambiar
+    //de maquina, que se quedaba como un recuadro vacio). Esto pasa en el cambio de maquina con Autoresize
+    zxvision_redraw_all_windows();
 }
 
 //Cambiar el tamano de la pantalla emulada en ventana

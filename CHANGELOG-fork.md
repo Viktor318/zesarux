@@ -74,6 +74,10 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
 - On the Amstrad CPC and the ZX Spectrum Next (TBBlue) the machine picture
   stayed in the top left corner too with the emulated display on a window
   (double picture); now it is only in the window.
+- With the display on a window, a machine change (with Autoresize, or the
+  zoom buttons) turned the windows above the emulated display, like the
+  splash message showing the screen mode, into empty blue boxes; now every
+  window is drawn again after the resize.
 
 ## v13.1-SN-hu.1 – 2026-11-06
 

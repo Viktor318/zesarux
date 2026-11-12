@@ -73,6 +73,10 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
 - Amstrad CPC-n és ZX Spectrum Nexten (TBBlue) ablakos kijelzőnél a gép
   képe a bal felső sarokban is megmaradt (dupla kép); most csak az
   ablakban látszik.
+- Ablakos kijelzőnél a gépváltáskor (Automatikus átméretezés mellett, vagy a
+  nagyítógombokkal) az emulált kijelző fölötti ablakok, például a
+  képernyőmódot kiíró nyitóüzenet, üres kék téglalappá váltak; most az
+  átméretezés után minden ablak újrarajzolódik.
 
 ## v13.1-SN-hu.1 – 2026-11-06
 
