@@ -64,6 +64,12 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
   képkockában az egész képet újrarajzolta, és ettől az emuláció a fele
   sebességre esett vissza (lassú gépelés, elvesző billentyűk, lassú
   billentyűismétlés). Most csak a megváltozott pontokat rajzolja.
+- Az upstream új ablakos kijelző beállításai magyarul és a fork rajzolásával:
+  *Kép igazítása az ablakhoz* (a kép az ablak méretét követi, simítással,
+  ha a *Gépkép simítása* be van kapcsolva), *Képarány megtartása* és
+  *Automatikus átméretezés* (gépváltáskor az ablak a beállított méretű
+  képhez igazodik). Igazítás mellett a nagyítógombok az ablakot méretezik
+  100/125/150/200%-os képhez, és a kép követi.
 
 ## v13.1-SN-hu.1 – 2026-11-06
 

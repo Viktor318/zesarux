@@ -379,33 +379,48 @@ ok Lo mismo para el dibujado de iconos y arrastre de iconos
 Que pasa sin ZX desktop? Quizá no se debería hacer este cambio a ventana si
 No hay ZX desktop
 
--renombrado de nombre de ventana "video output" por otro
+ok -renombrado de nombre de ventana "video output" por otro
 
--forzar real video al abrir ventana de video output
+ok-forzar real video al abrir ventana de video output
 
--si se cierra ventana de emulated display desde zxvision_window_delete_this_window (process switcher o process management)
+ok -si se cierra ventana de emulated display desde zxvision_window_delete_this_window (process switcher o process management)
 no se finaliza normalmente y por tanto no se pone ventana_video_output_abierta a cero
 Lo mismo pasa con cerrar todas las ventanas
 Quiza hace falta una funcion en zxvision_window que se llame al cerrar ventanas
 
 -sin zxdesktop y con ventana emulated display activa, que ponemos en el fondo ? o no permitimos emulated display window si el zx desktop no esta activado?
 
--al iniciar ZEsarUX, que de por validos iconos en zona de pantalla emulada si ventana emulated display esta abierta
+ok-al iniciar ZEsarUX, que de por validos iconos en zona de pantalla emulada si ventana emulated display esta abierta
+-al iniciar ZEsarUX, autoordenar iconos, que empiece por esquina sup-izq si ventana emulated display se ha restaurado al inicio
 
 -si emulated display window abierta, que al maximizar ventanas considere posicion arriba izquierda como inicial
 
--diferencia de uso de cpu entre docked y windowed? parece que usa mucha cpu mas
+-diferencia de uso de cpu entre docked y windowed? parece que usa mucha cpu mas.
+ok --implementado una putpixel cache para esa ventana y baja mucho el uso de cpu
 
+-- propuesta para incremento de cpu cuando hay muchas ventanas abiertas: que en memoria_overlay (cada caracter) diga si esta visible o no, cacheado,
+eso deberia aplica tambien a pixeles. se invalide esa cache cuando se activa dirty_user_must_draw_contents
+->creo que eso no reduce mucho el uso de cpu
+
+ok -poder hacer escalado con zoom decimal
+
+-gestion pulsaciones con el raton en la zona donde se ubica Docked display
+
+-maquinas no soportadas:
+*jupiter ace: no tiene render real video
+*mk14: no tiene render real video
+*pcw: no tiene render real video
+*sam coupe: no tiene render real video
 
 ---
 
-
 -en teoria en las máquinas que no se puede quitar border, si me voy a fullscreen con opcion de "no border en full screen", se verán mal, ejemplo tbblue
 
+-snapshot zsf que guarde rainbow buffer? quiza es demasiado espacio
 
+-Mensajes directos en ZRCP con una ventana de chat, como mensajería
 
-
-
+-Sonido de floppy 3”, simulado, de los bytes leidos
 
 ----
 -habilitar covox pentagon en zx evo baseconf
@@ -414,3 +429,5 @@ ok? -poder ver paletas de colores atm, zxevo, etc
 
 
 - demos para spectrums extendidos: https://www.pouet.net/prodlist.php?platform%5B%5D=ZX+Enhanced&page=1
+
+-usar zxvision_putpixel_no_menu_gui_zoom para keyboard help y que maquinas con gui zoom 2 no salga teclado enorme. tener en cuenta calculo correcto del raton

@@ -1828,7 +1828,7 @@ void scr_refresca_border_comun_spectrumzx8081(unsigned int color)
 {
 //      printf ("Refresco border\n");
 
-    if (ventana_video_output_esta_abierta()) return;
+    //if (ventana_video_output_esta_abierta()) return;
 
     int x,y;
 
@@ -3481,7 +3481,7 @@ void screen_set_machine_scale(int escala)
 
     //Iconos que hayan quedado bajo la imagen de la maquina: reordenarlos
     zxvision_reorder_configurable_icons_if_invalid();
-    zxvision_check_all_configurable_icons_positions();
+    zxvision_check_all_configurable_icons_positions(0);
     zxvision_reorder_configurable_icons_if_auto();
 
     cls_menu_overlay();
@@ -5848,48 +5848,41 @@ void scr_refresca_pantalla_y_border_zx8081(void)
 {
 
 
-    //modo caracteres alta resolucion- rainbow - metodo nuevo
-    if (rainbow_enabled.v==1) {
+    if (rainbow_enabled.v) {
         scr_refresca_pantalla_rainbow_comun();
         return;
     }
 
-
+    else {
 
 
         //simulacion pantalla negra fast
         if (video_fast_mode_emulation.v) {
 
-                if (video_fast_mode_next_frame_black!=LIMIT_FAST_FRAME_BLACK) {
-                    video_fast_mode_next_frame_black++;
-                }
+            if (video_fast_mode_next_frame_black!=LIMIT_FAST_FRAME_BLACK) {
+                video_fast_mode_next_frame_black++;
+            }
 
-                if (video_fast_mode_next_frame_black==LIMIT_FAST_FRAME_BLACK) {
-                                debug_printf(VERBOSE_DEBUG,"Detected fast mode");
-                    //forzar refresco de border
-                                modificado_border.v=1;
-
-                        }
+            if (video_fast_mode_next_frame_black==LIMIT_FAST_FRAME_BLACK) {
+                debug_printf(VERBOSE_DEBUG,"Detected fast mode");
+                modificado_border.v=1;
+            }
 
         }
 
 
+        if (border_enabled.v) {
+            //ver si hay que refrescar border
+            if (modificado_border.v)
+            {
+                scr_refresca_border_zx8081();
+                modificado_border.v=0;
+            }
+        }
 
+        scr_refresca_pantalla_zx8081();
 
-                if (border_enabled.v) {
-                        //ver si hay que refrescar border
-                        if (modificado_border.v)
-                        {
-                //printf ("refrescamos border\n");
-                                scr_refresca_border_zx8081();
-                                modificado_border.v=0;
-                //sleep (1);
-                        }
-
-                }
-
-    //modo caracteres normal
-        if (rainbow_enabled.v==0) scr_refresca_pantalla_zx8081();
+    }
 
 
 }
@@ -11962,7 +11955,6 @@ void screen_repinta_pantalla_z88(struct s_z88_return_character_atributes *z88_ca
 void scr_refresca_pantalla_ace(void)
 {
 
-
     //La pantalla del jupiter ACE esta en la direccion 2400H, ocupa 32*24=768 bytes
     //La tabla de caracteres esta en la direccion 2C00H, los primeros 32 bytes son UDG y graficos predefinidos
     //Caracteres por defecto son en color inverso. Si bit 7 esta a 1, caracteres son en negro sobre blanco
@@ -11990,17 +11982,17 @@ void scr_refresca_pantalla_y_border_ace(void)
 
 
 
-            if (border_enabled.v) {
+    if (border_enabled.v) {
         //Border en Ace es 0 y no cambia nunca
         if (modificado_border.v) {
                 //Dibujar border. Color 0
                 scr_refresca_border_comun_spectrumzx8081(0);
                 modificado_border.v=0;
         }
-            }
+    }
 
 
-        scr_refresca_pantalla_ace();
+    scr_refresca_pantalla_ace();
 }
 
 

@@ -1082,8 +1082,6 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
         int x,y,ancho,alto,is_minimized,is_maximized,ancho_antes_minimize,alto_antes_minimize;
 
         if (!util_find_window_geometry("cpucompactstatistics",&x,&y,&ancho,&alto,&is_minimized,&is_maximized,&ancho_antes_minimize,&alto_antes_minimize)) {
-            //x=menu_origin_x();
-            //y=1;
             ancho=32;
             alto=18;
 
@@ -4445,8 +4443,6 @@ void menu_debug_tsconf_tbblue_msx_tilenav(MENU_ITEM_PARAMETERS)
 
 
 
-//#define SOUND_WAVE_X (menu_origin_x()+1)
-//#define SOUND_WAVE_Y 3
 #define SOUND_WAVE_ANCHO 30
 #define SOUND_WAVE_ALTO 15
 
@@ -7556,8 +7552,6 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 
 
 
-//#define DEBUG_HEXDUMP_WINDOW_X (menu_origin_x() )
-//#define DEBUG_HEXDUMP_WINDOW_Y 1
 #define DEBUG_HEXDUMP_WINDOW_ANCHO 32
 #define DEBUG_HEXDUMP_WINDOW_ALTO 23
 
@@ -10558,11 +10552,9 @@ void menu_video_layers(MENU_ITEM_PARAMETERS)
 
 
 
-//#define TOTAL_PALETTE_WINDOW_X (menu_origin_x() )
-//#define TOTAL_PALETTE_WINDOW_Y 0
 #define TOTAL_PALETTE_WINDOW_ANCHO 32
 #define TOTAL_PALETTE_WINDOW_ALTO 24
-//#define TOTAL_PALETTE_COLORS_PER_WINDOW 16
+
 
 
 
@@ -11738,8 +11730,6 @@ void menu_cpu_transaction_log(MENU_ITEM_PARAMETERS)
 
 
 
-//#define SPRITES_X ( menu_origin_x() )
-//#define SPRITES_Y 0
 #define SPRITES_ANCHO 32
 #define SPRITES_ALTO 14
 //#define SPRITES_ALTO_VENTANA (SPRITES_ALTO+10)
@@ -20358,7 +20348,6 @@ void menu_textadv_loc_image(MENU_ITEM_PARAMETERS)
         int x,y,ancho,alto,is_minimized,is_maximized,ancho_antes_minimize,alto_antes_minimize;
 
         if (!util_find_window_geometry("textadvlocimage",&x,&y,&ancho,&alto,&is_minimized,&is_maximized,&ancho_antes_minimize,&alto_antes_minimize)) {
-            //x=menu_origin_x();
 
 
             //540x201 es lo que ocupa el bmp de spectrum 48k
@@ -20686,7 +20675,12 @@ zxvision_window *menu_video_output_window;
 
 
 //sin putpixel cache: render normal: 40% cpu. render ventana: 56% cpu
-//con putpixel cache: render normal: 26% cpu. render ventana: 56% cpu
+
+//con putpixel cache: render normal: 27% cpu. render ventana: 56% cpu
+//con putpixel cache y menu_video_output_overlay_putpixel_cache: render normal: 27% cpu (con menu cerrado), 32% con menu abierto.
+//   render ventana: 35% cpu con menu cerrado (con cpu info, video info y process switcher abiertos), 39% con menu abierto
+// -> o sea hay un 7% cpu mas aprox en render con ventana
+// con todas ventanas abiertas posibles: 84% uso cpu
 
 
 z80_int *menu_video_output_overlay_putpixel_cache=NULL;
@@ -20877,12 +20871,52 @@ static void menu_video_output_calcula_inversa(void)
     }
 }
 
+/* Tamano con el que se dibuja la imagen. Con "Fit image to window" (upstream) la imagen llena la zona de la
+   ventana (manteniendo la proporcion si esta activado); si no, el tamano elegido (screen_emulated_display_scale) */
+static void menu_video_output_tamano_dibujo(zxvision_window *w,int *p_ancho,int *p_alto)
+{
+    menu_video_output_tamano_imagen(p_ancho,p_alto);
+
+    if (!setting_emulated_display_win_zoom_fit.v) return;
+
+    int ancho_imagen=*p_ancho;
+    int alto_imagen=*p_alto;
+
+    int ancho_caracter=menu_char_width*menu_gui_zoom*zoom_x;
+    int alto_caracter=menu_char_height*menu_gui_zoom*zoom_y;
+
+    //Zona de la ventana menos el caracter de margen a la izquierda
+    int ancho_disponible=((w->visible_width)-zxvision_get_minus_width_byscrollvbar(w)-1)*ancho_caracter;
+    int alto_disponible=((w->visible_height)-2)*alto_caracter;
+
+    if (ancho_disponible<1 || alto_disponible<1 || ancho_imagen<1 || alto_imagen<1) return;
+
+    int ancho_final=ancho_disponible;
+    int alto_final=alto_disponible;
+
+    if (setting_emulated_display_win_zoom_fit_keep_proportion.v) {
+        //Proporcion de la imagen al 100%. Comparar multiplicando para no perder decimales
+        if ((long long)ancho_disponible*alto_imagen > (long long)alto_disponible*ancho_imagen) {
+            ancho_final=(int)((long long)alto_disponible*ancho_imagen/alto_imagen);
+        }
+        else {
+            alto_final=(int)((long long)ancho_disponible*alto_imagen/ancho_imagen);
+        }
+    }
+
+    if (ancho_final<1) ancho_final=1;
+    if (alto_final<1) alto_final=1;
+
+    *p_ancho=ancho_final;
+    *p_alto=alto_final;
+}
+
 void menu_video_output_dibuja_escalado(zxvision_window *w,z80_int *origen,int ancho,int alto)
 {
     if (ancho<1 || alto<1) return;
 
     int ancho_destino,alto_destino;
-    menu_video_output_tamano_imagen(&ancho_destino,&alto_destino);
+    menu_video_output_tamano_dibujo(w,&ancho_destino,&alto_destino);
 
     if (ancho_destino<1 || alto_destino<1) return;
 
@@ -20999,11 +21033,8 @@ void menu_video_output_dibuja_escalado(zxvision_window *w,z80_int *origen,int an
 
 //Upstream: cache de putpixel para su dibujado 1:1. El fork dibuja con menu_video_output_dibuja_escalado,
 //que salta los pixeles que ya estan en la capa del menu; esta funcion se mantiene para facilitar las fusiones
-void menu_video_output_alloc_putpixel_cache(void)
+void menu_video_output_alloc_putpixel_cache(int ancho,int alto)
 {
-
-    int ancho=screen_get_window_size_width_no_zoom();
-    int alto=screen_get_window_size_height_no_zoom();
 
     //asignar si ha cambiado tamaño o si no esta asignado
     if (ancho!=menu_video_output_overlay_putpixel_cache_ancho ||
@@ -21037,6 +21068,12 @@ void menu_video_output_alloc_putpixel_cache(void)
     }
 }
 
+
+//Ultima maquina para ajustar tamaño si conviene
+int menu_video_output_last_machine=-1;
+
+int menu_video_output_forzar_redibujado_frames=0;
+
 void menu_video_output_overlay(void)
 {
 
@@ -21056,6 +21093,14 @@ void menu_video_output_overlay(void)
         z80_int *puntero;
         puntero=rainbow_buffer;
 
+        //Autoredimensionar al cambiar de maquina (upstream). Fork: al tamano elegido para la ventana
+        //(screen_emulated_display_scale), como al cambiarlo con los botones de zoom
+        if (menu_video_output_last_machine!=-1 && setting_emulated_display_win_autoresize.v &&
+            menu_video_output_last_machine!=current_machine_type) {
+            menu_video_output_ajusta_ventana();
+        }
+
+        menu_video_output_last_machine=current_machine_type;
 
         //Efectos especiales (FX)
         puntero=screen_rainbow_effects(puntero,ancho,alto);
@@ -21068,6 +21113,8 @@ void menu_video_output_overlay(void)
 
     //Mostrar contenido
     zxvision_draw_window_contents(menu_video_output_window);
+
+    if (menu_video_output_forzar_redibujado_frames>0) menu_video_output_forzar_redibujado_frames--;
 
 }
 
@@ -21101,6 +21148,11 @@ int ventana_video_output_esta_abierta(void)
     }
 
     return ventana_video_output_abierta;
+}
+
+void menu_video_output_close_window_function(void)
+{
+    ventana_video_output_abierta=0;
 }
 
 void menu_video_output(MENU_ITEM_PARAMETERS)
@@ -21140,6 +21192,9 @@ void menu_video_output(MENU_ITEM_PARAMETERS)
 
         ventana->can_be_backgrounded=1;
 
+        //Definir funcion de cierre de ventana
+        ventana->close_window_function=menu_video_output_close_window_function;
+
     }
 
     //Si ya existe, activar esta ventana
@@ -21161,12 +21216,13 @@ void menu_video_output(MENU_ITEM_PARAMETERS)
     //cambio overlay
     zxvision_set_window_overlay(ventana,menu_video_output_overlay);
 
-
-    //Si se acaba de hacer activa, refrescar el zx desktop para que se vea que ya no está la pantalla emulada en modo Docked
-    if (!ventana_video_output_abierta) {
-        ventana_video_output_abierta=1;
-        menu_draw_ext_desktop();
+    if (rainbow_enabled.v==0) {
+        enable_rainbow();
     }
+
+    int antes_ventana_video_output_abierta=ventana_video_output_abierta;
+
+    ventana_video_output_abierta=1;
 
 
     //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
@@ -21176,16 +21232,19 @@ void menu_video_output(MENU_ITEM_PARAMETERS)
             return;
     }
 
+    //Si se acaba de hacer activa, refrescar el zx desktop para que se vea que ya no está la pantalla emulada en modo Docked
+    if (!antes_ventana_video_output_abierta) {
+        menu_draw_ext_desktop();
+    }
+
     ventana_video_output_activa=1;
 
+    /*
     if (rainbow_enabled.v==0) {
         enable_rainbow();
-        //zxvision_print_string_defaults_fillspc(ventana,1,0,"Real video not enabled");
-        //zxvision_print_string_defaults_fillspc(ventana,1,1,"Enable it on Setttings->Display");
     }
-    else {
-        zxvision_cls(ventana);
-    }
+    */
+
 
     do {
 
@@ -21205,17 +21264,14 @@ void menu_video_output(MENU_ITEM_PARAMETERS)
                 salir=1;
             break;
 
-            default:
-                zxvision_handle_cursors_pgupdn_opqa_wskl(ventana,tecla);
-            break;
+            //Y no atendemos a cursores, pgup, dn, shift+opqa etc porque se usan dentro de maquina emulada
+            //y no queremos que actue en la ventana
         }
 
 
     } while (salir==0);
 
     ventana_video_output_activa=0;
-
-
 
     util_add_window_geometry_compact(ventana);
 
@@ -21224,9 +21280,11 @@ void menu_video_output(MENU_ITEM_PARAMETERS)
     }
 
     else {
+        if (ventana->close_window_function!=NULL) {
+            ventana->close_window_function();
+        }
 
         zxvision_destroy_window(ventana);
-        ventana_video_output_abierta=0;
     }
 
 
@@ -25869,7 +25927,6 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
         int x,y,ancho,alto,is_minimized,is_maximized,ancho_antes_minimize,alto_antes_minimize;
 
         if (!util_find_window_geometry("helpshowkeyboard",&x,&y,&ancho,&alto,&is_minimized,&is_maximized,&ancho_antes_minimize,&alto_antes_minimize)) {
-            //x=menu_origin_x();
 
 
             //540x201 es lo que ocupa el bmp de spectrum 48k
@@ -26278,8 +26335,6 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
         int x,y,ancho,alto,is_minimized,is_maximized,ancho_antes_minimize,alto_antes_minimize;
 
         if (!util_find_window_geometry("debugconsole",&x,&y,&ancho,&alto,&is_minimized,&is_maximized,&ancho_antes_minimize,&alto_antes_minimize)) {
-            //x=menu_origin_x();
-            //y=0;
             ancho=DEBUG_UNNAMED_CONSOLE_VISIBLE_INITIAL_WIDTH; //32;
             alto=18;
 
@@ -26678,8 +26733,6 @@ void menu_audio_general_sound(MENU_ITEM_PARAMETERS)
         int x,y,ancho,alto,is_minimized,is_maximized,ancho_antes_minimize,alto_antes_minimize;
 
         if (!util_find_window_geometry("audiogensound",&x,&y,&ancho,&alto,&is_minimized,&is_maximized,&ancho_antes_minimize,&alto_antes_minimize)) {
-            //x=menu_origin_x();
-            //y=1;
             ancho=33;
             alto=22;
 
@@ -26885,8 +26938,6 @@ void menu_debug_ioports(MENU_ITEM_PARAMETERS)
         int x,y,ancho,alto,is_minimized,is_maximized,ancho_antes_minimize,alto_antes_minimize;
 
         if (!util_find_window_geometry("debugioports",&x,&y,&ancho,&alto,&is_minimized,&is_maximized,&ancho_antes_minimize,&alto_antes_minimize)) {
-            //x=menu_origin_x();
-            //y=1;
             ancho=33;
             alto=22;
 
@@ -30952,17 +31003,6 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
 
 
 
-
-
-
-
-
-
-
-
-
-//#define VISUALREALTAPE_X (menu_origin_x())
-//#define VISUALREALTAPE_Y 4
 #define VISUALREALTAPE_ANCHO 32
 #define VISUALREALTAPE_ALTO 20
 
@@ -53302,6 +53342,9 @@ void menu_template_window_can_be_backgrounded(MENU_ITEM_PARAMETERS)
 
         ventana->can_be_backgrounded=1;
 
+        //Si se quiere definir funcion de cierre de ventana
+        //ventana->close_window_function=menu_template_window_can_be_backgrounded_close_window_function;
+
     }
 
     //Si ya existe, activar esta ventana
@@ -53377,6 +53420,9 @@ void menu_template_window_can_be_backgrounded(MENU_ITEM_PARAMETERS)
     }
 
     else {
+        if (ventana->close_window_function!=NULL) {
+            ventana->close_window_function();
+        }
         zxvision_destroy_window(ventana);
     }
 

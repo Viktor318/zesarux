@@ -361,6 +361,9 @@ z80_bit command_line_snapshots_in_ram={0};
 
 z80_bit command_line_keystrokes_turbo={0};
 
+
+int se_abre_emulated_display=0;
+
 //z80_bit parameter_disable_allbetawarningsleep={0};
 
 //Fin command_line flags
@@ -2049,6 +2052,9 @@ printf("\n"
         "--process-switcher-always-visible        Process switcher is always visible (on top of all windows)\n"
         "--process-switcher-no-left-bottom        Do not force process switcher to be located at right-bottom part of the display (the name is kept from when it was left-bottom)\n"
         "--process-switcher-no-one-row            Do not limit process switcher to only one row of icons\n"
+        "--emulated-display-win-fit-image         Scale the emulated display (when windowed mode) to fill its window\n"
+        "--emulated-display-win-no-proportion     Do not keep proportions on the emulated display (when windowed mode) when fit image to window\n"
+        "--emulated-display-win-autoresize        Autoresize the emulated display when changing machine\n"
         "--allow-background-windows               Allow putting windows in background\n"
         "--allow-background-windows-closed-menu   Allow these background windows even when menu closed\n"
         );
@@ -3854,7 +3860,7 @@ int parse_cmdline_options(int desde_commandline)
 
                 int valor=parse_string_to_number(argv[puntero_parametro]);
 
-                if (valor<1 || valor>5) {
+                if (valor<1 || valor>10) {
                     debug_printf (VERBOSE_ERR,"Invalid value for ZX Desktop SCR scale factor\n");
 
                 }
@@ -6672,6 +6678,18 @@ int parse_cmdline_options(int desde_commandline)
                 setting_process_switcher_force_left_bottom.v=0;
             }
 
+            else if (!strcmp(argv[puntero_parametro],"--emulated-display-win-fit-image")) {
+                setting_emulated_display_win_zoom_fit.v=1;
+            }
+
+            else if (!strcmp(argv[puntero_parametro],"--emulated-display-win-no-proportion")) {
+                setting_emulated_display_win_zoom_fit_keep_proportion.v=0;
+            }
+
+            else if (!strcmp(argv[puntero_parametro],"--emulated-display-win-autoresize")) {
+                setting_emulated_display_win_autoresize.v=1;
+            }
+
             else if (!strcmp(argv[puntero_parametro],"--process-switcher-no-one-row")) {
                 setting_process_switcher_only_one_row.v=0;
             }
@@ -8365,6 +8383,9 @@ int parse_cmdline_options(int desde_commandline)
                 //strcpy(restore_window_array[total_restore_window_array_elements++],argv[puntero_parametro]);
                 add_window_to_restore(argv[puntero_parametro]);
 
+                //Si se ha restaurado "emulateddisplay", decimos que los iconos pueden ubicarse donde esta normalmente la pantalla emulada
+                if (!strcmp(argv[puntero_parametro],"emulateddisplay")) se_abre_emulated_display=1;
+
             }
 
             else if (!strcmp(argv[puntero_parametro],"--restore-all-known-windows")) {
@@ -9354,7 +9375,7 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
     create_default_zxdesktop_configurable_icons();
 
     //despues de leer los iconos de la config, e inicializar pantalla, ver si algun icono esta en alguna posicion que no debe y reasignar
-    zxvision_check_all_configurable_icons_positions();
+    zxvision_check_all_configurable_icons_positions(se_abre_emulated_display);
 
     set_last_dimensiones_ventana();
 
@@ -9391,6 +9412,10 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
     //Restaurar ventanas, si conviene. Hacerlo aqui y no mas tarde, para evitar por ejemplo que al salir el logo de splash
     //aparezcan las ventanas en background
     zxvision_restore_windows_on_startup();
+
+    //Fork: ya restauradas las ventanas; si despues se cierra la de la pantalla emulada, los iconos ya no pueden
+    //quedarse donde esta la pantalla emulada
+    se_abre_emulated_display=0;
 
     //Inicio bucle principal
     reg_pc=0;

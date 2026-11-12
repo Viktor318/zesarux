@@ -4520,4 +4520,11 @@ FX	Effektek	item
 If the emulated display is docked to top-left corner or is rendered on a window	Az emulált kijelző a bal felső sarokba van rögzítve, vagy külön ablakban jelenik meg	tooltip
 Size on a ~~window [%d%%]	Méret ~~ablakban [%d%%]	item
 Size of the emulated display on a window: 100%, 125%, 150% or 200%	Az ablakban lévő emulált kijelző mérete: 100%, 125%, 150% vagy 200%	tooltip
-Size of the emulated display on a window: 100%, 125%, 150% or 200%. It is kept apart from the size of the docked machine picture. While the emulated display is on a window, the zoom buttons change this size	Az ablakban lévő emulált kijelző mérete: 100%, 125%, 150% vagy 200%. Külön tárolódik a rögzített gépkép méretétől. Amíg az emulált kijelző ablakban van, a nagyítógombok ezt a méretet állítják	help
+Size of the emulated display on a window: 100%, 125%, 150% or 200%. It is kept apart from the size of the docked machine picture. While the emulated display is on a window, the zoom buttons change this size and the window follows it. With Fit image to window, the picture then follows the window when it is resized	Az ablakban lévő emulált kijelző mérete: 100%, 125%, 150% vagy 200%. Külön tárolódik a rögzített gépkép méretétől. Amíg az emulált kijelző ablakban van, a nagyítógombok ezt a méretet állítják, és az ablak hozzáigazodik. A Kép igazítása az ablakhoz beállítással ezután a kép követi az ablakot, ha átméretezed	help
+Fit image to window	Kép igazítása az ablakhoz	item
+Keep proportions	Képarány megtartása	item
+Autoresize	Automatikus átméretezés	item
+Scale the emulated display to fill its window	Az emulált kijelző képe kitölti az ablakát	tooltip
+Scale the emulated display to fit the available area of its window. The image is resized when the window size changes.	Az emulált kijelző képe kitölti az ablak rendelkezésre álló területét. Az ablak átméretezésekor a kép is átméreteződik.	help
+Keep proportions on the emulated display when fit image to window	Az emulált kijelző képaránya megmarad, amikor a kép az ablakhoz igazodik	tooltip
+Autoresize the emulated display when changing machine	Gépváltáskor az emulált kijelző ablaka az új gép képéhez igazodik	tooltip

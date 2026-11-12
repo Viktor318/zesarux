@@ -649,7 +649,7 @@ void menu_interface_border(MENU_ITEM_PARAMETERS)
     debug_printf (VERBOSE_DEBUG,"Rearrange zxvision windows after changing border settings");
     zxvision_rearrange_background_windows(0,1);
 
-    zxvision_check_all_configurable_icons_positions();
+    zxvision_check_all_configurable_icons_positions(0);
 
 }
 
@@ -693,7 +693,7 @@ void menu_interface_ql_display_proportion(MENU_ITEM_PARAMETERS)
     debug_printf (VERBOSE_DEBUG,"Rearrange zxvision windows after changing ql display proportion settings");
     zxvision_rearrange_background_windows(0,1);
 
-    zxvision_check_all_configurable_icons_positions();
+    zxvision_check_all_configurable_icons_positions(0);
 
 }
 
@@ -2840,8 +2840,8 @@ void menu_main_window_setting_emulated_display(MENU_ITEM_PARAMETERS)
         zxvision_window_delete_this_window(ventana_buscada);
 
         //Esto hacerlo al finalizar porque zxvision_window_delete_this_window no lo hace
-        ventana_video_output_abierta=0;
-        ventana_video_output_activa=0;
+        //ventana_video_output_abierta=0;
+        //ventana_video_output_activa=0;
 
     }
     else {
@@ -3130,16 +3130,6 @@ void menu_main_window_settings(MENU_ITEM_PARAMETERS)
         menu_add_item_menu_es_avanzado(array_menu_window_settings);
 
 
-
-        menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,menu_main_window_setting_emulated_display,NULL,
-            "Emulated Display","Pantalla emulada","Pantalla emulada");
-
-        //menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,menu_video_output,NULL,
-        //    "Emulated Display","Pantalla emulada","Pantalla emulada");
-
-
-        menu_add_item_menu_prefijo(array_menu_window_settings,"    ");
-
         //Buscamos la ventana asi en vez de usar ventana_video_output_esta_abierta() porque si se ha cerrado la ventana
         //desde process switch por ejemplo, la variable de cierre ventana_video_output_abierta no se ha actualizado
         int ventana_abierta=0;
@@ -3148,7 +3138,9 @@ void menu_main_window_settings(MENU_ITEM_PARAMETERS)
 
         if (ventana_buscada!=NULL) ventana_abierta=1;
 
-
+        menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,menu_main_window_setting_emulated_display,NULL,
+            "Position","Posición","Posició");
+        menu_add_item_menu_prefijo(array_menu_window_settings,"    ");
         if (ventana_abierta) {
             menu_add_item_menu_sufijo_format(array_menu_window_settings," [%s]",menu_tr("Windowed"));
             menu_add_item_menu_genera_ventana(array_menu_window_settings);
@@ -3171,10 +3163,40 @@ void menu_main_window_settings(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_tooltip(array_menu_window_settings,"Size of the emulated display on a window: 100%, 125%, 150% or 200%");
             menu_add_item_menu_ayuda(array_menu_window_settings,"Size of the emulated display on a window: 100%, 125%, 150% or 200%. "
                 "It is kept apart from the size of the docked machine picture. While the emulated display is on a window, "
-                "the zoom buttons change this size");
+                "the zoom buttons change this size and the window follows it. With Fit image to window, the picture then "
+                "follows the window when it is resized");
             menu_add_item_menu_es_avanzado(array_menu_window_settings);
         }
         menu_add_item_menu_es_avanzado(array_menu_window_settings);
+
+        if (ventana_abierta) {
+            menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,NULL,NULL,
+                "Fit image to window","Ajustar imagen a la ventana","Ajustar la imatge a la finestra");
+            menu_add_item_menu_prefijo_format(array_menu_window_settings,"[%c] ",(setting_emulated_display_win_zoom_fit.v ? 'X' : ' '));
+            menu_add_item_menu_opcion_conmuta(array_menu_window_settings,&setting_emulated_display_win_zoom_fit);
+            menu_add_item_menu_tooltip(array_menu_window_settings,"Scale the emulated display to fill its window");
+            menu_add_item_menu_ayuda(array_menu_window_settings,"Scale the emulated display to fit the available area of its window. The image is resized when the window size changes.");
+            menu_add_item_menu_es_avanzado(array_menu_window_settings);
+
+            if (setting_emulated_display_win_zoom_fit.v) {
+                menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,NULL,NULL,
+                    "Keep proportions","Mantener proporciones","Mantenir proporcions");
+                menu_add_item_menu_prefijo_format(array_menu_window_settings,"[%c] ",(setting_emulated_display_win_zoom_fit_keep_proportion.v ? 'X' : ' '));
+                menu_add_item_menu_opcion_conmuta(array_menu_window_settings,&setting_emulated_display_win_zoom_fit_keep_proportion);
+                menu_add_item_menu_tooltip(array_menu_window_settings,"Keep proportions on the emulated display when fit image to window");
+                menu_add_item_menu_ayuda(array_menu_window_settings,"Keep proportions on the emulated display when fit image to window");
+                menu_add_item_menu_es_avanzado(array_menu_window_settings);
+            }
+
+            menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,NULL,NULL,
+                "Autoresize","Autoredimensionar","Autoredimensionar");
+            menu_add_item_menu_prefijo_format(array_menu_window_settings,"[%c] ",(setting_emulated_display_win_autoresize.v ? 'X' : ' '));
+            menu_add_item_menu_opcion_conmuta(array_menu_window_settings,&setting_emulated_display_win_autoresize);
+            menu_add_item_menu_tooltip(array_menu_window_settings,"Autoresize the emulated display when changing machine");
+            menu_add_item_menu_ayuda(array_menu_window_settings,"Autoresize the emulated display when changing machine");
+            menu_add_item_menu_es_avanzado(array_menu_window_settings);
+
+        }
 
 
 
@@ -4006,7 +4028,7 @@ void menu_interface_enable_topbar_menu(MENU_ITEM_PARAMETERS)
 
     //Comprobar posiciones iconos y reajustar
     //Debido a que con topbar dejamos que los iconos empiecen mas arriba que cuando hay botones superiores
-    zxvision_check_all_configurable_icons_positions();
+    zxvision_check_all_configurable_icons_positions(0);
 
     zxvision_reorder_configurable_icons_if_auto();
 }
@@ -4204,6 +4226,10 @@ void menu_settings_windows_features(MENU_ITEM_PARAMETERS)
                 "Reopen windows on start","Reabrir ventanas al inicio","Reobrir finestres al inici");
             menu_add_item_menu_prefijo_format(array_menu_common,"[%c] ",(menu_reopen_background_windows_on_start.v ? 'X' : ' ') );
         }
+
+
+        menu_add_item_menu_separator(array_menu_common);
+
 
         menu_add_item_menu_en_es_ca(array_menu_common,MENU_OPCION_NORMAL,menu_interface_restore_windows_geometry,NULL,
             "    Restore windows geometry","    Restaurar geometria ventanas","    Restaurar geometria finestres");
@@ -15327,7 +15353,7 @@ void menu_ext_desk_settings_enable(MENU_ITEM_PARAMETERS)
         //zxvision_reorder_configurable_icons();
 
         //Comprobar posiciones iconos y reajustar
-        zxvision_check_all_configurable_icons_positions();
+        zxvision_check_all_configurable_icons_positions(0);
 
         //Crear iconos por defecto si hace falta
         create_default_zxdesktop_configurable_icons();
@@ -15372,7 +15398,7 @@ void menu_ext_desk_settings_custom_width_height(int reorganize_windows)
         zxvision_rearrange_background_windows(0,1);
 
         //Comprobar posiciones iconos y reajustar
-        zxvision_check_all_configurable_icons_positions();
+        zxvision_check_all_configurable_icons_positions(0);
     }
 
     zxvision_reorder_configurable_icons_if_auto();
@@ -15628,7 +15654,7 @@ void menu_zxdesktop_scrfile_mix_background(MENU_ITEM_PARAMETERS)
 
 void menu_zxdesktop_scrfile_scalefactor(MENU_ITEM_PARAMETERS)
 {
-    menu_ventana_scanf_numero_enhanced_dynamic("Scale factor",&zxdesktop_draw_scrfile_scale_factor,2,+1,1,5,0);
+    menu_ventana_scanf_numero_enhanced_dynamic("Scale factor",&zxdesktop_draw_scrfile_scale_factor,3,+1,1,10,0);
 }
 
 

@@ -65,6 +65,12 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
   speed: it drew the whole picture again on every frame, and the emulation
   fell to half speed (slow typing, lost keys, slow key repeat). Now only the
   changed pixels are drawn.
+- The new upstream settings of the windowed emulated display, in Hungarian
+  and with the fork's drawing: *Fit image to window* (the picture follows
+  the window size, smoothed if *Smooth machine picture* is on), *Keep
+  proportions* and *Autoresize* (on a machine change the window follows the
+  picture at the chosen size). With fitting, the zoom buttons size the
+  window for a 100/125/150/200% picture, and the picture follows it.
 
 ## v13.1-SN-hu.1 – 2026-11-06
 

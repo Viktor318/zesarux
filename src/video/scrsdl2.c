@@ -246,7 +246,7 @@ static void scrsdl_despues_de_redistribuir(int desktop_ancho_antes,int desktop_a
 
     //Iconos fuera de la ventana o bajo la imagen de la maquina (que puede haber crecido): reordenarlos
     zxvision_reorder_configurable_icons_if_invalid();
-    zxvision_check_all_configurable_icons_positions();
+    zxvision_check_all_configurable_icons_positions(0);
 
     zxvision_reorder_configurable_icons_if_auto();
 

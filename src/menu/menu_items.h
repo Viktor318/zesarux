@@ -72,6 +72,8 @@ extern void menu_video_output_dibuja_escalado(zxvision_window *w,z80_int *origen
 extern int ventana_video_output_abierta;
 extern int ventana_video_output_activa;
 
+
+
 extern void menu_zxdesktop_trash_empty(MENU_ITEM_PARAMETERS);
 
 extern void menu_toy_follow_mouse(MENU_ITEM_PARAMETERS);
