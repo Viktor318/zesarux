@@ -38,6 +38,7 @@
 #include "contend.h"
 #include "joystick.h"
 #include "zxvision.h"
+#include "menu_items.h"
 #include "operaciones.h"
 #include "utils.h"
 #include "audio.h"
@@ -2058,6 +2059,10 @@ void scr_refresca_pantalla_y_border_cpc_rainbow(void)
         debug_printf(VERBOSE_DEBUG,"Drawing black lines after lower border (elapsed 1 second since last CRTC vertical changes)");
     }
 
+    //Fork: con la pantalla emulada en una ventana (Emulated Display), la maquina no se dibuja en su sitio
+    //(la dibuja la ventana); si no, se veia dos veces. Las lineas negras bajo el borde si se ponen en el buffer
+    int dibujar_en_su_sitio=!ventana_video_output_esta_abierta();
+
 	for (y=0;y<alto;y++) {
 
 
@@ -2074,7 +2079,7 @@ void scr_refresca_pantalla_y_border_cpc_rainbow(void)
             }
 
             puntero++;
-            scr_putpixel_zoom_rainbow(x,y,color_pixel);
+            if (dibujar_en_su_sitio) scr_putpixel_zoom_rainbow(x,y,color_pixel);
 
 
 		}

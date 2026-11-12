@@ -33,6 +33,7 @@ static void tbblue_hq_dac_update(void);
 #include "contend.h"
 #include "utils.h"
 #include "zxvision.h"
+#include "menu_items.h"
 #include "divmmc.h"
 #include "diviface.h"
 #include "screen.h"
@@ -8711,6 +8712,10 @@ void screen_tbblue_refresca_no_rainbow_border(void)
 //Refresco pantalla con rainbow. Nota. esto deberia ser una funcion comun y no tener diferentes para comun, prism, tbblue, etc
 void screen_tbblue_refresca_rainbow(void)
 {
+
+    //Fork: con la pantalla emulada en una ventana (Emulated Display), la maquina no se dibuja en su sitio
+    //(la dibuja la ventana); si no, se veia dos veces
+    if (ventana_video_output_esta_abierta()) return;
 
     int ancho,alto;
 

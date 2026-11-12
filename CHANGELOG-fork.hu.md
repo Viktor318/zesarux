@@ -70,6 +70,9 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
   *Automatikus átméretezés* (gépváltáskor az ablak a beállított méretű
   képhez igazodik). Igazítás mellett a nagyítógombok az ablakot méretezik
   100/125/150/200%-os képhez, és a kép követi.
+- Amstrad CPC-n és ZX Spectrum Nexten (TBBlue) ablakos kijelzőnél a gép
+  képe a bal felső sarokban is megmaradt (dupla kép); most csak az
+  ablakban látszik.
 
 ## v13.1-SN-hu.1 – 2026-11-06
 

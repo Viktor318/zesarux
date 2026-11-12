@@ -71,6 +71,9 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
   proportions* and *Autoresize* (on a machine change the window follows the
   picture at the chosen size). With fitting, the zoom buttons size the
   window for a 100/125/150/200% picture, and the picture follows it.
+- On the Amstrad CPC and the ZX Spectrum Next (TBBlue) the machine picture
+  stayed in the top left corner too with the emulated display on a window
+  (double picture); now it is only in the window.
 
 ## v13.1-SN-hu.1 – 2026-11-06
 
