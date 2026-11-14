@@ -1926,7 +1926,7 @@ External Audio Source buffer is full, a fragment of %d ms has been lost	A küls�
 Error reading directory contents: %s	Hiba a mappa tartalmának olvasásakor: %s	error
 AY file does not have .ay, .pt3 or .vt2 extension	A zenefájl kiterjesztése nem .ay, .pt3 vagy .vt2	error
 Unknown music file format	Ismeretlen zenefájl-formátum	error
-%s modules play only with the high quality sound (Settings > Audio)	A(z) %s modulok csak jó minőségű hanggal szólnak (beállítások > Hang)	error
+%s modules play only with the high quality sound (SDL2 audio driver)	A(z) %s modulok csak jó minőségű hanggal szólnak (SDL2 hangmeghajtó)	error
 Unable to open ay file	Nem sikerült megnyitni az ay fájlt	error
 Error reading ay file	Hiba az ay fájl olvasásakor	error
 File version>3 not supported yet (file version: %d)	A 3-nál újabb fájlverzió még nem támogatott (fájlverzió: %d)	error
@@ -4398,9 +4398,6 @@ Recent folders (SPC switch)	Legutóbbi mappák (SPC: váltás)	window text
 %s Menu	%s: menü	text
  Press %s for menu 	 Menü: %s 	text
 F5/Button	F5/gomb	text
-High ~~quality sound	~~Jó minőségű hang	item
-Sound at 48000 Hz, 16 bit, band limited, like the Fuse emulator	Hang 48000 Hz-en, 16 biten, sávkorlátozva, mint a Fuse emulátorban	tooltip
-Makes the sound at 48000 Hz, 16 bit, in the way the Fuse emulator does: every change of the beeper is put in at its exact time (band limited), so it sounds clean, and it goes through the same filters as in Fuse (built-in speaker of the 16K/48K, TV speaker on the other machines). Disable it to use the classic sound output (15600 Hz, 8 bit). On machines that are not supported yet, the classic sound is converted to the high quality output	A hangot 48000 Hz-en, 16 biten állítja elő, úgy, ahogy a Fuse emulátor: a beeper minden váltása a pontos időpontjában, sávkorlátozva kerül a hangba, így tisztán szól, és ugyanazokon a szűrőkön megy át, mint a Fuse-ban (a 16K/48K beépített hangszórója, a többi gépen tévéhangszóró). Kapcsold ki, ha a klasszikus hangkimenetet (15600 Hz, 8 bit) szeretnéd használni. A még nem támogatott gépeken a klasszikus hangot alakítja át a jó minőségű kimenetre	help
 A~~udio	Han~~g	item
 U~~LA	UL~~A	item
 Vi~~deo	~~Videó	item

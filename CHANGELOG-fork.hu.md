@@ -24,6 +24,16 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
   kurzorbillentyűk, a Tab, az F-billentyűk és a Ctrl vagy bal Alt
   kombinációk ugyanúgy működnek, mint eddig.
 
+### Hang
+
+- Megszűnt a *Jó minőségű hang* beállítás: ahol elérhető (az SDL2
+  hangmeghajtóval, ez az alapértelmezett, és ez megy Windowson), mindig a
+  jó minőségű hang szól. Eddig is alapból be volt kapcsolva, és nincs ok
+  visszatérni a régi 8 bites hangra. Azokon a gépeken, amelyeknek még
+  nem állítja elő a hangját, a klasszikus hangjukat alakítja át rá. A
+  `--classic-audio` parancssori kapcsoló teszteléshez megmaradt, de már
+  nem kerül a beállításfájlba.
+
 ### AY lejátszó és AY keverő
 
 - **Pro Tracker 3 modulok** (`.pt3`, és a Vortex Tracker II szövegmodulok:
@@ -34,7 +44,7 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
   felvehetők a lejátszási listába (mappával is), és szerepelnek a
   fájlszűrőkben. A lejátszó a Fuse forkból jön (a ZXTune alapján). A
   TurboSound modulokból egyelőre csak az első chip szól. Jó minőségű hang
-  kell hozzájuk.
+  (az SDL2 hangmeghajtó) kell hozzájuk.
 - Az **AY keverő** minden gépen megnyitható (*Hang > AY keverő*), azokon is,
   amelyekben nincs AY chip (48K, ZX81...): az AY lejátszó bármelyik gépen
   szól, és a zenéje a keverőn megy át.

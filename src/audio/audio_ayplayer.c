@@ -681,7 +681,7 @@ int audio_ay_player_play_song(z80_byte song)
         ay_player_song_is_cpc=0;
 
         if (!audio_hq_fifo_in_use) {
-            debug_printf(VERBOSE_ERR,"%s modules play only with the high quality sound (Settings > Audio)",ay_player_module_format);
+            debug_printf(VERBOSE_ERR,"%s modules play only with the high quality sound (SDL2 audio driver)",ay_player_module_format);
             return 1;
         }
 

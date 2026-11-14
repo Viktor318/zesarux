@@ -919,7 +919,7 @@ printf (
         "\n"
 
         "--noreset-audiobuffer-full  Do not reset audio buffer when it's full. By default it does reset the buffer when full, it helps reducing latency\n"
-        "--classic-audio             Use the classic sound output (15600 Hz, 8 bit) instead of the high quality one (48000 Hz, 16 bit, band limited, like Fuse)\n"
+        "--classic-audio             Use the classic sound output (15600 Hz, 8 bit) instead of the high quality one (48000 Hz, 16 bit, band limited, like Fuse). Only for testing: it is not saved in the configuration\n"
         "--enable-silencedetector    Enable silence detector. Silence detector is disabled by default\n"
         "--disable-silencedetector   Disable silence detector. Silence detector is disabled by default\n"
 

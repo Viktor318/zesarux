@@ -61,10 +61,10 @@ megvannak a magyar ékezetes betűk.
 
 ### Hang
 
-- **Jó minőségű hang** (alapból bekapcsolva): 48 kHz, 16 bit,
-  sávkorlátozott, a Fuse módján előállítva (pontos beeper-időzítés, a Fuse AY
-  hanggenerátora és szűrői), a Spectrumokon, az Amstrad CPC-n, a ZX80-on, a
-  ZX81-en, a QL-en és a DAC-okkal.
+- **Jó minőségű hang** (az SDL2 hangmeghajtóval mindig bekapcsolva): 48 kHz,
+  16 bit, sávkorlátozott, a Fuse módján előállítva (pontos beeper-időzítés, a
+  Fuse AY hanggenerátora és szűrői), a Spectrumokon, az Amstrad CPC-n, a
+  ZX80-on, a ZX81-en, a QL-en és a DAC-okkal.
 - A Sinclair és Amstrad Spectrumok a valódi képfrissítési sebességükkel
   futnak.
 - Javítások az SDL hangkimenetben (kétszer szóló rövid hangok, kihagyások

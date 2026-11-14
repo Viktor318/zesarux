@@ -6053,19 +6053,6 @@ void menu_audio_beep_mic_mode(MENU_ITEM_PARAMETERS)
     if (beeper_mic_mixer_current_mode>BEEPER_MIC_MIXER_ONLY_MIC) beeper_mic_mixer_current_mode=BEEPER_MIC_MIXER_NORMAL;
 }
 
-void menu_audio_hq_sound(MENU_ITEM_PARAMETERS)
-{
-    audio_hq_enabled.v ^=1;
-
-    //Volver a abrir la tarjeta de sonido en el nuevo modo
-    if (audio_end!=NULL) audio_end();
-    if (audio_init!=NULL) {
-        if (audio_init()) {
-            fallback_audio_null();
-        }
-    }
-}
-
 void menu_settings_audio(MENU_ITEM_PARAMETERS)
 {
     menu_item *array_menu_settings_audio;
@@ -6081,15 +6068,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
         menu_add_item_menu_sufijo_format(array_menu_settings_audio," [%d%%]", audiovolume);
         menu_add_item_menu_shortcut(array_menu_settings_audio,'v');
 
-        menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_hq_sound,NULL,"High ~~quality sound");
-        menu_add_item_menu_prefijo_format(array_menu_settings_audio,"[%c] ",(audio_hq_enabled.v ? 'X' : ' '));
-        menu_add_item_menu_shortcut(array_menu_settings_audio,'q');
-        menu_add_item_menu_tooltip(array_menu_settings_audio,"Sound at 48000 Hz, 16 bit, band limited, like the Fuse emulator");
-        menu_add_item_menu_ayuda(array_menu_settings_audio,"Makes the sound at 48000 Hz, 16 bit, in the way the Fuse emulator does: "
-                    "every change of the beeper is put in at its exact time (band limited), so it sounds clean, "
-                    "and it goes through the same filters as in Fuse (built-in speaker of the 16K/48K, TV speaker on the other machines). "
-                    "Disable it to use the classic sound output (15600 Hz, 8 bit). "
-                    "On machines that are not supported yet, the classic sound is converted to the high quality output");
+        //Fork: el sonido de alta calidad siempre esta activo, ya no hay opcion en el menu (para pruebas: --classic-audio)
 
         if (!MACHINE_IS_QL && sn_chip_present.v==0) {
             menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_chip_autoenable,NULL,"A~~uto-enable AY Chip");

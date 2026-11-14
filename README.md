@@ -59,10 +59,10 @@ Hungarian accented letters.
 
 ### Sound
 
-- **High quality sound** (on by default): 48 kHz, 16 bit, band limited, made
-  the way Fuse makes it (exact beeper timing, the Fuse AY generator and
-  filters), on the Spectrums, the Amstrad CPC, the ZX80, the ZX81, the QL
-  and with the DACs.
+- **High quality sound** (always on with the SDL2 audio driver): 48 kHz,
+  16 bit, band limited, made the way Fuse makes it (exact beeper timing, the
+  Fuse AY generator and filters), on the Spectrums, the Amstrad CPC, the
+  ZX80, the ZX81, the QL and with the DACs.
 - The Sinclair and Amstrad Spectrums run at their real frame rate.
 - Fixes in the SDL sound output (doubled short sounds, dropouts on Windows).
 
