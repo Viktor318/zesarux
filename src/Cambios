@@ -11,6 +11,7 @@ Permitir renderizar pantalla emulada en una ventana aparte
 Agregada opción en archivo de configuración para activar el uso de teclas numéricas en teclado Azerty sin tener que pulsar tecla Shift
 Agregado mas soporte de joystick en Mac (Dpad, different axis)
 Agregado soporte de 60 hz para las máquinas: Master System, SG1000, MSX, Colecovision, Spectravideo, Timex Sinclair 2068
+Agregado renderizado en real video para PCW, Jupiter Ace y Sam Coupe
 Permitir enviar mensages privados a usuarios en ZENG Online
 Permitir smartload de archivo SCL
 Agregado iconos de dispositivos: esxdos handler, kartusho, iFrom, lec memory, superupgrade
@@ -107,6 +108,12 @@ Corregida emulación del floppy disk 3" CF2 (usado en +3, CPC, PCW):
 - Corregido PD765 timeout de lectura
 - Corregido PD765 Speedlock lecturas de sectores débiles (CRC error) en imágenes EDSK de +3
 - Corregido carga de discos protegidos con Speedlock en Spectrum +3
+
+Corregida emulación del Sam Coupe:
+- Agregadas las interrupciones de línea y corregidos los pulsos de estado de las interrupciones de línea y fotograma
+- Agregada la lectura de la línea vertical mediante HPEN
+- Corregidos los niveles de intensidad de la paleta de 128 colores
+- Corregida la configuración de 256K de RAM: las páginas ausentes 16-31 ya no reflejan las páginas 0-15
 
 Corregidos timings para TK90X y TK95 modelos de 50 hz y 60 hz
 Corregido MEMPTR despues de instrucciones return de Z80

@@ -8713,8 +8713,7 @@ void screen_tbblue_refresca_no_rainbow_border(void)
 void screen_tbblue_refresca_rainbow(void)
 {
 
-    //Fork: con la pantalla emulada en una ventana (Emulated Display), la maquina no se dibuja en su sitio
-    //(la dibuja la ventana); si no, se veia dos veces
+    //Si ventana video output abierta, no renderizamos desde aqui
     if (ventana_video_output_esta_abierta()) return;
 
     int ancho,alto;

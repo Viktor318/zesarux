@@ -14510,8 +14510,8 @@ struct s_machines_short_names_id machines_short_names_id[]={
 
    {"ATM1",MACHINE_ID_ATM_TURBO1,bitmap_button_ext_desktop_my_machine_atmturbo1},
    {"ATM2",MACHINE_ID_ATM_TURBO2,bitmap_button_ext_desktop_my_machine_atmturbo1},
-   {"ATM2p",MACHINE_ID_ATM_TURBO2_PLUS,bitmap_button_ext_desktop_userdefined},
-   {"ATM3",MACHINE_ID_ATM_TURBO3,bitmap_button_ext_desktop_userdefined},
+   {"ATM2p",MACHINE_ID_ATM_TURBO2_PLUS,bitmap_button_ext_desktop_my_machine_atmturbo2p},
+   {"ATM3",MACHINE_ID_ATM_TURBO3,bitmap_button_ext_desktop_my_machine_atmturbo2p},
 
    {"Didaktik",MACHINE_ID_DIDAKTIKGAMA,bitmap_button_ext_desktop_my_machine_didaktikgama},
    {"Chrome",MACHINE_ID_CHROME,bitmap_button_ext_desktop_my_machine_generic},
@@ -15485,6 +15485,7 @@ void poke_byte_writerom_exec(z80_int dir,z80_byte value)
         }
 
     else if (MACHINE_IS_SAM) {
+		if (sam_memory_paged_type[dir/16384]==SAM_MEMORY_PAGE_UNMAPPED) return;
 
                 z80_byte *puntero;
                 puntero=sam_return_segment_memory(dir);
