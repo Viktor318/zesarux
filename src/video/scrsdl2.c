@@ -395,18 +395,26 @@ void scrsdl_destruye_ventana(void)
     window=NULL;
 }
 
+//Fork: ancho de la imagen para un putpixel. Antes se calculaba en cada pixel con una cadena larga de funciones
+//(tamano de la maquina, del ZX Desktop...), y eso era buena parte del tiempo de dibujar menus y ventanas.
+//La imagen del driver ya tiene ese ancho (se crea con el mismo calculo); ademas asi no se escribe fuera de ella
+//si el tamano ha cambiado y la imagen aun no se ha rehecho. Retorna 0 si el pixel no cabe
+static int scrsdl_ancho_imagen_putpixel(int x,int y,int *ancho)
+{
+    if (scr_sdl_force_size.v) {
+        *ancho=scr_sdl_force_size_width;
+        return (x<scr_sdl_force_size_width && y<scr_sdl_force_size_height);
+    }
+
+    *ancho=scrsdl_imagen_ancho;
+    return (scrsdl_pixeles!=NULL && x>=0 && y>=0 && x<scrsdl_imagen_ancho && y<scrsdl_imagen_alto);
+}
+
 //Putpixel RGB 8 bit
 void scrsdl_putpixel_final_rgb8(int x,int y,unsigned int color_rgb)
 {
-    int ancho=screen_get_window_size_width_zoom_border_en();
-    ancho +=screen_get_ext_desktop_width_zoom();
-
-    //controlar limites x,y
-    if (scr_sdl_force_size.v) {
-        ancho=scr_sdl_force_size_width;
-        int alto=scr_sdl_force_size_height;
-        if (x>=ancho || y>=alto) return;
-    }
+    int ancho;
+    if (!scrsdl_ancho_imagen_putpixel(x,y,&ancho)) return;
 
     Uint8 *p = (Uint8 *)scrsdl_pixeles + (y * ancho + x);
 
@@ -423,15 +431,8 @@ void scrsdl_putpixel_final_rgb8(int x,int y,unsigned int color_rgb)
 //Putpixel RGB 32 bit
 void scrsdl_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
 {
-    int ancho=screen_get_window_size_width_zoom_border_en();
-    ancho +=screen_get_ext_desktop_width_zoom();
-
-    //controlar limites x,y
-    if (scr_sdl_force_size.v) {
-        ancho=scr_sdl_force_size_width;
-        int alto=scr_sdl_force_size_height;
-        if (x>=ancho || y>=alto) return;
-    }
+    int ancho;
+    if (!scrsdl_ancho_imagen_putpixel(x,y,&ancho)) return;
 
     Uint8 *p = (Uint8 *)scrsdl_pixeles + (y * ancho + x) * 4;
 
@@ -460,9 +461,19 @@ void scrsdl_putpixel_final(int x,int y,unsigned int color)
 
 }
 
+//Fork: con el menu cerrado tambien se guarda el pixel en la capa de la maquina, para que siempre este al dia
+//y al borrar menus y ventanas baste con volver a mezclar las capas (sin redibujar el ZX Desktop entero)
+static void scrsdl_putpixel_capa_maquina(int x,int y,unsigned int color)
+{
+    if (buffer_layer_machine!=NULL && x>=0 && y>=0 && x<ancho_layer_menu_machine && y<alto_layer_menu_machine) {
+        buffer_layer_machine[y*ancho_layer_menu_machine+x]=color;
+    }
+}
+
 static void scrsdl_putpixel_uno(int x,int y,unsigned int color)
 {
     if (menu_overlay_activo==0) {
+        scrsdl_putpixel_capa_maquina(x,y,color);
         scrsdl_putpixel_final(x,y,color);
         return;
     }
@@ -488,6 +499,7 @@ void scrsdl_putpixel(int x,int y,unsigned int color)
 
     if (menu_overlay_activo==0) {
         //Putpixel con menu cerrado
+        scrsdl_putpixel_capa_maquina(x,y,color);
         scrsdl_putpixel_final(x,y,color);
         return;
     }
@@ -734,13 +746,15 @@ static Uint32 *scrsdl_aplica_suavizado(int ancho,int alto)
 void scrsdl_refresca_pantalla_solo_driver(void)
 {
 
-    int ancho=screen_get_window_size_width_zoom_border_en();
-    ancho +=screen_get_ext_desktop_width_zoom();
+    //Fork: el ancho de la imagen del driver, el mismo que usan los putpixel
+    int ancho=scrsdl_imagen_ancho;
 
     //controlar limites x,y
     if (scr_sdl_force_size.v) {
         ancho=scr_sdl_force_size_width;
     }
+
+    if (scrsdl_pixeles==NULL || scrsdl_texture==NULL) return;
 
     if (scr_sdl_8bits_color.v) {
         SDL_UpdateTexture(scrsdl_texture, NULL, scrsdl_pixeles, ancho);
@@ -913,6 +927,7 @@ void scrsdl_end(void)
     debug_printf (VERBOSE_INFO,"Closing SDL2 video driver");
     scrsdl_libera_imagen();
     scrsdl_inicializado.v=0;
+    scr_capa_maquina_siempre_al_dia=0;
     scrsdl_destruye_ventana(); //Nota: Cuando se cambia de resolucion en maquina (por ejemplo de spectrum a prism),
     //se llama a _end y luego se vuelve a inicializar el driver
     //en el caso de video sdl, si audio tambien es sdl, al llamar a commonsdl_end no se finaliza driver sdl, dado que esta usando el audio
@@ -2668,6 +2683,8 @@ int scrsdl_init (void) {
 
     //Inicializaciones necesarias
     scr_putpixel=scrsdl_putpixel;
+    //Fork: este driver guarda siempre los pixeles en la capa de la maquina (ver scrsdl_putpixel_capa_maquina)
+    scr_capa_maquina_siempre_al_dia=1;
     scr_putpixel_final=scrsdl_putpixel_final;
 
     if (scr_sdl_8bits_color.v) {

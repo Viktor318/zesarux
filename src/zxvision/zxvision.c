@@ -4170,10 +4170,13 @@ void set_menu_overlay_function(void (*funcion)(void) )
 
     //para que al oscurecer la pantalla tambien refresque el border
     modificado_border.v=1;
+    //Fork: si la capa de la maquina ya estaba al dia (driver SDL2) no hace falta repintar la maquina entera
+    int repintar_maquina=!(menu_overlay_activo || screen_capa_maquina_sin_cambio_al_cambiar_overlay());
+
     menu_overlay_activo=1;
 
     //Necesario para que al poner la capa de menu, se repinte todo
-    clear_putpixel_cache();
+    if (repintar_maquina) clear_putpixel_cache();
 
     //Y por si acaso, aunque ya deberia haber buffer de capas activo, asignarlo
     scr_init_layers_menu();
@@ -4188,9 +4191,14 @@ void reset_menu_overlay_function(void)
 
 
 
+    //Fork: si la capa de la maquina esta al dia (driver SDL2), basta con volver a mezclar donde habia menus,
+    //sin repintar la maquina entera
+    int solo_remezclar=screen_capa_maquina_sin_cambio_al_cambiar_overlay();
+
     menu_overlay_activo=0;
 
-    scr_clear_layer_menu();
+    if (solo_remezclar) scr_clear_layer_menu_remix();
+    else scr_clear_layer_menu();
 
 
 }
@@ -5082,12 +5090,219 @@ void menu_init_footer(void)
 
 
 //funcion para limpiar el buffer de overlay y si hay cuadrado activo
+//Fork: generacion de las capas y firma del ZX Desktop (tamano, sitio, aspecto, botones, iconos...) cuando se dibujo
+//entero por ultima vez
+int menu_draw_ext_desktop_dibujado_generacion=-1;
+unsigned int menu_draw_ext_desktop_dibujado_firma=0;
+
+extern z80_bit menu_mostrar_boton_close_all_menus;
+void menu_draw_ext_desktop_recuadro_maquina(void);
+
+static unsigned int menu_draw_ext_desktop_firma_int(unsigned int firma,int valor)
+{
+    firma ^=(unsigned int)valor;
+    firma *=16777619U;
+    return firma;
+}
+
+static unsigned int menu_draw_ext_desktop_firma_texto(unsigned int firma,const char *texto,int maximo)
+{
+    int i;
+    for (i=0;i<maximo && texto[i];i++) firma=menu_draw_ext_desktop_firma_int(firma,(unsigned char)texto[i]);
+    return menu_draw_ext_desktop_firma_int(firma,0);
+}
+
+/* Firma de todo lo que hace cambiar el dibujo del ZX Desktop (sin contar el recuadro de la maquina, que se redibuja
+   siempre). Si cambia algo (un ajuste del ZX Desktop, un icono, un boton pulsado...), el ZX Desktop se redibuja entero
+   como antes; si no, al borrar los menus basta con volver a mezclar las capas */
+unsigned int menu_draw_ext_desktop_firma(void)
+{
+    if (!screen_ext_desktop_enabled || !scr_driver_can_ext_desktop()) return 0;
+
+    unsigned int firma=2166136261U;
+
+    int filesel_en_segundo_plano=(menu_filesel_show_previews_on_zxdesktop.v && zxvision_find_window_in_background("filesel")!=NULL);
+
+    int valores[]={
+        //Tamano y sitio
+        screen_get_ext_desktop_start_x(),screen_get_ext_desktop_width_zoom(),screen_get_ext_desktop_height_zoom(),
+        screen_get_total_width_window_plus_zxdesktop(),screen_get_total_height_window_no_footer_plus_zxdesktop(),
+        ventana_video_output_esta_abierta(),zoom_x,zoom_y,menu_gui_zoom,menu_char_width,menu_char_height,
+        current_machine_type,rainbow_enabled.v,estilo_gui_activo,
+
+        //Fondo
+        menu_ext_desktop_fill,menu_ext_desktop_fill_first_color,menu_ext_desktop_fill_second_color,
+        menu_ext_desktop_degraded_inverted.v,
+        zxdesktop_draw_scrfile_enabled,zxdesktop_draw_scrfile_centered,zxdesktop_draw_scrfile_fill_scale,
+        zxdesktop_draw_scrfile_scale_factor,zxdesktop_draw_scrfile_disable_flash,zxdesktop_draw_scrfile_mix_background,
+        menu_filesel_show_previews_on_zxdesktop.v,filesel_en_segundo_plano,
+        menu_filesel_overlay_last_preview_width,menu_filesel_overlay_last_preview_height,
+
+        //Botones e iconos
+        zxvision_topbar_menu_enabled.v,menu_zxdesktop_upper_buttons_enabled.v,menu_zxdesktop_lower_buttons_enabled.v,
+        menu_ext_desktop_transparent_upper_buttons.v,menu_ext_desktop_upper_buttons_background_color_follow_gui.v,
+        menu_ext_desktop_upper_buttons_background_color,
+        menu_ext_desktop_transparent_lower_buttons.v,menu_ext_desktop_lower_buttons_background_color_follow_gui.v,
+        menu_ext_desktop_lower_buttons_background_color,
+        menu_ext_desktop_disable_box_upper_buttons.v,menu_ext_desktop_disable_box_lower_buttons.v,
+        menu_ext_desktop_transparent_configurable_icons.v,menu_ext_desktop_configurable_icons_background_color_follow_gui.v,
+        menu_ext_desktop_configurable_icons_background_color,menu_ext_desktop_configurable_icons_text_background.v,
+        menu_ext_desktop_configurable_icons_short_text.v,menu_ext_desktop_contorno_iconos.v,menu_ext_desktop_color_contorno_iconos,
+        zxdesktop_configurable_icons_enabled_and_visible(),
+
+        //Estado: botones o iconos pulsados, papelera, icono moviendose (el boton de cerrar menus va aparte)
+        menu_pressed_zxdesktop_button_which,menu_pressed_zxdesktop_lower_icon_which,
+        menu_pressed_zxdesktop_configurable_icon_which,menu_pressed_zxdesktop_right_button_zxdesktop_background,
+        zxvision_draw_icon_papelera_abierta,configurable_icon_is_being_moved
+    };
+
+    int i;
+    for (i=0;i<(int)(sizeof(valores)/sizeof(valores[0]));i++) {
+        firma=menu_draw_ext_desktop_firma_int(firma,valores[i]);
+    }
+
+    firma=menu_draw_ext_desktop_firma_texto(firma,zxdesktop_draw_scrfile_name,PATH_MAX);
+
+    //Botones definidos por el usuario
+    for (i=0;i<MAX_USERDEF_BUTTONS;i++) {
+        firma=menu_draw_ext_desktop_firma_int(firma,defined_buttons_functions_array[i]);
+        firma=menu_draw_ext_desktop_firma_texto(firma,defined_buttons_functions_array_parameters[i],PATH_MAX);
+    }
+
+    //Iconos del ZX Desktop
+    for (i=0;i<MAX_ZXDESKTOP_CONFIGURABLE_ICONS;i++) {
+        zxdesktop_configurable_icon *icono=&zxdesktop_configurable_icons_list[i];
+        if (icono->status==ZXDESKTOP_CUSTOM_ICON_NOT_EXISTS) continue;
+        firma=menu_draw_ext_desktop_firma_int(firma,i);
+        firma=menu_draw_ext_desktop_firma_int(firma,icono->status);
+        firma=menu_draw_ext_desktop_firma_int(firma,icono->pos_x);
+        firma=menu_draw_ext_desktop_firma_int(firma,icono->pos_y);
+        firma=menu_draw_ext_desktop_firma_int(firma,icono->indice_funcion);
+        firma=menu_draw_ext_desktop_firma_texto(firma,icono->text_icon,MAX_LENGTH_TEXT_ICON);
+        firma=menu_draw_ext_desktop_firma_texto(firma,icono->extra_info,PATH_MAX);
+        firma=menu_draw_ext_desktop_firma_texto(firma,icono->alternate_bitmap,ALTERNATE_BITMAP_NAME_LENGTH);
+    }
+
+    return firma;
+}
+
+/* Fork: el boton de cerrar todos los menus solo se ve con el menu abierto. Antes, al abrir y al cerrar el menu se
+   redibujaba el ZX Desktop entero para ponerlo o quitarlo. Ahora, antes de dibujarlo se guarda lo que hay debajo en
+   la capa de la maquina, y para quitarlo se vuelve a poner (si el ZX Desktop no ha cambiado entretanto) */
+int menu_boton_cerrar_en_capa=0;
+static z80_int *menu_boton_cerrar_fondo=NULL;
+static int menu_boton_cerrar_fondo_tamanyo=0;
+static int menu_boton_cerrar_fondo_valido=0;
+static int menu_boton_cerrar_x0,menu_boton_cerrar_y0,menu_boton_cerrar_ancho,menu_boton_cerrar_alto;
+static int menu_boton_cerrar_fondo_generacion;
+static unsigned int menu_boton_cerrar_fondo_firma;
+
+void menu_ext_desktop_upper_button_origin(int n,int *px,int *py);
+void menu_draw_ext_desktop_one_button_background(int contador_boton,int pulsado);
+void menu_draw_ext_desktop_one_button_bitmap(int numero_boton,int pulsado,int yinicio);
+
+//Guardar lo que hay en la capa de la maquina donde va el boton (sin el boton)
+static void menu_boton_cerrar_guarda_fondo(void)
+{
+    menu_boton_cerrar_fondo_valido=0;
+
+    if (!scr_capa_maquina_siempre_al_dia || buffer_layer_machine==NULL) return;
+
+    int x0,y0,ancho,alto;
+    menu_ext_desktop_upper_button_origin(EXT_DESKTOP_BUTTON_CLOSE_ALL_ID,&x0,&y0);
+    menu_ext_desktop_buttons_get_geometry(&ancho,&alto,NULL,NULL,NULL);
+
+    if (x0<0 || y0<0) return;
+    if (x0+ancho>ancho_layer_menu_machine) ancho=ancho_layer_menu_machine-x0;
+    if (y0+alto>alto_layer_menu_machine) alto=alto_layer_menu_machine-y0;
+    if (ancho<=0 || alto<=0) return;
+
+    if (ancho*alto>menu_boton_cerrar_fondo_tamanyo) {
+        free(menu_boton_cerrar_fondo);
+        menu_boton_cerrar_fondo=malloc(ancho*alto*sizeof(z80_int));
+        menu_boton_cerrar_fondo_tamanyo=(menu_boton_cerrar_fondo!=NULL ? ancho*alto : 0);
+        if (menu_boton_cerrar_fondo==NULL) return;
+    }
+
+    int y;
+    for (y=0;y<alto;y++) {
+        memcpy(&menu_boton_cerrar_fondo[y*ancho],&buffer_layer_machine[(y0+y)*ancho_layer_menu_machine+x0],ancho*sizeof(z80_int));
+    }
+
+    menu_boton_cerrar_x0=x0;
+    menu_boton_cerrar_y0=y0;
+    menu_boton_cerrar_ancho=ancho;
+    menu_boton_cerrar_alto=alto;
+    menu_boton_cerrar_fondo_generacion=screen_layers_generation;
+    menu_boton_cerrar_fondo_firma=menu_draw_ext_desktop_firma();
+    menu_boton_cerrar_fondo_valido=1;
+}
+
+//Volver a poner lo que habia debajo del boton. Retorna 0 si no se puede (hay que redibujar el ZX Desktop entero)
+static int menu_boton_cerrar_restaura_fondo(void)
+{
+    if (!menu_boton_cerrar_fondo_valido || !scr_capa_maquina_siempre_al_dia || buffer_layer_machine==NULL) return 0;
+    if (menu_boton_cerrar_fondo_generacion!=screen_layers_generation) return 0;
+    if (menu_boton_cerrar_fondo_firma!=menu_draw_ext_desktop_firma()) return 0;
+
+    int x,y;
+    for (y=0;y<menu_boton_cerrar_alto;y++) {
+        int yy=menu_boton_cerrar_y0+y;
+        for (x=0;x<menu_boton_cerrar_ancho;x++) {
+            int xx=menu_boton_cerrar_x0+x;
+            int pos=yy*ancho_layer_menu_machine+xx;
+            z80_int color=menu_boton_cerrar_fondo[y*menu_boton_cerrar_ancho+x];
+            if (buffer_layer_machine[pos]!=color) {
+                buffer_layer_machine[pos]=color;
+                screen_putpixel_mix_layers(xx,yy);
+            }
+        }
+    }
+
+    menu_boton_cerrar_fondo_valido=0;
+    return 1;
+}
+
+//Poner o quitar el boton de cerrar todos los menus segun se tenga que ver o no.
+//Retorna 0 si no se ha podido quitar y hay que redibujar el ZX Desktop entero
+int menu_boton_cerrar_al_dia(void)
+{
+    //Sin ZX Desktop no hay boton
+    if (!screen_ext_desktop_enabled || !scr_driver_can_ext_desktop()) {
+        menu_boton_cerrar_en_capa=0;
+        return 1;
+    }
+
+    int mostrar=menu_mostrar_boton_close_all_menus.v;
+
+    if (mostrar==menu_boton_cerrar_en_capa) return 1;
+
+    if (mostrar) {
+        menu_boton_cerrar_guarda_fondo();
+        if (menu_zxdesktop_upper_buttons_enabled.v && zxvision_topbar_menu_enabled.v==0) {
+            menu_draw_ext_desktop_one_button_background(EXT_DESKTOP_BUTTON_CLOSE_ALL_ID,0);
+            menu_draw_ext_desktop_one_button_bitmap(EXT_DESKTOP_BUTTON_CLOSE_ALL_ID,0,0);
+        }
+        menu_boton_cerrar_en_capa=1;
+        return 1;
+    }
+
+    if (menu_boton_cerrar_restaura_fondo()) {
+        menu_boton_cerrar_en_capa=0;
+        return 1;
+    }
+
+    return 0;
+}
+
 void cls_menu_overlay(void)
 {
     int i;
 
     //Borrar solo el tamanyo de menu activo
-    for (i=0;i<scr_get_menu_width()*scr_get_menu_height();i++) {
+    //Fork: el tamano se calcula una vez, no en cada vuelta (es una cadena larga de funciones)
+    int total_caracteres=scr_get_menu_width()*scr_get_menu_height();
+    for (i=0;i<total_caracteres;i++) {
         overlay_screen_array[i].caracter=0;
         //overlay_usado_screen_array[i]=0;
 //#ifdef ZXVISION_USE_CACHE_OVERLAY_TEXT
@@ -5104,6 +5319,27 @@ void cls_menu_overlay(void)
 
     //Si es CPC, entonces aqui el border es variable y por tanto tenemos que redibujarlo, pues quiza el menu esta dentro de zona de border
     modificado_border.v=1;
+
+    /* Fork: si la capa de la maquina esta al dia (driver SDL2) y el ZX Desktop ya esta dibujado en ella (las capas son
+       las mismas y nada de lo que cambia su dibujo ha cambiado), o no hay ZX Desktop, basta con volver a mezclar los
+       pixeles donde habia menu: no hace falta redibujarlo entero ni repintar la maquina, que con cada operacion de
+       ventanas o al abrir y cerrar el menu daba un tiron a la emulacion */
+    int hay_zxdesktop=(screen_ext_desktop_enabled && scr_driver_can_ext_desktop());
+    int solo_remezclar=(!MACHINE_IS_Z88 && scr_capa_maquina_siempre_al_dia &&
+        (!hay_zxdesktop || (menu_draw_ext_desktop_dibujado_generacion==screen_layers_generation &&
+        menu_draw_ext_desktop_dibujado_firma==menu_draw_ext_desktop_firma())));
+
+    if (solo_remezclar) {
+        scr_clear_layer_menu_remix();
+
+        //Poner o quitar el boton de cerrar todos los menus. Si no se puede quitar, redibujar todo como antes
+        if (menu_boton_cerrar_al_dia()) {
+            //El recuadro de la maquina cambia de color segun la ventana que recibe las teclas: siempre (es poca cosa)
+            menu_draw_ext_desktop_recuadro_maquina();
+            zxvision_set_all_flag_dirty_must_draw_contents();
+            return;
+        }
+    }
 
     scr_clear_layer_menu();
 
@@ -7262,6 +7498,17 @@ void menu_draw_ext_desktop_border_emulated_machine(int ancho_no_zxdesktop,int al
     }
 }
 
+//Fork: redibujar solo el recuadro alrededor de la maquina emulada (cambia de color si la ventana activa recibe
+//las teclas o no)
+void menu_draw_ext_desktop_recuadro_maquina(void)
+{
+    if (!screen_ext_desktop_enabled || !scr_driver_can_ext_desktop() ) return;
+    if (ventana_video_output_esta_abierta()) return;
+
+    menu_draw_ext_desktop_border_emulated_machine(screen_get_machine_area_width(),screen_get_ext_desktop_height_zoom(),
+        screen_get_machine_area_height());
+}
+
 void menu_draw_ext_desktop_background(int xstart_zxdesktop)
 {
 
@@ -7603,7 +7850,17 @@ void menu_draw_ext_desktop(void)
     //no hay "nadie" ejecutando el core de cpu que diga que hay que descartar frames o no
     if (!menu_multitarea || menu_emulation_paused_on_menu) dibujar_zxdesktop_background=1;
 
-    if (dibujar_zxdesktop_background) menu_draw_ext_desktop_background(xstart_zxdesktop);
+    if (dibujar_zxdesktop_background) {
+        menu_draw_ext_desktop_background(xstart_zxdesktop);
+
+        //Fork: ya esta dibujado entero en estas capas (ver cls_menu_overlay)
+        menu_draw_ext_desktop_dibujado_generacion=screen_layers_generation;
+        menu_draw_ext_desktop_dibujado_firma=menu_draw_ext_desktop_firma();
+    }
+
+    //Fork: el boton de cerrar todos los menus se dibuja al final, guardando antes lo que hay debajo (ver menu_boton_cerrar_al_dia)
+    int mostrar_boton_cerrar=menu_mostrar_boton_close_all_menus.v;
+    menu_mostrar_boton_close_all_menus.v=0;
 
 
     //Dibujar botones
@@ -7617,6 +7874,38 @@ void menu_draw_ext_desktop(void)
     //Dibujar footer del zxdesktop
     menu_draw_ext_desktop_footer();
 
+    menu_mostrar_boton_close_all_menus.v=mostrar_boton_cerrar;
+    if (dibujar_zxdesktop_background) {
+        //Sin el boton de cerrar: ahora se pone si conviene
+        menu_boton_cerrar_en_capa=0;
+        menu_boton_cerrar_al_dia();
+    }
+    else if (mostrar_boton_cerrar) {
+        //Fondo sin redibujar: el boton tal cual, como antes
+        menu_boton_cerrar_en_capa=1;
+        if (menu_zxdesktop_upper_buttons_enabled.v && zxvision_topbar_menu_enabled.v==0) {
+            menu_draw_ext_desktop_one_button_background(EXT_DESKTOP_BUTTON_CLOSE_ALL_ID,0);
+            menu_draw_ext_desktop_one_button_bitmap(EXT_DESKTOP_BUTTON_CLOSE_ALL_ID,0,0);
+        }
+    }
+
+}
+
+/* Fork: como menu_draw_ext_desktop, pero si el fondo ya esta dibujado en estas capas con el mismo tamano y sitio,
+   solo se dibujan los botones, los iconos y el pie del ZX Desktop (pintar el fondo entero daba un tiron) */
+void menu_draw_ext_desktop_sin_fondo_si_dibujado(void)
+{
+    if (!screen_ext_desktop_enabled || !scr_driver_can_ext_desktop() ) return;
+
+    if (!scr_capa_maquina_siempre_al_dia || menu_draw_ext_desktop_dibujado_generacion!=screen_layers_generation ||
+        menu_draw_ext_desktop_dibujado_firma!=menu_draw_ext_desktop_firma() || !menu_boton_cerrar_al_dia()) {
+        menu_draw_ext_desktop();
+        return;
+    }
+
+    menu_draw_ext_desktop_buttons();
+    menu_draw_ext_desktop_configurable_icons();
+    menu_draw_ext_desktop_footer();
 }
 
 void zxvision_zxdesktop_set_no_frameskip_next(void)
@@ -8927,8 +9216,11 @@ void normal_overlay_texto_menu(void)
 
 
     //printf ("normal_overlay_texto_menu\n");
-    for (y=0;y<scr_get_menu_height();y++) {
-        for (x=0;x<scr_get_menu_width();x++,pos_array++) {
+    //Fork: el tamano se calcula una vez y no en cada caracter (esto se hace en cada frame)
+    int alto_menu=scr_get_menu_height();
+    int ancho_menu=scr_get_menu_width();
+    for (y=0;y<alto_menu;y++) {
+        for (x=0;x<ancho_menu;x++,pos_array++) {
             caracter=overlay_screen_array[pos_array].caracter;
 
             //sacamos el papel antes para poder alterarlo cuando se habilita DEBUG_ZXVISION_USE_CACHE_OVERLAY_TEXT
@@ -19101,7 +19393,10 @@ void zxvision_handle_mouse_events(zxvision_window *w)
             zxvision_set_ventana_tipo_activa();
 
             //Reflejar cambio de color en recuadro alrededor de maquina emulada
-            menu_refresca_pantalla();
+            //Fork: con multitarea, solo ese recuadro (antes se redibujaba la pantalla entera y todo el ZX Desktop
+            //con cada clic dentro o fuera de una ventana, y la emulacion daba un tiron)
+            if (menu_multitarea) menu_draw_ext_desktop_recuadro_maquina();
+            else menu_refresca_pantalla();
 
             zxvision_draw_window(w);
             zxvision_draw_window_contents(w);
@@ -19117,7 +19412,10 @@ void zxvision_handle_mouse_events(zxvision_window *w)
             zxvision_reset_ventana_tipo_activa();
 
             //Reflejar cambio de color en recuadro alrededor de maquina emulada
-            menu_refresca_pantalla();
+            //Fork: con multitarea, solo ese recuadro (antes se redibujaba la pantalla entera y todo el ZX Desktop
+            //con cada clic dentro o fuera de una ventana, y la emulacion daba un tiron)
+            if (menu_multitarea) menu_draw_ext_desktop_recuadro_maquina();
+            else menu_refresca_pantalla();
 
             zxvision_draw_window(w);
             zxvision_draw_window_contents(w);
@@ -29748,7 +30046,8 @@ menu_init_footer hace falta pues el layer de menu se borra y se queda negro en l
 
 
     //Redibujar ext desktop, para que no se vea el logo (logo solo aparece si menu abierto)
-    menu_draw_ext_desktop();
+    //Fork: sin volver a pintar el fondo si ya esta dibujado (botones, iconos y pie si)
+    menu_draw_ext_desktop_sin_fondo_si_dibujado();
 
     //Si salimos de menu y se ha pulsado dicha tecla F para activar la función, volver con menu overlay activo
 

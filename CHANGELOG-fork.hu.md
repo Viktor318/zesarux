@@ -85,6 +85,16 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
   képernyőt és az egész ZX Desktopot, amitől a gép a valós sebesség alá
   esett, és a hang akadozott. Többfeladatos módban a képernyő úgyis
   frissül minden képkockában, így ez most elmarad.
+- A menü megnyitása és bezárása, egy ablak aktiválása (kattintás a
+  fejlécére vagy a gépre) és egy ablak bezárása nem akasztja meg a gépet:
+  ezek mind újrarajzolták az egész ZX Desktopot, és többnyire a teljes
+  gépképet is. Most (SDL2 kijelzőn) a gép rétege mindig naprakész, így
+  elég a menük helyén újra összekeverni a két réteget. A ZX Desktop csak
+  akkor rajzolódik újra, ha a kinézetét befolyásoló dolog változott
+  (beállítás, ikon, gomb). A menük bezárás-gombja a felső sorban mentett
+  háttér visszarakásával tűnik el. Kattintáskor csak a gép körüli keret
+  rajzolódik újra. A menük és ablakok rajzolása is gyorsabb lett, mert a
+  méretüket nem számolja újra minden pixelnél.
 
 ## v13.1-SN-hu.1 – 2026-11-06
 

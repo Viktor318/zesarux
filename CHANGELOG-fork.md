@@ -86,6 +86,17 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
   whole screen and the whole ZX Desktop again, which brought the machine
   below real speed and made the sound stutter. In multitask mode the screen
   is refreshed on every frame anyway, so this is skipped now.
+- Opening and closing the menu, activating a window (clicking its title or
+  the machine) and closing a window no longer stall the machine. Each of
+  these drew the whole ZX Desktop again, and usually the whole machine
+  picture too. Now, on the SDL2 display, the machine layer is always up to
+  date, so it is enough to mix the two layers again where the menus were.
+  The ZX Desktop is only drawn again when something that changes its look
+  has changed (a setting, an icon, a button). The close-all-menus button
+  in the top row disappears by putting back the background saved under
+  it. A click only draws the frame around the machine again. Drawing menus
+  and windows is also faster, as their size is no longer worked out again
+  for every pixel.
 
 ## v13.1-SN-hu.1 – 2026-11-06
 

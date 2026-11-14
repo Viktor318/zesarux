@@ -1138,6 +1138,11 @@ extern z80_bit screen_machine_bw_no_multitask;
 
 extern z80_int *buffer_layer_machine;
 extern z80_int *buffer_layer_menu;
+extern int screen_layers_generation;
+extern int scr_capa_maquina_siempre_al_dia;
+extern void screen_menu_limites_invalidar(void);
+extern int screen_capa_maquina_sin_cambio_al_cambiar_overlay(void);
+extern void scr_clear_layer_menu_remix(void);
 
 extern int ancho_layer_menu_machine;
 extern int alto_layer_menu_machine;

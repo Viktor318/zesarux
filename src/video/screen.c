@@ -2711,6 +2711,38 @@ int alto_layer_menu_machine=0;
 
 
 z80_int *buffer_layer_machine=NULL;
+
+//Fork: se incrementa cada vez que se asignan de nuevo las capas (ver cls_menu_overlay)
+int screen_layers_generation=0;
+
+//Fork: si el driver de video guarda siempre los pixeles de la maquina y del ZX Desktop en la capa de la maquina,
+//tambien con el menu cerrado (driver SDL2). Entonces esa capa siempre esta al dia y se puede volver a mezclar
+int scr_capa_maquina_siempre_al_dia=0;
+
+//Fork: rectangulo de la capa de menu en el que se ha escrito desde que se borro, para no recorrerla entera al borrarla
+//(x1<x0: no se ha escrito nada)
+int screen_layer_menu_usado_x0=0;
+int screen_layer_menu_usado_y0=0;
+int screen_layer_menu_usado_x1=-1;
+int screen_layer_menu_usado_y1=-1;
+
+#define SCREEN_LAYER_MENU_MARCA_USADO(x,y) { \
+    if (screen_layer_menu_usado_x1<screen_layer_menu_usado_x0) { \
+        screen_layer_menu_usado_x0=screen_layer_menu_usado_x1=(x); screen_layer_menu_usado_y0=screen_layer_menu_usado_y1=(y); \
+    } \
+    else { \
+        if ((x)<screen_layer_menu_usado_x0) screen_layer_menu_usado_x0=(x); \
+        if ((x)>screen_layer_menu_usado_x1) screen_layer_menu_usado_x1=(x); \
+        if ((y)<screen_layer_menu_usado_y0) screen_layer_menu_usado_y0=(y); \
+        if ((y)>screen_layer_menu_usado_y1) screen_layer_menu_usado_y1=(y); \
+    } \
+}
+
+static void screen_layer_menu_usado_vacio(void)
+{
+    screen_layer_menu_usado_x0=screen_layer_menu_usado_y0=0;
+    screen_layer_menu_usado_x1=screen_layer_menu_usado_y1=-1;
+}
 z80_int *buffer_layer_menu=NULL;
 int tamanyo_memoria_buffer_layer_menu=0;
 
@@ -2805,6 +2837,13 @@ void scr_reallocate_layers_menu(int ancho,int alto)
     buffer_layer_menu=malloc(size_layers);
     tamanyo_memoria_buffer_layer_menu=numero_elementos;
 
+    //Fork: las capas son nuevas (su contenido se ha perdido): el ZX Desktop se tiene que dibujar entero
+    screen_layers_generation++;
+    //Y no se sabe que hay en la capa de menu: recorrerla entera al borrarla
+    screen_layer_menu_usado_x0=screen_layer_menu_usado_y0=0;
+    screen_layer_menu_usado_x1=ancho-1;
+    screen_layer_menu_usado_y1=alto-1;
+
 
     //printf ("despues buffer_layer_machine %p buffer_layer_menu %p\n",buffer_layer_machine,buffer_layer_menu);
 
@@ -2846,6 +2885,43 @@ void scr_init_layers_menu(void)
 
 }
 
+/* Fork: limites en pixeles de la capa de menu (ancho y alto de menu en caracteres por su tamano). Antes se calculaban
+   en cada pixel de cada menu y ventana, con una cadena larga de funciones (tamano de la maquina, del ZX Desktop...),
+   que era buena parte del tiempo de dibujarlos. Se guardan, y se vuelven a calcular si cambia algo de lo que dependen,
+   y por si acaso en cada frame (screen_menu_limites_invalidar) */
+static int screen_menu_limites_validos=0;
+static int screen_menu_limites_clave[18];
+static int screen_menu_limites_ancho_pixeles;
+static int screen_menu_limites_alto_pixeles;
+
+void screen_menu_limites_invalidar(void)
+{
+    screen_menu_limites_validos=0;
+}
+
+static void screen_menu_limites(int *ancho_maximo,int *alto_maximo,int con_zoom)
+{
+    int clave[18]={screen_layers_generation,ancho_layer_menu_machine,alto_layer_menu_machine,zoom_x,zoom_y,menu_gui_zoom,
+        menu_char_width,menu_char_height,screen_reduce_menu_ancho,screen_reduce_menu_alto,current_machine_type,
+        border_enabled.v,screen_machine_scale,screen_ext_desktop_enabled,zxdesktop_width,zxdesktop_height,
+        (int)(((unsigned long)scr_get_menu_width)&0x7FFFFFFF),(int)(((unsigned long)scr_get_menu_height)&0x7FFFFFFF)};
+
+    if (!screen_menu_limites_validos || memcmp(clave,screen_menu_limites_clave,sizeof(clave))) {
+        memcpy(screen_menu_limites_clave,clave,sizeof(clave));
+        screen_menu_limites_ancho_pixeles=scr_get_menu_width()*menu_char_width*menu_gui_zoom;
+        screen_menu_limites_alto_pixeles=scr_get_menu_height()*menu_char_height*menu_gui_zoom;
+        screen_menu_limites_validos=1;
+    }
+
+    *ancho_maximo=screen_menu_limites_ancho_pixeles;
+    *alto_maximo=screen_menu_limites_alto_pixeles;
+
+    if (con_zoom) {
+        *ancho_maximo *=zoom_x;
+        *alto_maximo *=zoom_y;
+    }
+}
+
 void scr_putpixel_layer_menu_no_zoom(int x,int y,int color)
 {
     int xzoom=x;
@@ -2855,8 +2931,8 @@ void scr_putpixel_layer_menu_no_zoom(int x,int y,int color)
     int xdestino=xzoom;
     int ydestino=yzoom;
 
-    int ancho_maximo_por_menu=scr_get_menu_width()*menu_char_width*menu_gui_zoom*zoom_x;
-    int alto_maximo_por_menu=scr_get_menu_height()*menu_char_height*menu_gui_zoom*zoom_y;
+    int ancho_maximo_por_menu,alto_maximo_por_menu;
+    screen_menu_limites(&ancho_maximo_por_menu,&alto_maximo_por_menu,1);
 
     //Proteger que no se salga de rango
     if (
@@ -2877,6 +2953,7 @@ void scr_putpixel_layer_menu_no_zoom(int x,int y,int color)
             int offset=ydestino*ancho_layer_menu_machine+xdestino;
 
             buffer_layer_menu[offset]=color;
+            SCREEN_LAYER_MENU_MARCA_USADO(xdestino,ydestino);
 
             //Y hacer mix
             screen_putpixel_mix_layers(xdestino,ydestino);
@@ -2896,8 +2973,8 @@ void scr_putpixel_layer_menu(int x,int y,int color)
     int zx,zy;
 
 
-    int ancho_maximo_por_menu=scr_get_menu_width()*menu_char_width*menu_gui_zoom*zoom_x;
-    int alto_maximo_por_menu=scr_get_menu_height()*menu_char_height*menu_gui_zoom*zoom_y;
+    int ancho_maximo_por_menu,alto_maximo_por_menu;
+    screen_menu_limites(&ancho_maximo_por_menu,&alto_maximo_por_menu,1);
 
 
     //Escalado a zoom indicado
@@ -2924,6 +3001,7 @@ void scr_putpixel_layer_menu(int x,int y,int color)
                     int offset=ydestino*ancho_layer_menu_machine+xdestino;
 
                     buffer_layer_menu[offset]=color;
+                    SCREEN_LAYER_MENU_MARCA_USADO(xdestino,ydestino);
 
                     //Y hacer mix
                     screen_putpixel_mix_layers(xdestino,ydestino);
@@ -3174,6 +3252,50 @@ void screen_putpixel_mix_layers(int x,int y)
 
 
 
+/* Fork: como scr_clear_layer_menu, pero ademas vuelve a mezclar las capas en los pixeles que tenian menu, con lo
+   que alli se vuelve a ver lo que hay en la capa de la maquina (la maquina o el ZX Desktop). Asi no hace falta
+   redibujar el ZX Desktop entero al borrar los menus (cerrar, mover o activar una ventana, abrir o cerrar el menu):
+   eso pintaba de nuevo cada pixel del ZX Desktop y la emulacion daba un tiron */
+void scr_clear_layer_menu_remix(void)
+{
+    if (buffer_layer_menu==NULL) return;
+    if (!si_complete_video_driver() ) return;
+
+    //Solo el rectangulo donde se ha escrito
+    int x0=screen_layer_menu_usado_x0;
+    int y0=screen_layer_menu_usado_y0;
+    int x1=screen_layer_menu_usado_x1;
+    int y1=screen_layer_menu_usado_y1;
+    if (x0<0) x0=0;
+    if (y0<0) y0=0;
+    if (x1>=ancho_layer_menu_machine) x1=ancho_layer_menu_machine-1;
+    if (y1>=alto_layer_menu_machine) y1=alto_layer_menu_machine-1;
+
+    int x,y;
+    for (y=y0;y<=y1;y++) {
+        z80_int *fila=&buffer_layer_menu[y*ancho_layer_menu_machine];
+        for (x=x0;x<=x1;x++) {
+            if (fila[x]!=SCREEN_LAYER_TRANSPARENT_MENU) {
+                fila[x]=SCREEN_LAYER_TRANSPARENT_MENU;
+                screen_putpixel_mix_layers(x,y);
+            }
+        }
+    }
+
+    screen_layer_menu_usado_vacio();
+
+    //La capa de la maquina esta al dia, y la mezcla ya ha puesto sus pixeles: no hace falta redibujar la maquina.
+    //Sin multitarea si, pues al abrir o cerrar el menu puede cambiar el color de la maquina (blanco y negro)
+    if (!menu_multitarea) clear_putpixel_cache();
+}
+
+/* Fork: si al activar o desactivar la capa de menu la maquina se sigue viendo igual y su capa esta al dia: entonces
+   no hace falta repintarla entera. Con la maquina oscurecida bajo los menus, o en blanco y negro sin multitarea, si */
+int screen_capa_maquina_sin_cambio_al_cambiar_overlay(void)
+{
+    return (scr_capa_maquina_siempre_al_dia && menu_multitarea && !screen_menu_reduce_bright_machine.v);
+}
+
 void scr_clear_layer_menu(void)
 {
         if (buffer_layer_menu==NULL) return;
@@ -3202,6 +3324,8 @@ void scr_clear_layer_menu(void)
             //}
             buffer_layer_menu[i]=SCREEN_LAYER_TRANSPARENT_MENU; //color transparente
         }
+
+        screen_layer_menu_usado_vacio();
 
         //printf ("After Clearing layer size %d. buffer_layer_menu %p\n",size,buffer_layer_menu);
 
@@ -10567,6 +10691,9 @@ void screen_after_menu_overlay_timer(void)
 
 void screen_render_menu_overlay_if_active(void)
 {
+    //Fork: por si ha cambiado algo de lo que dependen los limites de los menus que no se tiene en cuenta
+    screen_menu_limites_invalidar();
+
     if (menu_overlay_activo) {
 
         //struct timeval zxvision_time_total_antes,zxvision_time_total_despues;
