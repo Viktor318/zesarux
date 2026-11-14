@@ -80,6 +80,11 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
 - A gépkép simítása (nem egész pixeleket adó méreteknél, például 125%)
   kevesebb processzoridőt visz: csak a gépkép területét dolgozza fel, nem
   másolja minden képkockában a teljes ablak képét.
+- Nyitott menünél az egér mozgatása nem lassítja le a gépet: a menü minden
+  egérmozdulatnál (a kijelölt sor minden változásánál) újrarajzolta a teljes
+  képernyőt és az egész ZX Desktopot, amitől a gép a valós sebesség alá
+  esett, és a hang akadozott. Többfeladatos módban a képernyő úgyis
+  frissül minden képkockában, így ez most elmarad.
 
 ## v13.1-SN-hu.1 – 2026-11-06
 

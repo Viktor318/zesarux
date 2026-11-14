@@ -23386,7 +23386,13 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
             //printf ("despues de zxvision_draw_window_contents_no_speech\n");
 
 
-            menu_refresca_pantalla();
+            //Fork: con multitarea la pantalla ya se refresca en cada frame. Esto se ejecuta cada vez que cambia
+            //la opcion seleccionada, tambien con cada movimiento del raton sobre el menu, y redibujaba la pantalla
+            //entera y todo el ZX Desktop (fondo e iconos) cada vez: moviendo el raton la emulacion caia muy por
+            //debajo de la velocidad real (en Windows hasta 15-20 FPS) y el sonido se cortaba
+            if (!menu_multitarea) {
+                menu_refresca_pantalla();
+            }
 
             if (menu_dibuja_menu_recorrer_menus) {
                 //printf("Entering menu [%s]\n",titulo);

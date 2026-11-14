@@ -81,6 +81,11 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
 - Smoothing the machine picture (for sizes that do not give whole pixels,
   like 125%) uses less CPU time: only the machine picture area is
   processed, without copying the whole window picture on every frame.
+- Moving the mouse over an open menu no longer slows the machine down: on
+  every mouse movement (every change of the selected line) the menu drew the
+  whole screen and the whole ZX Desktop again, which brought the machine
+  below real speed and made the sound stutter. In multitask mode the screen
+  is refreshed on every frame anyway, so this is skipped now.
 
 ## v13.1-SN-hu.1 – 2026-11-06
 
