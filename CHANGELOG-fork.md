@@ -78,6 +78,9 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
   zoom buttons) turned the windows above the emulated display, like the
   splash message showing the screen mode, into empty blue boxes; now every
   window is drawn again after the resize.
+- Smoothing the machine picture (for sizes that do not give whole pixels,
+  like 125%) uses less CPU time: only the machine picture area is
+  processed, without copying the whole window picture on every frame.
 
 ## v13.1-SN-hu.1 – 2026-11-06
 

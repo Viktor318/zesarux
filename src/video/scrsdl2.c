@@ -614,6 +614,8 @@ void scrsdl_refresca_border(void)
    enviar la imagen; los menus y ventanas que haya encima de la maquina no se tocan */
 
 static Uint32 *scrsdl_pixeles_suave=NULL;
+//Tamano de la zona suavizada (la de la maquina, arriba a la izquierda)
+static int scrsdl_suave_zona_ancho=0,scrsdl_suave_zona_alto=0;
 static int scrsdl_pixeles_suave_tamanyo=0;
 
 //Para cada pixel de la zona de la maquina: los dos pixeles de origen (en coordenadas de la ventana) y el peso (0-256) del segundo
@@ -658,10 +660,12 @@ static Uint32 *scrsdl_aplica_suavizado(int ancho,int alto)
     if (zona_ancho>ancho) zona_ancho=ancho;
     if (zona_alto>alto) zona_alto=alto;
 
-    if (scrsdl_pixeles_suave_tamanyo!=ancho*alto) {
+    //Solo la zona de la maquina: se sube a la textura encima de la imagen normal (antes se copiaba la imagen
+    //entera de la ventana en cada frame, y eso con el suavizado del resto se comia mucha cpu)
+    if (scrsdl_pixeles_suave_tamanyo!=zona_ancho*zona_alto) {
         free(scrsdl_pixeles_suave);
-        scrsdl_pixeles_suave=malloc(ancho*alto*4);
-        scrsdl_pixeles_suave_tamanyo=(scrsdl_pixeles_suave!=NULL ? ancho*alto : 0);
+        scrsdl_pixeles_suave=malloc(zona_ancho*zona_alto*4);
+        scrsdl_pixeles_suave_tamanyo=(scrsdl_pixeles_suave!=NULL ? zona_ancho*zona_alto : 0);
         if (scrsdl_pixeles_suave==NULL) return NULL;
     }
 
@@ -679,9 +683,6 @@ static Uint32 *scrsdl_aplica_suavizado(int ancho,int alto)
     }
 
     Uint32 *origen=(Uint32 *)scrsdl_pixeles;
-    Uint32 *destino=scrsdl_pixeles_suave;
-
-    memcpy(destino,origen,ancho*alto*4);
 
     int hay_menu=(menu_overlay_activo && buffer_layer_menu!=NULL && ancho_layer_menu_machine==ancho);
 
@@ -690,11 +691,15 @@ static Uint32 *scrsdl_aplica_suavizado(int ancho,int alto)
         int wy=scrsdl_suave_wy[y];
         Uint32 *fila0=origen+scrsdl_suave_y0[y]*ancho;
         Uint32 *fila1=origen+scrsdl_suave_y1[y]*ancho;
+        Uint32 *destino=scrsdl_pixeles_suave+y*zona_ancho;
         for (x=0;x<zona_ancho;x++) {
             int pos=y*ancho+x;
 
             //Menus y ventanas encima de la maquina: tal cual
-            if (hay_menu && buffer_layer_menu[pos]!=SCREEN_LAYER_TRANSPARENT_MENU) continue;
+            if (hay_menu && buffer_layer_menu[pos]!=SCREEN_LAYER_TRANSPARENT_MENU) {
+                destino[x]=origen[pos];
+                continue;
+            }
 
             int wx=scrsdl_suave_wx[x];
             Uint32 a=fila0[scrsdl_suave_x0[x]];
@@ -703,7 +708,7 @@ static Uint32 *scrsdl_aplica_suavizado(int ancho,int alto)
             Uint32 d=fila1[scrsdl_suave_x1[x]];
 
             if (a==b && a==c && a==d) {
-                destino[pos]=a;
+                destino[x]=a;
                 continue;
             }
 
@@ -716,11 +721,14 @@ static Uint32 *scrsdl_aplica_suavizado(int ancho,int alto)
                 int valor=(arriba*(256-wy)+abajo*wy)>>16;
                 resultado |=((Uint32)valor)<<desplazamiento;
             }
-            destino[pos]=resultado;
+            destino[x]=resultado;
         }
     }
 
-    return destino;
+    scrsdl_suave_zona_ancho=zona_ancho;
+    scrsdl_suave_zona_alto=zona_alto;
+
+    return scrsdl_pixeles_suave;
 }
 
 void scrsdl_refresca_pantalla_solo_driver(void)
@@ -740,7 +748,12 @@ void scrsdl_refresca_pantalla_solo_driver(void)
     else {
         Uint32 *suave=NULL;
         if (!scr_sdl_force_size.v && ancho==scrsdl_imagen_ancho) suave=scrsdl_aplica_suavizado(scrsdl_imagen_ancho,scrsdl_imagen_alto);
-        SDL_UpdateTexture(scrsdl_texture, NULL, (suave!=NULL ? (void *)suave : (void *)scrsdl_pixeles), ancho * 4);
+        SDL_UpdateTexture(scrsdl_texture, NULL, scrsdl_pixeles, ancho * 4);
+        //La zona de la maquina suavizada, encima
+        if (suave!=NULL) {
+            SDL_Rect zona={0,0,scrsdl_suave_zona_ancho,scrsdl_suave_zona_alto};
+            SDL_UpdateTexture(scrsdl_texture, &zona, suave, scrsdl_suave_zona_ancho * 4);
+        }
     }
     SDL_RenderClear(renderer);
     //La imagen a tamano real arriba a la izquierda (sin estirarla): lo que sobra de la ventana queda negro

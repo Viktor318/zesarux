@@ -77,6 +77,9 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
   nagyítógombokkal) az emulált kijelző fölötti ablakok, például a
   képernyőmódot kiíró nyitóüzenet, üres kék téglalappá váltak; most az
   átméretezés után minden ablak újrarajzolódik.
+- A gépkép simítása (nem egész pixeleket adó méreteknél, például 125%)
+  kevesebb processzoridőt visz: csak a gépkép területét dolgozza fel, nem
+  másolja minden képkockában a teljes ablak képét.
 
 ## v13.1-SN-hu.1 – 2026-11-06
 
