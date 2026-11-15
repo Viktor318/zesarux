@@ -105,6 +105,19 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
   háttér visszarakásával tűnik el. Kattintáskor csak a gép körüli keret
   rajzolódik újra. A menük és ablakok rajzolása is gyorsabb lett, mert a
   méretüket nem számolja újra minden pixelnél.
+- További akadások megszűntek multitask mellett:
+  - A menü **tooltipjének** bezárásakor eddig minden ablak kétszer
+    rajzolódott újra, és még a teljes képernyő és az egész ZX Desktop is.
+    Most csak az ablakok rajzolódnak újra, egyszer.
+  - A menü **gyorsbillentyűinél** és a **fájlválasztó** megnyitásakor sem
+    rajzolódik újra a teljes képernyő és a ZX Desktop.
+  - Egy **ikon húzásakor** a ZX Desktop egérmozdulatonként csak ott
+    rajzolódik újra, ahol az ikon volt és ahová került: a teljes
+    újrarajzolás nálam kb. 25 ms volt, ez most kb. 4 ms.
+  - Az elengedett ikon nem marad ott, ahol elengedtük, ha utána máshová
+    kerül.
+- A ZX Desktop ikonjai alatt a nyitott ablakot jelző csík és az alsó gombsor
+  (meghajtók, kazetta, lemez) is frissül a menük bezárása után.
 
 ## v13.1-SN-hu.1 – 2026-11-06
 

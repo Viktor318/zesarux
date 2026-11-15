@@ -6297,7 +6297,9 @@ int menu_filesel_all_parameters(char *titulo,char *filtros[],char *archivo,int s
 
         zxvision_draw_window_contents(ventana);
 
-        menu_refresca_pantalla();
+        //Fork: con multitarea la pantalla se refresca en cada frame; esto redibujaba la pantalla entera y todo el
+        //ZX Desktop al abrir el selector de archivos, y la emulacion daba un tiron
+        if (!menu_multitarea) menu_refresca_pantalla();
 
 
         if (menu_filesel_posicionar_archivo.v) {

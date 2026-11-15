@@ -108,6 +108,19 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
   it. A click only draws the frame around the machine again. Drawing menus
   and windows is also faster, as their size is no longer worked out again
   for every pixel.
+- More stalls are gone in multitask mode:
+  - Closing a menu **tooltip** drew every window again twice, plus the
+    whole screen and the whole ZX Desktop. Now only the windows are drawn
+    again, once.
+  - Menu **hotkeys** and opening the **file selector** no longer draw the
+    whole screen and the ZX Desktop again.
+  - **Dragging an icon** draws the ZX Desktop again on every mouse movement
+    only where the icon was and where it went. The full redraw took about
+    25 ms here; now it is about 4 ms.
+  - A dropped icon no longer stays where it was dropped if it then goes
+    somewhere else.
+- The open-window mark under the ZX Desktop icons and the lower buttons
+  (drives, tape, disk) are also kept up to date after the menus are closed.
 
 ## v13.1-SN-hu.1 – 2026-11-06
 

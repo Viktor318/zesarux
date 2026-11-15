@@ -5097,6 +5097,7 @@ unsigned int menu_draw_ext_desktop_dibujado_firma=0;
 
 extern z80_bit menu_mostrar_boton_close_all_menus;
 void menu_draw_ext_desktop_recuadro_maquina(void);
+int zxdesktop_lowericon_find_index(int icono);
 
 static unsigned int menu_draw_ext_desktop_firma_int(unsigned int firma,int valor)
 {
@@ -5169,10 +5170,43 @@ unsigned int menu_draw_ext_desktop_firma(void)
         firma=menu_draw_ext_desktop_firma_texto(firma,defined_buttons_functions_array_parameters[i],PATH_MAX);
     }
 
+    //Botones inferiores: dispositivos activos o no, actividad (cinta, disco) y su animacion
+    //(los contadores de las animaciones avanzan siempre: solo cuentan cuando se dibujan)
+    firma=menu_draw_ext_desktop_firma_int(firma,realtape_inserted.v);
+    if (realtape_inserted.v) firma=menu_draw_ext_desktop_firma_int(firma,lowericon_realtape_frame);
+    int disco_girando=(dskplusthree_emulation.v && pd765_motor_status);
+    firma=menu_draw_ext_desktop_firma_int(firma,disco_girando);
+    if (disco_girando) {
+        firma=menu_draw_ext_desktop_firma_int(firma,cf2_floppy_icon_is_saving);
+        firma=menu_draw_ext_desktop_firma_int(firma,lowericon_cf2_floppy_frame);
+    }
+    if (menu_zxdesktop_lower_buttons_enabled.v) {
+        for (i=0;i<TOTAL_ZXDESKTOP_MAX_LOWER_BUTTONS;i++) {
+            int indice_array=zxdesktop_lowericon_find_index(i);
+            firma=menu_draw_ext_desktop_firma_int(firma,indice_array);
+            if (indice_array<0) continue;
+            firma=menu_draw_ext_desktop_firma_int(firma,zdesktop_lowericons_array[indice_array].is_active());
+            firma=menu_draw_ext_desktop_firma_int(firma,*(zdesktop_lowericons_array[indice_array].icon_is_inverse));
+        }
+    }
+
     //Iconos del ZX Desktop
+    firma=menu_draw_ext_desktop_firma_int(firma,zxdesktop_icon_show_app_open.v);
     for (i=0;i<MAX_ZXDESKTOP_CONFIGURABLE_ICONS;i++) {
         zxdesktop_configurable_icon *icono=&zxdesktop_configurable_icons_list[i];
         if (icono->status==ZXDESKTOP_CUSTOM_ICON_NOT_EXISTS) continue;
+
+        //Marca de ventana abierta (o minimizada) debajo del icono
+        if (zxdesktop_icon_show_app_open.v && icono->indice_funcion>=0) {
+            char *geometry_name;
+            if (defined_direct_functions_array[icono->indice_funcion].id_funcion==F_FUNCION_OPEN_WINDOW) geometry_name=icono->extra_info;
+            else geometry_name=defined_direct_functions_array[icono->indice_funcion].geometry_name;
+            if (geometry_name[0]) {
+                zxvision_window *ventana_abierta=zxvision_find_window_in_background(geometry_name);
+                firma=menu_draw_ext_desktop_firma_int(firma,(ventana_abierta==NULL ? 0 : 1+ventana_abierta->is_minimized));
+            }
+        }
+
         firma=menu_draw_ext_desktop_firma_int(firma,i);
         firma=menu_draw_ext_desktop_firma_int(firma,icono->status);
         firma=menu_draw_ext_desktop_firma_int(firma,icono->pos_x);
@@ -6856,7 +6890,64 @@ void zxdesktop_configurable_icons_clear_cache_bitmap(int indice)
 }
 
 
+/* Fork: redibujar solo una parte del ZX Desktop (al arrastrar un icono). Mientras esta activo, scr_putpixel solo
+   escribe dentro del rectangulo, y el fondo solo se calcula ahi */
+int menu_draw_ext_desktop_recorte_activo=0;
+int menu_draw_ext_desktop_recorte_x0,menu_draw_ext_desktop_recorte_y0;
+int menu_draw_ext_desktop_recorte_x1,menu_draw_ext_desktop_recorte_y1; //exclusivos
+static void (*menu_draw_ext_desktop_recorte_putpixel_anterior)(int x,int y,unsigned int color);
+
+static void menu_draw_ext_desktop_putpixel_recortado(int x,int y,unsigned int color)
+{
+    if (x<menu_draw_ext_desktop_recorte_x0 || x>=menu_draw_ext_desktop_recorte_x1 ||
+        y<menu_draw_ext_desktop_recorte_y0 || y>=menu_draw_ext_desktop_recorte_y1) return;
+    menu_draw_ext_desktop_recorte_putpixel_anterior(x,y,color);
+}
+
+/* Fork: rectangulo que ocupa en pantalla el icono que se esta arrastrando (dibujo, texto, marca de ventana abierta),
+   apuntado la ultima vez que se dibujo, con la posicion que tenia entonces */
+static int menu_icono_movido_valido=0;
+static int menu_icono_movido_indice;
+static int menu_icono_movido_pos_x,menu_icono_movido_pos_y;
+static int menu_icono_movido_x0,menu_icono_movido_y0,menu_icono_movido_x1,menu_icono_movido_y1; //x1,y1 exclusivos
+static void (*menu_icono_movido_putpixel_anterior)(int x,int y,unsigned int color);
+
+static void menu_icono_movido_putpixel_apunta(int x,int y,unsigned int color)
+{
+    if (x<menu_icono_movido_x0) menu_icono_movido_x0=x;
+    if (y<menu_icono_movido_y0) menu_icono_movido_y0=y;
+    if (x+1>menu_icono_movido_x1) menu_icono_movido_x1=x+1;
+    if (y+1>menu_icono_movido_y1) menu_icono_movido_y1=y+1;
+    menu_icono_movido_putpixel_anterior(x,y,color);
+}
+
+void menu_ext_desktop_draw_configurable_icon_dibuja(int index_icon,int pulsado);
+
 void menu_ext_desktop_draw_configurable_icon(int index_icon,int pulsado)
+{
+    //El icono que se arrastra: apuntar donde se dibuja, para luego redibujar solo esa zona
+    if (configurable_icon_is_being_moved && index_icon==configurable_icon_is_being_moved_which) {
+        //Si se dibuja recortado, el rectangulo apuntado no estaria entero: se calcula igualmente porque el icono
+        //se dibuja entero (solo se recorta la escritura)
+        menu_icono_movido_x0=menu_icono_movido_y0=999999;
+        menu_icono_movido_x1=menu_icono_movido_y1=-1;
+        menu_icono_movido_putpixel_anterior=scr_putpixel;
+        scr_putpixel=menu_icono_movido_putpixel_apunta;
+
+        menu_ext_desktop_draw_configurable_icon_dibuja(index_icon,pulsado);
+
+        scr_putpixel=menu_icono_movido_putpixel_anterior;
+
+        menu_icono_movido_valido=(menu_icono_movido_x1>menu_icono_movido_x0);
+        menu_icono_movido_indice=index_icon;
+        menu_get_ext_desktop_icons_position(index_icon,&menu_icono_movido_pos_x,&menu_icono_movido_pos_y);
+        return;
+    }
+
+    menu_ext_desktop_draw_configurable_icon_dibuja(index_icon,pulsado);
+}
+
+void menu_ext_desktop_draw_configurable_icon_dibuja(int index_icon,int pulsado)
 {
     int x,y;
     menu_get_ext_desktop_icons_position(index_icon,&x,&y);
@@ -7559,6 +7650,12 @@ void menu_draw_ext_desktop_background(int xstart_zxdesktop)
     //En el caso de barras fijas, offset es 0
     if (menu_ext_desktop_fill==1) menu_ext_desktop_fill_rainbow_counter=0;
 
+    //Fork: redibujando solo una parte: con los mismos colores que el ultimo dibujo entero (las barras de colores
+    //movibles avanzan una posicion cada vez que se dibuja entero)
+    int recorte=menu_draw_ext_desktop_recorte_activo;
+    int contador_rainbow_antes=menu_ext_desktop_fill_rainbow_counter;
+    if (recorte && menu_ext_desktop_fill==2) menu_ext_desktop_fill_rainbow_counter--;
+
     int filesel_ejecutandose_preview_en_zxdesktop=0;
     int filesel_ejecutandose=0;
 
@@ -7580,6 +7677,9 @@ void menu_draw_ext_desktop_background(int xstart_zxdesktop)
 
 
     for (y=yinicio;y<yinicio+alto;y++) {
+
+        //Fork: fuera del recorte no hace falta calcular nada
+        if (recorte && (y<menu_draw_ext_desktop_recorte_y0 || y>=menu_draw_ext_desktop_recorte_y1)) continue;
 
         //Este bloque solo para degraded, se calcula en cada posicion y
         if (menu_ext_desktop_fill==7) {
@@ -7667,7 +7767,16 @@ void menu_draw_ext_desktop_background(int xstart_zxdesktop)
             xinicio=0;
         }
 
-        for (x=xinicio;x<xfinal;x++) {
+        //Fork: con recorte, solo las x de dentro (el contador de colores avanza igual que si se recorriera la fila entera)
+        int xdesde=xinicio;
+        int xhasta=xfinal;
+        if (recorte) {
+            if (xdesde<menu_draw_ext_desktop_recorte_x0) xdesde=menu_draw_ext_desktop_recorte_x0;
+            if (xhasta>menu_draw_ext_desktop_recorte_x1) xhasta=menu_draw_ext_desktop_recorte_x1;
+            if (xdesde>xinicio) contador_color_rainbow +=xdesde-xinicio;
+        }
+
+        for (x=xdesde;x<xhasta;x++) {
 
             int restar_inicio_x_scr=xstart_zxdesktop;
             int ancho_disponible_scr=ancho_zxdesktop;
@@ -7810,7 +7919,8 @@ void menu_draw_ext_desktop_background(int xstart_zxdesktop)
         }
     }
 
-    menu_ext_desktop_fill_rainbow_counter++;
+    if (recorte) menu_ext_desktop_fill_rainbow_counter=contador_rainbow_antes;
+    else menu_ext_desktop_fill_rainbow_counter++;
 
     if (!ventana_video_output_esta_abierta()) {
         menu_draw_ext_desktop_border_emulated_machine(ancho_no_zxdesktop,alto_zxdesktop,alto_no_zxdesktop);
@@ -7850,12 +7960,23 @@ void menu_draw_ext_desktop(void)
     //no hay "nadie" ejecutando el core de cpu que diga que hay que descartar frames o no
     if (!menu_multitarea || menu_emulation_paused_on_menu) dibujar_zxdesktop_background=1;
 
+    //Fork: redibujando solo una parte (ver menu_draw_ext_desktop_recortado), siempre con fondo
+    if (menu_draw_ext_desktop_recorte_activo) dibujar_zxdesktop_background=1;
+
     if (dibujar_zxdesktop_background) {
         menu_draw_ext_desktop_background(xstart_zxdesktop);
 
         //Fork: ya esta dibujado entero en estas capas (ver cls_menu_overlay)
         menu_draw_ext_desktop_dibujado_generacion=screen_layers_generation;
         menu_draw_ext_desktop_dibujado_firma=menu_draw_ext_desktop_firma();
+    }
+
+    //Fork: redibujando solo una parte: lo demas tal cual, tambien el boton de cerrar todos los menus si se ve
+    if (menu_draw_ext_desktop_recorte_activo) {
+        menu_draw_ext_desktop_buttons();
+        menu_draw_ext_desktop_configurable_icons();
+        menu_draw_ext_desktop_footer();
+        return;
     }
 
     //Fork: el boton de cerrar todos los menus se dibuja al final, guardando antes lo que hay debajo (ver menu_boton_cerrar_al_dia)
@@ -7889,6 +8010,70 @@ void menu_draw_ext_desktop(void)
         }
     }
 
+}
+
+/* Fork: redibujar el ZX Desktop solo dentro de un rectangulo (x1,y1 exclusivos), en el orden normal: fondo, recuadro de
+   la maquina, botones, iconos y pie. Solo vale si la capa de la maquina esta al dia y lo de fuera no ha cambiado */
+void menu_draw_ext_desktop_recortado(int x0,int y0,int x1,int y1)
+{
+    if (x0<0) x0=0;
+    if (y0<0) y0=0;
+    if (x1<=x0 || y1<=y0) return;
+
+    menu_draw_ext_desktop_recorte_x0=x0;
+    menu_draw_ext_desktop_recorte_y0=y0;
+    menu_draw_ext_desktop_recorte_x1=x1;
+    menu_draw_ext_desktop_recorte_y1=y1;
+
+    //Si toca el boton de cerrar todos los menus, lo guardado de debajo de el ya no vale
+    if (menu_boton_cerrar_fondo_valido) {
+        if (x0<menu_boton_cerrar_x0+menu_boton_cerrar_ancho && x1>menu_boton_cerrar_x0 &&
+            y0<menu_boton_cerrar_y0+menu_boton_cerrar_alto && y1>menu_boton_cerrar_y0) {
+            menu_boton_cerrar_fondo_valido=0;
+        }
+    }
+
+    menu_draw_ext_desktop_recorte_putpixel_anterior=scr_putpixel;
+    scr_putpixel=menu_draw_ext_desktop_putpixel_recortado;
+    menu_draw_ext_desktop_recorte_activo=1;
+
+    menu_draw_ext_desktop();
+
+    menu_draw_ext_desktop_recorte_activo=0;
+    scr_putpixel=menu_draw_ext_desktop_recorte_putpixel_anterior;
+}
+
+/* Fork: al arrastrar un icono, redibujar solo donde estaba y donde esta ahora (antes se redibujaba el ZX Desktop
+   entero con cada movimiento del raton, y la emulacion daba tirones). Retorna 0 si hay que redibujarlo entero */
+int menu_draw_ext_desktop_icono_movido(int papelera_antes)
+{
+    if (!menu_multitarea || !scr_capa_maquina_siempre_al_dia) return 0;
+    if (!screen_ext_desktop_enabled || !scr_driver_can_ext_desktop()) return 0;
+    if (!configurable_icon_is_being_moved) return 0;
+    if (!menu_icono_movido_valido || menu_icono_movido_indice!=configurable_icon_is_being_moved_which) return 0;
+
+    //Lo demas tiene que estar como cuando se dibujo; si la papelera cambia (abierta o cerrada), entero
+    if (menu_draw_ext_desktop_dibujado_generacion!=screen_layers_generation) return 0;
+    if (papelera_antes!=zxvision_draw_icon_papelera_abierta) return 0;
+
+    int x,y;
+    menu_get_ext_desktop_icons_position(configurable_icon_is_being_moved_which,&x,&y);
+    int dx=x-menu_icono_movido_pos_x;
+    int dy=y-menu_icono_movido_pos_y;
+
+    //Donde estaba, y donde estara (el mismo dibujo desplazado), con un margen
+    int margen=4;
+    int x0=menu_icono_movido_x0;
+    int y0=menu_icono_movido_y0;
+    int x1=menu_icono_movido_x1;
+    int y1=menu_icono_movido_y1;
+    if (x0+dx<x0) x0 +=dx;
+    if (y0+dy<y0) y0 +=dy;
+    if (x1+dx>x1) x1 +=dx;
+    if (y1+dy>y1) y1 +=dy;
+
+    menu_draw_ext_desktop_recortado(x0-margen,y0-margen,x1+margen,y1+margen);
+    return 1;
 }
 
 /* Fork: como menu_draw_ext_desktop, pero si el fondo ya esta dibujado en estas capas con el mismo tamano y sitio,
@@ -18991,6 +19176,10 @@ void zxvision_handle_mouse_events_stop_drag_icon(void)
 
         zxvision_reorder_configurable_icons_if_auto();
 
+        //Fork: que el siguiente dibujo del ZX Desktop sea con fondo aunque toque saltarlo (frameskip), para que no quede
+        //el icono donde se solto si luego se coloca en otro sitio
+        zxvision_zxdesktop_set_no_frameskip_next();
+
     }
 }
 
@@ -19066,6 +19255,8 @@ void zxvision_handle_mouse_events_drag_icon(void)
             if (deltax>0 || deltay>0) {
 
 
+                int papelera_antes=zxvision_draw_icon_papelera_abierta;
+
                 //Ver si icono cerca de papelera
                 if (zxvision_si_icono_cerca_de_papelera(configurable_icon_is_being_moved_which,mouse_pixel_x,mouse_pixel_y)) {
                     debug_printf(VERBOSE_DEBUG,"There is a Trash near the moved icon");
@@ -19079,7 +19270,8 @@ void zxvision_handle_mouse_events_drag_icon(void)
                 //printf("Refrescar %d\n",contador_segundo);
 
                 //Necesario para que veamos moverse el icono
-                menu_draw_ext_desktop();
+                //Fork: si se puede, solo la zona donde estaba y donde esta
+                if (!menu_draw_ext_desktop_icono_movido(papelera_antes)) menu_draw_ext_desktop();
 
                 if (!menu_multitarea) {
                     //printf ("refresca pantalla\n");
@@ -22795,10 +22987,15 @@ void menu_dibuja_menu_help_tooltip(char *texto, int si_tooltip)
         }*/
 
         //zxvision_draw_below_windows_nospeech(zxvision_current_window);
-        zxvision_redraw_all_windows();
+        //Fork: con multitarea no hace falta: al cerrar la ventana del tooltip ya se han redibujado todas las ventanas,
+        //y la pantalla se refresca en cada frame. Antes, cada vez que se cerraba un tooltip se volvian a redibujar
+        //todas las ventanas, la pantalla entera y todo el ZX Desktop, y la emulacion daba un tiron
+        if (!menu_multitarea) {
+            zxvision_redraw_all_windows();
 
-        //printf ("antes refrescar pantalla\n");
-        menu_refresca_pantalla();
+            //printf ("antes refrescar pantalla\n");
+            menu_refresca_pantalla();
+        }
 
 
 
@@ -24328,7 +24525,9 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
                     //Mostrar por un momento opciones y letras
                     menu_writing_inverse_color.v=1;
                     menu_escribe_opciones_zxvision(ventana,m,entrada_atajo,max_opciones);
-                    menu_refresca_pantalla();
+                    //Fork: con multitarea la pantalla se refresca en cada frame mientras se espera a soltar la tecla;
+                    //esto redibujaba la pantalla entera y todo el ZX Desktop con cada atajo de teclado en los menus
+                    if (!menu_multitarea) menu_refresca_pantalla();
 
                     menu_dibuja_menu_espera_no_tecla();
 
