@@ -116,7 +116,14 @@ def hexcol(c):
 items = []
 
 
-def rect(x0, y0, x1, y1, c, rx=0):
+def ev(v):
+    return 2 * round(v / 2)
+
+
+def rect(x0, y0, x1, y1, c, rx=0, snap=True):
+    # bordes en pixeles pares: al 100% (la mitad) caen en pixeles enteros, nitidos
+    if snap:
+        x0, y0, x1, y1 = ev(x0), ev(y0), ev(x1), ev(y1)
     items.append('<rect x="%g" y="%g" width="%g" height="%g" rx="%g" fill="%s"/>'
                  % (x0, y0, x1 - x0, y1 - y0, rx, hexcol(c)))
 
@@ -135,7 +142,7 @@ def text(s, cx, cy, h, fnt, c, ref='H', align='centre'):
                  % (hexcol(c), sc, -sc, left - sc * x0, base, d))
 
 
-def arrow(cx, cy, d, c, L=20, T=3.2, head=11, hw=6.5):
+def arrow(cx, cy, d, c, L=22, T=4, head=12, hw=7.5):
     """an arrow of a line T thick, L long (with the head), pointing d"""
     pts = [(-L / 2, -T / 2), (L / 2 - head, -T / 2), (L / 2 - head, -hw), (L / 2, 0),
            (L / 2 - head, hw), (L / 2 - head, T / 2), (-L / 2, T / 2)]
@@ -148,28 +155,28 @@ def arrow(cx, cy, d, c, L=20, T=3.2, head=11, hw=6.5):
 
 # Los signos pequeños (* + - = _ < >) a tamaño normal, como las cifras: las
 # barras de - = _ + como rectángulos del grosor del trazo de las cifras
-SIGN_H = 13         # la altura de las cifras
-STROKE = 1.8        # el grosor de su trazo
-BAR = 11            # el ancho de - = _ +
+SIGN_H = 14         # la altura de las cifras
+STROKE = 2.6        # el grosor de su trazo (Heros Bold)
+BAR = 12            # el ancho de - = _ +
 
 
 def sign(ch, cx, cy):
     h = SIGN_H
     if ch == '-':
-        rect(cx - BAR / 2, cy - STROKE / 2, cx + BAR / 2, cy + STROKE / 2, INK)
+        rect(cx - BAR / 2, cy - STROKE / 2, cx + BAR / 2, cy + STROKE / 2, INK, snap=False)
     elif ch == '=':
-        for dy in (-2.6, 2.6):
-            rect(cx - BAR / 2, cy + dy - STROKE / 2, cx + BAR / 2, cy + dy + STROKE / 2, INK)
+        for dy in (-3, 3):
+            rect(cx - BAR / 2, cy + dy - STROKE / 2, cx + BAR / 2, cy + dy + STROKE / 2, INK, snap=False)
     elif ch == '_':
-        rect(cx - BAR / 2 - 0.5, cy + h / 2 - STROKE, cx + BAR / 2 + 0.5, cy + h / 2, INK)
+        rect(cx - BAR / 2 - 0.5, cy + h / 2 - STROKE, cx + BAR / 2 + 0.5, cy + h / 2, INK, snap=False)
     elif ch == '+':
-        rect(cx - BAR / 2, cy - STROKE / 2, cx + BAR / 2, cy + STROKE / 2, INK)
-        rect(cx - STROKE / 2, cy - BAR / 2, cx + STROKE / 2, cy + BAR / 2, INK)
+        rect(cx - BAR / 2, cy - STROKE / 2, cx + BAR / 2, cy + STROKE / 2, INK, snap=False)
+        rect(cx - STROKE / 2, cy - BAR / 2, cx + STROKE / 2, cy + BAR / 2, INK, snap=False)
     elif ch in '*<>':
         # el signo de la fuente, su tinta de la altura dada, centrada
-        f = kbdraw.font('heros')
+        f = kbdraw.font('herosb')
         d, (x0, y0, x1, y1) = f.outline(ch)
-        ih = {'*': 9.5, '<': 11.5, '>': 11.5}[ch]
+        ih = {'*': 10, '<': 12, '>': 12}[ch]
         sc = ih / (y1 - y0)
         items.append('<path fill="%s" transform="matrix(%.5f 0 0 %.5f %.3f %.3f)" d="%s"/>'
                      % (hexcol(INK), sc, -sc, cx - sc * (x0 + x1) / 2, cy + sc * (y0 + y1) / 2, d))
@@ -177,16 +184,29 @@ def sign(ch, cx, cy):
         # la puntuación en negrita: puntos más visibles
         text(ch, cx, cy, h, 'herosb', INK)
     elif ch == '`':
-        text(ch, cx, cy, h * 1.4, 'heros', INK)
+        text(ch, cx, cy, h * 1.4, 'herosb', INK)
     else:
-        text(ch, cx, cy, h, 'heros', INK)
+        text(ch, cx, cy, h, 'herosb', INK)
+
+
+FN_H = 11           # la altura de las palabras de las teclas de funcion
+
+
+def fn_text(t, cx, cy, maxw):
+    """una palabra de una tecla de funcion: Heros Cn Bold, FN_H de alto, mas
+    baja si no cabe en maxw"""
+    f = kbdraw.font('cnb')
+    capb = f.outline('H')[1]
+    d, (x0, y0, x1, y1) = f.outline(t)
+    h = min(FN_H, maxw * (capb[3] - capb[1]) / (x1 - x0))
+    text(t, cx, cy, h, 'cnb', INK)
 
 
 def cap(x0, y0, x1, y1, c):
     skirt, top = KEYS[c]
     rect(x0, y0, x1, y1, skirt, 5)
-    rect(x0 + 6, y0 + 4, x1 - 6, y1 - 11, top, 4)
-    return (x0 + x1) / 2, (y0 + 4 + y1 - 11) / 2
+    rect(x0 + 6, y0 + 4, x1 - 6, y1 - 12, top, 4)
+    return (ev(x0) + ev(x1)) / 2, (ev(y0) + 4 + ev(y1) - 12) / 2
 
 
 def draw():
@@ -195,14 +215,14 @@ def draw():
     rect(30, 40, 1018, 126, PLATE_EDGE, 3)
     rect(32, 42, 1016, 124, PLATE, 2)
     text('AMSTRAD', 44, 96, 20, 'cnb', PLATE_INK, align='left')
-    text('64K COLOUR PERSONAL COMPUTER', 176, 104, 10, 'heros', PLATE_INK, align='left')
-    text('CPC464', 702, 96, 26, 'cn', (236, 240, 244), align='left')
+    text('64K COLOUR PERSONAL COMPUTER', 176, 103, 12, 'herosb', PLATE_INK, align='left')
+    text('CPC464', 694, 96, 28, 'cnb', (236, 240, 244), align='left')
     # the colour badge
     rect(838, 84, 914, 108, (236, 240, 244), 2)
     for i, c in enumerate([(220, 40, 40), (40, 170, 70), (50, 110, 220)]):
         rect(843 + 24 * i, 89, 861 + 24 * i, 103, c, 2)
-    text('COLOUR', 917, 103, 10, 'heros', PLATE_INK, align='left')
-    text('ON', 948, 70, 7, 'heros', PLATE_INK, align='left')
+    text('COLOUR', 920, 102, 12, 'herosb', PLATE_INK, align='left')
+    text('ON', 944, 71, 9, 'herosb', PLATE_INK, align='left')
     items.append('<circle cx="975" cy="67" r="6" fill="#e01818"/>')
     # the wells of the keys
     rect(7, 156, 1012, 484, WELL, 4)
@@ -216,21 +236,21 @@ def draw():
                  % (hexcol(sk), x0, y0, x1, y1, xl, y0 + KH, x0))
     items.append('<path fill="%s" d="M%g %gH%gV%gH%gV%gH%gZ"/>'
                  % (hexcol(tp), x0 + 6, y0 + 4, x1 - 6, y1 - 11, xl + 6, y0 + KH - 11, x0 + 6))
-    text('ENTER', (xl + x1) / 2, (y0 + y1) / 2 - 4, 8, 'herosb', INK)
+    fn_text('ENTER', (xl + x1) / 2, (y0 + y1) / 2 - 4, 90)
     for x0, y0, x1, y1, c, t, kind in keys:
         cx, cy = cap(x0, y0, x1, y1, c)
         if kind == 'big':
-            text(t, cx, cy, 18, 'heros', INK, ref='H')
+            text(t, cx, cy, 20, 'herosb', INK, ref='H')
         elif kind == 'two':
             up, lo = t[0], t[1]
             sign(up, cx, cy - 10)
-            sign(lo, cx, cy + 10)
+            sign(lo, cx, cy + 11)
         elif kind == 'arrow':
             arrow(cx, cy, t, INK)
         elif t:
             lines = t.split('\n')
             for n, l in enumerate(lines):
-                text(l, cx, cy + (n - (len(lines) - 1) / 2) * 13, 8, 'herosb', INK)
+                fn_text(l, cx, cy + (n - (len(lines) - 1) / 2) * 15, x1 - x0 - 18)
     out = ['<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d">' % (W, H, W, H),
            '<!-- The keyboard of the Amstrad CPC 464, drawn again for the ZEsarUX fork '
            '(tools/keyboards/cpc464.py). The letters are outlines of TeX Gyre Heros (GUST Font License). -->']

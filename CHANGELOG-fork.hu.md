@@ -44,7 +44,8 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
   mutatja): az eddigi fénykép helyett rajz, ugyanabban a méretben (1280×490),
   az EightyOne-os képek stílusában. A gombok helye a fényképről mérve, a
   billentyűtábla az új helyekre számolva; az L alakú ENTER mindkét része
-  kattintható. A kis jelek (`*` `+` `-` `=` `_` `<` `>`) normál méretűek.
+  kattintható. A feliratok vastag betűsek, hogy kicsinyítve se
+  mosódjanak el; a kis jelek (`*` `+` `-` `=` `_` `<` `>`) normál méretűek.
   Készítője: `tools/keyboards/cpc464.py`.
 - A képek a `tools/keyboards/make_zesarux_keyboards.py` szkripttel
   készülnek az EightyOne fork rajzaiból (`Source/KBPics/svg`).

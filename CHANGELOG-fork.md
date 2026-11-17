@@ -45,7 +45,9 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
   drawing instead of the photo, at the same size (1280×490), in the style of
   the EightyOne pictures. The places of the keys are measured on the photo
   and the key table is moved onto them; both parts of the L-shaped ENTER can
-  be clicked. The small signs (`*` `+` `-` `=` `_` `<` `>`) are of normal size.
+  be clicked. The texts are bold, so that they do not blur when the picture
+  is made smaller; the small signs (`*` `+` `-` `=` `_` `<` `>`) are of
+  normal size.
   Made by `tools/keyboards/cpc464.py`.
 - The pictures are made from the drawings of the EightyOne fork
   (`Source/KBPics/svg`) by `tools/keyboards/make_zesarux_keyboards.py`.
