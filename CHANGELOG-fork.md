@@ -35,6 +35,9 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
   the ones of the tables until now, moved onto the keys of the drawings.
   The 16K shows the picture of the 48K, as in EightyOne. The pictures of
   the Spanish 48+/128, the Inves and the other machines did not change.
+- **Five sizes** in the Help menu and with a double click on the title:
+  100%, 125%, 150%, 175% and 200% (they were 100, 150 and 200%), as in
+  EightyOne.
 - On the Spectrum+ and 128 picture the `!` is a little thicker and the `'` a
   little thinner, and the `@` and the `#` are in the font's own proportions
   (they were squeezed and stretched).

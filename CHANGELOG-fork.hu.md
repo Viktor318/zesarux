@@ -35,6 +35,8 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
   táblázatokból a rajzok billentyűire áthelyezve. A 16K a 48K képét mutatja,
   ahogy az EightyOne-ban. A spanyol 48+/128, az Inves és a többi gép képe
   nem változott.
+- **Öt méret** a Súgó menüben és a címsorra dupla kattintással: 100%, 125%,
+  150%, 175% és 200% (eddig 100, 150 és 200%), mint az EightyOne-ban.
 - A Spectrum+ és a 128 képén a `!` kicsit vastagabb, a `'` kicsit vékonyabb,
   a `@` és a `#` a betűtípus saját arányaiban (eddig összenyomva, illetve
   széthúzva).
