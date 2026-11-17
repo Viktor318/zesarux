@@ -4,7 +4,8 @@
 Fork (Viktor318/zesarux): the virtual keyboard pictures drawn again for the
 EightyOne fork (Viktor318/EightyOne, Source/KBPics/svg), for ZEsarUX:
 
-  ../keyboard_<x>.bmp      the picture at 200% (1080 pixels wide, as the other
+  src/keyboards/keyboard_<x>.bmp
+                           the picture at 200% (1080 pixels wide, as the other
                            pictures), 256 colours, drawn at that size (the
                            edges of the keys on whole pixels)
   out/<x>.c                the key places for menu_items.c: the keys of the
@@ -25,8 +26,8 @@ import sys
 from PIL import Image, ImageDraw
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-KEYBOARDS = os.path.dirname(HERE)
-MENU_ITEMS = os.path.join(KEYBOARDS, '..', 'menu', 'menu_items.c')
+KEYBOARDS = os.path.join(HERE, '..', '..', 'src', 'keyboards')
+MENU_ITEMS = os.path.join(HERE, '..', '..', 'src', 'menu', 'menu_items.c')
 OUT = os.path.join(HERE, 'out')
 WIDTH = 1080
 ORIGINAL = 540      # the coordinates of the tables are in pixels of the 540 wide originals
@@ -177,7 +178,7 @@ def main():
         nkeys = split_tall(keys)
         m = iter(mapping([r for r in oldrects if r], nkeys))
         res = [None if r is None else nkeys[next(m)] for r in oldrects]
-        lines = ['//Fork: para keyboard_%s.bmp (redibujado, ver keyboards/tools)' % name,
+        lines = ['//Fork: para keyboard_%s.bmp (redibujado, ver tools/keyboards en la raiz del repositorio)' % name,
                  'int keyboard_map_table_coords_%s[40*4]={' % tname]
         for i in range(0, len(t), 5):
             lines.append('    ' + ',    '.join('9999,9999,9999,9999' if k is None else c_rect(k) for k in res[i:i + 5]) + ',')

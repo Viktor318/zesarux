@@ -36,7 +36,7 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
   The 16K shows the picture of the 48K, as in EightyOne. The pictures of
   the Spanish 48+/128, the Inves and the other machines did not change.
 - The pictures are made from the drawings of the EightyOne fork
-  (`Source/KBPics/svg`) by `src/keyboards/tools/make_zesarux_keyboards.py`.
+  (`Source/KBPics/svg`) by `tools/keyboards/make_zesarux_keyboards.py`.
 - When it is first opened, the window fits the picture at 200%. The new
   pictures are taller for their width than the old ones, so with a window
   size saved earlier there can be an empty band beside the picture; a

@@ -23245,7 +23245,7 @@ También hay que gestionar los casos de teclados con mas de 5 columnas o mas de 
 
 //para keyboard_48.bmp
 //4 valores de cada tecla: x,y inicial, x,y final
-//Fork: para la imagen redibujada (ver keyboards/tools)
+//Fork: para la imagen redibujada (ver tools/keyboards en la raiz del repositorio)
 int keyboard_map_table_coords_48[40*4]={
     6,192,61,224,    67,192,110,224,    116,192,158,224,    164,192,208,224,    214,192,256,224,
     47,136,88,169,    96,136,138,169,    145,136,186,169,    194,136,236,169,    243,136,284,169,
@@ -23269,7 +23269,7 @@ int keyboard_map_table_coords_48p[40*4]={
 200,164,378,198,4,162,40,198,370,124,408,158,330,124,368,160,290,124,330,162,
 };
 
-//Fork: para la imagen redibujada (ver keyboards/tools)
+//Fork: para la imagen redibujada (ver tools/keyboards en la raiz del repositorio)
 int keyboard_map_table_coords_p2[40*4]={
     2,144,91,188,    132,144,170,188,    172,144,210,188,    212,144,249,188,    252,144,289,188,
     116,98,153,142,    155,98,192,142,    194,98,232,142,    234,98,272,142,    274,98,311,142,
@@ -23366,7 +23366,7 @@ int keyboard_map_table_coords_chloe[40*4]={
 
 };
 
-//Fork: para la imagen redibujada (ver keyboards/tools)
+//Fork: para la imagen redibujada (ver tools/keyboards en la raiz del repositorio)
 int keyboard_map_table_coords_tk85[40*4]={
     20,188,59,224,    68,188,108,224,    118,188,158,224,    168,188,208,224,    218,188,258,224,
     43,128,82,164,    93,128,132,164,    143,128,182,164,    193,128,232,164,    243,128,282,164,
@@ -23461,7 +23461,7 @@ int keyboard_map_table_coords_zx8081[40*4]={
 460,160, 500,188, 412,160, 452,188, 364,162, 402,186, 316,160, 354,186, 270,162, 306,186,
 };
 
-//Fork: para la imagen redibujada (ver keyboards/tools)
+//Fork: para la imagen redibujada (ver tools/keyboards en la raiz del repositorio)
 int keyboard_map_table_coords_ace[40*4]={
     20,187,57,221,    70,187,107,221,    121,187,158,221,    171,187,208,221,    222,187,258,221,
     44,130,81,164,    94,130,131,164,    145,130,182,164,    195,130,232,164,    246,130,282,164,
@@ -23650,7 +23650,7 @@ int keyboard_map_table_coords_pcw[8*11*4]={
 };
 
 
-//Fork: para la imagen redibujada (ver keyboards/tools)
+//Fork: para la imagen redibujada (ver tools/keyboards en la raiz del repositorio)
 int keyboard_map_table_coords_timex_computer[40*4]={
     22,160,60,181,    77,160,105,181,    122,160,150,181,    167,160,195,181,    212,160,240,181,
     54,116,82,136,    100,116,128,136,    144,116,172,136,    190,116,218,136,    234,116,262,136,
@@ -23664,7 +23664,7 @@ int keyboard_map_table_coords_timex_computer[40*4]={
 
 
 
-//Fork: para la imagen redibujada (ver keyboards/tools)
+//Fork: para la imagen redibujada (ver tools/keyboards en la raiz del repositorio)
 int keyboard_map_table_coords_timex_sinclair_1500[40*4]={
     3,178,60,235,    65,178,111,235,    114,178,162,235,    165,178,211,235,    215,178,261,235,
     39,118,86,174,    89,118,137,174,    140,118,186,174,    190,118,236,174,    240,118,286,174,
@@ -23759,7 +23759,7 @@ z80_byte puerto_32766=255; //    db              255  ; B    N    M    Simb Spac
 */
 
 //Teclas adicionales spectrum+
-//Fork: para keyboard_48p.bmp y keyboard_128.bmp (redibujado, ver keyboards/tools)
+//Fork: para keyboard_48p.bmp y keyboard_128.bmp (redibujado, ver tools/keyboards en la raiz del repositorio)
 int keyboard_map_table_coords_plus[40*4]={
     2,144,91,188,    132,144,170,188,    172,144,210,188,    212,144,249,188,    252,144,289,188,
     116,98,153,142,    155,98,192,142,    194,98,232,142,    234,98,272,142,    274,98,311,142,
@@ -23771,7 +23771,7 @@ int keyboard_map_table_coords_plus[40*4]={
     200,192,380,236,    2,192,40,236,    370,144,408,188,    330,144,368,188,    291,144,328,188,
 };
 
-//Fork: para keyboard_zx81.bmp y keyboard_ts1000.bmp (redibujado, ver keyboards/tools)
+//Fork: para keyboard_zx81.bmp y keyboard_ts1000.bmp (redibujado, ver tools/keyboards en la raiz del repositorio)
 int keyboard_map_table_coords_zx81[40*4]={
     20,188,59,224,    68,188,108,224,    118,188,158,224,    168,188,208,224,    218,188,258,224,
     43,128,82,164,    93,128,132,164,    143,128,182,164,    193,128,232,164,    243,128,282,164,
@@ -23783,7 +23783,7 @@ int keyboard_map_table_coords_zx81[40*4]={
     468,188,508,224,    418,188,458,224,    368,188,408,224,    318,188,358,224,    268,188,308,224,
 };
 
-//Fork: para keyboard_zx80.bmp (redibujado, ver keyboards/tools)
+//Fork: para keyboard_zx80.bmp (redibujado, ver tools/keyboards en la raiz del repositorio)
 int keyboard_map_table_coords_zx80[40*4]={
     18,196,56,231,    66,196,105,231,    116,196,156,231,    166,196,206,231,    216,196,256,231,
     40,136,80,172,    91,136,130,172,    141,136,180,172,    191,136,230,172,    241,136,280,172,
