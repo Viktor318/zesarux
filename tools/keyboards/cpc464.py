@@ -32,6 +32,7 @@ PLATE = (70, 80, 93)
 PLATE_EDGE = (58, 66, 77)
 WELL = (28, 30, 32)
 INK = (226, 230, 232)
+INK_COLOUR = (244, 246, 248)     # las palabras de las teclas de color (rojas, verdes, azules)
 PLATE_INK = (214, 220, 226)
 KEYS = {
     #      skirt           top
@@ -128,7 +129,7 @@ def rect(x0, y0, x1, y1, c, rx=0, snap=True):
                  % (x0, y0, x1 - x0, y1 - y0, rx, hexcol(c)))
 
 
-def text(s, cx, cy, h, fnt, c, ref='H', align='centre'):
+def text(s, cx, cy, h, fnt, c, ref='H', align='centre', snap=False):
     """s centred on cx (align 'left': from cx), its capitals h pixels high
     (as high as ref), centred on cy"""
     f = kbdraw.font(fnt)
@@ -138,6 +139,11 @@ def text(s, cx, cy, h, fnt, c, ref='H', align='centre'):
     sc = h / capH
     left = cx - sc * (x1 - x0) / 2 if align == 'centre' else cx
     base = cy + h / 2
+    if snap:
+        # la linea base y el borde izquierdo de la tinta en pixeles pares:
+        # al 100% (la mitad) los trazos horizontales caen en pixeles enteros
+        base = ev(base)
+        left = ev(left)
     items.append('<path fill="%s" transform="matrix(%.5f 0 0 %.5f %.3f %.3f)" d="%s"/>'
                  % (hexcol(c), sc, -sc, left - sc * x0, base, d))
 
@@ -190,16 +196,19 @@ def sign(ch, cx, cy):
 
 
 FN_H = 11           # la altura de las palabras de las teclas de funcion
+# las de las teclas de color (Viktor): mas altas, mas blancas y en pixeles pares
+FN_H_COLOUR, FN_LINE_COLOUR, FN_MARGIN_COLOUR = 12, 16, 16
 
 
-def fn_text(t, cx, cy, maxw):
+def fn_text(t, cx, cy, maxw, colour=False):
     """una palabra de una tecla de funcion: Heros Cn Bold, FN_H de alto, mas
-    baja si no cabe en maxw"""
+    baja si no cabe en maxw; en una tecla de color (colour) FN_H_COLOUR de
+    alto, en INK_COLOUR y en pixeles pares"""
     f = kbdraw.font('cnb')
     capb = f.outline('H')[1]
     d, (x0, y0, x1, y1) = f.outline(t)
-    h = min(FN_H, maxw * (capb[3] - capb[1]) / (x1 - x0))
-    text(t, cx, cy, h, 'cnb', INK)
+    h = min(FN_H_COLOUR if colour else FN_H, maxw * (capb[3] - capb[1]) / (x1 - x0))
+    text(t, cx, cy, h, 'cnb', INK_COLOUR if colour else INK, snap=colour)
 
 
 def cap(x0, y0, x1, y1, c):
@@ -236,7 +245,7 @@ def draw():
                  % (hexcol(sk), x0, y0, x1, y1, xl, y0 + KH, x0))
     items.append('<path fill="%s" d="M%g %gH%gV%gH%gV%gH%gZ"/>'
                  % (hexcol(tp), x0 + 6, y0 + 4, x1 - 6, y1 - 11, xl + 6, y0 + KH - 11, x0 + 6))
-    fn_text('ENTER', (xl + x1) / 2, (y0 + y1) / 2 - 4, 90)
+    fn_text('ENTER', (xl + x1) / 2, (y0 + y1) / 2 - 4, 90, colour=True)
     for x0, y0, x1, y1, c, t, kind in keys:
         cx, cy = cap(x0, y0, x1, y1, c)
         if kind == 'big':
@@ -249,8 +258,10 @@ def draw():
             arrow(cx, cy, t, INK)
         elif t:
             lines = t.split('\n')
+            colour = c != 'k'
+            line, margin = (FN_LINE_COLOUR, FN_MARGIN_COLOUR) if colour else (15, 18)
             for n, l in enumerate(lines):
-                fn_text(l, cx, cy + (n - (len(lines) - 1) / 2) * 15, x1 - x0 - 18)
+                fn_text(l, cx, cy + (n - (len(lines) - 1) / 2) * line, x1 - x0 - margin, colour)
     out = ['<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d">' % (W, H, W, H),
            '<!-- The keyboard of the Amstrad CPC 464, drawn again for the ZEsarUX fork '
            '(tools/keyboards/cpc464.py). The letters are outlines of TeX Gyre Heros (GUST Font License). -->']
