@@ -24,6 +24,16 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
   kurzorbillentyűk, a Tab, az F-billentyűk és a Ctrl vagy bal Alt
   kombinációk ugyanúgy működnek, mint eddig.
 
+### Upstream
+
+- Beolvasztva az upstream 13.1 Beta 1 (2026-11-17): **ATM Turbo 1/2 és ATM
+  Turbo 2+/3 virtuális billentyűzet**, és a BMP-képek sorkitöltésének
+  javítása (a néggyel nem osztható szélességű képek ferdén jelentek meg;
+  a fork billentyűzet-méretezője is így olvassa a képet). A program verziója
+  mostantól 13.1-B1-hu.1-ként jelenik meg. Az upstream új, egész szorzós
+  billentyűzet-méretezése helyett a fork sajátja maradt (100/150/200%,
+  bármilyen ablakméret, simítás, tárolt kép).
+
 ### Hang
 
 - Megszűnt a *Jó minőségű hang* beállítás: ahol elérhető (az SDL2

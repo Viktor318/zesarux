@@ -16435,6 +16435,10 @@ void screen_render_bmpfile_putpixel(zxvision_window *ventana,int x,int y,int col
     }
 }
 
+int last_screen_render_bmpfile_function_ancho=0;
+int last_screen_render_bmpfile_function_alto=0;
+
+
 /*
 //Se puede especificar un x_offset que desplaza la imagen x pixeles a la derecha,
 Se puede especificar un x_ignore que hace que X lineas desde la izquierda no se dibujen,
@@ -16484,6 +16488,9 @@ Height	4 bytes	0016h	Vertical height of bitmap in pixels
     int ancho=mem[18] + 256 * mem[19];
     int alto=mem[22] + 256 * mem[23];
 
+    last_screen_render_bmpfile_function_ancho=ancho;
+    last_screen_render_bmpfile_function_alto=alto;
+
 //printf ("ancho: %d alto: %d\n",ancho,alto);
 
 
@@ -16503,9 +16510,8 @@ DataOffset	4 bytes	000Ah	Offset from beginning of file to the beginning of the b
     int offset_bmp=mem[10] + 256 * mem[11];
     //printf ("offset pixeles: %d\n",offset_bmp);
 
-    int ancho_calculo=ancho;
-    //Nota: parece que el ancho tiene que ser par, para poder calcular el offset
-    if ( (ancho_calculo % 2 ) !=0) ancho_calculo++;
+    // En BMP de 8 bits cada fila se rellena hasta un múltiplo de cuatro bytes.
+    int ancho_calculo=(ancho+3)&~3;
 
     int ancho_mostrar_final=ancho;
 
@@ -16575,6 +16581,7 @@ void screen_render_bmpfile(z80_byte *mem,int indice_paleta_color,zxvision_window
         screen_render_bmpfile_putpixel);
 
 }
+
 
 /*
 Funcion llamada desde los drivers de video generalmente despues de redimensionar la ventana de ZEsarUX,

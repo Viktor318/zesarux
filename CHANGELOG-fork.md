@@ -24,6 +24,16 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
   the cursor keys, Tab, the F keys and the Ctrl or left Alt combinations
   work as before.
 
+### Upstream
+
+- Merged upstream 13.1 Beta 1 (2026-11-17): **ATM Turbo 1/2 and ATM Turbo
+  2+/3 virtual keyboards**, and the fix for the row padding of BMP pictures
+  (pictures whose width is not a multiple of four were shown slanted; the
+  fork's keyboard scaler now reads them the same way). The program now
+  shows its version as 13.1-B1-hu.1. The fork keeps its own keyboard
+  scaling (100/150/200%, any window size, smoothing, stored picture)
+  instead of the new upstream integer-factor scaling.
+
 ### Sound
 
 - The *High quality sound* setting is gone: the high quality sound is

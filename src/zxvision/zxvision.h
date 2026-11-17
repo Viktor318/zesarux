@@ -621,11 +621,13 @@ extern void zxvision_reapply_style_colours_all_windows(void);
 extern void menu_calculate_mouse_xy_absolute_interface(int *resultado_x,int *resultado_y);
 extern void menu_calculate_mouse_xy_absolute_interface_pixel(int *resultado_x,int *resultado_y);
 extern void zxvision_get_mouse_in_window(zxvision_window *ventana,int *posx,int *posy);
+extern void zxvision_get_mouse_in_window_no_zooms(zxvision_window *ventana,int *posx,int *posy);
 extern int zxvision_mouse_in_zesarux_window(void);
 extern int zxvision_mouse_in_emulated_machine(void);
 
 extern void zxvision_putpixel(zxvision_window *w,int x,int y,int color);
 extern void zxvision_putpixel_no_menu_gui_zoom(zxvision_window *w,int x,int y,int color);
+extern void zxvision_putpixel_no_menu_gui_zoom_no_zoom(zxvision_window *w,int x,int y,int color);
 extern void zxvision_putpixel_no_zoom(zxvision_window *w,int x,int y,int color);
 extern void menu_scr_putpixel_no_zoom(int x,int y,int color);
 extern void menu_tecleado_agregar(z80_byte caracter);

@@ -23141,6 +23141,8 @@ void menu_help_keyboard_load_bmp(void)
     else if (MACHINE_IS_ZXUNO) strcpy(nombrebmp,"keyboard_zxuno.bmp");
     else if (MACHINE_IS_DIDAKTIKGAMA) strcpy(nombrebmp,"keyboard_didaktikgama.bmp");
     else if (MACHINE_IS_SCORPION) strcpy(nombrebmp,"keyboard_scorpion.bmp");
+    else if (MACHINE_IS_ATM_TURBO1 || MACHINE_IS_ATM_TURBO2) strcpy(nombrebmp,"keyboard_atm1.bmp");
+    else if (MACHINE_IS_ATM_TURBO2_PLUS || MACHINE_IS_ATM_TURBO3) strcpy(nombrebmp,"keyboard_atm2p.bmp");
     else strcpy(nombrebmp,"keyboard_48.bmp");
 
     //localizarlo
@@ -23286,6 +23288,30 @@ int keyboard_map_table_coords_didaktikgama[40*4]={
 568,171,609,212,    517,171,558,212,    463,171,506,212,    408,171,452,212,    356,171,398,212,
 599,219,639,260,    543,219,589,260,    490,219,534,260,    436,219,479,260,    382,219,426,260,
 576,268,639,308,    518,268,564,308,    463,268,508,308,    409,268,453,308,    356,268,400,308,
+};
+
+// Coordenadas de las 40 teclas Spectrum en el BMP compartido por ATM1 y ATM2.
+int keyboard_map_table_coords_atm[40*4]={
+    23,149,58,184,    105,149,138,184,    143,149,175,184,    184,149,219,184,    224,149,258,184,
+    90,109,122,144,    128,109,160,144,    169,109,202,144,    208,109,242,144,    247,109,281,144,
+    72,68,105,102,    110,68,144,102,    148,68,181,102,    186,68,218,102,    223,68,255,102,
+    93,29,126,60,    130,29,164,60,    168,29,201,60,    205,29,239,60,    243,29,276,60,
+    430,29,466,60,    393,29,426,60,    355,29,389,60,    318,29,351,60,    280,29,314,60,
+    419,68,452,102,    381,68,414,102,    341,68,376,102,    302,68,336,102,    263,68,297,102,
+    519,109,558,144,    405,109,439,144,    366,109,400,144,    326,109,361,144,    286,109,321,144,
+    134,192,220,226,    495,149,529,184,    344,149,378,184,    304,149,338,184,    263,149,298,184,
+};
+
+// Matriz Spectrum sobre el BMP compartido por ATM2+ y ATM3.
+int keyboard_map_table_coords_atm2p[40*4]={
+    18,141,126,177,    184,141,231,177,    234,141,280,177,    283,141,330,177,    333,141,380,177,
+    158,100,204,136,    207,100,254,136,    257,100,303,136,    306,100,353,136,    356,100,403,136,
+    148,59,193,96,    195,59,239,96,    243,59,287,96,    291,59,335,96,    339,59,385,96,
+    138,16,183,53,    187,16,233,53,    237,16,283,53,    287,16,333,53,    337,16,384,53,
+    585,16,627,53,    537,16,582,53,    488,16,532,53,    438,16,484,53,    388,16,433,53,
+    583,59,626,96,    535,59,578,96,    487,59,530,96,    438,59,482,96,    389,59,434,96,
+    611,100,680,136,    556,100,607,136,    506,100,552,136,    456,100,502,136,    406,100,452,136,
+    263,183,485,217,    18,183,69,217,    484,141,530,177,    434,141,480,177,    384,141,430,177,
 };
 
 int keyboard_map_table_coords_scorpion[40*4]={
@@ -23776,6 +23802,59 @@ keyboard_help_double_key keyboard_map_additional_p2[]={
     { 0,0,0,0,NULL,0,NULL,0 }
 };
 
+// Atajos y teclas duplicadas del teclado mecánico de ATM1/ATM2.
+// TAB, ALT, la tecla anterior al 1, las dos R y la flecha roja superior quedan sin asignar hasta confirmar su cableado.
+keyboard_help_double_key keyboard_map_additional_atm[]={
+    { 18,29,52,60, &puerto_63486,1, KEY_PORT_VALUE_SHIFT }, // EDIT
+    { 508,29,540,60, &puerto_61438,1, KEY_PORT_VALUE_SHIFT }, // DEL
+    { 11,109,44,144, &puerto_63486,2, KEY_PORT_VALUE_SHIFT }, // Caps Lock
+    { 62,149,99,184, KEY_PORT_VALUE_SHIFT, KEY_PORT_VALUE_SYMBOL }, // EXT
+    { 305,192,391,226, &puerto_32766,1, NULL,0 }, // segundo espacio
+    { 470,29,504,60, &puerto_49150,2, KEY_PORT_VALUE_SYMBOL }, // igual
+    { 457,68,489,102, &puerto_61438,4, KEY_PORT_VALUE_SYMBOL }, // paréntesis izquierdo
+    { 494,68,525,102, &puerto_61438,2, KEY_PORT_VALUE_SYMBOL }, // paréntesis derecho
+    { 530,68,558,102, &puerto_61438,1, KEY_PORT_VALUE_SYMBOL }, // guion bajo
+    { 445,109,476,144, &puerto_65278,2, KEY_PORT_VALUE_SYMBOL }, // dos puntos
+    { 482,109,513,144, &puerto_57342,1, KEY_PORT_VALUE_SYMBOL }, // comillas
+    { 384,149,416,184, &puerto_32766,8, KEY_PORT_VALUE_SYMBOL }, // coma
+    { 421,149,452,184, &puerto_32766,4, KEY_PORT_VALUE_SYMBOL }, // punto
+    { 457,149,489,184, &puerto_65278,8, KEY_PORT_VALUE_SYMBOL }, // interrogación
+    { 620,68,654,102, &puerto_49150,8, KEY_PORT_VALUE_SYMBOL }, // menos del bloque derecho
+    { 660,68,692,102, &puerto_57342,2, KEY_PORT_VALUE_SYMBOL }, // punto y coma
+    { 698,68,731,102, &puerto_65278,16, KEY_PORT_VALUE_SYMBOL }, // división
+    { 620,109,654,143, &puerto_49150,4, KEY_PORT_VALUE_SYMBOL }, // suma
+    { 698,109,731,143, &puerto_32766,16, KEY_PORT_VALUE_SYMBOL }, // asterisco
+    { 660,109,692,143, &puerto_61438,8, KEY_PORT_VALUE_SHIFT }, // cursor arriba
+    { 620,149,654,184, &puerto_63486,16, KEY_PORT_VALUE_SHIFT }, // cursor izquierda
+    { 660,149,692,184, &puerto_61438,16, KEY_PORT_VALUE_SHIFT }, // cursor abajo
+    { 698,149,731,184, &puerto_61438,4, KEY_PORT_VALUE_SHIFT }, // cursor derecha
+    { 0,0,0,0,NULL,0,NULL,0 }
+};
+
+// Combinaciones y teclas duplicadas de ATM2+/ATM3; Enter ocupa dos rectángulos.
+keyboard_help_double_key keyboard_map_additional_atm2p[]={
+    { 18,16,73,53, &puerto_63486,4, KEY_PORT_VALUE_SHIFT }, // True Video
+    { 77,16,133,53, &puerto_63486,8, KEY_PORT_VALUE_SHIFT }, // Inverse Video
+    { 18,59,86,96, &puerto_61438,1, KEY_PORT_VALUE_SHIFT }, // Delete
+    { 90,59,143,96, &puerto_61438,2, KEY_PORT_VALUE_SHIFT }, // Graph
+    { 18,100,90,136, KEY_PORT_VALUE_SHIFT, KEY_PORT_VALUE_SYMBOL }, // modo extendido
+    { 95,100,153,136, &puerto_63486,1, KEY_PORT_VALUE_SHIFT }, // Edit
+    { 130,141,180,177, &puerto_63486,2, KEY_PORT_VALUE_SHIFT }, // Caps Lock
+    { 633,16,680,53, &puerto_32766,1, KEY_PORT_VALUE_SHIFT }, // Break
+    { 632,59,680,96, &puerto_49150,1, NULL,0 }, // parte superior de Enter
+    { 585,141,680,177, KEY_PORT_VALUE_SHIFT, NULL,0 }, // Caps Shift derecho
+    { 631,183,680,217, KEY_PORT_VALUE_SYMBOL, NULL,0 }, // Symbol Shift derecho
+    { 74,183,116,217, &puerto_57342,2, KEY_PORT_VALUE_SYMBOL }, // punto y coma
+    { 121,183,162,217, &puerto_57342,1, KEY_PORT_VALUE_SYMBOL }, // comillas
+    { 167,183,210,217, &puerto_63486,16, KEY_PORT_VALUE_SHIFT }, // cursor izquierda
+    { 215,183,258,217, &puerto_61438,4, KEY_PORT_VALUE_SHIFT }, // cursor derecha
+    { 490,183,532,217, &puerto_61438,8, KEY_PORT_VALUE_SHIFT }, // cursor arriba
+    { 537,183,579,217, &puerto_61438,16, KEY_PORT_VALUE_SHIFT }, // cursor abajo
+    { 584,183,626,217, &puerto_32766,8, KEY_PORT_VALUE_SYMBOL }, // coma
+    { 535,141,580,177, &puerto_32766,4, KEY_PORT_VALUE_SYMBOL }, // punto
+    { 0,0,0,0,NULL,0,NULL,0 }
+};
+
 //Teclas adicionales scorpion
 keyboard_help_double_key keyboard_map_additional_scorpion[]={
     { 593,263,628,296,     KEY_PORT_VALUE_SYMBOL,  NULL, 0}, // Symbol Shift derecho
@@ -24145,6 +24224,9 @@ void keyboard_help_reset_teclas_pulsadas(void)
 //Retorna tabla de coordenadas de teclas
 int *keyboard_help_return_map_table(void)
 {
+    if (MACHINE_IS_ATM_TURBO1 || MACHINE_IS_ATM_TURBO2) return keyboard_map_table_coords_atm;
+    if (MACHINE_IS_ATM_TURBO2_PLUS || MACHINE_IS_ATM_TURBO3) return keyboard_map_table_coords_atm2p;
+
     if (MACHINE_IS_SPECTRUM_48_PLUS_SPA || MACHINE_IS_SPECTRUM_48_PLUS_ENG ||
         MACHINE_IS_INVES || MACHINE_IS_SPECTRUM_128 || MACHINE_IS_SPECTRUM_128_SPA || MACHINE_IS_CZ_SPECTRUM_PLUS) {
         return keyboard_map_table_coords_48p;
@@ -24280,6 +24362,9 @@ int *keyboard_help_return_map_table(void)
 
 keyboard_help_double_key *keyboard_help_return_double_keys(void)
 {
+    if (MACHINE_IS_ATM_TURBO1 || MACHINE_IS_ATM_TURBO2) return keyboard_map_additional_atm;
+    if (MACHINE_IS_ATM_TURBO2_PLUS || MACHINE_IS_ATM_TURBO3) return keyboard_map_additional_atm2p;
+
 
     keyboard_help_double_key *teclas_dobles=NULL;
 
@@ -24465,6 +24550,8 @@ static const struct s_menu_help_keyboard_original_width menu_help_keyboard_origi
     {"keyboard_cz1000_plus.bmp",580}, {"keyboard_cz1500_plus.bmp",572}, {"keyboard_mk14.bmp",312},
     {"keyboard_pcw_8256.bmp",640}, {"keyboard_pcw_8512_only_text.bmp",31}, {"keyboard_sam.bmp",640},
     {"keyboard_zxuno.bmp",596},
+    //Fork: teclados ATM del upstream (aun en su tamano original)
+    {"keyboard_atm1.bmp",750}, {"keyboard_atm2p.bmp",700},
     //All the other images are 540 pixels wide
     {NULL,540}
 };
@@ -24944,6 +25031,8 @@ void menu_help_keyboard_overlay_render_512k_pcw(z80_byte *mem,int indice_paleta_
 
 }
 
+//Fork: el escalado del upstream (factor entero, menu_help_keyboard_putpixel_internal_zoom,
+//menu_help_keyboard_recalculate_zoom_factor) no se usa: la imagen se escala al tamano de la ventana con la cache de abajo
 
 /* Remuestreo suavizado de la imagen del teclado a la cache (fork).
    El pixel mas cercano, al reducir la imagen (por ejemplo al 84%), se salta columnas y filas enteras,
@@ -25061,9 +25150,8 @@ static int menu_help_keyboard_escala_bmp_suave(z80_byte *mem,int ignorar_x,int e
     if (ancho_destino<=0 || alto_destino<=0) return 0;
 
     int offset_bmp=mem[10] + 256 * mem[11];
-    int ancho_calculo=ancho;
-    //Como screen_render_bmpfile_function
-    if ( (ancho_calculo % 2 ) !=0) ancho_calculo++;
+    //En los BMP de 8 bits cada fila se rellena hasta un multiplo de cuatro bytes (como en screen_render_bmpfile_function)
+    int ancho_calculo=(ancho+3)&~3;
 
     z80_byte *paleta=&mem[14 + mem[14] + 256*mem[15]];
 
@@ -26033,6 +26121,7 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
         //No se puede empezar pulsando tecla en el teclado y luego con raton, que querriamos que usase este "if" de abajo,
         //porque cuando se deja de pulsar el tecla se liberan todos los puertos y entonces se pararia de enviar pulsaciones de raton
 
+
         if ((tecla || todos_puertos_teclado_acumulado!=255) && !mouse_left && !mouse_right) {
             //printf("generar tecla en condicion de tecla pulsada. tecla=%d mouse_left: %d mouse_right: %d todos_puertos_teclado_acumulado=%d\n",
             //    tecla,mouse_left,mouse_right,todos_puertos_teclado_acumulado);
@@ -26155,7 +26244,7 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
     else {
         zxvision_destroy_window(ventana);
         free(help_keyboard_bmp_file_mem);
-     }
+    }
 
 
 }
