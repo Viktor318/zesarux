@@ -35,6 +35,9 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
   the ones of the tables until now, moved onto the keys of the drawings.
   The 16K shows the picture of the 48K, as in EightyOne. The pictures of
   the Spanish 48+/128, the Inves and the other machines did not change.
+- On the Spectrum+ and 128 picture the `!` is a little thicker and the `'` a
+  little thinner, and the `@` and the `#` are in the font's own proportions
+  (they were squeezed and stretched).
 - The pictures are made from the drawings of the EightyOne fork
   (`Source/KBPics/svg`) by `tools/keyboards/make_zesarux_keyboards.py`.
 - When it is first opened, the window fits the picture at 200%. The new

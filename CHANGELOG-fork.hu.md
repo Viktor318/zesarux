@@ -35,6 +35,9 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
   táblázatokból a rajzok billentyűire áthelyezve. A 16K a 48K képét mutatja,
   ahogy az EightyOne-ban. A spanyol 48+/128, az Inves és a többi gép képe
   nem változott.
+- A Spectrum+ és a 128 képén a `!` kicsit vastagabb, a `'` kicsit vékonyabb,
+  a `@` és a `#` a betűtípus saját arányaiban (eddig összenyomva, illetve
+  széthúzva).
 - A képek a `tools/keyboards/make_zesarux_keyboards.py` szkripttel
   készülnek az EightyOne fork rajzaiból (`Source/KBPics/svg`).
 - Az ablak első megnyitáskor a 200%-os méretre igazodik a képhez. A
