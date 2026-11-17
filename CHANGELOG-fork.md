@@ -41,6 +41,12 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
 - On the Spectrum+ and 128 picture the `!` is a little thicker and the `'` a
   little thinner, and the `@` and the `#` are in the font's own proportions
   (they were squeezed and stretched).
+- **Amstrad CPC 464 keyboard drawn again** (the CPC 4128 shows it too): a
+  drawing instead of the photo, at the same size (1280×490), in the style of
+  the EightyOne pictures. The places of the keys are measured on the photo
+  and the key table is moved onto them; both parts of the L-shaped ENTER can
+  be clicked. The small signs (`*` `+` `-` `=` `_` `<` `>`) are of normal size.
+  Made by `tools/keyboards/cpc464.py`.
 - The pictures are made from the drawings of the EightyOne fork
   (`Source/KBPics/svg`) by `tools/keyboards/make_zesarux_keyboards.py`.
 - When it is first opened, the window fits the picture at 200%. The new

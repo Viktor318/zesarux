@@ -40,6 +40,12 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
 - A Spectrum+ és a 128 képén a `!` kicsit vastagabb, a `'` kicsit vékonyabb,
   a `@` és a `#` a betűtípus saját arányaiban (eddig összenyomva, illetve
   széthúzva).
+- **Újrarajzolt Amstrad CPC 464 billentyűzet** (a CPC 4128 is ezt
+  mutatja): az eddigi fénykép helyett rajz, ugyanabban a méretben (1280×490),
+  az EightyOne-os képek stílusában. A gombok helye a fényképről mérve, a
+  billentyűtábla az új helyekre számolva; az L alakú ENTER mindkét része
+  kattintható. A kis jelek (`*` `+` `-` `=` `_` `<` `>`) normál méretűek.
+  Készítője: `tools/keyboards/cpc464.py`.
 - A képek a `tools/keyboards/make_zesarux_keyboards.py` szkripttel
   készülnek az EightyOne fork rajzaiból (`Source/KBPics/svg`).
 - Az ablak első megnyitáskor a 200%-os méretre igazodik a képhez. A
