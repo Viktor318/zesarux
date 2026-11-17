@@ -24,6 +24,24 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
   kurzorbillentyűk, a Tab, az F-billentyűk és a Ctrl vagy bal Alt
   kombinációk ugyanúgy működnek, mint eddig.
 
+### Virtuális billentyűzet
+
+- **Újrarajzolt billentyűzetképek**, ugyanazokkal a rajzokkal, mint az
+  EightyOne forkban: Spectrum 16K/48K, Spectrum+ és 128, +2, +2A/+3, ZX80
+  (alatta az INTEGRAL FUNCTIONS felirattal), ZX81 (TK82C, TK83, CZ1000),
+  Timex Sinclair 1000 (saját, TIMEX feliratú képpel), TS1500, TK85, Jupiter
+  Ace, TC2048 és TS2068. 1080 pixel szélesek, közvetlenül ebben a méretben
+  rajzolva, így a 200% pixelre éles. A billentyűk helye az eddigi
+  táblázatokból a rajzok billentyűire áthelyezve. A 16K a 48K képét mutatja,
+  ahogy az EightyOne-ban. A spanyol 48+/128, az Inves és a többi gép képe
+  nem változott.
+- A képek a `src/keyboards/tools/make_zesarux_keyboards.py` szkripttel
+  készülnek az EightyOne fork rajzaiból (`Source/KBPics/svg`).
+- Az ablak első megnyitáskor a 200%-os méretre igazodik a képhez. A
+  rajzolt képek arányosan magasabbak, mint a régiek, ezért egy korábban
+  elmentett ablakméretnél a kép mellett üres sáv maradhat. A címsorra
+  duplán kattintva az ablak újra a képhez igazodik.
+
 ### Upstream
 
 - Beolvasztva az upstream 13.1 Beta 1 (2026-11-17): **ATM Turbo 1/2 és ATM

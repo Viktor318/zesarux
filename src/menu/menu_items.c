@@ -23118,7 +23118,7 @@ void menu_help_keyboard_load_bmp(void)
     else if (MACHINE_IS_Z88) strcpy(nombrebmp,"keyboard_z88.bmp");
     else if (MACHINE_IS_SPECTRUM_P2) strcpy(nombrebmp,"keyboard_p2.bmp");
     else if (MACHINE_IS_SPECTRUM_P2A_P3) strcpy(nombrebmp,"keyboard_p3.bmp");
-    else if (MACHINE_IS_SPECTRUM_16) strcpy(nombrebmp,"keyboard_16.bmp");
+    else if (MACHINE_IS_SPECTRUM_16) strcpy(nombrebmp,"keyboard_48.bmp"); //Fork: el del 48K (keyboard_16.bmp era el del 48K con las teclas gris claro)
     else if (MACHINE_IS_SPECTRUM_48_PLUS_SPA) strcpy(nombrebmp,"keyboard_48s.bmp");
     else if (MACHINE_IS_CZ_SPECTRUM_PLUS) strcpy(nombrebmp,"keyboard_48s.bmp"); //mismo teclado
     else if (MACHINE_IS_SPECTRUM_48_PLUS_ENG) strcpy(nombrebmp,"keyboard_48p.bmp"); //mismo teclado que el 128, aunque dejo archivos separados
@@ -23128,7 +23128,7 @@ void menu_help_keyboard_load_bmp(void)
     else if (MACHINE_IS_MICRODIGITAL_TK80) strcpy(nombrebmp,"keyboard_zx80.bmp");
     else if (MACHINE_IS_MICRODIGITAL_TK82) strcpy(nombrebmp,"keyboard_zx80.bmp");
     else if (MACHINE_IS_ZX81) strcpy(nombrebmp,"keyboard_zx81.bmp");
-    else if (MACHINE_IS_TIMEX_TS1000) strcpy(nombrebmp,"keyboard_zx81.bmp"); //mismo teclado
+    else if (MACHINE_IS_TIMEX_TS1000) strcpy(nombrebmp,"keyboard_ts1000.bmp"); //Fork: el del ZX81 con su nombre (redibujado)
     else if (MACHINE_IS_CZ_1000) strcpy(nombrebmp,"keyboard_zx81.bmp"); //mismo teclado
     else if (MACHINE_IS_MICRODIGITAL_TK82C) strcpy(nombrebmp,"keyboard_zx81.bmp"); //mismo teclado
     else if (MACHINE_IS_MICRODIGITAL_TK83) strcpy(nombrebmp,"keyboard_zx81.bmp"); //mismo teclado
@@ -23245,15 +23245,16 @@ También hay que gestionar los casos de teclados con mas de 5 columnas o mas de 
 
 //para keyboard_48.bmp
 //4 valores de cada tecla: x,y inicial, x,y final
+//Fork: para la imagen redibujada (ver keyboards/tools)
 int keyboard_map_table_coords_48[40*4]={
-8,166,54,190,       72,166,106,190,     120,166,158,190,    172,166,206,190,    220,166,256,190,
-46,116,80,140,      94,116,130,142,     146,116,180,140,    196,116,232,142,    245,116,280,140,
-34,68,68,92,        84,68,120,92,       132,68,168,92,      184,68,220,92,      235,68,266,92,
-8,20,44,44,         58,20,96,44,        110,20,144,44,      160,20,194,44,      210,20,244,44,
-458,20,492,44,      408,20,444,44,      358,20,394,44,      308,20,342,44,      260,20,294,44,
-484,68,518,92,      434,68,468,92,      384,68,418,92,      334,68,370,92,      284,68,316,92,
-494,116,530,142,    446,118,480,142,    396,118,428,142,    346,118,378,142,    296,118,328,142,
-468,166,530,190,    420,166,454,190,    370,166,404,190,    321,166,354,190,    270,166,304,190,
+    6,192,61,224,    67,192,110,224,    116,192,158,224,    164,192,208,224,    214,192,256,224,
+    47,136,88,169,    96,136,138,169,    145,136,186,169,    194,136,236,169,    243,136,284,169,
+    34,80,76,112,    84,80,125,112,    133,80,174,112,    182,80,224,112,    232,80,273,112,
+    10,24,52,56,    61,24,102,56,    112,24,153,56,    162,24,204,56,    214,24,255,56,
+    467,24,508,56,    416,24,458,56,    366,24,407,56,    315,24,356,56,    264,24,306,56,
+    478,80,520,112,    429,80,470,112,    380,80,421,112,    330,80,372,112,    281,80,322,112,
+    488,136,530,169,    439,136,480,169,    390,136,432,169,    341,136,382,169,    292,136,334,169,
+    458,192,534,224,    408,192,452,224,    360,192,403,224,    311,192,354,224,    262,192,305,224,
 };
 
 //modelos +
@@ -23268,15 +23269,16 @@ int keyboard_map_table_coords_48p[40*4]={
 200,164,378,198,4,162,40,198,370,124,408,158,330,124,368,160,290,124,330,162,
 };
 
+//Fork: para la imagen redibujada (ver keyboards/tools)
 int keyboard_map_table_coords_p2[40*4]={
-2,124,88,160,134,124,170,160,174,124,210,158,210,122,252,158,252,124,288,156,
-112,84,150,120,152,82,186,120,192,84,230,120,232,82,270,118,272,82,308,114,
-102,44,138,80,140,42,182,80,182,42,220,78,220,44,262,78,260,42,300,80,
-82,2,120,40,122,2,162,40,162,2,200,38,202,2,240,40,242,2,280,40,
-442,2,480,40,402,2,438,40,362,2,400,40,322,2,360,40,282,2,318,38,
-462,44,498,78,420,44,458,78,382,42,420,78,340,44,378,78,300,44,340,78,
-472,82,536,118,430,84,468,118,392,84,428,118,350,84,390,120,312,84,348,120,
-200,164,378,198,4,164,38,198,372,124,408,158,332,124,368,158,292,124,330,160,
+    2,144,91,188,    132,144,170,188,    172,144,210,188,    212,144,249,188,    252,144,289,188,
+    116,98,153,142,    155,98,192,142,    194,98,232,142,    234,98,272,142,    274,98,311,142,
+    105,50,142,94,    144,50,182,94,    184,50,222,94,    224,50,261,94,    263,50,300,94,
+    82,3,119,47,    121,3,158,47,    160,3,198,47,    200,3,238,47,    240,3,277,47,
+    438,3,475,47,    398,3,436,47,    358,3,396,47,    318,3,356,47,    279,3,316,47,
+    461,50,498,94,    422,50,459,94,    382,50,419,94,    342,50,380,94,    302,50,340,94,
+    472,98,538,142,    432,98,470,142,    392,98,430,142,    353,98,390,142,    314,98,351,142,
+    200,192,380,236,    2,192,40,236,    370,144,408,188,    330,144,368,188,    291,144,328,188,
 };
 
 int keyboard_map_table_coords_didaktikgama[40*4]={
@@ -23364,15 +23366,16 @@ int keyboard_map_table_coords_chloe[40*4]={
 
 };
 
+//Fork: para la imagen redibujada (ver keyboards/tools)
 int keyboard_map_table_coords_tk85[40*4]={
-8,166,52,188, 72,162,104,188, 122,164,156,190, 172,164,204,188, 224,162,254,188,
-46,116,80,138,96,114,128,140,146,112,180,140,196,112,232,140,246,112,282,138,
-32,64,64,88,84,66,114,86,134,66,166,88,182,62,218,88,234,66,268,88,
-8,14,40,40,58,14,90,38,108,12,140,38,158,14,192,38,210,12,242,36,
-462,14,492,36,410,14,444,36,360,12,392,40,312,12,344,38,260,12,296,36,
-486,64,518,86,434,64,468,86,384,62,418,86,336,62,368,86,284,62,318,92,
-498,112,530,136,446,112,482,138,398,114,432,138,348,112,382,136,298,112,330,140,
-472,164,532,190,422,164,452,188,372,162,402,186,324,164,354,190,272,164,304,188,
+    20,188,59,224,    68,188,108,224,    118,188,158,224,    168,188,208,224,    218,188,258,224,
+    43,128,82,164,    93,128,132,164,    143,128,182,164,    193,128,232,164,    243,128,282,164,
+    31,68,70,104,    81,68,120,104,    131,68,170,104,    181,68,220,104,    231,68,270,104,
+    4,18,44,54,    54,18,94,54,    104,18,144,54,    154,18,194,54,    205,18,244,54,
+    456,18,495,54,    406,18,445,54,    356,18,395,54,    305,18,344,54,    255,18,294,54,
+    481,68,520,104,    431,68,470,104,    381,68,420,104,    331,68,370,104,    281,68,320,104,
+    494,128,533,164,    444,128,483,164,    393,128,432,164,    343,128,382,164,    293,128,332,164,
+    468,188,534,224,    418,188,458,224,    368,188,408,224,    318,188,358,224,    268,188,308,224,
 };
 
 
@@ -23458,15 +23461,16 @@ int keyboard_map_table_coords_zx8081[40*4]={
 460,160, 500,188, 412,160, 452,188, 364,162, 402,186, 316,160, 354,186, 270,162, 306,186,
 };
 
+//Fork: para la imagen redibujada (ver keyboards/tools)
 int keyboard_map_table_coords_ace[40*4]={
-34,158,62,184,82,158,110,186,128,154,160,184,178,158,206,184,224,156,252,184,
-56,110,84,136,104,110,134,136,152,110,182,136,198,108,228,136,244,108,276,136,
-40,60,72,90,90,62,120,88,138,62,168,88,184,62,216,90,234,60,264,88,
-18,14,50,42, 66,14,98,40, 118,14,146,40, 162,12,194,40, 210,14,242,42,
-448,12,482,40,402,12,434,40,356,16,382,40,308,16,336,40,260,16,288,40,
-474,62,504,86,426,62,454,88,378,64,406,88,330,64,360,88,282,64,312,88,
-486,110,516,136,438,112,468,136,388,110,418,136,342,110,370,136,296,110,322,136,
-464,158,514,184, 416,158,446,184, 368,158,398,184, 320,156,350,184, 272,156,302,184,
+    20,187,57,221,    70,187,107,221,    121,187,158,221,    171,187,208,221,    222,187,258,221,
+    44,130,81,164,    94,130,131,164,    145,130,182,164,    195,130,232,164,    246,130,282,164,
+    30,74,66,108,    80,74,116,108,    130,74,167,108,    181,74,218,108,    231,74,268,108,
+    6,17,43,51,    56,17,93,51,    107,17,144,51,    157,17,194,51,    208,17,244,51,
+    458,17,495,51,    408,17,445,51,    358,17,394,51,    308,17,344,51,    258,17,294,51,
+    482,74,519,108,    432,74,468,108,    382,74,418,108,    332,74,368,108,    282,74,318,108,
+    496,130,533,164,    446,130,482,164,    396,130,432,164,    346,130,382,164,    296,130,332,164,
+    472,187,532,221,    422,187,459,221,    372,187,408,221,    322,187,358,221,    272,187,308,221,
 };
 
 //4 de direccion, 2 botones
@@ -23646,28 +23650,30 @@ int keyboard_map_table_coords_pcw[8*11*4]={
 };
 
 
+//Fork: para la imagen redibujada (ver keyboards/tools)
 int keyboard_map_table_coords_timex_computer[40*4]={
-20,134,64,158,78,132,110,156,122,132,154,160,166,132,200,160,210,132,242,160,
-52,94,86,118,100,96,130,118,142,94,176,118,188,94,222,118,234,96,266,118,
-42,56,74,78,88,56,120,78,134,56,166,80,180,54,210,78,222,56,252,78,
-20,16,50,40,64,16,98,40,110,18,142,40,154,16,186,38,200,16,232,40,
-424,18,458,42,378,16,412,38,334,16,368,40,290,16,322,42,246,16,276,40,
-448,54,482,78,402,54,436,80,358,54,390,80,312,54,346,80,268,56,302,80,
-458,94,526,118,412,96,446,118,368,94,400,118,324,94,356,118,278,96,312,118,
-120,172,424,196, 392,134,424,156,346,132,378,154,302,134,334,156,256,132,290,156,
+    22,160,60,181,    77,160,105,181,    122,160,150,181,    167,160,195,181,    212,160,240,181,
+    54,116,82,136,    100,116,128,136,    144,116,172,136,    190,116,218,136,    234,116,262,136,
+    44,70,72,91,    89,70,117,91,    134,70,162,91,    178,70,206,91,    224,70,252,91,
+    22,26,50,46,    66,26,94,46,    111,26,139,46,    156,26,184,46,    201,26,229,46,
+    426,26,454,46,    380,26,408,46,    336,26,364,46,    291,26,319,46,    246,26,274,46,
+    448,70,476,91,    403,70,431,91,    358,70,386,91,    314,70,342,91,    268,70,296,91,
+    458,116,518,136,    414,116,442,136,    369,116,397,136,    324,116,352,136,    279,116,307,136,
+    122,206,420,227,    392,160,420,181,    346,160,374,181,    302,160,330,181,    256,160,284,181,
 };
 
 
 
+//Fork: para la imagen redibujada (ver keyboards/tools)
 int keyboard_map_table_coords_timex_sinclair_1500[40*4]={
-8,162,54,188,70,162,106,188,120,160,156,188,170,162,206,186,220,162,258,188,
-44,112,80,140,96,112,132,138,146,112,180,136,196,114,230,136,246,112,280,136,
-32,62,70,88,84,62,118,86,132,60,168,88,184,60,218,86,232,62,268,88,
-6,12,44,38,58,12,92,36,108,12,144,36,156,10,192,36,208,10,244,38,
-458,10,496,38,408,10,446,38,358,10,394,38,310,12,342,36,258,10,296,38,
-484,60,518,88, 434,60,468,88, 384,60,420,86, 334,62,368,88, 282,60,320,86,
-498,112,534,140,448,110,482,136,398,110,430,134,346,110,384,138,294,110,330,134,
-472,164,532,188,424,162,458,186,370,162,406,186,322,162,356,186,272,162,304,186,
+    3,178,60,235,    65,178,111,235,    114,178,162,235,    165,178,211,235,    215,178,261,235,
+    39,118,86,174,    89,118,137,174,    140,118,186,174,    190,118,236,174,    240,118,286,174,
+    27,58,74,114,    77,58,124,114,    127,58,174,114,    178,58,224,114,    228,58,274,114,
+    1,4,48,55,    51,4,98,55,    101,4,148,55,    152,4,198,55,    202,4,248,55,
+    452,4,499,55,    402,4,449,55,    352,4,399,55,    302,4,348,55,    250,4,299,55,
+    478,58,525,114,    428,58,475,114,    378,58,425,114,    328,58,375,114,    277,58,325,114,
+    490,118,538,174,    440,118,488,174,    390,118,437,174,    340,118,387,174,    290,118,337,174,
+    465,178,536,235,    415,178,461,235,    364,178,412,235,    315,178,361,235,    265,178,311,235,
 };
 
 
@@ -23753,6 +23759,42 @@ z80_byte puerto_32766=255; //    db              255  ; B    N    M    Simb Spac
 */
 
 //Teclas adicionales spectrum+
+//Fork: para keyboard_48p.bmp y keyboard_128.bmp (redibujado, ver keyboards/tools)
+int keyboard_map_table_coords_plus[40*4]={
+    2,144,91,188,    132,144,170,188,    172,144,210,188,    212,144,249,188,    252,144,289,188,
+    116,98,153,142,    155,98,192,142,    194,98,232,142,    234,98,272,142,    274,98,311,142,
+    105,50,142,94,    144,50,182,94,    184,50,222,94,    224,50,261,94,    263,50,300,94,
+    82,3,119,47,    121,3,158,47,    160,3,198,47,    200,3,238,47,    240,3,277,47,
+    438,3,475,47,    398,3,436,47,    358,3,396,47,    318,3,356,47,    279,3,316,47,
+    461,50,498,94,    422,50,459,94,    382,50,419,94,    342,50,380,94,    302,50,340,94,
+    472,98,538,142,    432,98,470,142,    392,98,430,142,    353,98,390,142,    314,98,351,142,
+    200,192,380,236,    2,192,40,236,    370,144,408,188,    330,144,368,188,    291,144,328,188,
+};
+
+//Fork: para keyboard_zx81.bmp y keyboard_ts1000.bmp (redibujado, ver keyboards/tools)
+int keyboard_map_table_coords_zx81[40*4]={
+    20,188,59,224,    68,188,108,224,    118,188,158,224,    168,188,208,224,    218,188,258,224,
+    43,128,82,164,    93,128,132,164,    143,128,182,164,    193,128,232,164,    243,128,282,164,
+    31,68,70,104,    81,68,120,104,    131,68,170,104,    181,68,220,104,    231,68,270,104,
+    4,18,44,54,    54,18,94,54,    104,18,144,54,    154,18,194,54,    205,18,244,54,
+    456,18,495,54,    406,18,445,54,    356,18,395,54,    305,18,344,54,    255,18,294,54,
+    481,68,520,104,    431,68,470,104,    381,68,420,104,    331,68,370,104,    281,68,320,104,
+    494,128,533,164,    444,128,483,164,    393,128,432,164,    343,128,382,164,    293,128,332,164,
+    468,188,508,224,    418,188,458,224,    368,188,408,224,    318,188,358,224,    268,188,308,224,
+};
+
+//Fork: para keyboard_zx80.bmp (redibujado, ver keyboards/tools)
+int keyboard_map_table_coords_zx80[40*4]={
+    18,196,56,231,    66,196,105,231,    116,196,156,231,    166,196,206,231,    216,196,256,231,
+    40,136,80,172,    91,136,130,172,    141,136,180,172,    191,136,230,172,    241,136,280,172,
+    29,76,68,112,    79,76,118,112,    129,76,168,112,    179,76,218,112,    229,76,268,112,
+    3,17,42,52,    53,17,92,52,    104,17,143,52,    154,17,193,52,    204,17,243,52,
+    454,17,494,52,    404,17,444,52,    354,17,394,52,    304,17,344,52,    254,17,294,52,
+    479,76,518,112,    429,76,468,112,    379,76,418,112,    329,76,368,112,    279,76,318,112,
+    491,136,530,172,    441,136,480,172,    391,136,430,172,    341,136,380,172,    291,136,330,172,
+    466,196,506,231,    416,196,456,231,    366,196,406,231,    316,196,356,231,    266,196,306,231,
+};
+
 keyboard_help_double_key keyboard_map_additional_48p[]={
     { 500,162, 537,198,     KEY_PORT_VALUE_SYMBOL,  NULL, 0},  //symbol derecha
     { 452,124,536,158,      KEY_PORT_VALUE_SHIFT,   NULL, 0}, //caps shift derecha
@@ -23777,27 +23819,52 @@ keyboard_help_double_key keyboard_map_additional_48p[]={
     { 0,0,0,0,NULL,0,NULL,0 }
 };
 
+//Fork: teclas adicionales para keyboard_48p.bmp y keyboard_128.bmp (redibujados)
+keyboard_help_double_key keyboard_map_additional_plus[]={
+    { 500, 192, 538, 236, KEY_PORT_VALUE_SYMBOL, NULL, 0 }, //symbol derecha
+    { 449, 144, 538, 188, KEY_PORT_VALUE_SHIFT, NULL, 0 }, //caps shift derecha
+    { 500, 50, 538, 142, &puerto_49150, 1, NULL, 0 }, //trozo del enter parte de arriba
+    { 2, 98, 63, 142, KEY_PORT_VALUE_SHIFT, KEY_PORT_VALUE_SYMBOL }, //extend mode
+    { 2, 50, 63, 94, &puerto_65278, 1, &puerto_61438, 1 }, //delete
+    { 2, 3, 40, 47, &puerto_63486, 4, KEY_PORT_VALUE_SHIFT }, //true video
+    { 42, 3, 79, 47, &puerto_63486, 8, KEY_PORT_VALUE_SHIFT }, //inverse video
+    { 65, 50, 102, 94, &puerto_61438, 2, KEY_PORT_VALUE_SHIFT }, //graph
+    { 65, 98, 113, 142, &puerto_63486, 1, KEY_PORT_VALUE_SHIFT }, //edit
+    { 93, 144, 130, 188, &puerto_63486, 2, KEY_PORT_VALUE_SHIFT }, //caps lock
+    { 42, 192, 79, 236, &puerto_57342, 2, KEY_PORT_VALUE_SYMBOL }, // ;
+    { 82, 192, 119, 236, &puerto_57342, 1, KEY_PORT_VALUE_SYMBOL }, // "
+    { 121, 192, 158, 236, &puerto_63486, 16, KEY_PORT_VALUE_SHIFT }, // flecha izq
+    { 160, 192, 198, 236, &puerto_61438, 4, KEY_PORT_VALUE_SHIFT }, // flecha der
+    { 382, 192, 419, 236, &puerto_61438, 8, KEY_PORT_VALUE_SHIFT }, // flecha arr
+    { 422, 192, 459, 236, &puerto_61438, 16, KEY_PORT_VALUE_SHIFT }, // flecha abaj
+    { 461, 192, 498, 236, &puerto_32766, 8, KEY_PORT_VALUE_SYMBOL }, // ,
+    { 410, 144, 447, 188, &puerto_32766, 4, KEY_PORT_VALUE_SYMBOL }, // .
+    { 477, 3, 538, 47, &puerto_32766, 1, KEY_PORT_VALUE_SHIFT }, // break
+
+    { 0,0,0,0,NULL,0,NULL,0 }
+};
+
 //Teclas adicionales spectrum +2,+2a,+3
 keyboard_help_double_key keyboard_map_additional_p2[]={
-    { 500,162, 537,198,     KEY_PORT_VALUE_SYMBOL,  NULL, 0},  //symbol derecha
-    { 452,124,536,158,      KEY_PORT_VALUE_SHIFT,   NULL, 0}, //caps shift derecha
-    { 504,42,537,118,       &puerto_49150,1,   NULL, 0}, //trozo del enter parte de arriba
-    { 2,82, 68, 120,        KEY_PORT_VALUE_SHIFT,   KEY_PORT_VALUE_SYMBOL }, //extend mode
-    { 2,44, 58,80,          &puerto_65278,1,        &puerto_61438,1 },  //delete
-    { 2,2,38,36,            &puerto_63486,4,        KEY_PORT_VALUE_SHIFT }, //true video
-    { 44,2,76,36,           &puerto_63486,8,        KEY_PORT_VALUE_SHIFT }, //inverse video
-    { 62,44,98,80,          &puerto_61438,2,        KEY_PORT_VALUE_SHIFT },//graph
-    { 74,82,108,118,        &puerto_63486,1,        KEY_PORT_VALUE_SHIFT },//edit
-    { 90,124,128,158,       &puerto_63486,2,        KEY_PORT_VALUE_SHIFT }, //caps lock
-    { 42,164,78,198,        &puerto_57342,2,        KEY_PORT_VALUE_SYMBOL }, // ;
-    { 82,164,116,198,       &puerto_57342,1,        KEY_PORT_VALUE_SYMBOL }, // "
-    { 122,164,158,198,      &puerto_63486,16,       KEY_PORT_VALUE_SHIFT }, // flecha izq
-    { 162,164,196,198,      &puerto_61438,4,        KEY_PORT_VALUE_SHIFT }, // flecha der
-    { 382,164,418,198,      &puerto_61438,8,        KEY_PORT_VALUE_SHIFT }, // flecha arr
-    { 422,164,458,198,      &puerto_61438,16,       KEY_PORT_VALUE_SHIFT }, // flecha abaj
-    { 460,162,496,198,      &puerto_32766,8,        KEY_PORT_VALUE_SYMBOL }, // ,
-    { 412,124,448,160,      &puerto_32766,4,        KEY_PORT_VALUE_SYMBOL }, // .
-    { 482,2,538,38,         &puerto_32766,1,        KEY_PORT_VALUE_SHIFT }, // break
+    { 500, 192, 538, 236, KEY_PORT_VALUE_SYMBOL, NULL, 0 }, //symbol derecha
+    { 449, 144, 538, 188, KEY_PORT_VALUE_SHIFT, NULL, 0 }, //caps shift derecha
+    { 500, 50, 538, 142, &puerto_49150, 1, NULL, 0 }, //trozo del enter parte de arriba
+    { 2, 98, 63, 142, KEY_PORT_VALUE_SHIFT, KEY_PORT_VALUE_SYMBOL }, //extend mode
+    { 2, 50, 63, 94, &puerto_65278, 1, &puerto_61438, 1 }, //delete
+    { 2, 3, 40, 47, &puerto_63486, 4, KEY_PORT_VALUE_SHIFT }, //true video
+    { 42, 3, 79, 47, &puerto_63486, 8, KEY_PORT_VALUE_SHIFT }, //inverse video
+    { 65, 50, 102, 94, &puerto_61438, 2, KEY_PORT_VALUE_SHIFT }, //graph
+    { 65, 98, 113, 142, &puerto_63486, 1, KEY_PORT_VALUE_SHIFT }, //edit
+    { 93, 144, 130, 188, &puerto_63486, 2, KEY_PORT_VALUE_SHIFT }, //caps lock
+    { 42, 192, 79, 236, &puerto_57342, 2, KEY_PORT_VALUE_SYMBOL }, // ;
+    { 82, 192, 119, 236, &puerto_57342, 1, KEY_PORT_VALUE_SYMBOL }, // "
+    { 121, 192, 158, 236, &puerto_63486, 16, KEY_PORT_VALUE_SHIFT }, // flecha izq
+    { 160, 192, 198, 236, &puerto_61438, 4, KEY_PORT_VALUE_SHIFT }, // flecha der
+    { 382, 192, 419, 236, &puerto_61438, 8, KEY_PORT_VALUE_SHIFT }, // flecha arr
+    { 422, 192, 459, 236, &puerto_61438, 16, KEY_PORT_VALUE_SHIFT }, // flecha abaj
+    { 461, 192, 498, 236, &puerto_32766, 8, KEY_PORT_VALUE_SYMBOL }, // ,
+    { 410, 144, 447, 188, &puerto_32766, 4, KEY_PORT_VALUE_SYMBOL }, // .
+    { 477, 3, 538, 47, &puerto_32766, 1, KEY_PORT_VALUE_SHIFT }, // break
 
     { 0,0,0,0,NULL,0,NULL,0 }
 };
@@ -23993,9 +24060,8 @@ keyboard_help_double_key keyboard_map_additional_svi_328[]={
 };
 
 keyboard_help_double_key keyboard_map_additional_timex_computer[]={
-    { 480,134,526,154,      KEY_PORT_VALUE_SHIFT,   NULL, 0}, //caps shift derecha
-
-    { 438,134,470,156,      &puerto_32766,1,        KEY_PORT_VALUE_SHIFT }, // break
+    { 481, 160, 518, 181, KEY_PORT_VALUE_SHIFT, NULL, 0 }, //caps shift derecha
+    { 436, 160, 464, 181, &puerto_32766, 1, KEY_PORT_VALUE_SHIFT }, // break
 
     { 0,0,0,0,NULL,0,NULL,0 }
 };
@@ -24227,8 +24293,12 @@ int *keyboard_help_return_map_table(void)
     if (MACHINE_IS_ATM_TURBO1 || MACHINE_IS_ATM_TURBO2) return keyboard_map_table_coords_atm;
     if (MACHINE_IS_ATM_TURBO2_PLUS || MACHINE_IS_ATM_TURBO3) return keyboard_map_table_coords_atm2p;
 
-    if (MACHINE_IS_SPECTRUM_48_PLUS_SPA || MACHINE_IS_SPECTRUM_48_PLUS_ENG ||
-        MACHINE_IS_INVES || MACHINE_IS_SPECTRUM_128 || MACHINE_IS_SPECTRUM_128_SPA || MACHINE_IS_CZ_SPECTRUM_PLUS) {
+    //Fork: el 48+ ingles y el 128 con su imagen redibujada
+    if (MACHINE_IS_SPECTRUM_48_PLUS_ENG || MACHINE_IS_SPECTRUM_128) {
+        return keyboard_map_table_coords_plus;
+    }
+    if (MACHINE_IS_SPECTRUM_48_PLUS_SPA ||
+        MACHINE_IS_INVES || MACHINE_IS_SPECTRUM_128_SPA || MACHINE_IS_CZ_SPECTRUM_PLUS) {
         return keyboard_map_table_coords_48p;
     }
 
@@ -24285,7 +24355,9 @@ int *keyboard_help_return_map_table(void)
     }
 
     else if (MACHINE_IS_ZX8081) {
-        return keyboard_map_table_coords_zx8081;
+        //Fork: imagenes redibujadas del ZX80 (tambien TK80 y TK82) y del ZX81 (y parecidos), con teclas en sitios distintos
+        if (MACHINE_IS_ZX80 || MACHINE_IS_MICRODIGITAL_TK80 || MACHINE_IS_MICRODIGITAL_TK82) return keyboard_map_table_coords_zx80;
+        return keyboard_map_table_coords_zx81;
     }
 
     else if (MACHINE_IS_ACE) {
@@ -24368,8 +24440,13 @@ keyboard_help_double_key *keyboard_help_return_double_keys(void)
 
     keyboard_help_double_key *teclas_dobles=NULL;
 
-    if (MACHINE_IS_SPECTRUM_48_PLUS_SPA || MACHINE_IS_SPECTRUM_48_PLUS_ENG ||
-        MACHINE_IS_INVES || MACHINE_IS_SPECTRUM_128 || MACHINE_IS_SPECTRUM_128_SPA || MACHINE_IS_CZ_SPECTRUM_PLUS) {
+    //Fork: el 48+ ingles y el 128 con su imagen redibujada
+    if (MACHINE_IS_SPECTRUM_48_PLUS_ENG || MACHINE_IS_SPECTRUM_128) {
+            teclas_dobles=keyboard_map_additional_plus;
+    }
+
+    else if (MACHINE_IS_SPECTRUM_48_PLUS_SPA ||
+        MACHINE_IS_INVES || MACHINE_IS_SPECTRUM_128_SPA || MACHINE_IS_CZ_SPECTRUM_PLUS) {
             teclas_dobles=keyboard_map_additional_48p;
     }
 
@@ -26026,6 +26103,10 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
             ancho=1+1+(540*2)/menu_char_width/zoom_x/menu_gui_zoom;
 
             alto=1+2+(201*2)/8/zoom_y/menu_gui_zoom;
+
+            //Fork: las imagenes no tienen todas la misma proporcion (las redibujadas son mas altas):
+            //al cargar la imagen se ajusta la ventana al 200%
+            menu_help_keyboard_pending_size=MENU_HELP_KEYBOARD_SIZE_200;
 
             //Default size: twice the image size (the image is scaled to the window), limited to the screen
             if (ancho>scr_get_menu_width()) ancho=scr_get_menu_width();

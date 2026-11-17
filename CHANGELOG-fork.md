@@ -24,6 +24,24 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
   the cursor keys, Tab, the F keys and the Ctrl or left Alt combinations
   work as before.
 
+### Virtual keyboard
+
+- **Keyboard pictures drawn again**, with the same drawings as in the
+  EightyOne fork: Spectrum 16K/48K, Spectrum+ and 128, +2, +2A/+3, ZX80
+  (with INTEGRAL FUNCTIONS under it), ZX81 (TK82C, TK83, CZ1000), Timex
+  Sinclair 1000 (its own picture, with the TIMEX name), TS1500, TK85,
+  Jupiter Ace, TC2048 and TS2068. They are 1080 pixels wide and drawn at
+  that size, so 200% is sharp pixel for pixel. The places of the keys are
+  the ones of the tables until now, moved onto the keys of the drawings.
+  The 16K shows the picture of the 48K, as in EightyOne. The pictures of
+  the Spanish 48+/128, the Inves and the other machines did not change.
+- The pictures are made from the drawings of the EightyOne fork
+  (`Source/KBPics/svg`) by `src/keyboards/tools/make_zesarux_keyboards.py`.
+- When it is first opened, the window fits the picture at 200%. The new
+  pictures are taller for their width than the old ones, so with a window
+  size saved earlier there can be an empty band beside the picture; a
+  double click on the title fits the window to the picture again.
+
 ### Upstream
 
 - Merged upstream 13.1 Beta 1 (2026-11-17): **ATM Turbo 1/2 and ATM Turbo
