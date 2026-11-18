@@ -952,7 +952,7 @@ Color Percent	Szín százaléka	item
 Emulated Display FX	Emulált kijelző effektjei	menu title
 --- Full Screen ---	--- Teljes képernyő ---	item
 [%c] ~~Full Screen	[%c] ~~Teljes képernyő	item
-Show ZX Desktop in Full Screen	ZX Desktop teljes képernyőn	item
+Show DAVID Desktop in Full Screen	ZX Desktop teljes képernyőn	item
  Restore windows after leaving Full Screen	 Ablakok visszaállítása kilépéskor	item
 Show Border in Full Screen	Keret teljes képernyőn	item
 Show Footer in Full Screen	Lábléc teljes képernyőn	item
@@ -967,7 +967,7 @@ Auto-adjust zoom for large displays	Nagyítás igazítása nagy kijelzőhöz	ite
 ~~Border	K~~eret	item
 --- Frameskip ---	--- Képkocka-kihagyás ---	item
 F~~rameskip	~~Képkocka-kihagyás	item
-Frameskip on ZX Desktop background	Képkocka-kihagyás ZX Desktop háttéren	item
+Frameskip on DAVID Desktop background	Képkocka-kihagyás ZX Desktop háttéren	item
 Auto Frameskip	Automatikus képkocka-kihagyás	text
 Also when moving objects	Objektumok mozgatásakor is	item
 RPi slow improve performance	Lassú RPi teljesítmény javítása	item
@@ -1376,16 +1376,16 @@ Ma~~x address [%d]	Max. ~~cím [%d]	item
 Print char traps	Karakterkiírás elfogása	menu title
 Set high contrast style	Nagy kontrasztú stílus	window title
 Set big font	Nagy betűméret	window title
-ZX Desktop clean fill	ZX Desktop egyszínű kitöltés	window title
-ZX Desktop buttons	ZX Desktop gombjai	window title
+DAVID Desktop clean fill	ZX Desktop egyszínű kitöltés	window title
+DAVID Desktop buttons	ZX Desktop gombjai	window title
 Force hotkeys	Gyorsbillentyűk kényszerítése	window title
 Disable background windows	Háttérablakok tiltása	window title
 Set high ~~contrast style	~~Nagy kontrasztú stílus beállítása	item
 Set big ~~font	Nagy ~~betűméret beállítása	item
 Force ~~hotkeys	~~Gyorsbillentyűk kényszerítése	item
 Disable background ~~windows	~~Háttérablakok tiltása	item
-Set ZX Desktop p~~lain background	~~ZX Desktop egyszínű háttér	item
-Improve ZX Desktop ~~object visibility	ZX ~~Desktop objektumai jobban látsszanak	item
+Set DAVID Desktop p~~lain background	~~ZX Desktop egyszínű háttér	item
+Improve DAVID Desktop ~~object visibility	ZX ~~Desktop objektumai jobban látsszanak	item
 Inverse colours	Fordított színek	item
 Gray mode	Szürke mód	item
 GUI sounds	Felület hangjai	item
@@ -1429,7 +1429,7 @@ Fu~~nction keys	F~~unkcióbillentyűk	item
 Ma~~in Window	~~Főablak	item
 Smart load	Okos betöltés	item
 ~~Snapshot	~~Pillanatkép	item
-ZX Des~~ktop	ZX Des~~ktop	item
+DAVID Des~~ktop	ZX Des~~ktop	item
 ZX ~~Vision	ZX ~~Vision	item
 Show advanced options	Haladó beállítások mutatása	item
 Settings	Beállítások	menu title
@@ -1533,7 +1533,7 @@ Select ~~Machine	~~Gép kiválasztása	item
 ~~Hardware settings	~~Hardverbeállítások	item
 Debug ~~CPU	CP~~U hibakereső	item
 ~~Reset CPU	~~CPU újraindítása	item
-Create Icon on ZX Desktop	Ikon létrehozása a ZX Desktopon	item
+Create Icon on DAVID Desktop	Ikon létrehozása a ZX Desktopon	item
 Properties	Tulajdonságok	menu title
 Add next	Következő hozzáadása	item
 Set Icons	Ikonok beállítása	menu title
@@ -1541,7 +1541,7 @@ Set Icons	Ikonok beállítása	menu title
 Specify Width	Szélesség megadása	item
 ~~Height	~~Magasság	item
 Specify Height	Magasság megadása	item
-Open Menu on ZX Desktop	Menü megnyitása a ZX Desktopon	item
+Open Menu on DAVID Desktop	Menü megnyitása a ZX Desktopon	item
 Footer +/- buttons	Lábléc +/- gombjai	item
 Frame on emulated display	Keret az emulált kijelző körül	item
 --- Upper Buttons ---	--- Felső gombok ---	item
@@ -1551,7 +1551,7 @@ Background color	Háttérszín	item
 Box	Doboz	item
     Customize ~~buttons	    ~~Gombok testreszabása	item
 --- Lower Buttons ---	--- Alsó gombok ---	item
---- Icons on ZX Desktop ---	--- Ikonok a ZX Desktopon ---	item
+--- Icons on DAVID Desktop ---	--- Ikonok a ZX Desktopon ---	item
 Text background	Szöveg háttere	item
 Short text	Rövid szöveg	item
 Automatic order icons	Ikonok automatikus rendezése	item
@@ -1572,7 +1572,7 @@ SCR autoscale	SCR automatikus méretezés	item
 SCR scale factor	SCR méretaránya	item
 SCR background mix	SCR keverése a háttérrel	item
 SCR allow flash	SCR villogás engedélyezése	item
-ZX Desktop Settings	ZX Desktop beállításai	menu title
+DAVID Desktop Settings	ZX Desktop beállításai	menu title
 ~~Turbo [%dX %s MHz]	~~Turbó [%dX %s MHz]	item
 Set GMX Turbo CPU speed	GMX turbó CPU-sebesség	item
 Set GMX Normal CPU speed	GMX normál CPU-sebesség	item
@@ -1592,7 +1592,7 @@ Show ~~directories	~~Mappák mutatása	item
 Show file ~~size	~~Fájlméret mutatása	item
 Show file ~~previews	Fá~~jlok előnézete	item
 Red~~uce previews to half size	~~Előnézetek fele méretben	item
-Show previews also on ~~ZX Desktop	Előnézetek ~~a ZX Desktopon is	item
+Show previews also on DAVID Des~~ktop	Előnézetek ~~a ZX Desktopon is	item
 ~~Hexadecimal file viewer	~~Hexadecimális fájlnézegető	item
 Allow fold~~ers delete	Mappák ~~törlésének engedélyezése	item
 File Browser Settings	Fájlböngésző beállításai	menu title
@@ -1902,7 +1902,7 @@ New file link	Új fájlhivatkozás	text
 Customize icons	Ikonok testreszabása	text
 Reorder icons	Ikonok átrendezése	text
 Sort icons alphabetically	Ikonok ábécérendben	text
-ZX Desktop settings	ZX Desktop beállításai	text
+DAVID Desktop settings	ZX Desktop beállításai	text
 Exit ZEsarUX	Kilépés a ZEsarUX-ból	text
 Downgraded version	Régebbi változat	window title
 Disabled save settings	Beállítások mentése kikapcsolva	window title
@@ -2105,7 +2105,7 @@ OK. All changes have been written to the disk image	OK. Minden változás kiírv
 Syncing disk image may take a while. Press Enter and wait please	A lemezkép szinkronizálása eltarthat egy ideig. Nyomj Entert, és várj	warning
 Ok image has been unmounted	Ok, a lemezkép leválasztva	message
 Ok image has been mounted on 0:/	Ok, a lemezkép csatolva ide: 0:/	message
-Ok created link on ZX Desktop	Ok, hivatkozás létrehozva a ZX Desktopon	message
+Ok created link on DAVID Desktop	Ok, hivatkozás létrehozva a ZX Desktopon	message
 Do you want to use this file?	Ezt a fájlt szeretnéd használni?	question
 End address must be higher or equal than start address	A záró címnek nagyobbnak vagy egyenlőnek kell lennie a kezdő címnél	warning
 Export cancelled	Exportálás megszakítva	warning
@@ -2157,7 +2157,7 @@ Switch always visible	Mindig látható váltása	option
 Send message	Üzenet küldése	option
 Information	Információ	option
 Close	Bezárás	option
-Create link on ZX Desktop	Hivatkozás a ZX Desktopon	option
+Create link on DAVID Desktop	Hivatkozás a ZX Desktopon	option
 Copy contents	Tartalom másolása	option
 Can not close ourself	Ez a folyamat nem zárhatja be önmagát	error
 OK. All windows closed	OK. Minden ablak bezárva	message
@@ -2209,7 +2209,7 @@ Error appending text	Hiba a szöveg hozzáfűzésekor	error
 Source code lines: %d\nCode comments: %d\nTotal .c files: %d\nTotal .h files: %d\nApproximate TODOs: %d\nEstimated time spent developing ZEsarUX: ^^%d^^ hours since 2013, and counting\nZEsarUX yesterday users: %s\n\nEdited with Visual Studio Code and vim\nDeveloped on macOS Tahoe, Debian 13, Raspbian, FreeBSD 14, and MinGW environment on Windows\n	Forráskódsorok: %d\nKódmegjegyzések: %d\n.c fájlok összesen: %d\n.h fájlok összesen: %d\nTODO-k kb. száma: %d\nA ZEsarUX fejlesztésére fordított becsült idő: ^^%d^^ óra 2013 óta, és még nincs vége\nA ZEsarUX tegnapi felhasználói: %s\n\nSzerkesztve Visual Studio Code-dal és vim-mel\nFejlesztve macOS Tahoe, Debian 13, Raspbian, FreeBSD 14 rendszeren és Windowson MinGW környezetben\n	message
 On Menu:\nUse cursor keys to move\nPress F1 (or h on some video drivers) on an option to see its help\nPress Enter or cursor right to select a menu item\nPress Space on some menu items to enable/disable\nPress a key between a and z to select an entry with shortcuts; shortcut clues appear when you wait some seconds or press a key not associated with any shortcut.\nUnavailable options may be hidden, or disabled, which are shown with red colour or with x cursor on some video drivers\nCharacter > on the right of a menu item means the menu has submenus\nESC Key closes all menus, except in the case with aalib driver and pure text console, which is changed to another key (shown on the menu). On curses driver, ESC key is a bit slow, you have to wait one second after pressing it; you can also use key @ to simulate ESC on menu on curses driver.\nCursor left gives you to the previous menu\n\n\nOn File Browser:\n- Use cursors and PgDn/Up\n- Use Enter or left mouse click to select item. Compressed files will be opened like folders\n- Use Space to expand files, currently supported:\nddh, dsk, epr, eprom, flash, hdf, mdv, o, p, pzx, scl, tap, trd, tzx and also all the compressed supported files.\n- When moving the cursor, a small preview of the screen in the file is shown, currently supported files for preview:\nddh, dsk, p, pzx, scr, sna, sp, tap, trd, tzx, z80, zsf\n- Use TAB to change section\n- Use Space/cursor on filter to change filter\n- Press the initial letter \nfor faster searching\n\nWhen using fileselector from file utilities menu:\n- Press shift+key to select functions, like shift+v to view files or shift+d to select Drive\n- Currently supported files on Viewer:\nb, bas, basz88, baszx80, baszx81, cas, cdt, col, ddh, dsk, epr, eprom, flash, ide, mmc, mmcide, nex, o, p, pzx, sna, snx, sp, spg, tap, trd, tzx, z80, zsf, zx and text files.\n\nOn message windows:\n- Use cursors and PgDn/Up\n- Use f and n to find text\n- Use c to copy to ZEsarUX clipboard\n\nOn input fields, press cursor down to delete all input text.\nOn numeric input fields, numbers can be written on decimal, hexadecimal (with suffix H), binary (with suffix %) or as a character (with quotes '' or "")\n\nSymbols on menu must be written according to the Spectrum keyboard mapping, so for example, to write the symbol minus (<), you have to press ctrl(symbol shift)+r. You should use ctrl/alt (no need to Spectrum extended mode) to write any of the following: ~|\\{}[], located on letters asdfgyu\n\n\nOn ZX Vision windows:\n- Use mouse to move windows dragging from the title bar\n- Drag mouse from the bottom-right part of the window to resize it\n- Click on the minimize button (-) to minimize the window\n- Click on the maximize button (+) or double click on the title bar to maximize the window\n- Click on the recover button (=) to recover previous size after a minimize or maximize action\n- Click out of the window to close all menus\n- Click out of the window and press shift key to put the focus on the emulated machine and send there keyboard presses\n- Can also be moved with the keyboard: Shift+QAOP\n- Can also be resized with the keyboard: Shift+WSKL\n- Note: If the resize zone of the window (bottom-right) flashes in red colour and/or window border is in red when mouse over the bottom-right zone, means that the window needs to be enlarged, because there is text or image beyond current size.\n\nOn ZX Desktop:\n- Left mouse button click on an icon to open it or trigger an action\n- Right mouse button click on an icon to get properties or actions of that icon; right click on the ZX Desktop for icon actions or desktop properties\n\nInside a machine, the keys are mapped this way:\nESC: If text to speech is not enabled, sends Shift+Space (break) on Spectrum. If enabled, stops playing text to speech\nCTRL: Symbol shift\nLeft ALT + number keys: Caps shift + number keys (Spectrum; can be disabled in Settings->Hardware->Keyboard)\nTAB: Extended mode (symbol shift + caps shift)\n\nF4: When menu is closed, send Spectrum display content to speech program, including only known characters (unknown characters are shown as a space). When menu is opened, it will read the window contents and send it to speech program, even if it has already been read again\nF5: Open menu\nF7: Switch ZX Desktop on/off\nF8: Open On Screen Keyboard (only on Spectrum & ZX80/81)\nF9: Open Smart Load window\nF11: Decrease window zoom\nF12: Increase window zoom\n\nOn Z88, the following keys have special meaning:\nF1: Help\nF2: Index\nF3: Menu\nCTRL: Diamond\nALT: Square\n\nNote: Drivers curses, aa, caca do not read CTRL or ALT. Instead, you can use F6 for CTRL and F7 for ALT on these drivers.\n	A menüben:\nA mozgáshoz használd a kurzorbillentyűket\nEgy opción nyomd meg az F1-et (egyes videómeghajtókon a h-t) a súgója megtekintéséhez\nMenüpont kiválasztásához nyomj Entert vagy jobbra kurzort\nEgyes menüpontokat a Space-szel be- és kikapcsolhatsz\nAz a–z billentyűkkel gyorsbillentyűs bejegyzést választhatsz; a gyorsbillentyű-tippek akkor jelennek meg, ha vársz néhány másodpercet, vagy olyan billentyűt nyomsz, amelyhez nem tartozik gyorsbillentyű.\nAz elérhetetlen opciók rejtettek vagy letiltottak lehetnek; a letiltottak piros színnel, egyes videómeghajtókon x kurzorral jelennek meg\nA menüpont jobb oldalán lévő > karakter azt jelenti, hogy a menünek almenüi vannak\nAz ESC billentyű bezárja az összes menüt, kivéve az aalib meghajtót és a tiszta szöveges konzolt, ahol helyette egy másik billentyű működik (a menüben látható). A curses meghajtón az ESC billentyű kicsit lassú, lenyomása után egy másodpercet várnod kell; a curses meghajtón a menüben a @ billentyűvel is helyettesítheted az ESC-et.\nA balra kurzor az előző menübe visz\n\n\nA fájlböngészőben:\n- Használd a kurzorokat és a PgDn/Up billentyűket\n- Elem kiválasztásához használd az Entert vagy a bal egérgombot. A tömörített fájlok mappaként nyílnak meg\n- Fájlok kibontásához használd a Space-t, jelenleg támogatott:\nddh, dsk, epr, eprom, flash, hdf, mdv, o, p, pzx, scl, tap, trd, tzx és az összes támogatott tömörített fájl.\n- A kurzor mozgatásakor a fájlban lévő képernyő kis előnézete látható, az előnézet jelenleg ezeknél a fájloknál támogatott:\nddh, dsk, p, pzx, scr, sna, sp, tap, trd, tzx, z80, zsf\n- Szakaszváltáshoz használd a TAB-ot\n- A szűrőn a Space-szel/kurzorral válthatsz szűrőt\n- Nyomd meg a kezdőbetűt \na gyorsabb kereséshez\n\nA fájlkezelő menüből megnyitott fájlválasztóban:\n- Funkciók kiválasztásához nyomj shift+billentyűt, például shift+v a fájlok megtekintéséhez vagy shift+d a meghajtó kiválasztásához\n- A nézegetőben jelenleg támogatott fájlok:\nb, bas, basz88, baszx80, baszx81, cas, cdt, col, ddh, dsk, epr, eprom, flash, ide, mmc, mmcide, nex, o, p, pzx, sna, snx, sp, spg, tap, trd, tzx, z80, zsf, zx és szövegfájlok.\n\nAz üzenetablakokban:\n- Használd a kurzorokat és a PgDn/Up billentyűket\n- Szöveg kereséséhez használd az f és n billentyűt\n- A ZEsarUX vágólapra másoláshoz használd a c-t\n\nBeviteli mezőkben a lefelé kurzorral törölheted a teljes beírt szöveget.\nSzámbeviteli mezőkben a számok megadhatók decimálisan, hexadecimálisan (utótag: H), binárisan (utótag: %) vagy karakterként ('' vagy "" idézőjelek között)\n\nA menüben a szimbólumokat a Spectrum billentyűzetkiosztása szerint kell beírni, így például a kisebb jelhez (<) a ctrl(symbol shift)+r-t kell lenyomnod. A következők beírásához a ctrl/alt billentyűt használd (nincs szükség a Spectrum kiterjesztett módjára): ~|\\{}[], ezek az asdfgyu betűkön találhatók\n\n\nZX Vision ablakokban:\n- Az ablakokat egérrel, a címsoruknál fogva húzva mozgathatod\n- Átméretezéshez húzd az egeret az ablak jobb alsó részétől\n- Az ablak ikonra állításához kattints az ikon gombra (-)\n- Az ablak teljes méretre állításához kattints a teljes méret gombra (+), vagy kattints duplán a címsorra\n- Ikonra vagy teljes méretre állítás után a visszaállítás gombra (=) kattintva kapod vissza az előző méretet\n- Az ablakon kívül kattintva az összes menü bezárul\n- Az ablakon kívül kattintva és a shift billentyűt lenyomva a fókusz az emulált gépre kerül, és oda mennek a billentyűleütések\n- Billentyűzettel is mozgatható: Shift+QAOP\n- Billentyűzettel is átméretezhető: Shift+WSKL\n- Megjegyzés: Ha az ablak átméretező része (jobb alul) pirosan villog, és/vagy az ablak kerete piros, amikor az egér a jobb alsó részen van, akkor az ablakot nagyobbra kell venni, mert a jelenlegi méreten túl is van szöveg vagy kép.\n\nA ZX Desktopon:\n- Bal egérgombbal egy ikonra kattintva megnyitod azt vagy elindítasz egy műveletet\n- Jobb egérgombbal egy ikonra kattintva az ikon tulajdonságait vagy műveleteit éred el; a ZX Desktopon jobb kattintással az ikonműveletek vagy az asztal tulajdonságai érhetők el\n\nA gépen belül a billentyűk így vannak kiosztva:\nESC: Ha a szövegfelolvasás nincs bekapcsolva, Shift+Space-t (break) küld a Spectrumnak. Ha be van kapcsolva, leállítja a szövegfelolvasást\nCTRL: Symbol shift\nBal ALT + számbillentyűk: Caps shift + számbillentyűk (Spectrum; kikapcsolható: Beállítások->Hardver->Billentyűzet)\nTAB: Kiterjesztett mód (symbol shift + caps shift)\n\nF4: Zárt menünél a Spectrum képernyőtartalmát a felolvasóprogramnak küldi, csak az ismert karaktereket (az ismeretlenek szóközként jelennek meg). Nyitott menünél beolvassa az ablak tartalmát, és elküldi a felolvasóprogramnak, akkor is, ha az már fel lett olvasva\nF5: Menü megnyitása\nF7: ZX Desktop ki/be\nF8: Képernyő-billentyűzet megnyitása (csak Spectrumon és ZX80/81-en)\nF9: Okos betöltés ablak megnyitása\nF11: Ablaknagyítás csökkentése\nF12: Ablaknagyítás növelése\n\nZ88-on a következő billentyűknek különleges jelentésük van:\nF1: Súgó\nF2: Index\nF3: Menü\nCTRL: Diamond\nALT: Square\n\nMegjegyzés: A curses, aa, caca meghajtók nem olvassák a CTRL és ALT billentyűt. Ezeken a meghajtókon a CTRL helyett az F6-ot, az ALT helyett az F7-et használhatod.\n	message
 Press h<num> to see help for <num> option, for example: h3\nPress t<num> to see tooltip for <num> option\nUnavailable options may be hidden, or disabled, which are shown with x cursor\nESC text gives you to the previous menu\nOn fileselector, write the file without spaces\nOn input fields, numbers can be written on decimal or hexadecimal (with suffix H)\n	A h<szám> megnyomásával a <szám>. opció súgóját látod, például: h3\nA t<szám> megnyomásával a <szám>. opció buboréksúgóját látod\nAz elérhetetlen opciók rejtve lehetnek, vagy le vannak tiltva; ezeket x kurzor jelzi\nAz ESC visszavisz az előző menübe\nA fájlválasztóban szóközök nélkül írd be a fájlnevet\nA beviteli mezőkbe a számokat decimálisan vagy hexadecimálisan (H utótaggal) is beírhatod\n	message
-When you enable Background Windows (from Settings-> ZX Vision), some features are added to the ZX Desktop and some behaviour is modified. \n\nFirst, we will refer to 'menu' to all the menu windows and all the windows in background. When we say that the 'menu is open' or the 'menu is closed', we refer to all the menu windows and all the windows in background, that they are visible and can be interacted with them or not (enabling setting background windows+even when menu closed, shows windows in background but you can't interact with them). \n\nWe will refer to 'main menu' to the ZEsarUX main menu window (the one with Smartload, Machine, etc). \n\nWindows that can be sent to background, have a button (exclamation mark !, or a shaded button) in the window title. \nPressing that button (or F6 key) will send the window to the background and then, if background windows setting is enabled even when menu closed, the menu will be closed; otherwise, it will go back to the previous window. \n\nA window in the background is open, doesn't have the focus, and usually is refreshing its contents (we will talk about it later). \nIf you click to another window, the current window will be sent to background, if it allows to do it. If it's not allowed, the current window will be closed. \nSome background windows don't refresh their contents when they are in background, like Debug CPU. \n\nPressing F5 when on menu or pressing the ZEsarUX logo button (on the top left of ZX Desktop) will send you back to the main menu.\nPressing Shift+Cursor Right will switch to another background window.\n\nPressing window close button, ESC or right click on the mouse it always closes the current window (same behaviour with background windows disabled). \n\nWhen menu is open, pressing on the emulated machine section (usually on the left) and shift key, the keyboard focus is lost from the menu and goes to the emulated machine. To return the keyboard focus to the menu, press on any of the background windows, or in the ZEsarUX logo, or press F5. \n\nYou can enable a setting to restore windows when ZEsarUX is opened (from Settings-> ZX Vision-> Reopen windows on start). \n\nYou can enable a setting to view windows in background even when menu closed (but you can't interact with them), from Settings-> ZX Vision-> Background Windows-Even when menu closed\nWhen setting Background Windows-Even is disabled, pressing ESC on the main menu, makes disappear all windows. But pressing F5 again will restore all windows. \nYou can have background windows enabled but multitasking disabled (not recommended, but allowed). 	Ha bekapcsolod a háttérablakokat (Beállítások-> ZX Vision), a ZX Desktop néhány új funkciót kap, és bizonyos viselkedések megváltoznak. \n\nElőször is: 'menü' alatt az összes menüablakot és az összes háttérben lévő ablakot értjük. Amikor azt mondjuk, hogy 'a menü nyitva van' vagy 'a menü zárva van', az összes menüablakra és háttérablakra gondolunk: láthatók-e, és lehet-e velük dolgozni, vagy sem (a háttérablakok + Bezárt menünél is beállítás bekapcsolásával a háttérablakok látszanak, de nem lehet velük dolgozni). \n\n'Főmenü' alatt a ZEsarUX főmenüablakát értjük (amelyben az Okos betöltés, a Gép stb. található). \n\nA háttérbe küldhető ablakok címsorában van egy gomb (felkiáltójel ! vagy egy árnyékolt gomb). \nA gomb (vagy az F6 billentyű) megnyomása háttérbe küldi az ablakot, majd ha a háttérablakok Bezárt menünél is beállítás be van kapcsolva, a menü bezárul; különben visszatérsz az előző ablakhoz. \n\nA háttérben lévő ablak nyitva van, nincs rajta a fókusz, és általában frissíti a tartalmát (erről később lesz szó). \nHa egy másik ablakra kattintasz, az aktuális ablak a háttérbe kerül, ha ezt engedi. Ha nem engedi, az aktuális ablak bezárul. \nNéhány háttérablak nem frissíti a tartalmát, amíg a háttérben van, például a CPU hibakereső. \n\nHa a menüben megnyomod az F5 billentyűt vagy a ZEsarUX logó gombját (a ZX Desktop bal felső sarkában), visszakerülsz a főmenübe.\nA Shift+Jobbra kurzor egy másik háttérablakra vált.\n\nAz ablak bezáró gombja, az ESC vagy a jobb egérgomb mindig bezárja az aktuális ablakot (ugyanúgy, mint kikapcsolt háttérablakoknál). \n\nNyitott menünél, ha az emulált gép területére kattintasz (általában bal oldalt) és megnyomod a Shift billentyűt, a billentyűzetfókusz a menüről az emulált gépre kerül. A billentyűzetfókusz visszaadásához a menünek kattints bármelyik háttérablakra vagy a ZEsarUX logóra, vagy nyomd meg az F5 billentyűt. \n\nBekapcsolhatod, hogy a ZEsarUX indításakor az ablakok visszaálljanak (Beállítások-> ZX Vision-> Ablakok újranyitása induláskor). \n\nBekapcsolhatod, hogy a háttérablakok bezárt menünél is látsszanak (de nem lehet velük dolgozni): Beállítások-> ZX Vision-> Háttérablakok-Bezárt menünél is\nHa a Háttérablakok-Bezárt menünél is beállítás ki van kapcsolva, a főmenüben az ESC megnyomására minden ablak eltűnik. Az F5 újbóli megnyomása azonban visszaállítja az összes ablakot. \nA háttérablakok kikapcsolt többfeladatos működés mellett is bekapcsolhatók (nem ajánlott, de lehetséges). 	message
+When you enable Background Windows (from Settings-> ZX Vision), some features are added to the DAVID Desktop and some behaviour is modified. \n\nFirst, we will refer to 'menu' to all the menu windows and all the windows in background. When we say that the 'menu is open' or the 'menu is closed', we refer to all the menu windows and all the windows in background, that they are visible and can be interacted with them or not (enabling setting background windows+even when menu closed, shows windows in background but you can't interact with them). \n\nWe will refer to 'main menu' to the ZEsarUX main menu window (the one with Smartload, Machine, etc). \n\nWindows that can be sent to background, have a button (exclamation mark !, or a shaded button) in the window title. \nPressing that button (or F6 key) will send the window to the background and then, if background windows setting is enabled even when menu closed, the menu will be closed; otherwise, it will go back to the previous window. \n\nA window in the background is open, doesn't have the focus, and usually is refreshing its contents (we will talk about it later). \nIf you click to another window, the current window will be sent to background, if it allows to do it. If it's not allowed, the current window will be closed. \nSome background windows don't refresh their contents when they are in background, like Debug CPU. \n\nPressing F5 when on menu or pressing the ZEsarUX logo button (on the top left of DAVID Desktop) will send you back to the main menu.\nPressing Shift+Cursor Right will switch to another background window.\n\nPressing window close button, ESC or right click on the mouse it always closes the current window (same behaviour with background windows disabled). \n\nWhen menu is open, pressing on the emulated machine section (usually on the left) and shift key, the keyboard focus is lost from the menu and goes to the emulated machine. To return the keyboard focus to the menu, press on any of the background windows, or in the ZEsarUX logo, or press F5. \n\nYou can enable a setting to restore windows when ZEsarUX is opened (from Settings-> ZX Vision-> Reopen windows on start). \n\nYou can enable a setting to view windows in background even when menu closed (but you can't interact with them), from Settings-> ZX Vision-> Background Windows-Even when menu closed\nWhen setting Background Windows-Even is disabled, pressing ESC on the main menu, makes disappear all windows. But pressing F5 again will restore all windows. \nYou can have background windows enabled but multitasking disabled (not recommended, but allowed). 	Ha bekapcsolod a háttérablakokat (Beállítások-> ZX Vision), a ZX Desktop néhány új funkciót kap, és bizonyos viselkedések megváltoznak. \n\nElőször is: 'menü' alatt az összes menüablakot és az összes háttérben lévő ablakot értjük. Amikor azt mondjuk, hogy 'a menü nyitva van' vagy 'a menü zárva van', az összes menüablakra és háttérablakra gondolunk: láthatók-e, és lehet-e velük dolgozni, vagy sem (a háttérablakok + Bezárt menünél is beállítás bekapcsolásával a háttérablakok látszanak, de nem lehet velük dolgozni). \n\n'Főmenü' alatt a ZEsarUX főmenüablakát értjük (amelyben az Okos betöltés, a Gép stb. található). \n\nA háttérbe küldhető ablakok címsorában van egy gomb (felkiáltójel ! vagy egy árnyékolt gomb). \nA gomb (vagy az F6 billentyű) megnyomása háttérbe küldi az ablakot, majd ha a háttérablakok Bezárt menünél is beállítás be van kapcsolva, a menü bezárul; különben visszatérsz az előző ablakhoz. \n\nA háttérben lévő ablak nyitva van, nincs rajta a fókusz, és általában frissíti a tartalmát (erről később lesz szó). \nHa egy másik ablakra kattintasz, az aktuális ablak a háttérbe kerül, ha ezt engedi. Ha nem engedi, az aktuális ablak bezárul. \nNéhány háttérablak nem frissíti a tartalmát, amíg a háttérben van, például a CPU hibakereső. \n\nHa a menüben megnyomod az F5 billentyűt vagy a ZEsarUX logó gombját (a ZX Desktop bal felső sarkában), visszakerülsz a főmenübe.\nA Shift+Jobbra kurzor egy másik háttérablakra vált.\n\nAz ablak bezáró gombja, az ESC vagy a jobb egérgomb mindig bezárja az aktuális ablakot (ugyanúgy, mint kikapcsolt háttérablakoknál). \n\nNyitott menünél, ha az emulált gép területére kattintasz (általában bal oldalt) és megnyomod a Shift billentyűt, a billentyűzetfókusz a menüről az emulált gépre kerül. A billentyűzetfókusz visszaadásához a menünek kattints bármelyik háttérablakra vagy a ZEsarUX logóra, vagy nyomd meg az F5 billentyűt. \n\nBekapcsolhatod, hogy a ZEsarUX indításakor az ablakok visszaálljanak (Beállítások-> ZX Vision-> Ablakok újranyitása induláskor). \n\nBekapcsolhatod, hogy a háttérablakok bezárt menünél is látsszanak (de nem lehet velük dolgozni): Beállítások-> ZX Vision-> Háttérablakok-Bezárt menünél is\nHa a Háttérablakok-Bezárt menünél is beállítás ki van kapcsolva, a főmenüben az ESC megnyomására minden ablak eltűnik. Az F5 újbóli megnyomása azonban visszaállítja az összes ablakot. \nA háttérablakok kikapcsolt többfeladatos működés mellett is bekapcsolhatók (nem ajánlott, de lehetséges). 	message
 Can not find software	Nem található a szoftver	error
 Te estarás preguntando... que es esto? Pues es una manera de homenajear a los que ya no están con nosotros, a personas que han sido importantes en mi vida y han tenido relación con ZEsarUX.\nPuede parecerte algo extraño que un programa contenga esta sección (o no?) pero es una manera que tengo de homenajearlos.\nEspero que esta sección no aumente con los años, cosa que sería buena señal.	Te estarás preguntando... que es esto? Pues es una manera de homenajear a los que ya no están con nosotros, a personas que han sido importantes en mi vida y han tenido relación con ZEsarUX.\nPuede parecerte algo extraño que un programa contenga esta sección (o no?) pero es una manera que tengo de homenajearlos.\nEspero que esta sección no aumente con los años, cosa que sería buena señal.	message
 You might be wondering... what is this? Well, it's a way to honor those who are no longer with us, to people who have been important in my life and have had a relationship with ZEsarUX.\nIt may seem strange to you that a program contains this section (or not?) but it is a way I have to honor them.\nI hope this section does not increase over the years, which would be a good sign.	Talán azon tűnődsz... mi ez? Nos, így tisztelgek azok előtt, akik már nincsenek velünk: olyan emberek előtt, akik fontosak voltak az életemben, és kapcsolatban álltak a ZEsarUX-szal.\nFurcsának tűnhet, hogy egy program ilyen részt tartalmaz (vagy mégsem?), de ez az én módom arra, hogy tisztelegjek előttük.\nRemélem, ez a rész nem bővül az évek során, mert az jó jel lenne.	message
@@ -2290,8 +2290,8 @@ You can not set cocoa driver from menu. You must start emulator with cocoa drive
 Invalid gui style	Érvénytelen felületstílus	error
 OK. Style applied	OK. Stílus alkalmazva	message
 OK. Big font applied	OK. Nagy betűtípus alkalmazva	message
-OK. Clean ZX Desktop applied	OK. Tiszta ZX Desktop alkalmazva	message
-OK. Enabled boxes and disable transparency on ZX Desktop buttons and icons	OK. Keretek bekapcsolva, átlátszóság kikapcsolva a ZX Desktop gombjain és ikonjain	message
+OK. Clean DAVID Desktop applied	OK. Tiszta ZX Desktop alkalmazva	message
+OK. Enabled boxes and disable transparency on DAVID Desktop buttons and icons	OK. Keretek bekapcsolva, átlátszóság kikapcsolva a ZX Desktop gombjain és ikonjain	message
 OK. Forced hotkeys	OK. Gyorsbillentyűk kényszerítve	message
 OK. Disabled background windows	OK. Háttérablakok kikapcsolva	message
 OK. Driver applied	OK. Meghajtó alkalmazva	message
@@ -2940,7 +2940,7 @@ Unable to find %s	Nem található: %s	error
 You must set launcher before adding entries	Bejegyzések hozzáadása előtt be kell állítanod az indítót	error
 Setting %s not allowed on zmenu file	A(z) %s beállítás nem engedélyezett zmenu fájlban	error
 You haven't defined a menu type	Nem adtál meg menütípust	error
-Can not load ZX Desktop background SCR file %s	Nem sikerült betölteni a ZX Desktop háttér SCR fájlját: %s	error
+Can not load DAVID Desktop background SCR file %s	Nem sikerült betölteni a ZX Desktop háttér SCR fájlját: %s	error
 Can not add more icons, probably limit reached: %d	Nem adható hozzá több ikon, valószínűleg elérted a korlátot: %d	error
 Edit Breakpoints	Töréspontok szerkesztése	tooltip
 List breakpoints	Töréspontok listázása	tooltip
@@ -3009,8 +3009,8 @@ Connect to a ZEsarUX Network Gaming Online server	Csatlakozás egy ZEsarUX Netwo
 ZEsarUX Network Gaming protocol Online (ZENG Online) allows you to play to any emulated game, using two or more ZEsarUX instances, located each one on any part of the world or in a local network.\nIt's similar to ZENG but uses a central online server\n	A ZEsarUX hálózati játék online protokollja (ZENG Online) lehetővé teszi, hogy bármelyik emulált játékkal játssz két vagy több ZEsarUX példánnyal, amelyek a világ bármely pontján vagy egy helyi hálózatban lehetnek.\nHasonló a ZENG-hez, de egy központi online szervert használ\n	help
 Get information about processes and manage them	Információk a folyamatokról és kezelésük	tooltip
 Process switcher	Ablakváltó	tooltip
-Cascade all windows on the ZX Desktop	Az összes ablak lépcsőzetes elrendezése a ZX Desktopon	tooltip
-Rearrange all windows on the ZX Desktop	Az összes ablak átrendezése a ZX Desktopon	tooltip
+Cascade all windows on the DAVID Desktop	Az összes ablak lépcsőzetes elrendezése a ZX Desktopon	tooltip
+Rearrange all windows on the DAVID Desktop	Az összes ablak átrendezése a ZX Desktopon	tooltip
 Reduce windows to maximum size 20x10	Az ablakok kicsinyítése legfeljebb 20x10 méretre	tooltip
 Send message to a window	Üzenet küldése egy ablaknak	tooltip
 Open On Screen Adventure Keyboard	A képernyős kalandbillentyűzet megnyitása	tooltip
@@ -3242,8 +3242,8 @@ Antialias is only applied to the standard 16 Spectrum colors	Az élsimítás csa
 BMP file should be 256 indexed colours, no compression, 352x304 for speccy	A BMP fájl 256 színű, indexelt, tömörítetlen legyen, Spectrumhoz 352x304 méretű	tooltip
 BMP file should be 256 indexed colours, no compression, 352x304 for speccy. See folder /extras/media/artwork on ZEsarUX extras for examples	A BMP fájl 256 színű, indexelt, tömörítetlen legyen, Spectrumhoz 352x304 méretű. Példákat a ZEsarUX extras /extras/media/artwork mappájában találsz	help
 Set to -1 to not use transparent color	Állítsd -1-re, ha nem szeretnél átlátszó színt	tooltip
-Disable ZX Desktop when going to full screen	ZX Desktop kikapcsolása teljes képernyőn	tooltip
-Disable ZX Desktop when going to full screen. It will be enabled again going back from full screen. Windows will be closed on full screen if this setting is enabled	ZX Desktop kikapcsolása teljes képernyőn. A teljes képernyőből visszatérve újra bekapcsol. Ha ez a beállítás be van kapcsolva, teljes képernyőn az ablakok bezáródnak	help
+Disable DAVID Desktop when going to full screen	ZX Desktop kikapcsolása teljes képernyőn	tooltip
+Disable DAVID Desktop when going to full screen. It will be enabled again going back from full screen. Windows will be closed on full screen if this setting is enabled	ZX Desktop kikapcsolása teljes képernyőn. A teljes képernyőből visszatérve újra bekapcsol. Ha ez a beállítás be van kapcsolva, teljes képernyőn az ablakok bezáródnak	help
 Restore windows after going from full screen	Ablakok visszaállítása a teljes képernyőből kilépve	tooltip
 Restore windows after disabling full screen, when 'Disable on Full Screen' setting is set	Ablakok visszaállítása a teljes képernyő kikapcsolása után, ha a 'ZX Desktop teljes képernyőn' beállítás ezt kéri	help
 Disable Border when going to full screen	Keret kikapcsolása teljes képernyőn	tooltip
@@ -3256,7 +3256,7 @@ Changes Window Size Width Zoom	Az ablakszélesség nagyításának módosítása
 Changes Window Size Height Zoom	Az ablakmagasság nagyításának módosítása	tooltip
 Autochange to zoom 1 when switching to machine with large display (Next, QL, CPC, ...)	Automatikus váltás 1-es nagyításra nagy kijelzőjű gépre váltáskor (Next, QL, CPC, ...)	tooltip
 Sets the number of frames to skip every time the screen needs to be refreshed	Hány képkockát hagyjon ki minden alkalommal, amikor a képernyőt frissíteni kell	tooltip
-Apply frameskip when drawing ZX Desktop background	Képkocka-kihagyás alkalmazása a ZX Desktop háttér rajzolásakor	tooltip
+Apply frameskip when drawing DAVID Desktop background	Képkocka-kihagyás alkalmazása a ZX Desktop háttér rajzolásakor	tooltip
 Let ZEsarUX decide when to skip frames	A ZEsarUX döntse el, mikor hagyjon ki képkockákat	tooltip
 ZEsarUX skips frames when the host cpu use is too high. Then skiping frames the cpu use decreases	A ZEsarUX képkockákat hagy ki, ha a gazdagép CPU-használata túl magas. A képkockák kihagyásával csökken a CPU-használat	help
 Autoframeskip even when moving icons or windows or resizing windows	Automatikus képkocka-kihagyás ikonok vagy ablakok mozgatásakor, illetve ablakok átméretezésekor is	tooltip
@@ -3302,8 +3302,8 @@ Enable a Top Menu. It disables the upper buttons. Pressing F5 one opens the Top 
 Hide some menu items	Egyes menüelemek elrejtése	tooltip
 Show Top Menu when moving mouse to top	Felső menü mutatása, ha az egér felülre ér	tooltip
 Show Top Menu when moving mouse to top. If disabled, Top Menu will only be opened when clicking mouse	Felső menü mutatása, ha az egér felülre ér. Ha ki van kapcsolva, a Felső menü csak egérkattintásra nyílik meg	help
-Ignore mouse clicking to open menu or ZX Desktop buttons	Egérkattintás figyelmen kívül hagyása menünyitáskor és a ZX Desktop gombjainál	tooltip
-Disabling this will make mouse be ignored when clicking on the window to open menu or pressing ZX Desktop buttons. The mouse can still be used when the menu is open	Ha ezt kikapcsolod, az egér nem számít, amikor az ablakra kattintasz a menü megnyitásához, vagy a ZX Desktop gombjait nyomod. Nyitott menüben az egér továbbra is használható	help
+Ignore mouse clicking to open menu or DAVID Desktop buttons	Egérkattintás figyelmen kívül hagyása menünyitáskor és a ZX Desktop gombjainál	tooltip
+Disabling this will make mouse be ignored when clicking on the window to open menu or pressing DAVID Desktop buttons. The mouse can still be used when the menu is open	Ha ezt kikapcsolod, az egér nem számít, amikor az ablakra kattintasz a menü megnyitásához, vagy a ZX Desktop gombjait nyomod. Nyitott menüben az egér továbbra is használható	help
 Limit the action to open menu (F5 by default, joystick button)	A menünyitó művelet korlátozása (alapértelmezésként F5, joystick gomb)	tooltip
 Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second	A menünyitó művelet korlátozása (alapértelmezésként F5, joystick gomb). A megnyitáshoz egy másodpercen belül háromszor kell megnyomnod a billentyűt	help
 On menu interaction, use keys 5678 as cursors, caps shift+space for ESC, caps shift+ctrl for TAB, caps shift+ctrl+m for Open Menu (F5)	Menühasználatkor az 5678 billentyűk kurzorként működnek, a caps shift+space ESC, a caps shift+ctrl TAB, a caps shift+ctrl+m pedig Menü megnyitása (F5)	tooltip
@@ -3589,8 +3589,8 @@ This function enables second trap character routine detection for programs that 
 Lower address limit to find character routine	Alsó címhatár a karakterrutin kereséséhez	tooltip
 Higher address limit to find character routine	Felső címhatár a karakterrutin kereséséhez	tooltip
 This setting can be also be enabled/disabled from Settings-> ZX Vision menu	Ez a beállítás a Beállítások-> ZX Vision menüben is be- vagy kikapcsolható	tooltip
-This setting can be also be enabled/disabled from Settings-> ZX Desktop menu	Ez a beállítás a Beállítások-> ZX Desktop menüben is be- vagy kikapcsolható	tooltip
-Affects buttons and icons. This setting can be also be enabled/disabled from Settings-> ZX Desktop menu	A gombokra és ikonokra vonatkozik. Ez a beállítás a Beállítások-> ZX Desktop menüben is be- vagy kikapcsolható	tooltip
+This setting can be also be enabled/disabled from Settings-> DAVID Desktop menu	Ez a beállítás a Beállítások-> ZX Desktop menüben is be- vagy kikapcsolható	tooltip
+Affects buttons and icons. This setting can be also be enabled/disabled from Settings-> DAVID Desktop menu	A gombokra és ikonokra vonatkozik. Ez a beállítás a Beállítások-> ZX Desktop menüben is be- vagy kikapcsolható	tooltip
 Set Gray Palette	Szürke paletta beállítása	tooltip
 Set Gray Palette to all the colours used on the emulator, including menu	Szürke paletta beállítása az emulátor összes használt színére, a menüt is beleértve	help
 Enable sounds for GUI events	Hangok bekapcsolása a grafikus felület eseményeihez	tooltip
@@ -3618,8 +3618,8 @@ These settings are related to the main ZEsarUX Window	Ezek a beállítások a ZE
 Smart load settings	Okos betöltés beállításai	tooltip
 Snapshot settings	Pillanatkép beállításai	tooltip
 Statistics settings	Statisztika beállításai	tooltip
-Expand the program window having a ZX Desktop space to the right and on the bottom	A program ablakának kibővítése jobbra és lent egy ZX Desktop területtel	tooltip
-ZX Desktop enables you to have a space on the right and on the bottom to place zxvision windows, menus or other widgets	A ZX Desktop egy területet ad jobbra és lent, ahová zxvision ablakokat, menüket vagy más widgeteket helyezhetsz	help
+Extend the emulator window with additional desktop space to the right and below the emulated screen	Az emulátor ablakának bővítése további asztalterülettel az emulált képernyőtől jobbra és alatta	tooltip
+DAVID Desktop (Display Augmentation for Visual Icons and Dialogs) extends the emulator's display area beyond the emulated machine's screen, providing additional space for ZX Vision windows, menus, widgets and desktop icons.	A ZX Desktop az emulált gép képernyőjén túl is kibővíti az emulátor képterületét, így további hely jut a ZX Vision ablakoknak, a menüknek, a widgeteknek és az asztali ikonoknak.	help
 These settings are related to the GUI interface: ZX Vision	Ezek a beállítások a grafikus felületre vonatkoznak: ZX Vision	tooltip
 Show or hide advanced options in menus	Speciális opciók megjelenítése vagy elrejtése a menükben	tooltip
 When enabled, advanced options are displayed in menus. Disable this option to simplify the interface by hiding these options	Bekapcsolva a menükben megjelennek a speciális opciók. Kapcsold ki, ha ezek elrejtésével egyszerűbb felületet szeretnél	help
@@ -3691,16 +3691,16 @@ The input audio value read (considering range from -128 to +127) is treated norm
 Apply offset to sound value read	Eltolás alkalmazása a beolvasott hangértékre	tooltip
 Indicates some value (positive or negative) to sum to the raw value read (considering range from -128 to +127) to the input audio value read	Megad egy (pozitív vagy negatív) értéket, amelyet a beolvasott bemeneti hang nyers értékéhez (-128 és +127 közötti tartományban) hozzáad	help
 Autorewind tape when reaching end of tape	A kazetta automatikus visszatekerése, amikor a végére ér	tooltip
-Tells the width of the ZX Desktop space	Megadja a ZX Desktop terület szélességét	tooltip
+Tells the width of the DAVID Desktop space	Megadja a ZX Desktop terület szélességét	tooltip
 Final width is this value in pixels X current horizontal zoom	A végső szélesség: ez az érték pixelben X az aktuális vízszintes nagyítás	help
-Tells the height of the ZX Desktop space	Megadja a ZX Desktop terület magasságát	tooltip
+Tells the height of the DAVID Desktop space	Megadja a ZX Desktop terület magasságát	tooltip
 Final height is this value in pixels X current vertical zoom	A végső magasság: ez az érték pixelben X az aktuális függőleges nagyítás	help
-Try to place new menu items on the ZX Desktop space	Az új menüelemek elhelyezése lehetőleg a ZX Desktop területen	tooltip
-Enable buttons on footer to enlarge/reduce ZX Desktop (visible when menu closed)	Gombok a láblécen a ZX Desktop méretének növeléséhez/csökkentéséhez (zárt menünél láthatók)	tooltip
+Try to place new menu items on the DAVID Desktop space	Az új menüelemek elhelyezése lehetőleg a ZX Desktop területen	tooltip
+Enable buttons on footer to enlarge/reduce DAVID Desktop (visible when menu closed)	Gombok a láblécen a ZX Desktop méretének növeléséhez/csökkentéséhez (zárt menünél láthatók)	tooltip
 Enable showing a frame around the emulated machine display	Képkeret megjelenítése az emulált gép képernyője körül	tooltip
 Sets a stroke on icons	Körvonalat ad az ikonokhoz	tooltip
-Sets a stroke on icons, useful to avoid blending with ZX Desktop	Körvonalat ad az ikonokhoz, hogy ne olvadjanak bele a ZX Desktopba	help
-Sets a SCR file for ZX Desktop background. Flash attributes are not used	SCR fájl beállítása a ZX Desktop hátteréhez. A villogó (flash) attribútumok nem érvényesülnek	tooltip
+Sets a stroke on icons, useful to avoid blending with DAVID Desktop	Körvonalat ad az ikonokhoz, hogy ne olvadjanak bele a ZX Desktopba	help
+Sets a SCR file for DAVID Desktop background.	SCR fájl beállítása a ZX Desktop hátteréhez.	tooltip
 Changes only the Z80 speed	Csak a Z80 sebességét módosítja	tooltip
 Changes only the Z80 speed. Do not modify FPS, interrupts or any other parameter. Some machines, like ZX-Uno or Chloe, change this setting	Csak a Z80 sebességét módosítja. Nem változtatja meg az FPS-t, a megszakításokat vagy más paramétert. Egyes gépek, például a ZX-Uno vagy a Chloe, maguk is módosítják ezt a beállítást	help
 Denies changing turbo mode when booting ZX-Uno and on bios	Megtiltja a turbó mód váltását a ZX-Uno indításakor és a BIOS-ban	tooltip
@@ -3725,7 +3725,7 @@ Hide file size from file browser menus	Fájlméret elrejtése a fájlböngésző
 Show file previews in the file selector	Fájl-előnézetek megjelenítése a fájlválasztóban	tooltip
 Show file previews for .scr, .tap, .tzx, etc...\nNote that the fileselector window must be big enough to hold that preview, if not, it will not be shown	Fájl-előnézetek megjelenítése .scr, .tap, .tzx stb. fájlokhoz\nA fájlválasztó ablaknak elég nagynak kell lennie az előnézethez, különben az nem jelenik meg	help
 Reduce previews to half size instead of full size	Az előnézetek fél méretre kicsinyítése teljes méret helyett	tooltip
-Show previews also on ZX Desktop	Előnézetek megjelenítése a ZX Desktopon is	tooltip
+Show previews also on DAVID Desktop	Előnézetek megjelenítése a ZX Desktopon is	tooltip
 File viewer always shows file contents in hexadecimal+ascii	A fájlnézegető mindig hexadecimális+ASCII formában mutatja a fájl tartalmát	tooltip
 Allows deleting folders on the file utilities browser. Enable it AT YOUR OWN RISK	Engedélyezi a mappák törlését a fájlkezelő böngészőjében. CSAK SAJÁT FELELŐSSÉGEDRE kapcsold be	tooltip
 Check ZEsarUX updates	ZEsarUX frissítések keresése	tooltip
@@ -3923,8 +3923,8 @@ If you save a file, for example, a snapshot, you must write the file with the de
 ZEsarUX uses two native snapshot file formats: .zsf and .zx.\n.zsf, which means 'ZEsarUX Snapshot File', is the preferred snapshot type, as it is supported on almost all emulated computers and can save things like: ZX-Uno memory, Divmmc status, etc.\n.zx is the old snapshot native file format, which was the default format for ZEsarUX previous versions and also used in my other emulator, the ZXSpectr	A ZEsarUX két saját pillanatkép-formátumot használ: .zsf és .zx.\nA .zsf, azaz 'ZEsarUX Snapshot File', az ajánlott pillanatkép-típus, mivel szinte minden emulált számítógépen támogatott, és olyan dolgokat is el tud menteni, mint a ZX-Uno memória, a Divmmc állapota stb.\nA .zx a régi saját pillanatkép-formátum, amely a ZEsarUX korábbi verzióinak alapértelmezett formátuma volt, és a másik emulátorom, a ZXSpectr is ezt használta	first aid
 Do you know you can navigate inside files, like tap, tzx, trd?\nUse the fileselector and press space over that kind of file.\nRemember to change fileselector filter to show all contents	Tudtad, hogy fájlokon, például tap, tzx, trd fájlokon belül is navigálhatsz?\nA fájlválasztóban nyomd le a Space-t egy ilyen fájlon.\nNe felejtsd el a fájlválasztó szűrőjét úgy állítani, hogy minden tartalmat mutasson	first aid
 You can enable background windows and put some windows on the background. Go to Settings-> ZX Vision settings-> Background windows to enable it	Bekapcsolhatod a háttérablakokat, és egyes ablakokat a háttérbe helyezhetsz. A bekapcsoláshoz menj a Beállítások-> ZX Vision beállításai-> Háttérablakok menüpontba	first aid
-Have you enabled ZX Desktop? It allows you to have a space on the right and on the bottom to place zxvision windows, menus or other widgets. Go to Settings-> ZX Desktop settings to enable it	Bekapcsoltad már a ZX Desktopot? Jobb oldalon és alul helyet biztosít zxvision ablakok, menük vagy más widgetek elhelyezésére. A bekapcsoláshoz menj a Beállítások-> ZX Desktop beállításai menüpontba	first aid
-You can customize upper ZX Desktop buttons to trigger different actions. Go to Settings-> ZX Desktop-> Customize buttons	A ZX Desktop felső gombjait testreszabhatod, hogy különböző műveleteket indítsanak. Menj a Beállítások-> ZX Desktop-> Gombok testreszabása menüpontba	first aid
+Have you enabled DAVID Desktop? It allows you to have a space on the right and on the bottom to place zxvision windows, menus or other widgets. Go to Settings-> DAVID Desktop settings to enable it	Bekapcsoltad már a ZX Desktopot? Jobb oldalon és alul helyet biztosít zxvision ablakok, menük vagy más widgetek elhelyezésére. A bekapcsoláshoz menj a Beállítások-> ZX Desktop beállításai menüpontba	first aid
+You can customize upper DAVID Desktop buttons to trigger different actions. Go to Settings-> DAVID Desktop-> Customize buttons	A ZX Desktop felső gombjait testreszabhatod, hogy különböző műveleteket indítsanak. Menj a Beállítások-> ZX Desktop-> Gombok testreszabása menüpontba	first aid
 When saving snapshots, the recommended extension is ZSF, as this is the native ZEsarUX snapshot format. If you want to save a different format snapshot, just change the extension. If you want to overwrite a existing snapshot, just select it	Pillanatkép mentésekor az ajánlott kiterjesztés a ZSF, mivel ez a ZEsarUX saját pillanatkép-formátuma. Ha más formátumú pillanatképet szeretnél menteni, egyszerűen változtasd meg a kiterjesztést. Ha egy meglévő pillanatképet szeretnél felülírni, egyszerűen válaszd ki	first aid
 The menu interface has many items which are hidden by default. You can show them by enabling Settings-> Advanced menu items	A menüfelületen sok elem alapértelmezés szerint rejtett. Megjelenítheted őket a Beállítások-> Haladó menüpontok bekapcsolásával	first aid
 Have you donated to ZEsarUX? ZEsarUX will always cost you nothing to use, but that doesn't mean it costs me nothing to make. So if you want to demonstrate your appreciation to it and also help me cover the costs of my development servers, go to the ZEsarUX website and look for the DONATE section. Thanks!	Támogattad már a ZEsarUX-ot? A ZEsarUX használata mindig ingyenes lesz számodra, de ez nem jelenti azt, hogy nekem nem kerül semmibe az elkészítése. Ha szeretnéd kifejezni az elismerésedet, és segíteni a fejlesztői szervereim költségeinek fedezésében, látogass el a ZEsarUX weboldalára, és keresd a DONATE részt. Köszönöm!	first aid
@@ -3997,7 +3997,7 @@ Switch Auto Left-Right Joystick	Automatikus bal-jobb joystick ki/be	tooltip
 Switch Border	Keret ki/be	tooltip
 Switch Fotter	Lábléc ki/be	tooltip
 Switch Full Screen	Teljes képernyő ki/be	tooltip
-Switch ZX Desktop on/off	ZX Desktop ki/be	tooltip
+Switch DAVID Desktop on/off	ZX Desktop ki/be	tooltip
 Switch ZX-Uno Prism video mode	ZX-Uno Prism videómód váltása	tooltip
 The current machine	Az aktuális gép	tooltip
 Top speed emulation	Emuláció maximális sebességgel	tooltip
@@ -4505,7 +4505,7 @@ Back 10 seconds (key ,)	Vissza 10 másodpercet (, billentyű)	help
 Forward 10 seconds (key .)	Előre 10 másodpercet (. billentyű)	help
 ~~Machine picture size [%d%%]	Gépkép ~~mérete [%d%%]	item
 Size of the emulated machine picture: 100%, 125%, 150% or 200%	Az emulált gép képének mérete: 100%, 125%, 150% vagy 200%	tooltip
-Size of the emulated machine picture: 100%, 125%, 150% or 200%. Menus, icons and ZX Desktop keep their size; ZX Desktop fills the rest of the window. If the picture does not fit in the window, a smaller size is used	Az emulált gép képének mérete: 100%, 125%, 150% vagy 200%. A menük, ikonok és a ZX Desktop mérete nem változik; a ZX Desktop kitölti az ablak többi részét. Ha a kép nem fér el az ablakban, a program kisebb méretet használ	help
+Size of the emulated machine picture: 100%, 125%, 150% or 200%. Menus, icons and DAVID Desktop keep their size; DAVID Desktop fills the rest of the window. If the picture does not fit in the window, a smaller size is used	Az emulált gép képének mérete: 100%, 125%, 150% vagy 200%. A menük, ikonok és a ZX Desktop mérete nem változik; a ZX Desktop kitölti az ablak többi részét. Ha a kép nem fér el az ablakban, a program kisebb méretet használ	help
 [%c] Smooth machine picture	[%c] Gépkép simítása	item
 Smooth the machine picture when its size does not give whole pixels	A gép képének simítása, ha a mérete nem ad egész pixeleket	tooltip
 When the size of the machine picture does not give whole pixels (125%, or 150% on 80 column modes), some pixels are wider than others. Smoothing makes them even, but a bit blurred	Ha a gép képének mérete nem ad egész pixeleket (125%, illetve 150% a 80 oszlopos módokban), egyes pixelek szélesebbek a többinél. A simítás egyenletessé teszi őket, de a kép kissé elmosódik	help

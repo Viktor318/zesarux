@@ -80,10 +80,11 @@ Hungarian accented letters.
 ### Window and full screen
 
 - The main window keeps its size, place and maximized state between runs;
-  ZX Desktop fills the space beside and below the machine.
+  DAVID Desktop (formerly ZX Desktop) fills the space beside and below the
+  machine.
 - **Machine picture size** 100%, 125%, 150% or 200%, with optional
   smoothing; the menus and icons keep their size.
-- **Full screen** with ZX Desktop, or the machine picture alone filling the
+- **Full screen** with DAVID Desktop, or the machine picture alone filling the
   screen with sharp, even pixels.
 
 ### Virtual keyboard

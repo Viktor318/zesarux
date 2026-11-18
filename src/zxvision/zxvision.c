@@ -288,7 +288,7 @@ defined_f_function defined_direct_functions_array[MAX_F_FUNCTIONS]={
     {"SwitchFooter",F_FUNCION_SWITCHFOOTER,bitmap_button_ext_desktop_switchfooter,"","Switch Fotter"},
     {"ZoomIn",F_FUNCION_ZOOM_IN,bitmap_button_ext_desktop_zoomin,"","Increase window zoom"},
     {"ZoomOut",F_FUNCION_ZOOM_OUT,bitmap_button_ext_desktop_zoomout,"","Decrease window zoom"},
-    {"SwitchZXDesktop",F_FUNCION_SWITCH_ZXDESKTOP,bitmap_button_ext_desktop_switchzxdesktop,"","Switch ZX Desktop on/off"},
+    {"SwitchZXDesktop",F_FUNCION_SWITCH_ZXDESKTOP,bitmap_button_ext_desktop_switchzxdesktop,"","Switch DAVID Desktop on/off"},
 
     //Actuar sobre storage
     {"ReloadMMC",F_FUNCION_RELOADMMC,bitmap_button_ext_desktop_reloadmmc,"","Reload MMC"},

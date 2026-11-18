@@ -2918,7 +2918,7 @@ void menu_main_window_settings(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_shortcut(array_menu_window_settings,'m');
             menu_add_item_menu_tooltip(array_menu_window_settings,"Size of the emulated machine picture: 100%, 125%, 150% or 200%");
             menu_add_item_menu_ayuda(array_menu_window_settings,"Size of the emulated machine picture: 100%, 125%, 150% or 200%. "
-                "Menus, icons and ZX Desktop keep their size; ZX Desktop fills the rest of the window. "
+                "Menus, icons and DAVID Desktop keep their size; DAVID Desktop fills the rest of the window. "
                 "If the picture does not fit in the window, a smaller size is used");
 
             menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_machine_smooth,NULL,

@@ -70,6 +70,14 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
 
 ### Upstream
 
+- Merged the upstream state of 2026-11-18: **ZX Desktop is renamed DAVID
+  Desktop** (in the English interface), ATM Turbo memory zones for the
+  debugger, small fixes. In the Hungarian interface the name stays **ZX
+  Desktop** (Viktor's choice); the translations follow the new English
+  texts, so they stay in Hungarian. The fork's own English texts (e.g. the
+  help of the machine picture size, the tooltip of the desktop switch button)
+  say DAVID Desktop too. The command line options (`--enable-zxdesktop` etc.)
+  and the saved settings did not change.
 - Merged upstream 13.1 Beta 1 (2026-11-17): **ATM Turbo 1/2 and ATM Turbo
   2+/3 virtual keyboards**, and the fix for the row padding of BMP pictures
   (pictures whose width is not a multiple of four were shown slanted; the

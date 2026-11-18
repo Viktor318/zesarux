@@ -68,6 +68,14 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
 
 ### Upstream
 
+- Beolvasztva az upstream 2026-11-18-i állapota: a **ZX Desktop új neve
+  DAVID Desktop** (az angol felületen), az ATM Turbo memóriazónái a
+  hibakeresőhöz, kisebb javítások. A magyar felületen a név továbbra is
+  **ZX Desktop** (Viktor döntése); a fordítások az új angol szövegekhez
+  igazítva, így magyarul maradnak. A fork saját angol szövegei (pl. a gépkép
+  méretének súgója, a ZX Desktop gombjának tooltipje) is DAVID Desktopot
+  írnak. A parancssori kapcsolók (`--enable-zxdesktop` stb.) és a mentett
+  beállítások nem változtak.
 - Beolvasztva az upstream 13.1 Beta 1 (2026-11-17): **ATM Turbo 1/2 és ATM
   Turbo 2+/3 virtuális billentyűzet**, és a BMP-képek sorkitöltésének
   javítása (a néggyel nem osztható szélességű képek ferdén jelentek meg;

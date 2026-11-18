@@ -3639,7 +3639,7 @@ void screen_layout_fit_window(int ancho_ventana,int alto_ventana)
             //Ya llena la pantalla en alguna direccion: el driver la reducira (o la deja igual)
             if (ancho>=ancho_ventana || alto>=alto_ventana) break;
         }
-        debug_printf (VERBOSE_INFO,"Full screen without ZX Desktop: machine picture scale %d/4",screen_machine_scale);
+        debug_printf (VERBOSE_INFO,"Full screen without DAVID Desktop: machine picture scale %d/4",screen_machine_scale);
         return;
     }
 

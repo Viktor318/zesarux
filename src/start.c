@@ -651,7 +651,7 @@ void zesarux_cmdline_help(void)
         "--zoom n                Total Zoom Factor\n"
         "--main-window x y w h m Position and size of the main window, and if it is maximized (m=1). Saved on exit (SDL2 video driver)\n"
         "--machine-smooth        Smooth the emulated machine picture when its size does not give whole pixels (125%% for example)\n"
-        "--machine-scale n       Size of the emulated machine picture in percent: 100, 125, 150 or 200 (SDL2 video driver). Menus, icons and ZX Desktop keep their size\n"
+        "--machine-scale n       Size of the emulated machine picture in percent: 100, 125, 150 or 200 (SDL2 video driver). Menus, icons and DAVID Desktop keep their size\n"
         "--emulated-display-scale n  Size of the emulated display on a window in percent: 100, 125, 150 or 200 (SDL2 video driver)\n"
         "--vo driver             Video output driver. Valid drivers: ");
 
