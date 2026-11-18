@@ -811,7 +811,7 @@ int zxdesktop_estado_antes_fullscreen=0;
 
 void menu_interface_fullscreen_enable(void)
 {
-    //Desactivar ZX Desktop al pasar a full screen
+    //Desactivar DAVID Desktop al pasar a full screen
     zxdesktop_estado_antes_fullscreen=screen_ext_desktop_enabled;
     if (zxdesktop_disable_on_full_screen) {
         if (screen_ext_desktop_enabled) {
@@ -859,7 +859,7 @@ void menu_interface_fullscreen_disable(void)
         scr_refresca_pantalla_solo_driver();
     }
 
-    //Retornar ZX Desktop estado al volver de full screen
+    //Retornar DAVID Desktop estado al volver de full screen
     if (zxdesktop_disable_on_full_screen && zxdesktop_estado_antes_fullscreen) {
         if (!screen_ext_desktop_enabled) {
             menu_ext_desk_settings_enable(0);
@@ -2866,10 +2866,10 @@ void menu_main_window_settings(MENU_ITEM_PARAMETERS)
         menu_add_item_menu_se_cerrara(array_menu_window_settings);
 
         menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_disable_on_fullscreen,menu_interface_border_cond,
-            "Show ZX Desktop in Full Screen","Mostrar ZX Desktop en pantalla completa","Mostrar ZX Desktop a pantalla completa");
+            "Show DAVID Desktop in Full Screen","Mostrar DAVID Desktop en pantalla completa","Mostrar DAVID Desktop a pantalla completa");
         menu_add_item_menu_prefijo_format(array_menu_window_settings,"[%c] ",(zxdesktop_disable_on_full_screen ? ' ' : 'X' ));
-        menu_add_item_menu_tooltip(array_menu_window_settings,"Disable ZX Desktop when going to full screen");
-        menu_add_item_menu_ayuda(array_menu_window_settings,"Disable ZX Desktop when going to full screen. "
+        menu_add_item_menu_tooltip(array_menu_window_settings,"Disable DAVID Desktop when going to full screen");
+        menu_add_item_menu_ayuda(array_menu_window_settings,"Disable DAVID Desktop when going to full screen. "
             "It will be enabled again going back from full screen. Windows will be closed on full screen if this setting is enabled");
         menu_add_item_menu_es_avanzado(array_menu_window_settings);
 
@@ -3014,10 +3014,10 @@ void menu_main_window_settings(MENU_ITEM_PARAMETERS)
         menu_add_item_menu_es_avanzado(array_menu_window_settings);
 
         menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_frameskip_draw_zxdesktop_background,NULL,
-            "Frameskip on ZX Desktop background","Frameskip en fondo ZX Desktop","Frameskip al fons del ZX Desktop");
+            "Frameskip on DAVID Desktop background","Frameskip en fondo DAVID Desktop","Frameskip al fons del DAVID Desktop");
         menu_add_item_menu_prefijo_format(array_menu_window_settings,"[%c]  ",(frameskip_draw_zxdesktop_background.v ? 'X' : ' ')  );
-        menu_add_item_menu_tooltip(array_menu_window_settings,"Apply frameskip when drawing ZX Desktop background");
-        menu_add_item_menu_ayuda(array_menu_window_settings,"Apply frameskip when drawing ZX Desktop background");
+        menu_add_item_menu_tooltip(array_menu_window_settings,"Apply frameskip when drawing DAVID Desktop background");
+        menu_add_item_menu_ayuda(array_menu_window_settings,"Apply frameskip when drawing DAVID Desktop background");
         menu_add_item_menu_es_avanzado(array_menu_window_settings);
 
 
@@ -4019,7 +4019,7 @@ void menu_interface_enable_topbar_menu(MENU_ITEM_PARAMETERS)
     zxvision_topbar_menu_enabled.v ^=1;
 
     if (zxvision_topbar_menu_enabled.v) {
-        //Cambiar nombres cortos/largos de menus en topbar segun si zx desktop activado o no
+        //Cambiar nombres cortos/largos de menus en topbar segun si DAVID desktop activado o no
         topbar_guess_show_short_menu_names_variable();
 
         //hacerla visible momentaneamente para que el usuario la vea
@@ -4568,10 +4568,10 @@ void menu_zxvision_settings(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_en_es_ca(array_menu_common,MENU_OPCION_NORMAL,menu_interface_ignore_click_open_menu,NULL,
                 "Mouse Cl~~ick opens menu","Cl~~ick raton abre menú","Cl~~ick ratolí obre menú");
             menu_add_item_menu_prefijo_format(array_menu_common,"[%c] ", (mouse_menu_ignore_click_open.v==0 ? 'X' : ' ') );
-            menu_add_item_menu_tooltip(array_menu_common,"Ignore mouse clicking to open menu or ZX Desktop buttons");
+            menu_add_item_menu_tooltip(array_menu_common,"Ignore mouse clicking to open menu or DAVID Desktop buttons");
             menu_add_item_menu_shortcut(array_menu_common,'i');
             menu_add_item_menu_ayuda(array_menu_common,"Disabling this will make mouse be ignored when clicking on "
-                "the window to open menu or pressing ZX Desktop buttons. The mouse can still be used when the menu is open");
+                "the window to open menu or pressing DAVID Desktop buttons. The mouse can still be used when the menu is open");
             menu_add_item_menu_es_avanzado(array_menu_common);
         }
 
@@ -11669,7 +11669,7 @@ void menu_accessibility_menu_zxdesktop_clean(MENU_ITEM_PARAMETERS)
     zxdesktop_draw_scrfile_enabled=0;
 
 
-    menu_generic_message_splash("ZX Desktop clean fill","OK. Clean ZX Desktop applied");
+    menu_generic_message_splash("DAVID Desktop clean fill","OK. Clean DAVID Desktop applied");
 }
 
 
@@ -11684,7 +11684,7 @@ void menu_accessibility_menu_zxdesktop_button_boxes(MENU_ITEM_PARAMETERS)
     menu_ext_desktop_transparent_configurable_icons.v=0;
 
 
-    menu_generic_message_splash("ZX Desktop buttons","OK. Enabled boxes and disable transparency on ZX Desktop buttons and icons");
+    menu_generic_message_splash("DAVID Desktop buttons","OK. Enabled boxes and disable transparency on DAVID Desktop buttons and icons");
 }
 
 void menu_accessibility_menu_hotkeys(MENU_ITEM_PARAMETERS)
@@ -11753,16 +11753,16 @@ void menu_accessibility_menu(MENU_ITEM_PARAMETERS)
 
         if (screen_ext_desktop_enabled) {
             menu_add_item_menu_en_es_ca(array_menu_common,MENU_OPCION_NORMAL,menu_accessibility_menu_zxdesktop_clean,NULL,
-                "Set ZX Desktop p~~lain background","Definir fondo ~~limpio ZX Desktop","Definir fons c~~lar ZX Desktop");
+                "Set DAVID Desktop p~~lain background","Definir fondo ~~limpio DAVID Desktop","Definir fons c~~lar DAVID Desktop");
             menu_add_item_menu_shortcut(array_menu_common,'l');
-            menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings-> ZX Desktop menu");
-            menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings-> ZX Desktop menu");
+            menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings-> DAVID Desktop menu");
+            menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings-> DAVID Desktop menu");
 
             menu_add_item_menu_en_es_ca(array_menu_common,MENU_OPCION_NORMAL,menu_accessibility_menu_zxdesktop_button_boxes,NULL,
-                "Improve ZX Desktop ~~object visibility","Mejorar visibilidad ~~objetos ZX Desktop ","Millorar visibilitat ~~objectes ZX Desktop");
+                "Improve DAVID Desktop ~~object visibility","Mejorar visibilidad ~~objetos DAVID Desktop ","Millorar visibilitat ~~objectes DAVID Desktop");
             menu_add_item_menu_shortcut(array_menu_common,'o');
-            menu_add_item_menu_tooltip(array_menu_common,"Affects buttons and icons. This setting can be also be enabled/disabled from Settings-> ZX Desktop menu");
-            menu_add_item_menu_ayuda(array_menu_common,"Affects buttons and icons. This setting can be also be enabled/disabled from Settings-> ZX Desktop menu");
+            menu_add_item_menu_tooltip(array_menu_common,"Affects buttons and icons. This setting can be also be enabled/disabled from Settings-> DAVID Desktop menu");
+            menu_add_item_menu_ayuda(array_menu_common,"Affects buttons and icons. This setting can be also be enabled/disabled from Settings-> DAVID Desktop menu");
         }
 
         menu_add_item_menu_separator(array_menu_common);
@@ -12554,11 +12554,13 @@ void menu_settings(MENU_ITEM_PARAMETERS)
         */
 
         if (scr_driver_can_ext_desktop() ) {
-            menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_ext_desktop_settings,NULL,"ZX Des~~ktop");
+            menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_ext_desktop_settings,NULL,"DAVID Des~~ktop");
             menu_add_item_menu_shortcut(array_menu_settings,'k');
-            menu_add_item_menu_tooltip(array_menu_settings,"Expand the program window having a ZX Desktop space to the right and on the bottom");
-            menu_add_item_menu_ayuda(array_menu_settings,"ZX Desktop enables you to have a space on the right and on the bottom to place "
-                "zxvision windows, menus or other widgets");
+            menu_add_item_menu_tooltip(array_menu_settings, "Extend the emulator window with additional desktop space "
+                "to the right and below the emulated screen");
+            menu_add_item_menu_ayuda(array_menu_settings,"DAVID Desktop (Display Augmentation for Visual Icons and Dialogs) extends "
+                "the emulator's display area beyond the emulated machine's screen, providing additional space for ZX Vision windows, "
+                "menus, widgets and desktop icons.");
             menu_add_item_menu_tiene_submenu(array_menu_settings);
         }
 
@@ -15074,7 +15076,7 @@ void zxdesktop_add_extra_parameters_element_action(enum defined_f_function_ids a
 }
 
 
-//Definir boton de zx desktop a accion
+//Definir boton de DAVID desktop a accion
 void menu_zxdesktop_set_userdef_buttons_functions(MENU_ITEM_PARAMETERS)
 {
     menu_item *array_menu_zxdesktop_set_userdef_buttons_functions;
@@ -15323,7 +15325,7 @@ void menu_ext_desk_settings_enable(MENU_ITEM_PARAMETERS)
     screen_restart_pantalla_restore_overlay(previous_function,menu_antes);
 
 
-    //Cerrar ventamas y olvidar geometria ventanas, cuando quitamos zx desktop
+    //Cerrar ventamas y olvidar geometria ventanas, cuando quitamos DAVID desktop
     if (!screen_ext_desktop_enabled) {
         zxvision_window_delete_all_windows_and_clear_geometry();
     }
@@ -15341,7 +15343,7 @@ void menu_ext_desk_settings_enable(MENU_ITEM_PARAMETERS)
 
     zxvision_reorder_configurable_icons_if_auto();
 
-    //Cambiar nombres cortos/largos de menus en topbar segun si zx desktop activado o no
+    //Cambiar nombres cortos/largos de menus en topbar segun si DAVID desktop activado o no
     topbar_guess_show_short_menu_names_variable();
 
     cls_menu_overlay();
@@ -16319,7 +16321,7 @@ void menu_zxdesktop_set_configurable_icons_modify(MENU_ITEM_PARAMETERS)
 
 
             menu_add_item_menu_en_es_ca(array_menu_common,MENU_OPCION_NORMAL,menu_zxdesktop_set_configurable_icons_create_link_to_machine,
-                NULL,"Create Icon on ZX Desktop","Crear Icono en ZX Desktop","Crear Icona a ZX Desktop");
+                NULL,"Create Icon on DAVID Desktop","Crear Icono en DAVID Desktop","Crear Icona a DAVID Desktop");
 
         }
 
@@ -16363,7 +16365,7 @@ void menu_zxdesktop_set_configurable_icons_modify(MENU_ITEM_PARAMETERS)
 
 }
 
-//Definir icono de zx desktop a accion
+//Definir icono de DAVID desktop a accion
 void menu_zxdesktop_set_configurable_icons(MENU_ITEM_PARAMETERS)
 {
     menu_item *array_menu_common;
@@ -16526,7 +16528,7 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_sufijo_format(array_menu_ext_desktop_settings," [%4d]",zxdesktop_width);
             menu_add_item_menu_prefijo_format(array_menu_ext_desktop_settings,"    ");
             menu_add_item_menu_shortcut(array_menu_ext_desktop_settings,'w');
-            menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Tells the width of the ZX Desktop space");
+            menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Tells the width of the DAVID Desktop space");
             menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Final width is this value in pixels X current horizontal zoom");
             menu_add_item_menu_es_avanzado(array_menu_ext_desktop_settings);
 
@@ -16543,7 +16545,7 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_sufijo_format(array_menu_ext_desktop_settings," [%4d]",zxdesktop_height);
             menu_add_item_menu_prefijo_format(array_menu_ext_desktop_settings,"    ");
             menu_add_item_menu_shortcut(array_menu_ext_desktop_settings,'h');
-            menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Tells the height of the ZX Desktop space");
+            menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Tells the height of the DAVID Desktop space");
             menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Final height is this value in pixels X current vertical zoom");
             menu_add_item_menu_es_avanzado(array_menu_ext_desktop_settings);
 
@@ -16561,17 +16563,17 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 
 
             menu_add_item_menu_en_es_ca(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_placemenu,NULL,
-                "Open Menu on ZX Desktop","Abrir menú en ZX Desktop","Obrir menú al ZX Desktop");
+                "Open Menu on DAVID Desktop","Abrir menú en DAVID Desktop","Obrir menú al DAVID Desktop");
             menu_add_item_menu_prefijo_format(array_menu_ext_desktop_settings,"[%c] ",(screen_ext_desktop_place_menu ? 'X' : ' ' ) );
-            menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Try to place new menu items on the ZX Desktop space");
-            menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Try to place new menu items on the ZX Desktop space");
+            menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Try to place new menu items on the DAVID Desktop space");
+            menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Try to place new menu items on the DAVID Desktop space");
         }
 
         menu_add_item_menu_en_es_ca(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_switch_button,NULL,
             "Footer +/- buttons","Botones +/- en pie de pagina","Botons +/- al peu de pagina");
         menu_add_item_menu_prefijo_format(array_menu_ext_desktop_settings,"[%c] ",(zxdesktop_switch_button_enabled.v ? 'X' : ' ' ) );
-        menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Enable buttons on footer to enlarge/reduce ZX Desktop (visible when menu closed)");
-        menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Enable buttons on footer to enlarge/reduce ZX Desktop (visible when menu closed)");
+        menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Enable buttons on footer to enlarge/reduce DAVID Desktop (visible when menu closed)");
+        menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Enable buttons on footer to enlarge/reduce DAVID Desktop (visible when menu closed)");
         menu_add_item_menu_es_avanzado(array_menu_ext_desktop_settings);
 
 
@@ -16685,7 +16687,7 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 
 
             menu_add_item_menu_en_es_ca(array_menu_ext_desktop_settings,MENU_OPCION_SEPARADOR,NULL,NULL,
-                "--- Icons on ZX Desktop ---","--- Iconos en ZX Desktop ---","--- Icones al ZX Desktop ---");
+                "--- Icons on DAVID Desktop ---","--- Iconos en DAVID Desktop ---","--- Icones al DAVID Desktop ---");
             menu_add_item_menu_en_es_ca(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_configurable_icons_enabled,NULL,
                 "Enable","Activar","Activar");
             menu_add_item_menu_prefijo_format(array_menu_ext_desktop_settings,"[%c] ",(zxdesktop_configurable_icons_enabled.v ? 'X' : ' ' ) );
@@ -16760,7 +16762,7 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
                 "Stroke on icons","Contorno en iconos","Contorn en icones");
             menu_add_item_menu_prefijo_format(array_menu_ext_desktop_settings,"[%c] ",(menu_ext_desktop_contorno_iconos.v ? 'X' : ' ' ) );
             menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Sets a stroke on icons");
-            menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Sets a stroke on icons, useful to avoid blending with ZX Desktop");
+            menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Sets a stroke on icons, useful to avoid blending with DAVID Desktop");
             menu_add_item_menu_opcion_conmuta(array_menu_ext_desktop_settings,&menu_ext_desktop_contorno_iconos);
             menu_add_item_menu_es_avanzado(array_menu_ext_desktop_settings);
 
@@ -16866,8 +16868,8 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_sufijo_format(array_menu_ext_desktop_settings," [%s]",string_back_scr_shown);
             menu_add_item_menu_prefijo_format(array_menu_ext_desktop_settings,"    ");
             menu_add_item_menu_shortcut(array_menu_ext_desktop_settings,'s');
-            menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Sets a SCR file for ZX Desktop background. Flash attributes are not used");
-            menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Sets a SCR file for ZX Desktop background. Flash attributes are not used");
+            menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Sets a SCR file for DAVID Desktop background.");
+            menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Sets a SCR file for DAVID Desktop background.");
 
             if (zxdesktop_draw_scrfile_name[0]!=0) {
                 menu_add_item_menu_en_es_ca(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_scrfile_enable,NULL,
@@ -16917,7 +16919,7 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
         menu_add_ESC_item(array_menu_ext_desktop_settings);
 
         retorno_menu=menu_dibuja_menu(&ext_desktop_settings_opcion_seleccionada,&item_seleccionado,array_menu_ext_desktop_settings,
-            "ZX Desktop Settings","Opciones ZX Desktop","Opcions ZX Desktop");
+            "DAVID Desktop Settings","Opciones DAVID Desktop","Opcions DAVID Desktop");
 
 
 
@@ -17270,11 +17272,11 @@ void menu_fileselector_settings(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_ayuda(array_menu_common,"Reduce previews to half size instead of full size");
 
             menu_add_item_menu_en_es_ca(array_menu_common,MENU_OPCION_NORMAL,menu_setting_filesel_previews_on_zxdesktop,NULL,
-                "Show previews also on ~~ZX Desktop","Mostrar previews también en ~~ZX Desktop","Mostrar previews també al ~~ZX Desktop");
+                "Show previews also on DAVID Des~~ktop","Mostrar previews también en DAVID Des~~ktop","Mostrar previews també al DAVID Des~~ktop");
             menu_add_item_menu_prefijo_format(array_menu_common,"[%c] ",(menu_filesel_show_previews_on_zxdesktop.v ? 'X' : ' ') );
-            menu_add_item_menu_shortcut(array_menu_common,'z');
-            menu_add_item_menu_tooltip(array_menu_common,"Show previews also on ZX Desktop");
-            menu_add_item_menu_ayuda(array_menu_common,"Show previews also on ZX Desktop");
+            menu_add_item_menu_shortcut(array_menu_common,'k');
+            menu_add_item_menu_tooltip(array_menu_common,"Show previews also on DAVID Desktop");
+            menu_add_item_menu_ayuda(array_menu_common,"Show previews also on DAVID Desktop");
         }
 
         menu_add_item_menu_en_es_ca(array_menu_common,MENU_OPCION_NORMAL,menu_setting_fileviewer_hex,NULL,
