@@ -21,13 +21,13 @@ edition here, not to the original project.
 
 ## Download
 
-Download `ZEsarUX-13.1-SN-hu.1-windows.zip` from the
+Download `ZEsarUX-13.1-B1-hu.1-windows.zip` from the
 [Releases](https://github.com/Viktor318/zesarux/releases) page, unpack it
 into a folder of your choice and start `zesarux.exe`. Nothing has to be
 installed.
 
-The fork is based on ZEsarUX 13.1-SN, the development snapshot ("SN") of the
-coming ZEsarUX 13.1; hence the version name 13.1-SN-hu.1.
+The fork is based on ZEsarUX 13.1 Beta 1, the first beta ("B1") of the
+coming ZEsarUX 13.1; hence the version name 13.1-B1-hu.1.
 
 ## First steps
 
@@ -51,7 +51,8 @@ Hungarian accented letters.
 - **Windows keyboard layout** (Spectrum, ZX80, ZX81, QL and Amstrad CPC):
   what you type appears on the emulated machine, whatever the layout of your
   keyboard. On a Hungarian keyboard Shift+2 types `"`, AltGr+V types `@`;
-  the key combination of the machine is pressed automatically.
+  the key combination of the machine is pressed automatically. The same
+  works in the text fields of the menus (file names, search).
 - **Left Alt + number keys = Caps Shift + number** (EDIT, cursor keys,
   DELETE...).
 - The numeric keypad works on machines without one; optional key repeat on
@@ -76,6 +77,8 @@ Hungarian accented letters.
 - The **AY mixer**: stereo mode (eight modes, with custom places), volume,
   panorama and on/off switch of each channel, main volume; settings can be
   saved for each song in `.mix` files (the same format as in the Fuse fork).
+- The AY mixer and the audio chip windows can be opened on machines without
+  an AY chip too, for the music of the AY player.
 
 ### Window and full screen
 
@@ -86,12 +89,16 @@ Hungarian accented letters.
   smoothing; the menus and icons keep their size.
 - **Full screen** with DAVID Desktop, or the machine picture alone filling the
   screen with sharp, even pixels.
+- Menus, windows, tooltips and dragging icons no longer hold up the
+  emulation; the emulated display on a window has a size of its own.
 
 ### Virtual keyboard
 
-High resolution keyboard pictures in three sizes (100%, 150%, 200%; a double
-click on the title steps between them), and pressing its keys no longer slows
-down the emulation.
+Sharp keyboard pictures drawn again (the Spectrums, ZX80, ZX81, the Timex
+machines, TK85 and Jupiter Ace from the drawings of the EightyOne fork, the
+CPC 464 drawn on its own) in five sizes (100%, 125%, 150%, 175%, 200%; a
+double click on the title steps between them), and pressing its keys no
+longer slows down the emulation.
 
 See [CHANGELOG-fork.md](CHANGELOG-fork.md) for the full list.
 

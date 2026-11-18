@@ -2,11 +2,13 @@
 
 **English** | [Magyar](CHANGELOG-fork.hu.md)
 
-Changes of this fork on top of ZEsarUX 13.1-SN (the development snapshot of
-the upstream `main` branch). The changes of ZEsarUX itself are in
+Changes of this fork on top of ZEsarUX 13.1 (the development version of the
+upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of ZEsarUX itself are in
 [src/Changelog](src/Changelog) (in Hungarian: [src/Changelog_hu](src/Changelog_hu)).
 
-## Unreleased
+## v13.1-B1-hu.1 – 2026-11-18
+
+The second release of the fork, based on ZEsarUX 13.1 Beta 1.
 
 ### Hungarian user interface
 
@@ -83,7 +85,7 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
   (pictures whose width is not a multiple of four were shown slanted; the
   fork's keyboard scaler now reads them the same way). The program now
   shows its version as 13.1-B1-hu.1. The fork keeps its own keyboard
-  scaling (100/150/200%, any window size, smoothing, stored picture)
+  scaling (100–200%, any window size, smoothing, stored picture)
   instead of the new upstream integer-factor scaling.
 
 ### Sound

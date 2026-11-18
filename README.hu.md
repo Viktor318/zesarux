@@ -22,13 +22,13 @@ ne az eredeti projektnek.
 
 ## Letöltés
 
-Töltsd le a `ZEsarUX-13.1-SN-hu.1-windows.zip` fájlt a
+Töltsd le a `ZEsarUX-13.1-B1-hu.1-windows.zip` fájlt a
 [Releases](https://github.com/Viktor318/zesarux/releases) oldalról, csomagold
 ki egy tetszőleges mappába, és indítsd el a `zesarux.exe`-t. Semmit nem kell
 telepíteni.
 
-A fork a ZEsarUX 13.1-SN-re épül, a készülő ZEsarUX 13.1 fejlesztői
-pillanatképére („SN”: snapshot); innen a 13.1-SN-hu.1 verziónév.
+A fork a ZEsarUX 13.1 Beta 1-re épül, a készülő ZEsarUX 13.1 első bétájára
+(„B1”); innen a 13.1-B1-hu.1 verziónév.
 
 ## Első lépések
 
@@ -53,7 +53,8 @@ megvannak a magyar ékezetes betűk.
 - **Windowsos billentyűzetkiosztás** (Spectrum, ZX80, ZX81, QL és Amstrad
   CPC): amit begépelsz, az jelenik meg az emulált gépen, bármilyen a
   billentyűzeted kiosztása. Magyar billentyűzeten a Shift+2 `"`-t, az AltGr+V
-  `@`-t ír; a gép billentyűkombinációját a program nyomja le.
+  `@`-t ír; a gép billentyűkombinációját a program nyomja le. A menük
+  szövegmezőiben (fájlnév, keresés) is így működik.
 - **Bal Alt + számbillentyűk = Caps Shift + szám** (EDIT, kurzorbillentyűk,
   DELETE...).
 - A számbillentyűzet azokon a gépeken is működik, amelyeknek nincs;
@@ -80,6 +81,8 @@ megvannak a magyar ékezetes betűk.
 - Az **AY keverő**: sztereó mód (nyolc mód, egyéni helyekkel), csatornánként
   hangerő, panoráma és be/ki kapcsoló, fő hangerő; a beállítások dalonként
   `.mix` fájlba menthetők (ugyanaz a formátum, mint a Fuse forkban).
+- Az AY keverő és a hangchip ablakok AY chip nélküli gépeken is
+  megnyithatók, az AY lejátszó zenéjéhez.
 
 ### Ablak és teljes képernyő
 
@@ -90,12 +93,16 @@ megvannak a magyar ékezetes betűk.
   menük és az ikonok mérete nem változik.
 - **Teljes képernyő** ZX Desktoppal, vagy csak a gépkép, amely éles,
   egyenletes pixelekkel kitölti a képernyőt.
+- A menük, az ablakok, a buboréksúgók és az ikonok húzása nem akasztja meg
+  az emulációt; az ablakban lévő emulált kijelzőnek saját mérete van.
 
 ### Virtuális billentyűzet
 
-Nagy felbontású billentyűzetképek három méretben (100%, 150%, 200%; a
-címsorra duplán kattintva lépeget közöttük), és a gombjainak lenyomása nem
-lassítja az emulációt.
+Éles, újrarajzolt billentyűzetképek (a Spectrumok, a ZX80, a ZX81, a
+Timexek, a TK85 és a Jupiter Ace képe az EightyOne fork rajzaiból, a CPC 464
+saját rajz) öt méretben (100%, 125%, 150%, 175%, 200%; a címsorra duplán
+kattintva lépeget közöttük), és a gombjainak lenyomása nem lassítja az
+emulációt.
 
 A teljes lista a [CHANGELOG-fork.hu.md](CHANGELOG-fork.hu.md) fájlban van.
 

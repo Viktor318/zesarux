@@ -57,7 +57,7 @@ Examples
 //Version del fork (Viktor318/zesarux, edicion hungara). Se muestra al usuario (titulo, pie, Acerca de...)
 //junto a EMULATOR_VERSION, que no se cambia para que las comprobaciones de version del original sigan funcionando
 #define EMULATOR_FORK_VERSION "hu.1"
-#define EMULATOR_FORK_DATE "06/11/2026"
+#define EMULATOR_FORK_DATE "18/11/2026"
 #define EMULATOR_DISPLAY_VERSION EMULATOR_VERSION "-" EMULATOR_FORK_VERSION
 
 #define EMULATOR_DATE "17 November 2026"

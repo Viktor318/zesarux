@@ -2,12 +2,14 @@
 
 [English](CHANGELOG-fork.md) | **Magyar**
 
-A fork változtatásai a ZEsarUX 13.1-SN-hez képest (az upstream `main` ág
-fejlesztői pillanatképe). A ZEsarUX saját változásai a
+A fork változtatásai a ZEsarUX 13.1-hez képest (az upstream `main` ág
+fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saját változásai a
 [src/Changelog_hu](src/Changelog_hu) fájlban vannak (angolul:
 [src/Changelog](src/Changelog)).
 
-## Kiadatlan
+## v13.1-B1-hu.1 – 2026-11-18
+
+A fork második kiadása, a ZEsarUX 13.1 Beta 1-re építve.
 
 ### Magyar felület
 
@@ -81,7 +83,7 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
   javítása (a néggyel nem osztható szélességű képek ferdén jelentek meg;
   a fork billentyűzet-méretezője is így olvassa a képet). A program verziója
   mostantól 13.1-B1-hu.1-ként jelenik meg. Az upstream új, egész szorzós
-  billentyűzet-méretezése helyett a fork sajátja maradt (100/150/200%,
+  billentyűzet-méretezése helyett a fork sajátja maradt (100–200%,
   bármilyen ablakméret, simítás, tárolt kép).
 
 ### Hang
