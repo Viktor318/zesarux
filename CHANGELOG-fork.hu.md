@@ -22,6 +22,9 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
     képernyőt jelentő „kijelző” marad, pl. *Emulált kijelző*);
   - *Stop emulation in menus*: megállítás → leállítás; *Autofire*: automata
     tűz → automatikus tűz; *Disabled save settings*: tiltva → kikapcsolva.
+- A Transtape *Simulate reset press* menüpontja és ablakcíme „Reset gomb
+  megnyomása” és „Reset gomb” (eddig „Újraindító gomb”), egyezően az ablak
+  „OK. Reset gomb megnyomva” szövegével.
 
 ### Billentyűzet
 

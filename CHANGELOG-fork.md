@@ -22,6 +22,9 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
     meaning the screen stays, e.g. *Emulált kijelző*);
   - *Stop emulation in menus*: megállítás → leállítás; *Autofire*: automata
     tűz → automatikus tűz; *Disabled save settings*: tiltva → kikapcsolva.
+- The Transtape *Simulate reset press* menu item and window title are
+  „Reset gomb megnyomása” and „Reset gomb” (they were „Újraindító gomb”), to
+  match the „OK. Reset gomb megnyomva” text of the window.
 
 ### Keyboard
 

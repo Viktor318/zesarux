@@ -748,13 +748,13 @@ Default SPI Flash file	Alapértelmezett SPI Flash fájl	window title
 ~~Flash File: [%s]	~~Flash fájl: [%s]	item
 [%c] ~~Write protect	[%c] Í~~rásvédelem	item
 [%c] Persistent Writes	[%c] Tartós írás	item
-Reset button	Újraindító gomb	window title
+Reset button	Reset gomb	window title
 [%c] ~~Transtape Enabled	[%c] ~~Transtape bekapcsolva	item
 Version	Változat	item
 Rom file	ROM fájl	item
 Switch A10	A10 kapcsoló	item
 Switch A11	A11 kapcsoló	item
-Simulate reset press	Újraindító gomb megnyomása	item
+Simulate reset press	Reset gomb megnyomása	item
 Transtape emulation	Transtape emuláció	menu title
 [%c] ~~Spec-Mate Enabled	[%c] ~~Spec-Mate bekapcsolva	item
 Spec-mate emulation	Spec-Mate emuláció	menu title
