@@ -2384,7 +2384,7 @@ static const struct s_hungarian_string hungarian_strings[]={
     {"OK. Poke applied","OK. Poke alkalmazva"},
     {"OK. Remember to enable DIVIDE paging to load the firmware","OK. Ne feledd bekapcsolni a DIVIDE lapoz\303\241st a firmware bet\303\266lt\303\251s\303\251hez"},
     {"OK. Remember to enable DIVMMC paging to load the firmware","OK. Ne feledd bekapcsolni a DIVMMC lapoz\303\241st a firmware bet\303\266lt\303\251s\303\251hez"},
-    {"OK. Reset pressed","OK. \303\232jraind\303\255t\303\263 gomb megnyomva"},
+    {"OK. Reset pressed","OK. Reset gomb megnyomva"},
     {"OK. Restored all first-use messages","OK. Minden els\305\221 haszn\303\241lati \303\274zenet vissza\303\241ll\303\255tva"},
     {"OK. Results cleared","OK. Eredm\303\251nyek t\303\266r\303\266lve"},
     {"OK. Screen file name: %s","OK. K\303\251perny\305\221f\303\241jl neve: %s"},

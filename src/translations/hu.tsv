@@ -2242,7 +2242,7 @@ Invalid quantity %d	Érvénytelen mennyiség: %d	error
 Buffer has been emptied	A puffer kiürítve	message
 Enable?	Bekapcsolod?	question
 Reload SPI Flash from file?	Újratöltöd az SPI Flash-t fájlból?	question
-OK. Reset pressed	OK. Újraindító gomb megnyomva	message
+OK. Reset pressed	OK. Reset gomb megnyomva	message
 ROM file is not expected size	A ROM fájl mérete nem a várt	error
 Unable to open mantransfer binary file %s	Nem sikerült megnyitni a mantransfer bináris fájlt: %s	error
 ROM file must be 8 KB length	A ROM fájlnak 8 KB méretűnek kell lennie	error
