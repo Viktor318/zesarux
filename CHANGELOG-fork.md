@@ -21,8 +21,7 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
   - the *Display* menu: Kijelző → **Megjelenítés** (hotkey: j; „kijelző”
     meaning the screen stays, e.g. *Emulált kijelző*);
   - *Stop emulation in menus*: megállítás → leállítás; *Autofire*: automata
-    tűz → automatikus tűz; *Disabled save settings*: tiltva → kikapcsolva;
-    *Reset pressed*: Reset gomb → Újraindító gomb.
+    tűz → automatikus tűz; *Disabled save settings*: tiltva → kikapcsolva.
 
 ### Keyboard
 

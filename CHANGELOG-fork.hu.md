@@ -21,8 +21,7 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
   - a *Display* menü: Kijelző → **Megjelenítés** (gyorsbillentyű: j; a
     képernyőt jelentő „kijelző” marad, pl. *Emulált kijelző*);
   - *Stop emulation in menus*: megállítás → leállítás; *Autofire*: automata
-    tűz → automatikus tűz; *Disabled save settings*: tiltva → kikapcsolva;
-    *Reset pressed*: Reset gomb → Újraindító gomb.
+    tűz → automatikus tűz; *Disabled save settings*: tiltva → kikapcsolva.
 
 ### Billentyűzet
 
