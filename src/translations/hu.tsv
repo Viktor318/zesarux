@@ -440,7 +440,7 @@ Qu~~icksave Screen	Képernyő ~~gyorsmentése	item
 View ~~Colour Palettes	~~Színpaletták megtekintése	item
 On Screen ~~Keyboard	~~Képernyő-billentyűzet	item
 ~~Text Adventure Tools	Szöveges kaland ~~eszközei	item
-Display	Kijelző	menu title
+Display	Megjelenítés	menu title
 [%d] Zoom	[%d] Nagyítás	item
 Audio Chip Piano	Hangchip zongora	menu title
 Wave Piano	Hullám zongora	menu title
@@ -470,7 +470,8 @@ Maximum snapshots	Pillanatképek maximális száma	window title
 Rewind timeout	Visszatekerési időkorlát	window title
 Save snapshot in RAM	Pillanatkép mentése a RAM-ba	window title
 Save Snapshot	Pillanatkép mentése	window title
-Browse Snapshots	Pillanatképek böngészése	menu title
+Browse Snapshots	Pillanatképek tallózása	menu title
+Browse	Tallózás	item
 Time Machine	Időgép	window title
 Confirm restore snapshot	Pillanatkép visszaállításának megerősítése	question
 [%c] Enabled	[%c] Bekapcsolva	item
@@ -702,14 +703,14 @@ Quicks~~ave	Gy~~orsmentés	item
 Save a~~utoconfig file	~~Automatikus beállítás mentése fájlba	item
 Snapshots to ~~RAM	~~Pillanatképek a RAM-ba	item
 Snapshot	Pillanatkép	menu title
-Eject Cartridge	Cartridge kivétele	window title
-~~Load Cartridge	~~Cartridge betöltése	item
+Eject Cartridge	Kártya kivétele	window title
+~~Load Cartridge	Kártya ~~betöltése	item
 Mapper type [%s]	Leképező típusa [%s]	item
-Cartridge Size [%d KB]	Cartridge mérete [%d KB]	item
+Cartridge Size [%d KB]	Kártya mérete [%d KB]	item
 [%s] Mapper type	[%s] Leképező típusa	item
 --- Info ---	--- Adatok ---	item
-Cartridge Size: %d KB	Cartridge mérete: %d KB	item
-~~Eject Cartridge	Cartridge ~~kivétele	item
+Cartridge Size: %d KB	Kártya mérete: %d KB	item
+~~Eject Cartridge	Kártya ~~kivétele	item
 RAM Size	RAM mérete	menu title
 Size	Méret	menu title
 Eprom Size	EPROM mérete	menu title
@@ -793,12 +794,12 @@ Open Z88 Flap	Z88 fedél kinyitása	item
 ~~Microdrive & Floppy	Micro~~drive és floppy	item
 ~~Tape	Kaze~~tta	item
 3" CF2 F~~loppy	~~3" CF2 floppy	item
-Timex ~~Cartridge	Timex ~~cartridge	item
-MSX ~~Cartridge	MS~~X cartridge	item
-Coleco ~~Cartridge	Co~~leco cartridge	item
-SG-1000 ~~Cartridge	SG-~~1000 cartridge	item
-SMS ~~Cartridge	SMS ca~~rtridge	item
-SVI ~~Cartridge	S~~VI cartridge	item
+Timex ~~Cartridge	Timex ká~~rtya	item
+MSX ~~Cartridge	MS~~X kártya	item
+Coleco ~~Cartridge	Co~~leco kártya	item
+SG-1000 ~~Cartridge	SG-~~1000 kártya	item
+SMS ~~Cartridge	SMS ká~~rtya	item
+SVI ~~Cartridge	S~~VI kártya	item
 LEC memory	LEC memória	item
 ZX~~pand emulation	ZX~~pand emuláció	item
 C~~opy Interfaces	Más~~oló interfészek	item
@@ -825,7 +826,7 @@ Search results	Keresési eredmények	window title
 S~~napshot	Pi~~llanatkép	item
 ~~Machine	~~Gép	item
 ~~Audio	~~Hang	item
-~~Display	~~Kijelző	item
+~~Display	Meg~~jelenítés	item
 S~~torage	Há~~ttértár	item
 D~~ebug	H~~ibakeresés	item
 Netw~~ork	Háló~~zat	item
@@ -1044,7 +1045,7 @@ Right mouse button sends ESC	Jobb egérgomb = ESC	item
 Old menu behaviour (ESC, etc)	Régi menüműködés (ESC stb.)	item
 --- Task Management ---	--- Feladatkezelés ---	item
 M~~ultitask	~~Többfeladatos mód	item
-Sto~~p emulation in menus	~~Emuláció megállítása a menükben	item
+Sto~~p emulation in menus	~~Emuláció leállítása a menükben	item
 ~~Background windows	~~Háttérablakok	item
 Even when menu closed	Bezárt menünél is	item
 --- Help ---	--- Súgó ---	item
@@ -1219,8 +1220,8 @@ TV Settings	TV beállításai	menu title
 Emulated ~~Joystick	~~Emulált joystick	item
 Fire key	Tűz gomb	item
 SMS swap controls	SMS vezérlők felcserélése	item
-Joystick ~~Autofire	~~Joystick automata tűz	item
-Autofire frequency	Automata tűz gyakorisága	item
+Joystick ~~Autofire	~~Joystick automatikus tűz	item
+Autofire frequency	Automatikus tűz gyakorisága	item
 Joystick AutoLeftRight	Joystick automatikus bal-jobb	item
 Cheap Joystick	Olcsó joystick	item
 Joystick Settings	Joystick beállításai	menu title
@@ -1640,7 +1641,7 @@ Tape Vie~~wer	Ka~~zettanézegető	item
 Run Tape ~~Copier	~~Kazettamásoló futtatása	item
 Software made by me	Saját programjaim	item
 Tape	Kazetta	menu title
-Timex Cartridge	Timex cartridge	menu title
+Timex Cartridge	Timex kártya	menu title
 [%c] Dandanator ~~Enabled	[%c] ~~Dandanator bekapcsolva	item
 [%c] ~~Samram Enabled	[%c] ~~Samram bekapcsolva	item
 Total sectors	Összes szektor	window title
@@ -1664,7 +1665,7 @@ Tape player powered on	Magnó bekapcsolva	item
 Tape inserted	Kazetta behelyezve	item
 Cover has been ~~opened flag	Fedél ~~kinyitva jelző	item
 Fo~~rmat	~~Formázás	item
-~~Browse	~~Böngészés	item
+~~Browse	T~~allózás	item
 ~~Chkdsk	~~Ellenőrzés (chkdsk)	item
 Visual Data Drive	Vizuális Data Drive	item
 Convert Audio	Hang átalakítása	item
@@ -1700,7 +1701,7 @@ Microdrive File	Microdrive fájl	item
 Microdrive Emulation	Microdrive emuláció	item
 Write Protection	Írásvédelem	item
 Persistent Writes	Tartós írás	item
-Microdrive browse	Microdrive böngészése	item
+Microdrive browse	Microdrive tallózása	item
 Microdrive map	Microdrive térkép	item
 Chkdsk	Ellenőrzés (chkdsk)	item
 Microdrive raw map	Microdrive nyers térkép	item
@@ -1904,7 +1905,7 @@ Sort icons alphabetically	Ikonok ábécérendben	text
 ZX Desktop settings	ZX Desktop beállításai	text
 Exit ZEsarUX	Kilépés a ZEsarUX-ból	text
 Downgraded version	Régebbi változat	window title
-Disabled save settings	Beállítások mentése tiltva	window title
+Disabled save settings	Beállítások mentése kikapcsolva	window title
 Updated version	Frissített változat	window title
 New version available	Új változat érhető el	window title
 Use Windows keyboard layout	Windowsos billentyűzetkiosztás	item
@@ -1991,8 +1992,8 @@ DSK Basic: Sector size not supported on track %d	Alap DSK: nem támogatott szekt
 DSK: Extended DSK, track signature not found on track %XH size %d offset %XH	DSK: Kiterjesztett DSK, nem található sávaláírás. Sáv: %XH, méret: %d, eltolás: %XH	error
 DSK Extended: Sector size not supported on track %d side %d	Kiterjesztett DSK: nem támogatott szektorméret. Sáv: %d, oldal: %d	error
 dsk_get_sector: Sector size not supported on track %d sector %d	dsk_get_sector: nem támogatott szektorméret. Sáv: %d, szektor: %d	error
-Only 8k, 16k, 24k and 32k rom cartridges are allowed	Csak 8k, 16k, 24k és 32k méretű ROM cartridge-ek engedélyezettek	error
-If rom cartridge is smaller than 64kb, only 8k, 16k, 32k and 48k rom cartridges are allowed	Ha a ROM cartridge 64kb-nál kisebb, csak 8k, 16k, 32k és 48k méretű ROM cartridge-ek engedélyezettek	error
+Only 8k, 16k, 24k and 32k rom cartridges are allowed	Csak 8k, 16k, 24k és 32k méretű ROM-kártyák engedélyezettek	error
+If rom cartridge is smaller than 64kb, only 8k, 16k, 32k and 48k rom cartridges are allowed	Ha a ROM-kártya 64kb-nál kisebb, csak 8k, 16k, 32k és 48k méretű ROM-kártyák engedélyezettek	error
 Unable to open cas input file %s	Nem sikerült megnyitni a cas bemeneti fájlt: %s	error
 Can't find file %s	Nem található a fájl: %s	error
 Unable to load extra rom %s	Nem sikerült betölteni az extra ROM-ot: %s	error
@@ -2003,10 +2004,10 @@ Calling lee_puerto function on a QL machine. TODO fix it!	A lee_puerto függvén
 Calling out_port function on a QL machine. TODO fix it!	Az out_port függvény hívása QL gépen. TODO: javítani!	error
 Calling fetch_opcode function on a QL machine. TODO fix it!	A fetch_opcode függvény hívása QL gépen. TODO: javítani!	error
 File %s not found	A fájl nem található: %s	error
-Cartridges bigger than 48K are not allowed	48K-nál nagyobb cartridge-ek nem engedélyezettek	error
-Unable to open cartridge file %s	Nem sikerült megnyitni a cartridge fájlt: %s	error
-Cartridges bigger than %d KB are not allowed	%d KB-nál nagyobb cartridge-ek nem engedélyezettek	error
-Only 2k, 4k, 8k, 16k and 32k rom cartridges are allowed	Csak 2k, 4k, 8k, 16k és 32k méretű ROM cartridge-ek engedélyezettek	error
+Cartridges bigger than 48K are not allowed	48K-nál nagyobb kártyák nem engedélyezettek	error
+Unable to open cartridge file %s	Nem sikerült megnyitni a kártyafájlt: %s	error
+Cartridges bigger than %d KB are not allowed	%d KB-nál nagyobb kártyák nem engedélyezettek	error
+Only 2k, 4k, 8k, 16k and 32k rom cartridges are allowed	Csak 2k, 4k, 8k, 16k és 32k méretű ROM-kártyák engedélyezettek	error
 DCK with id 0x%02X not supported	Nem támogatott DCK, azonosító: 0x%02X	error
 8 KB block with id 0x%02X not supported	Nem támogatott 8 KB-os blokk, azonosító: 0x%02X	error
 Too many files. Exceed 256KB/16 files of 16KB size	Túl sok fájl. Túllépi a 256KB-ot (16 db 16KB-os fájl)	error
@@ -2059,7 +2060,7 @@ Can not allocate memory for pzx browser	Nem sikerült memóriát foglalni a pzx 
 Can not allocate memory for tzx browser	Nem sikerült memóriát foglalni a tzx böngészőnek	error
 Invalid .TZX file	Érvénytelen .TZX fájl	error
 Tape browser not supported for this tape type	A kazettaböngésző nem támogatja ezt a kazettatípust	error
-Unable to open tape for browsing	Nem sikerült megnyitni a kazettát böngészésre	error
+Unable to open tape for browsing	Nem sikerült megnyitni a kazettát tallózáshoz	error
 Too much headers. Showing only the allowed in memory	Túl sok fejléc. Csak a memóriában elférők láthatók	error
 Invalid .SP file	Érvénytelen .SP fájl	error
 Invalid .SNA file	Érvénytelen .SNA fájl	error
@@ -2130,13 +2131,13 @@ Invalid port number	Érvénytelen portszám	error
 Invalid interval	Érvénytelen intervallum	error
 Cancel?	Megszakítod?	question
 No results found	Nincs találat	error
-You need to have networking compiled to browse zx81 speccy games	A zx81 speccy játékok böngészéséhez hálózati támogatással kell fordítani	error
+You need to have networking compiled to browse zx81 speccy games	A zx81 speccy játékok tallózásához hálózati támogatással kell fordítani	error
 Error downloading. Return code: %d	Hiba a letöltéskor. Visszatérési kód: %d	error
 Can not create zsock http thread	Nem sikerült létrehozni a zsock http szálat	error
 Download has not ended yet	A letöltés még nem fejeződött be	warning
 Can not create download wos thread	Nem sikerült létrehozni a wos letöltési szálat	error
-You need to have SSL compiled to browse online speccy games	Az online speccy játékok böngészéséhez SSL-támogatással kell fordítani	error
-You need to have networking compiled to browse online speccy games	Az online speccy játékok böngészéséhez hálózati támogatással kell fordítani	error
+You need to have SSL compiled to browse online speccy games	Az online speccy játékok tallózásához SSL-támogatással kell fordítani	error
+You need to have networking compiled to browse online speccy games	Az online speccy játékok tallózásához hálózati támogatással kell fordítani	error
 Response too long. Showing only the first %d bytes	A válasz túl hosszú. Csak az első %d bájt látható	error
 File has been downloaded and uncompressed to current folder	A fájl letöltve és kibontva az aktuális mappába	message
 File has been downloaded and uncompressed to %s	A fájl letöltve és kibontva ide: %s	message
@@ -2222,7 +2223,7 @@ Where do you want to save it?	Hová szeretnéd menteni?	question
 Create .config from snapshot/tape	.config létrehozása pillanatképből/kazettából	option
 Select new/existing .config file	Új/meglévő .config fájl kiválasztása	option
 OK. File saved	OK. Fájl elmentve	message
-OK. Cartridge ejected	OK. Cartridge kiadva	message
+OK. Cartridge ejected	OK. Kártya kivéve	message
 Create?	Létrehozod?	question
 OK. Changes applied	OK. Változtatások alkalmazva	message
 Empty EPROM name	Üres EPROM név	error
@@ -2241,7 +2242,7 @@ Invalid quantity %d	Érvénytelen mennyiség: %d	error
 Buffer has been emptied	A puffer kiürítve	message
 Enable?	Bekapcsolod?	question
 Reload SPI Flash from file?	Újratöltöd az SPI Flash-t fájlból?	question
-OK. Reset pressed	OK. Reset gomb megnyomva	message
+OK. Reset pressed	OK. Újraindító gomb megnyomva	message
 ROM file is not expected size	A ROM fájl mérete nem a várt	error
 Unable to open mantransfer binary file %s	Nem sikerült megnyitni a mantransfer bináris fájlt: %s	error
 ROM file must be 8 KB length	A ROM fájlnak 8 KB méretűnek kell lennie	error
@@ -3104,13 +3105,13 @@ Save snapshot of the current machine state	Pillanatkép mentése a gép aktuáli
 Supported snapshot formats on save:\nZ80, ZX, SP, P, O\nYou must write the file name with the extension	Mentéskor támogatott pillanatkép-formátumok:\nZ80, ZX, SP, P, O\nA fájlnevet a kiterjesztéssel együtt kell megadnod	help
 Next saved ZSF snapshot will have this text note	A következő mentett ZSF pillanatkép ezt a szöveges megjegyzést kapja	tooltip
 Load a snapshot quickly	Pillanatkép gyors betöltése	tooltip
-Browses on the quicksave directory	Böngészés a gyorsmentési mappában	help
+Browses on the quicksave directory	Tallózás a gyorsmentési mappában	help
 Save a snapshot quickly	Pillanatkép gyors mentése	tooltip
 Save a snapshot quickly. Name prefix and directory to save are configured on settings->Snapshot	Pillanatkép gyors mentése. A névelőtag és a mentési mappa a Beállítások->Pillanatkép menüben állítható be	help
 Generate .config file with common settings	.config fájl generálása a gyakori beállításokkal	tooltip
 Generate .config file with common settings. Used to define custom settings for games, by default it asks to generate a .config file for the last smartloaded game	.config fájl generálása a gyakori beállításokkal. Játékok egyéni beállításainak megadására szolgál; alapértelmezés szerint a legutóbb okos betöltéssel betöltött játékhoz kínál fel .config fájlt	help
 Options to keep last snapshots in RAM	Az utolsó pillanatképek RAM-ban tartásának beállításai	tooltip
-Load Cartridge	Cartridge betöltése	tooltip
+Load Cartridge	Kártya betöltése	tooltip
 Type of memory card if present	A memóriakártya típusa, ha van	tooltip
 Size of RAM card	A RAM-kártya mérete	tooltip
 EPROM file to use	A használandó EPROM fájl	tooltip
@@ -3131,7 +3132,7 @@ It reclaims the space used by deleted files	Visszanyeri a törölt fájlok álta
 Undelete deleted files	Törölt fájlok visszaállítása	tooltip
 Copy files from your hard drive to Card	Fájlok másolása a merevlemezedről a kártyára	tooltip
 Copy files from your hard drive to Card. Card card must be initialized before you can copy files to it, I mean, if it's a new card, it must be erased and Z88 Filer must know it; usually it is needed to copy at least one file from Filer	Fájlok másolása a merevlemezedről a kártyára. A kártyát inicializálni kell, mielőtt fájlokat másolhatnál rá: ha új kártyáról van szó, előbb törölni kell, és a Z88 Filernek ismernie kell; általában legalább egy fájlt át kell másolni rá a Filerből	help
-Browse card	Kártya böngészése	tooltip
+Browse card	Kártya tallózása	tooltip
 Expand eprom file	EPROM-fájl kibontása	tooltip
 Copy files from Card to your hard drive	Fájlok másolása a kártyáról a merevlemezedre	tooltip
 File used for the ZX-Uno SPI Flash	A ZX-Uno SPI Flash-hez használt fájl	tooltip
@@ -3162,12 +3163,12 @@ Selects Memory Slots to use on Z88	A Z88-on használt memóriafoglalatok kivála
 Select tape and options	Kazetta és beállítások kiválasztása	tooltip
 Select tape for input (read) or output (write). \nYou use them as real tapes, with BASIC functions like LOAD and SAVE\nAlso select different options to change tape behaviour	Kazetta kiválasztása bemenetnek (olvasás) vagy kimenetnek (írás). \nÚgy használhatod őket, mint a valódi kazettákat, a LOAD és SAVE BASIC parancsokkal\nItt további beállításokkal módosíthatod a kazetta működését is	help
 3" Compact Floppy Disc emulation, used on Spectrum +3, Amstrad CPC 6128,664, Amstrad PCW	3"-os Compact Floppy lemez emulációja, a Spectrum +3, az Amstrad CPC 6128, 664 és az Amstrad PCW használta	help
-Timex Cartridge Settings	Timex cartridge beállításai	help
-MSX Cartridge Settings	MSX cartridge beállításai	help
-Coleco Cartridge Settings	Coleco cartridge beállításai	help
-SG-1000 Cartridge Settings	SG-1000 cartridge beállításai	help
-SMS Cartridge Settings	SMS cartridge beállításai	help
-SVI Cartridge Settings	SVI cartridge beállításai	help
+Timex Cartridge Settings	Timex kártya beállításai	help
+MSX Cartridge Settings	MSX kártya beállításai	help
+Coleco Cartridge Settings	Coleco kártya beállításai	help
+SG-1000 Cartridge Settings	SG-1000 kártya beállításai	help
+SMS Cartridge Settings	SMS kártya beállításai	help
+SVI Cartridge Settings	SVI kártya beállításai	help
 Betadisk settings	Betadisk beállításai	help
 Enables emulator to handle ESXDOS calls and use local files from your computer instead of using from inside the mmc/ide virtual file; also you can enable ESXDOS debug calls.\nYou can choose to have also enabled mmc/ide virtual file or not, you can use one of the settings or both. In case of using both, supported esxdos handler functions are managed with it; if not, they will be handled by the usual mmc/ide virtual file firmware (usually esxdos).\nUse with caution, only some ESXDOS calls are handled, the rest are handled from the mmc/ide virtual file firmware.\nThe list of supported calls are: \nDISK_FILEMAP, DISK_INFO, DISK_STATUS, F_CHDIR, F_CLOSE, F_FSTAT, F_GETCWD, F_MKDIR, F_MOUNT, F_OPEN, F_OPENDIR, F_READ, F_READDIR, F_RENAME, F_REWINDDIR, F_SEEK, F_SEEKDIR, F_STAT, F_SYNC, F_TELLDIR, F_UNLINK, F_WRITE, M_DOSVERSION, M_DRIVEINFO, M_GETSETDRV\nNote: you can also enable and disable ESXDOS handler whenever you want, for example in programs that use unsupported functions for handler.	Lehetővé teszi, hogy az emulátor kezelje az ESXDOS hívásokat, és a számítógéped helyi fájljait használja az mmc/ide virtuális fájl tartalma helyett; az ESXDOS hívások hibakeresése is bekapcsolható.\nVálaszthatod, hogy az mmc/ide virtuális fájl is be legyen-e kapcsolva: használhatod az egyiket vagy mindkettőt. Ha mindkettőt használod, a kezelő által támogatott esxdos függvényeket a kezelő intézi, a többit a szokásos mmc/ide virtuális fájl firmware-e (általában esxdos).\nÓvatosan használd: csak néhány ESXDOS hívás kezelt, a többit az mmc/ide virtuális fájl firmware-e kezeli.\nA támogatott hívások listája: \nDISK_FILEMAP, DISK_INFO, DISK_STATUS, F_CHDIR, F_CLOSE, F_FSTAT, F_GETCWD, F_MKDIR, F_MOUNT, F_OPEN, F_OPENDIR, F_READ, F_READDIR, F_RENAME, F_REWINDDIR, F_SEEK, F_SEEKDIR, F_STAT, F_SYNC, F_TELLDIR, F_UNLINK, F_WRITE, M_DOSVERSION, M_DRIVEINFO, M_GETSETDRV\nMegjegyzés: az ESXDOS kezelőt bármikor be- és kikapcsolhatod, például olyan programoknál, amelyek a kezelő által nem támogatott függvényeket használnak.	help
 HiLow settings	HiLow beállításai	help
@@ -3197,11 +3198,11 @@ This is my ZEsarUX own version of the Unix classic toy ;)	A klasszikus Unix ját
 This my ZEsarUX own version of the Game of Life :)	Az Életjáték saját ZEsarUX-verzióm :)	tooltip
 The Game of Life, also known simply as Life, is a cellular automaton devised by the British mathematician John Horton Conway in 1970. It is a zero-player game, meaning that its evolution is determined by its initial state, requiring no further input. One interacts with the Game of Life by creating an initial configuration and observing how it evolves. It is Turing complete and can simulate a universal constructor or any other Turing machine. This my ZEsarUX own version of the Game of Life :)	Az Életjáték (Game of Life, röviden Life) egy sejtautomata, amelyet John Horton Conway brit matematikus alkotott meg 1970-ben. Nulla játékosos játék, vagyis a fejlődését a kezdőállapota határozza meg, további bemenetre nincs szükség. Az Életjátékkal úgy lehet „játszani”, hogy létrehozol egy kezdő elrendezést, és megfigyeled, hogyan fejlődik. Turing-teljes, és képes szimulálni egy univerzális konstruktort vagy bármely más Turing-gépet. Ez az Életjáték saját ZEsarUX-verzióm :)	help
 Slow movement	Lassú mozgás	help
-This option loads the file depending on its type: \n-Binary tapes are inserted as standard tapes and loaded quickly\n-Audio tapes are loaded as real tapes\n-Snapshots are loaded at once\n-Cartridges or memory cards are inserted on the machine\nNote: Tapes will be autoloaded if the autoload setting is on (by default)	Ez a lehetőség a típusa szerint tölti be a fájlt: \n-A bináris kazetták normál kazettaként kerülnek behelyezésre, és gyorsan betöltődnek\n-A hangkazetták valódi kazettaként töltődnek be\n-A pillanatképek azonnal betöltődnek\n-A cartridge-ek és memóriakártyák a gépbe kerülnek\nMegjegyzés: a kazetták automatikusan betöltődnek, ha az automatikus betöltés be van kapcsolva (alapértelmezés)	help
+This option loads the file depending on its type: \n-Binary tapes are inserted as standard tapes and loaded quickly\n-Audio tapes are loaded as real tapes\n-Snapshots are loaded at once\n-Cartridges or memory cards are inserted on the machine\nNote: Tapes will be autoloaded if the autoload setting is on (by default)	Ez a lehetőség a típusa szerint tölti be a fájlt: \n-A bináris kazetták normál kazettaként kerülnek behelyezésre, és gyorsan betöltődnek\n-A hangkazetták valódi kazettaként töltődnek be\n-A pillanatképek azonnal betöltődnek\n-A ROM-kártyák és memóriakártyák a gépbe kerülnek\nMegjegyzés: a kazetták automatikusan betöltődnek, ha az automatikus betöltés be van kapcsolva (alapértelmezés)	help
 Load or save different snapshot images. Snapshot images are loaded or saved at once	Különböző pillanatképek betöltése vagy mentése. A pillanatképek azonnal betöltődnek vagy mentődnek	help
 You can switch to another machine. It also resets the machine	Másik gépre válthatsz. Ez a gépet is újraindítja	help
 Audio related actions	Hanggal kapcsolatos műveletek	help
-Display related actions	Kijelzővel kapcsolatos műveletek	tooltip
+Display related actions	Megjelenítéssel kapcsolatos műveletek	tooltip
 Select storage mediums, like tape, MMC, IDE, etc	Háttértárak kiválasztása, például kazetta, MMC, IDE stb.	help
 Tools to debug the machine	Eszközök a gép hibakereséséhez	help
 Network related actions	Hálózattal kapcsolatos műveletek	help
@@ -3228,7 +3229,7 @@ Inverse Color Palette	Fordított színpaletta	tooltip
 Inverses all the colours used on the emulator, including menu	Megfordítja az emulátor összes színét, a menüt is beleértve	help
 Draw colours using RGB 8 bit	Színek megjelenítése 8 bites RGB-vel	tooltip
 Draw colours using RGB 8 bit, but the internal palette still uses RGB 24 bit, it's just pixel colors are drawn using 8 bit	Színek megjelenítése 8 bites RGB-vel; a belső paletta továbbra is 24 bites RGB, csak a pixelek színei jelennek meg 8 biten	help
-Only black and white colors with dithering, best results with zoom >=2	Csak fekete-fehér színek ditheringgel, zoom >=2 mellett a legjobb	tooltip
+Only black and white colors with dithering, best results with zoom >=2	Csak fekete-fehér színek ditheringgel, 2-es vagy nagyobb nagyítás mellett a legjobb	tooltip
 Only black and white colors with dithering, best results with zoom >=2. If realvideo setting off, the dither effect is not applied to border	Csak fekete-fehér színek ditheringgel, zoom >=2 mellett a legjobb. Ha a realvideo ki van kapcsolva, a dithering nem érvényesül a kereten	help
 Use real Spectrum 16/48/+ colour palette	A valódi Spectrum 16/48/+ színpaletta használata	tooltip
 Use real Spectrum 16/48/+ colour palette. In fact, this palette is the same as a Spectrum issue 3, and almost the same as issue 1 and 2	A valódi Spectrum 16/48/+ színpaletta használata. Ez a paletta valójában ugyanaz, mint a Spectrum issue 3-é, és majdnem ugyanaz, mint az issue 1-é és 2-é	help
@@ -3460,8 +3461,8 @@ Joystick is emulated with:\n-A real joystick connected to an USB port\n-Cursor k
 Define which key triggers the fire function for the joystick	A joystick tűz funkcióját kiváltó billentyű	tooltip
 Define which key triggers the fire function for the joystick. Not all video drivers support reading all keys. Only kempston joystick allows more than one fire button	A joystick tűz funkcióját kiváltó billentyű. Nem minden videómeghajtó képes minden billentyűt beolvasni. Csak a Kempston joystick enged meg egynél több tűz gombot	help
 Swap controls player 1 <-> player 2	Vezérlők felcserélése: 1. játékos <-> 2. játékos	tooltip
-Enable joystick autofire	Joystick automata tűz bekapcsolása	tooltip
-Frequency for the joystick autofire	A joystick automata tüzelés gyakorisága	tooltip
+Enable joystick autofire	Joystick automatikus tűz bekapcsolása	tooltip
+Frequency for the joystick autofire	A joystick automatikus tüzének gyakorisága	tooltip
 Times per second (Hz) the joystick fire is auto-switched from pressed to not pressed and viceversa. Autofire can only be enabled on Kempston, Fuller, Zebra and Mikrogen; Sinclair, Cursor, and OPQA can not have autofire because this function can interfiere with the menu (it might think a key is pressed)	Másodpercenként hányszor (Hz) váltson a joystick tűz gomb lenyomott és felengedett állapot között. Automata tűz csak Kempston, Fuller, Zebra és Mikrogen esetén kapcsolható be; Sinclair, Cursor és OPQA esetén nem, mert ez a funkció zavarhatja a menüt (azt hiheti, hogy egy billentyű le van nyomva)	help
 You have to define a F-key or a button to trigger the action: JoyLeftRight	Meg kell adnod egy F-billentyűt vagy egy gombot, amely kiváltja a műveletet: JoyLeftRight	tooltip
 Emulates a cheap device which puts values in the bus, affecting interrupts	Egy olcsó eszközt emulál, amely értékeket tesz a buszra, és ezzel befolyásolja a megszakításokat	tooltip
@@ -3486,7 +3487,7 @@ TV settings	TV beállításai	tooltip
 Change some ULA settings	Néhány ULA-beállítás módosítása	tooltip
 Video settings	Videóbeállítások	tooltip
 Autoload medium and set machine	Adathordozó automatikus betöltése és gép beállítása	tooltip
-This option first change to the machine that handles the medium file type selected (tape, cartridge, etc), resets it, set some default machine values, and then, it sends a LOAD sentence to load the medium\nNote: The machine is changed only using smartload. Inserting a medium only resets the machine but does not change it	Ez az opció először átvált arra a gépre, amely a kiválasztott adathordozó fájltípusát kezeli (kazetta, cartridge stb.), újraindítja, beállít néhány alapértelmezett gépértéket, majd LOAD utasítást küld az adathordozó betöltéséhez\nMegjegyzés: a gép csak okos betöltéskor vált át. Az adathordozó behelyezése csak újraindítja a gépet, de nem váltja át	help
+This option first change to the machine that handles the medium file type selected (tape, cartridge, etc), resets it, set some default machine values, and then, it sends a LOAD sentence to load the medium\nNote: The machine is changed only using smartload. Inserting a medium only resets the machine but does not change it	Ez az opció először átvált arra a gépre, amely a kiválasztott adathordozó fájltípusát kezeli (kazetta, kártya stb.), újraindítja, beállít néhány alapértelmezett gépértéket, majd LOAD utasítást küld az adathordozó betöltéséhez\nMegjegyzés: a gép csak okos betöltéskor vált át. Az adathordozó behelyezése csak újraindítja a gépet, de nem váltja át	help
 Do the autoload process at top speed	Az automatikus betöltés maximális sebességgel	tooltip
 Detect options for the selected medium file and the needed machine	A kiválasztott adathordozó-fájl beállításainak és a szükséges gépnek a felismerése	tooltip
 The emulator uses a database for different included programs (and some other not included) and reads .config files to select emulator settings and the needed machine to run them. If you disable this, the database nor the .config files are read	Az emulátor adatbázist használ különféle mellékelt (és néhány nem mellékelt) programokhoz, és .config fájlokat olvas be, hogy kiválassza a futtatásukhoz szükséges emulátorbeállításokat és gépet. Ha ezt kikapcsolod, sem az adatbázis, sem a .config fájlok nem lesznek beolvasva	help
@@ -3738,9 +3739,9 @@ Show internal ROM instead of Superupgrade flash	A belső ROM megjelenítése a S
 Enable ifrom	iFrom bekapcsolása	tooltip
 Select Standard tape for Input and Output	Szabványos kazetta kiválasztása bemenetként és kimenetként	tooltip
 Standard tapes are those handled by ROM routines and have normal speed (no turbo). These tapes are handled by ZEsarUX and loaded or saved very quickly (for example tap). Audio format files (for example rwa, wav or smp) are converted by ZEsarUX to bytes and loaded on the machine memory. For every other non standard tapes (turbo or handled by non-ROM routines like loading stripes on different colours) you must use Real Input tape for load, and Audio output to file for saving	A szabványos kazetták azok, amelyeket a ROM rutinjai kezelnek, és normál sebességűek (nem turbó). Ezeket a kazettákat a ZEsarUX kezeli, és nagyon gyorsan tölti be vagy menti (például tap). A hangformátumú fájlokat (például rwa, wav vagy smp) a ZEsarUX bájtokká alakítja, és betölti a gép memóriájába. Minden más, nem szabványos kazettához (turbó, vagy nem ROM rutinok által kezelt, például eltérő színű betöltési csíkokkal) betöltéshez a valódi kazetta bemenetet, mentéshez pedig a Hang kimenete fájlba funkciót kell használnod	help
-Browse Input tape	Bemeneti kazetta böngészése	tooltip
+Browse Input tape	Bemeneti kazetta tallózása	tooltip
 Expand Input tape	Bemeneti kazetta kibontása	tooltip
-Browse Output tape	Kimeneti kazetta böngészése	tooltip
+Browse Output tape	Kimeneti kazetta tallózása	tooltip
 Expand Output tape	Kimeneti kazetta kibontása	tooltip
 Input Real Tape at normal loading Speed	Valódi kazetta bemenet normál betöltési sebességgel	tooltip
 You may select any input valid tape: o, p, tap, tzx, rwa, wav, smp. This tape is handled the same way as the real machine does, at normal loading speed, and may select tapes with different loading methods instead of the ROM: turbo loading, alkatraz, etc...\nWhen inserted real tape, realvideo is enabled, only to show real loading stripes on screen, but it is not necessary, you may disable realvideo if you want	Bármilyen érvényes bemeneti kazettát kiválaszthatsz: o, p, tap, tzx, rwa, wav, smp. Ezt a kazettát az emulátor ugyanúgy kezeli, mint a valódi gép, normál betöltési sebességgel, így a ROM-étól eltérő betöltési módszerű kazetták is választhatók: turbó betöltés, alkatraz stb...\nValódi kazetta behelyezésekor a realvideo bekapcsol, csak hogy a valódi betöltési csíkok látszódjanak a képernyőn, de ez nem szükséges, ki is kapcsolhatod a realvideo-t, ha szeretnéd	help
@@ -3748,13 +3749,13 @@ File to use as the input audio	A hangbemenetként használt fájl	tooltip
 File to use as the input audio. File can be an audio file but also a tap, tzx, etc	A hangbemenetként használt fájl. Ez lehet hangfájl, de tap, tzx stb. is	help
 Insert the file	A fájl behelyezése	tooltip
 Start playing the tape	A kazetta lejátszásának indítása	tooltip
-Browse Real tape	Valódi kazetta böngészése	tooltip
+Browse Real tape	Valódi kazetta tallózása	tooltip
 Expand Real tape	Valódi kazetta kibontása	tooltip
 See an audio render of your tape, see tape blocks and rewind or move forward the cassette player	Megtekintheted a kazetta hangképét és blokkjait, és előre- vagy visszatekerheted a magnót	tooltip
 Allow to run a tape copier	Kazettamásoló program futtatása	tooltip
 Open folder with some of programs made by me	Néhány általam készített programot tartalmazó mappa megnyitása	tooltip
-Load Timex Cartridge	Timex cartridge betöltése	tooltip
-Supported timex cartridge formats on load:\nDCK	Támogatott Timex cartridge formátumok betöltéskor:\nDCK	help
+Load Timex Cartridge	Timex kártya betöltése	tooltip
+Supported timex cartridge formats on load:\nDCK	Támogatott Timex kártyaformátumok betöltéskor:\nDCK	help
 Enable dandanator	Dandanator bekapcsolása	tooltip
 Enable samram	Samram bekapcsolása	tooltip
 HiLow Data Drive Emulation file	HiLow Data Drive emulációs fájl	tooltip
@@ -3896,12 +3897,12 @@ This smartload window allows you to load any file known by ZEsarUX. Just select 
 This is the Main Menu. You can select an item by using cursor keys, Enter (or right key) and mouse. Most of them have help, try pressing F1. Also, many have tooltip help, that means if you don't press a key, it will appear a tooltip about what the item does. ESC closes all menus, you can also close it by pressing the top-left button in the window. You can go back a menu pressing cursor left. You can also use your mouse to resize or move windows	Ez a Főmenü. Egy elemet a kurzorbillentyűkkel, az Enterrel (vagy a jobbra billentyűvel) és az egérrel választhatsz ki. A legtöbb elemhez tartozik súgó, próbáld ki az F1 lenyomásával. Sok elemhez buboréksúgó is van: ha nem nyomsz le billentyűt, megjelenik egy rövid leírás arról, mit csinál az adott elem. Az ESC bezárja az összes menüt, de az ablak bal felső gombjával is bezárhatod. A kurzor balra billentyűvel visszaléphetsz az előző menübe. Az egérrel az ablakokat át is méretezheted vagy mozgathatod	first aid
 Warning: as SSL support is not compiled, results newer than 2013 may fail	Figyelmeztetés: mivel az SSL támogatás nincs befordítva, a 2013-nál újabb találatok hibásak lehetnek	first aid
 A real joystick has been detected\nYou can go to menu Settings->Hardware->Real joystick support and set your buttons configuration	Valódi joystickot észleltem\nA Beállítások->Hardver->Valódi joystick menüben beállíthatod a gombok kiosztását	first aid
-The SG-1000 doesn't have a BIOS, so you must insert a game rom from menu Storage->SG-1000 Cartridge	Az SG-1000-nek nincs BIOS-a, ezért a Háttértár->SG-1000 cartridge menüben be kell helyezned egy játék ROM-ot	first aid
+The SG-1000 doesn't have a BIOS, so you must insert a game rom from menu Storage->SG-1000 Cartridge	Az SG-1000-nek nincs BIOS-a, ezért a Háttértár->SG-1000 kártya menüben be kell helyezned egy játék ROM-ot	first aid
 In case of glitches or bugs, maybe the official image uses features not emulated in ZEsarUX yet. If it's that the case, use the included tbblue sd image in ZEsarUX	Képhibák vagy programhibák esetén lehet, hogy a hivatalos lemezkép olyan funkciókat használ, amelyeket a ZEsarUX még nem emulál. Ilyenkor használd a ZEsarUX-hoz mellékelt tbblue SD lemezképet	first aid
 Changes done in the image file are only kept in RAM memory, until you execute the Sync action	A lemezképfájlon végzett módosítások csak a RAM memóriában maradnak meg, amíg végre nem hajtod a Szinkronizálás műveletet	first aid
 This downloaded file is hosted in spectrumcomputing.co.uk website. Thanks to Peter Jones for allowing it	Ez a letöltött fájl a spectrumcomputing.co.uk weboldalon található. Köszönet Peter Jonesnak, hogy ezt lehetővé tette	first aid
 This search engine is hosted in zxinfo.dk website. Thanks to Thomas Heckmann for allowing it	Ez a keresőmotor a zxinfo.dk weboldalon fut. Köszönet Thomas Heckmannak, hogy ezt lehetővé tette	first aid
-Browsing the floating point numeric variables is not accurate, please take the numbers as approximate	A lebegőpontos numerikus változók böngészése nem pontos, a számokat tekintsd közelítő értéknek	first aid
+Browsing the floating point numeric variables is not accurate, please take the numbers as approximate	A lebegőpontos numerikus változók tallózása nem pontos, a számokat tekintsd közelítő értéknek	first aid
 First messages appear at the bottom of the window	Az első üzenetek az ablak alján jelennek meg	first aid
 As you have real video enabled, you may see the machine display now drawn as the initial state, but it's not the actual state, it's a temporary frame that will disappear after you close the menu	Mivel a Real Video be van kapcsolva, a gép képernyőjét most a kezdeti állapotban rajzolva láthatod, de ez nem a tényleges állapot, hanem egy ideiglenes képkocka, amely a menü bezárása után eltűnik	first aid
 Warning: not all messages are translated.\nAviso: No todos los mensajes están traducidos.\nAvís: No tots els missages estan traduïts.	Figyelmeztetés: nem minden üzenet van lefordítva.\nAviso: No todos los mensajes están traducidos.\nAvís: No tots els missages estan traduïts.	first aid
@@ -3991,7 +3992,7 @@ Set Machine	Gép beállítása	tooltip
 Show Background Windows	Háttérablakok megjelenítése	tooltip
 Silence Audio	Hang némítása	tooltip
 Smart Load	Okos betöltés	tooltip
-Smart load tapes, snapshots, floppies, memory cards, cartridges...	Kazetták, pillanatképek, lemezek, memóriakártyák, cartridge-ek okos betöltése...	tooltip
+Smart load tapes, snapshots, floppies, memory cards, cartridges...	Kazetták, pillanatképek, lemezek, memóriakártyák, ROM-kártyák okos betöltése...	tooltip
 Switch Auto Left-Right Joystick	Automatikus bal-jobb joystick ki/be	tooltip
 Switch Border	Keret ki/be	tooltip
 Switch Fotter	Lábléc ki/be	tooltip
@@ -4142,7 +4143,7 @@ Action	Művelet	window title
 Recreating image...	Kép újraépítése...	window text
 Select Image Program	Képprogram kiválasztása	window title
 Real video not enabled	A Real Video nincs bekapcsolva	window text
-Enable it on Setttings->Display	Kapcsold be: Beállítások->Kijelző	window text
+Enable it on Setttings->Display	Kapcsold be: Beállítások->Megjelenítés	window text
 Debug console is not enabled. Enable it on Settings->Debug	A hibakeresési konzol nincs bekapcsolva. Kapcsold be: Beállítások->Hibakeresés	window text
 General sound is not enabled	A General Sound nincs bekapcsolva	window text
 Select Source File	Forrásfájl kiválasztása	window title
@@ -4176,7 +4177,7 @@ Keys: %s	Billentyűk: %s	window text
 ~~Orien.: %s ~~Mode: [%s]	~~Orient.: %s ~~Mód: [%s]	window text
 Select Snapshot	Pillanatkép kiválasztása	window title
 Save game config	Játékbeállítás mentése	window title
-Select Cartridge	Cartridge kiválasztása	window title
+Select Cartridge	Kártya kiválasztása	window title
 Select existing or new	Válassz meglévőt vagy újat	window title
 Select file to copy	Másolandó fájl kiválasztása	window title
 Select Target File	Célfájl kiválasztása	window title

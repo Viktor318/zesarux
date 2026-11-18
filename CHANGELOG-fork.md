@@ -13,6 +13,16 @@ the upstream `main` branch). The changes of ZEsarUX itself are in
 - The new upstream *Emulated Display* settings (the machine picture docked
   to the top left corner or in a window; formerly *Video Output*) in
   Hungarian.
+- The translation follows the common glossary of the four forks:
+  - *Browse*: Böngészés → **Tallózás** (the windows named browser, e.g.
+    Kazettaböngésző, stay);
+  - *Cartridge*: cartridge → **kártya**, for ROMs **ROM-kártya** (e.g.
+    *Kártya betöltése*, *Kártya kivétele*, *Timex kártya*);
+  - the *Display* menu: Kijelző → **Megjelenítés** (hotkey: j; „kijelző”
+    meaning the screen stays, e.g. *Emulált kijelző*);
+  - *Stop emulation in menus*: megállítás → leállítás; *Autofire*: automata
+    tűz → automatikus tűz; *Disabled save settings*: tiltva → kikapcsolva;
+    *Reset pressed*: Reset gomb → Újraindító gomb.
 
 ### Keyboard
 

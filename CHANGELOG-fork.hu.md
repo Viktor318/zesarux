@@ -13,6 +13,16 @@ fejlesztői pillanatképe). A ZEsarUX saját változásai a
 
 - Az upstream új *Emulált kijelző* beállításai (a gépkép a bal felső sarokba
   rögzítve vagy külön ablakban; korábban *Videókimenet*) magyarul.
+- A fordítás a négy fork közös szójegyzékéhez igazítva:
+  - *Browse*: Böngészés → **Tallózás** (a böngésző nevű ablakok, pl.
+    Kazettaböngésző, maradnak);
+  - *Cartridge*: cartridge → **kártya**, ROM-nál **ROM-kártya** (pl. *Kártya
+    betöltése*, *Kártya kivétele*, *Timex kártya*);
+  - a *Display* menü: Kijelző → **Megjelenítés** (gyorsbillentyű: j; a
+    képernyőt jelentő „kijelző” marad, pl. *Emulált kijelző*);
+  - *Stop emulation in menus*: megállítás → leállítás; *Autofire*: automata
+    tűz → automatikus tűz; *Disabled save settings*: tiltva → kikapcsolva;
+    *Reset pressed*: Reset gomb → Újraindító gomb.
 
 ### Billentyűzet
 
