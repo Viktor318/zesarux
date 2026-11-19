@@ -29,6 +29,10 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
   the title (100 → 125 → 150 → 175 → 200 → 250 → 300 → 100%). At 300% the
   pictures drawn again are shown pixel by pixel. The double click skips a
   size that does not fit on the screen and goes to 100%.
+- **All keyboard pictures are PNG**: the pictures of the other machines too
+  (lossless, the colours and the order of the palette unchanged). The
+  `keyboards` folder went from 20 MB to 6.8 MB. New BMP pictures from upstream
+  still work.
 
 ## v13.1-B1-hu.1 – 2026-11-18
 

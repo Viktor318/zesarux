@@ -30,6 +30,10 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
   kattintással (100 → 125 → 150 → 175 → 200 → 250 → 300 → 100%). A 300% az
   újrarajzolt képeknél képpontról képpontra mutatja a képet. A dupla kattintás
   a képernyőre nem férő méretet átugorja, és 100%-ra vált.
+- **Minden billentyűzetkép PNG**: a többi gép képe is (veszteség nélkül, a
+  színek és a paletta sorrendje változatlan). A `keyboards` mappa így
+  20 MB-ról 6,8 MB-ra csökkent. Az upstream új BMP-képei továbbra is
+  működnek.
 
 ## v13.1-B1-hu.1 – 2026-11-18
 
