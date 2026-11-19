@@ -2275,6 +2275,10 @@ See the SDL documentation. Scancodes represent the physical position of the keys
 				util_set_reset_mouse(UTIL_MOUSE_RIGHT_BUTTON,1);
             }
 
+            if ( event.button.button == SDL_BUTTON_MIDDLE ) {
+                kempston_mouse_middle=1;
+            }
+
             debug_printf (VERBOSE_PARANOID,"Mouse Button press. x=%d y=%d", event.button.x, event.button.y);
 
 		}
@@ -2292,9 +2296,16 @@ See the SDL documentation. Scancodes represent the physical position of the keys
 				util_set_reset_mouse(UTIL_MOUSE_RIGHT_BUTTON,0);
 			}
 
+            if ( event.button.button == SDL_BUTTON_MIDDLE ) {
+                kempston_mouse_middle=0;
+            }
+
 		}
 
         if (event.type == SDL_MOUSEWHEEL) {
+            //Rueda del Kempston mouse del Next
+            kempston_mouse_wheel_move(event.wheel.y);
+
             if (event.wheel.y > 0) {
                 mouse_wheel_vertical=1;
             }

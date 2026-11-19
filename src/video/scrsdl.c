@@ -1866,6 +1866,9 @@ void scrsdl_actualiza_tablas_teclado(void)
                 //mouse_right=1;
 				util_set_reset_mouse(UTIL_MOUSE_RIGHT_BUTTON,1);
             }
+            if ( event.button.button == SDL_BUTTON_MIDDLE ) {
+                kempston_mouse_middle=1;
+            }
 
 
 
@@ -1884,12 +1887,18 @@ void scrsdl_actualiza_tablas_teclado(void)
 			    	//mouse_right=0;
 			    }
 
+                if ( event.button.button == SDL_BUTTON_MIDDLE ) {
+                        kempston_mouse_middle=0;
+                }
+
                 if ( event.button.button == SDL_BUTTON_WHEELUP ) {
                         mouse_wheel_vertical=1;
+                        kempston_mouse_wheel_move(1);
                 }
 
                 if ( event.button.button == SDL_BUTTON_WHEELDOWN ) {
                         mouse_wheel_vertical=-1;
+                        kempston_mouse_wheel_move(-1);
                 }
 
 //Parchecillo para usar scroll izquierdo y derecho. No viene por defecto en sdl 1.2

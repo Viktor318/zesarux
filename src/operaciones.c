@@ -7374,7 +7374,29 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
             }
         }
 
-        if (kempston_mouse_port==1) {
+        if (kempston_mouse_port==1 && MACHINE_IS_TBBLUE) {
+            //Next: bits 7-4 contador de la rueda, bit 3 cuarto boton (no emulado, siempre 1),
+            //bit 2 boton central, bit 1 izquierdo, bit 0 derecho. Botones activos a 0
+            //https://wiki.specnext.dev/Kempston_Mouse_Buttons
+            acumulado=((kempston_mouse_wheel&15)<<4) | 15;
+
+            if (!zxvision_key_not_sent_emulated_mach() ) {
+                int izquierdo=mouse_left;
+                int derecho=mouse_right;
+
+                //NextReg 0x0A bit 3: intercambiar boton izquierdo y derecho
+                if (tbblue_registers[10] & 8) {
+                    izquierdo=mouse_right;
+                    derecho=mouse_left;
+                }
+
+                if (izquierdo) acumulado &=(255-2);
+                if (derecho) acumulado &=(255-1);
+                if (kempston_mouse_middle) acumulado &=(255-4);
+            }
+        }
+
+        else if (kempston_mouse_port==1) {
             //Buttons
 			acumulado=255;
 
@@ -7384,10 +7406,6 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
                 if (mouse_left) acumulado &=(255-2);
                 //right button
                 if (mouse_right) acumulado &=(255-1);
-
-                //en Next, bits altos se usan para wheel, como no los emulamos, a 0
-                //https://specnext.dev/wiki/Kempston_Mouse_Buttons
-                if (MACHINE_IS_TBBLUE) acumulado &=0x0F;
 
             }
         }

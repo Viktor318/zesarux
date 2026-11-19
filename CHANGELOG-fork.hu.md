@@ -38,6 +38,14 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
   ablakában, amíg az egér vissza nem került rá. Most eltűnik, amikor az egér
   kimegy az ablakból, és amikor az ablak háttérbe kerül vagy bezárul.
 
+### ZX Spectrum Next
+
+- **A Next egere teljesebb**: a Kempston egér (Beállítások → Hardver → Egér
+  → Kempston egér) a Next-en a görgőt és a középső gombot is továbbítja, ahogy
+  a valódi Next (a gombok portjának 7–4. bitje a görgő számlálója, a 2. bit a
+  középső gomb). A Next 0x0A regiszterének gombcsere-bitjét (bal és jobb gomb
+  felcserélése) is figyelembe veszi. Nyitott menünél a görgő a menüé marad.
+
 ## v13.1-B1-hu.1 – 2026-11-18
 
 A fork második kiadása, a ZEsarUX 13.1 Beta 1-re építve.

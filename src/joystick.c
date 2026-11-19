@@ -208,6 +208,24 @@ int mouse_wheel_horizontal=0;
 //se toma como base el mismo formato que lightgun x e y pero con modulo % 256
 z80_byte kempston_mouse_x=0,kempston_mouse_y=0;
 
+//Boton central del raton (Kempston mouse del Next, bit 2 del puerto de botones)
+int kempston_mouse_middle=0;
+
+//Contador de 4 bits de la rueda (Kempston mouse del Next, bits 7-4 del puerto de botones)
+z80_byte kempston_mouse_wheel=0;
+
+//Movimiento de la rueda del raton del host hacia la maquina emulada.
+//pasos: positivo hacia arriba, negativo hacia abajo. Como en un raton PS/2, arriba resta y abajo suma
+void kempston_mouse_wheel_move(int pasos)
+{
+    if (!kempston_mouse_emulation.v) return;
+
+    //Con el menu abierto la rueda es del menu
+    if (zxvision_key_not_sent_emulated_mach()) return;
+
+    kempston_mouse_wheel=(kempston_mouse_wheel-pasos) & 15;
+}
+
 
 //Mascara de bits (desde 7 hasta 0): Fire4 Fire3 Fire2 Fire1 Up Down Left Right
 z80_byte puerto_especial_joystick=0;

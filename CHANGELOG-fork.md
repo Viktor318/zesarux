@@ -38,6 +38,15 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
   mouse leaves the window, and when the window goes to the background or is
   closed.
 
+### ZX Spectrum Next
+
+- **More complete mouse on the Next**: the Kempston mouse (Settings →
+  Hardware → Mouse → Kempston Mouse) passes the wheel and the middle button to
+  the Next too, like the real Next (bits 7–4 of the buttons port are the wheel
+  counter, bit 2 is the middle button). The button swap bit of Next register
+  0x0A (left and right button swapped) is followed as well. With the menu open
+  the wheel stays with the menu.
+
 ## v13.1-B1-hu.1 – 2026-11-18
 
 The second release of the fork, based on ZEsarUX 13.1 Beta 1.
