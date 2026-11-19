@@ -4,10 +4,11 @@
 Fork (Viktor318/zesarux): the virtual keyboard pictures drawn again for the
 EightyOne fork (Viktor318/EightyOne, Source/KBPics/svg), for ZEsarUX:
 
-  src/keyboards/keyboard_<x>.bmp
-                           the picture at 200% (1080 pixels wide, as the other
-                           pictures), 256 colours, drawn at that size (the
-                           edges of the keys on whole pixels)
+  src/keyboards/keyboard_<x>.png
+                           the picture at 300% (1620 pixels wide), 256
+                           colours, drawn at that size (the edges of the keys
+                           on whole pixels); the .bmp of the same name is
+                           deleted
   out/<x>.c                the key places for menu_items.c: the keys of the
                            table the picture had until now (and of its table of
                            additional keys), each moved onto the key of the new
@@ -29,7 +30,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 KEYBOARDS = os.path.join(HERE, '..', '..', 'src', 'keyboards')
 MENU_ITEMS = os.path.join(HERE, '..', '..', 'src', 'menu', 'menu_items.c')
 OUT = os.path.join(HERE, 'out')
-WIDTH = 1080
+WIDTH = 1620       # 300%: tres pixeles por pixel de los originales (desde 2026-11-19; antes 1080)
 ORIGINAL = 540      # the coordinates of the tables are in pixels of the 540 wide originals
 
 # picture: (EightyOne drawing, its places if not its own, table, table of additional keys, extra picture under it)
@@ -144,6 +145,20 @@ def to_bmp(im, path):
     p.save(path)
 
 
+def to_png(im, path):
+    """la imagen como PNG de paleta (256 colores, como to_bmp); el BMP del
+    mismo nombre, si queda, se borra (el programa usa el PNG)"""
+    sys.path.insert(0, SVGDIR)
+    from make import colours256
+    p = colours256(im)
+    pal = p.getpalette()[:768]
+    p.putpalette(pal + [0] * (768 - len(pal)))
+    p.save(path, optimize=True)
+    bmp = path[:-4] + '.bmp'
+    if os.path.exists(bmp):
+        os.remove(bmp)
+
+
 def c_rect(k):
     x, y, w, h = k
     return '%d,%d,%d,%d' % (round(x * ORIGINAL / WIDTH), round(y * ORIGINAL / WIDTH),
@@ -166,7 +181,7 @@ def main():
             canvas.paste(im, (0, 0))
             canvas.paste(im2, (min(k[0] for k in keys), im.height))
             im = canvas
-        to_bmp(im, os.path.join(KEYBOARDS, 'keyboard_%s.bmp' % name))
+        to_png(im, os.path.join(KEYBOARDS, 'keyboard_%s.png' % name))
         if not tname:
             continue
         # the tables until now, and the size of their picture (in units of the original)

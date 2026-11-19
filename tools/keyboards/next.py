@@ -7,7 +7,8 @@ las teclas se han medido en ella (1080 x 402 pixeles; las tablas en unidades de
 540) y se escriben aqui. Los textos son contornos de TeX Gyre Heros (GUST Font
 License), de kbdraw.py del fork de EightyOne.
 
-  src/keyboards/keyboard_next.bmp   la imagen, 1080 x 402, 256 colores
+  src/keyboards/keyboard_next.png   la imagen, 1620 x 603 (300%; el dibujo es de
+                                    1080 x 402), 256 colores
   out/next.svg, out/next.png        el dibujo
   out/next.c                        las posiciones para menu_items.c (unidades
                                     de 540), en el orden de las tablas antiguas
@@ -23,6 +24,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import make_zesarux_keyboards as mz
 
+ZOOM = 1.5               # la imagen guardada, respecto al dibujo
 W, H = 1080, 402
 F = 2                      # pixeles por unidad de las tablas (540 de ancho)
 
@@ -335,9 +337,13 @@ def main():
     svg = os.path.join(mz.OUT, 'next.svg')
     png = os.path.join(mz.OUT, 'next.png')
     open(svg, 'w').write(draw())
-    subprocess.check_call(['rsvg-convert', svg, '-o', png])
-    im = Image.open(png).convert('RGB')
-    mz.to_bmp(im, os.path.join(mz.KEYBOARDS, 'keyboard_next.bmp'))
+    # la imagen a 1,5 veces el dibujo (300%: tres pixeles por pixel del original);
+    # los bordes en pixeles pares del dibujo caen asi en multiplos de 3
+    subprocess.check_call(['rsvg-convert', '-z', str(ZOOM), svg, '-o', png])
+    mz.SVGDIR = sys.argv[1]
+    mz.to_png(Image.open(png).convert('RGB'), os.path.join(mz.KEYBOARDS, 'keyboard_next.png'))
+    # las tablas y la imagen marcada, en las medidas del dibujo
+    im = Image.open(png).convert('RGB').resize((W, H), Image.BOX)
 
     src = mz.source()
     old = mz.table(src, 'next')

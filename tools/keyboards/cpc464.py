@@ -8,7 +8,8 @@ on it (1280 x 490 pixels, twice its 640 x 245 original) and written here.
 The texts are outlines of TeX Gyre Heros (GUST Font License), from kbdraw.py
 of the EightyOne fork.
 
-  src/keyboards/keyboard_cpc_464.bmp   the picture, 1280 x 490, 256 colours
+  src/keyboards/keyboard_cpc_464.png   the picture, 1920 x 735 (300%; drawn at
+                                       1280 x 490), 256 colours
   out/cpc_464.svg, out/cpc_464.png     the drawing
   out/cpc_464.c                        the key places for menu_items.c (640
                                        units), in the order of the old table
@@ -23,6 +24,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import make_zesarux_keyboards as mz
 
+ZOOM = 1.5               # la imagen guardada, respecto al dibujo
 W, H = 1280, 490
 P = 64.6            # the pitch of the keys
 
@@ -287,9 +289,13 @@ def main():
     svg = os.path.join(mz.OUT, 'cpc_464.svg')
     png = os.path.join(mz.OUT, 'cpc_464.png')
     open(svg, 'w').write(draw())
-    subprocess.check_call(['rsvg-convert', svg, '-o', png])
-    im = Image.open(png).convert('RGB')
-    mz.to_bmp(im, os.path.join(mz.KEYBOARDS, 'keyboard_cpc_464.bmp'))
+    # la imagen a 1,5 veces el dibujo (300%: tres pixeles por pixel del original);
+    # los bordes en pixeles pares del dibujo caen asi en multiplos de 3
+    subprocess.check_call(['rsvg-convert', '-z', str(ZOOM), svg, '-o', png])
+    mz.SVGDIR = sys.argv[1]
+    mz.to_png(Image.open(png).convert('RGB'), os.path.join(mz.KEYBOARDS, 'keyboard_cpc_464.png'))
+    # las tablas y la imagen marcada, en las medidas del dibujo
+    im = Image.open(png).convert('RGB').resize((W, H), Image.BOX)
 
     src = mz.source()
     old = mz.table(src, 'cpc_464')

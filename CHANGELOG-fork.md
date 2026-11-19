@@ -20,6 +20,11 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
   for the `.bmp`. The PNG is read by our own code with the miniz library
   already in the program; palette, grey, RGB and RGBA PNGs all work (8 bit,
   at most 256 colours).
+- The pictures drawn again (the common machines, CPC 464 and Next) are
+  stored **at one and a half times the resolution**, as PNG: 1620 pixels wide
+  (the CPC 1920), three times the original picture of the machine. So 150% is
+  sharp too (one pixel of two), and the larger sizes stay sharp. With these
+  pictures the `keyboards` folder is about 6 MB smaller.
 
 ## v13.1-B1-hu.1 – 2026-11-18
 

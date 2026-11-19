@@ -21,6 +21,11 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
   A PNG beolvasása saját, a programban már meglévő miniz tömörítővel; a
   palettás, a szürke, az RGB és az RGBA PNG-k is jók (8 bit, legfeljebb 256
   szín).
+- Az újrarajzolt képek (a közös gépek, a CPC 464 és a Next) **másfélszer
+  nagyobb felbontásban**, PNG-ként: 1620 pixel szélesek (a CPC 1920), vagyis
+  a gép eredeti képének háromszorosai. Így a 150% is éles (kettőből egy
+  pixel), és a nagyobb méretek is élesek maradnak. A `keyboards` mappa ezekkel
+  a képekkel kb. 6 MB-tal kisebb lett.
 
 ## v13.1-B1-hu.1 – 2026-11-18
 
