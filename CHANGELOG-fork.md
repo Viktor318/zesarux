@@ -46,6 +46,15 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
   counter, bit 2 is the middle button). The button swap bit of Next register
   0x0A (left and right button swapped) is followed as well. With the menu open
   the wheel stays with the menu.
+- **The AY of the Next is as loud as on the 128K** (high quality sound): all
+  three AY chips of the Next are on (TurboSound), and until now each chip was
+  divided by the number of chips, so a program using only one chip (for
+  example the PLAY of NextBASIC) played at a third of the 128K volume. Now the
+  chips are added up, like on the real Next (classic sound unchanged).
+- **The DACs of the Next start from the middle value (0x80)**, and go back to
+  it on reset too, like on the real Next. Until now they started from 0: the
+  unused DACs sat at the lowest value, which gave a hidden offset and a bigger
+  click at the first DAC write.
 
 ## v13.1-B1-hu.1 – 2026-11-18
 

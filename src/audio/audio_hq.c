@@ -707,8 +707,10 @@ static void hq_ay_render(int frame_tstates)
                 if (!ay_chip_present.v) output=0;
                 //Si cpu pausada, el chip tampoco suena (como en el sonido clasico)
                 if (paused_cpu_emulation.v) output=0;
-                //Varios chips: dividir, como en el sonido clasico
-                output /=chips;
+                //Varios chips: dividir, como en el sonido clasico. En TBBlue no: el Next suma sus tres AY
+                //(TurboSound activo por defecto) y un programa que usa un solo chip sonaba a un tercio
+                //del volumen de un 128K. La suma de los 9 canales cabe en 16 bits (y se recorta al final)
+                if (!MACHINE_IS_TBBLUE) output /=chips;
 
                 //Mezclador: volumen, panorama y silencio del canal
                 int levels[2];

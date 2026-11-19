@@ -67,10 +67,13 @@ z80_byte tbblue_extra_512kb_blocks=3;
 
 int tbblue_use_rtc_traps=1;
 
-z80_byte tbblue_dac_a=0;
-z80_byte tbblue_dac_b=0;
-z80_byte tbblue_dac_c=0;
-z80_byte tbblue_dac_d=0;
+//Valor de los DAC tras un reset: 0x80 es el punto medio (silencio), como en el Next
+#define TBBLUE_DAC_RESET_VALUE 0x80
+
+z80_byte tbblue_dac_a=TBBLUE_DAC_RESET_VALUE;
+z80_byte tbblue_dac_b=TBBLUE_DAC_RESET_VALUE;
+z80_byte tbblue_dac_c=TBBLUE_DAC_RESET_VALUE;
+z80_byte tbblue_dac_d=TBBLUE_DAC_RESET_VALUE;
 
 //Establece numero de bloques extra de 512kb en base a memoria indicada en KB
 void tbblue_set_ram_blocks(int memoria_kb)
@@ -3992,6 +3995,11 @@ Bit	Function
 
 
     tbblue_copper_pc=0;
+
+    //Los DAC vuelven al punto medio con el soft reset y el hard reset (NextReg 0x2C-0x2E: soft reset = 0x80).
+    //Con 0 quedaban en el valor minimo: chasquido al primer OUT y sonido desplazado
+    tbblue_dac_a=tbblue_dac_b=tbblue_dac_c=tbblue_dac_d=TBBLUE_DAC_RESET_VALUE;
+    tbblue_hq_dac_update();
 
     tbblue_set_mmu_128k_default();
 

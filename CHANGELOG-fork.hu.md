@@ -45,6 +45,16 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
   a valódi Next (a gombok portjának 7–4. bitje a görgő számlálója, a 2. bit a
   középső gomb). A Next 0x0A regiszterének gombcsere-bitjét (bal és jobb gomb
   felcserélése) is figyelembe veszi. Nyitott menünél a görgő a menüé marad.
+- **Az AY a Next-en a 128K-val azonos hangerővel szól** (jó minőségű hang):
+  a Next mindhárom AY chipje be van kapcsolva (TurboSound), és eddig minden
+  chip a chipek számával osztva szólt, így egy csak egy chipet használó
+  program (például a NextBASIC PLAY-je) a 128K hangerejének harmadával. Most a
+  chipek hangja összeadódik, mint a valódi Next-en (a klasszikus hangon nem
+  változott).
+- **A Next DAC-jai a középértékről (0x80) indulnak**, és oda állnak vissza
+  újraindításkor is, ahogy a valódi Next-en. Eddig 0-ról indultak: a nem
+  használt DAC-ok a legkisebb értéken álltak, ami rejtett eltolást és nagyobb
+  pattanást okozott a DAC első írásakor.
 
 ## v13.1-B1-hu.1 – 2026-11-18
 
