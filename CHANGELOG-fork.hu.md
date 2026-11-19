@@ -34,6 +34,9 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
   színek és a paletta sorrendje változatlan). A `keyboards` mappa így
   20 MB-ról 6,8 MB-ra csökkent. Az upstream új BMP-képei továbbra is
   működnek.
+- Javítva: a gomb sárga kiemelése néha ott maradt a virtuális billentyűzet
+  ablakában, amíg az egér vissza nem került rá. Most eltűnik, amikor az egér
+  kimegy az ablakból, és amikor az ablak háttérbe kerül vagy bezárul.
 
 ## v13.1-B1-hu.1 – 2026-11-18
 

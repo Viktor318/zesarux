@@ -26362,6 +26362,14 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
             menu_help_keyboard_highlight_key_mouse(pulsado_x,pulsado_y);
         }
 
+        //Fork: si el raton ha salido de la ventana, quitar la tecla iluminada. Si no, el recuadro amarillo
+        //se quedaba (tambien al pasar la ventana a segundo plano) hasta volver con el raton a la ventana
+        else if (menu_help_keyboard_highlight_key && !mouse_left && !mouse_right && !si_menu_mouse_en_ventana_no_en_scrolls()) {
+            menu_help_keyboard_highlight_key=0;
+            menu_help_keyboard_highlight_key_indice_anterior=-1;
+            menu_help_keyboard_overlay_force_draw=1;
+        }
+
 
         if (ventana->visible_height!=alto_anterior || ventana->visible_width!=ancho_anterior) {
 
@@ -26382,6 +26390,13 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
     //En AY Piano por ejemplo esto no pasa aunque el estilo del menu es el mismo...
 
 
+
+    //Fork: al salir (o pasar a segundo plano) no dejar ninguna tecla iluminada
+    if (menu_help_keyboard_highlight_key) {
+        menu_help_keyboard_highlight_key=0;
+        menu_help_keyboard_highlight_key_indice_anterior=-1;
+        menu_help_keyboard_overlay_force_draw=1;
+    }
 
     //Grabar geometria ventana
     util_add_window_geometry_compact(ventana);

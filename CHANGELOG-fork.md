@@ -33,6 +33,10 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
   (lossless, the colours and the order of the palette unchanged). The
   `keyboards` folder went from 20 MB to 6.8 MB. New BMP pictures from upstream
   still work.
+- Fixed: the yellow highlight of a key sometimes stayed in the virtual
+  keyboard window until the mouse came back to it. It now goes away when the
+  mouse leaves the window, and when the window goes to the background or is
+  closed.
 
 ## v13.1-B1-hu.1 – 2026-11-18
 
