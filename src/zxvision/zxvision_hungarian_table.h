@@ -302,6 +302,7 @@ static const struct s_hungarian_string hungarian_strings[]={
     {"After some seconds the text will be sent to the Speech program when no new line is sent. 0=never. A new line could also be detected by a space, comma, semicolon or dot depending on previous choices in this menu","N\303\251h\303\241ny m\303\241sodperc ut\303\241n a sz\303\266veg a besz\303\251dprogramhoz ker\303\274l, ha nem \303\251rkezik \303\272j sor. 0=soha. Az el\305\221z\305\221 be\303\241ll\303\255t\303\241sokt\303\263l f\303\274gg\305\221en \303\272j sornak sz\303\241m\303\255that a sz\303\263k\303\266z, vessz\305\221, pontosvessz\305\221 vagy pont is"},
     {"After that time (in miliseconds) without receiving any character, we can guess it's the end of the location description. Increase it if the descriptions are not full read","Ha ennyi ideig (ezredm\303\241sodpercben) nem \303\251rkezik karakter, felt\303\251telezhet\305\221, hogy v\303\251ge a helysz\303\255nle\303\255r\303\241snak. N\303\266veld meg, ha a le\303\255r\303\241sok nem olvas\303\263dnak be teljesen"},
     {"After this time pressed rewind action, the rewind position is reset to current","Ha a visszateker\303\251s lenyom\303\241sa ut\303\241n ennyi id\305\221 eltelik, a visszateker\303\251si poz\303\255ci\303\263 vissza\303\241ll az aktu\303\241lisra"},
+    {"Align icons to grid","Ikonok r\303\241cshoz igaz\303\255t\303\241sa"},
     {"Alive    %s  |","\303\211letjel  %s  |"},
     {"Alive packets sent: %d","Elk\303\274ld\303\266tt \303\251letjelek: %d"},
     {"All","Mind"},

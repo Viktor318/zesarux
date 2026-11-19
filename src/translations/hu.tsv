@@ -1555,6 +1555,7 @@ Box	Doboz	item
 Text background	Szöveg háttere	item
 Short text	Rövid szöveg	item
 Automatic order icons	Ikonok automatikus rendezése	item
+Align icons to grid	Ikonok rácshoz igazítása	item
 Show indicators for open apps	Nyitott appok jelzése	item
 Empty trash on exit	Kuka ürítése kilépéskor	item
     Modify icons	    Ikonok módosítása	item

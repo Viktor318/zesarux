@@ -163,6 +163,12 @@ The second release of the fork, based on ZEsarUX 13.1 Beta 1.
 
 ### Upstream
 
+- Merged the upstream state of 2026-11-19: **Next: the hardware IM2 mode
+  ULA interrupt** (vector from NR 0xC0, enable from NR 0xC4, and a new
+  interrupt only after RETI), the **right edge of the Layer 2 clip window**
+  in the 320×256 and 640×256 modes; ATM Turbo snapshots (ZSF) and debugging;
+  Covox on the BaseConf machine; **aligning the icons to a grid** on the
+  desktop (*Align icons to grid*, translated to Hungarian too).
 - Merged the upstream state of 2026-11-18: **ZX Desktop is renamed DAVID
   Desktop** (in the English interface), ATM Turbo memory zones for the
   debugger, small fixes. In the Hungarian interface the name stays **ZX

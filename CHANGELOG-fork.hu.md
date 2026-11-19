@@ -160,6 +160,13 @@ A fork második kiadása, a ZEsarUX 13.1 Beta 1-re építve.
 
 ### Upstream
 
+- Beolvasztva az upstream 2026-11-19-i állapota: **Next: a hardveres IM2
+  mód ULA-megszakítása** (a vektor az NR 0xC0-ból, az engedélyezés az
+  NR 0xC4-ből, és új megszakítás csak a RETI után jön), a **Layer 2
+  vágóablakának jobb széle** 320×256-os és 640×256-os módban; az ATM Turbo
+  gyorsmentése (ZSF) és hibakeresője; Covox a BaseConf gépen; **az ikonok
+  rácshoz igazítása** a ZX Desktopon (*Ikonok rácshoz igazítása*, magyarul
+  is).
 - Beolvasztva az upstream 2026-11-18-i állapota: a **ZX Desktop új neve
   DAVID Desktop** (az angol felületen), az ATM Turbo memóriazónái a
   hibakeresőhöz, kisebb javítások. A magyar felületen a név továbbra is
