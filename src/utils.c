@@ -4066,6 +4066,8 @@ void reset_keyboard_ports(void)
 
         puerto_especial_joystick=0;
 
+        tbblue_cursor_keys_state=0;
+
         //De Sam coupe
 
         puerto_65534=255;
@@ -4993,6 +4995,9 @@ int util_write_configfile(void)
     else {
         ADD_STRING_CONFIG,"--allowturbotbbluerom");
     }
+
+    if (tbblue_cursor_keys_joystick.v) ADD_STRING_CONFIG,"--tbblue-cursor-keys-joystick");
+
 
                                                     ADD_STRING_CONFIG,"--tbblue-max-turbo-rom %d",tbblue_deny_turbo_rom_max_allowed);
 
@@ -9509,6 +9514,7 @@ z80_byte antes_puerto_32766=puerto_32766;
 
 
 z80_byte antes_puerto_especial_joystick=puerto_especial_joystick;
+z80_byte antes_tbblue_cursor_keys_state=tbblue_cursor_keys_state;
 
 
     unsigned char antes_ql_keyboard_table[8];
@@ -9582,6 +9588,7 @@ z80_byte antes_puerto_especial_joystick=puerto_especial_joystick;
 
 
     puerto_especial_joystick=antes_puerto_especial_joystick;
+    tbblue_cursor_keys_state=antes_tbblue_cursor_keys_state;
     //printf("Despues Puerto puerto_61438: %d\n",puerto_61438);
 
     if (MACHINE_IS_QL) {
@@ -10200,7 +10207,8 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 if (pressrelease) {
                                         //puerto_65278 &=255-1;
                                         //puerto_63486 &=255-16;
-                                        joystick_set_left(1);
+                                        if (tbblue_cursor_keys_as_keyboard()) tbblue_cursor_keys_state |=2;
+                                        else joystick_set_left(1);
                                         blink_kbd_a12 &= (255-64);
                                         cpc_keyboard_table[1] &=(255-1);
                                         msx_keyboard_table[8] &=(255-16);
@@ -10213,6 +10221,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 else {
                                         //puerto_65278 |=1;
                                         //puerto_63486 |=16;
+                                        tbblue_cursor_keys_state &=(255-2);
                                         joystick_release_left(1);
                                         blink_kbd_a12 |= 64;
                                         cpc_keyboard_table[1] |=1;
@@ -10226,7 +10235,8 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 if (pressrelease) {
                                         //puerto_65278 &=255-1;
                                         //puerto_61438 &=255-4;
-                                        joystick_set_right(1);
+                                        if (tbblue_cursor_keys_as_keyboard()) tbblue_cursor_keys_state |=1;
+                                        else joystick_set_right(1);
                                         blink_kbd_a11 &= (255-64);
                                                   cpc_keyboard_table[0] &=(255-2);
                                         msx_keyboard_table[8] &=(255-128);
@@ -10237,6 +10247,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 else {
                                         //puerto_65278 |=1;
                                         //puerto_61438 |=4;
+                                        tbblue_cursor_keys_state &=(255-1);
                                         joystick_release_right(1);
                                         blink_kbd_a11 |= 64;
                                         cpc_keyboard_table[0] |=2;
@@ -10251,7 +10262,8 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 if (pressrelease) {
                                         //puerto_65278 &=255-1;
                                         //puerto_61438 &=255-16;
-                                        joystick_set_down(1);
+                                        if (tbblue_cursor_keys_as_keyboard()) tbblue_cursor_keys_state |=4;
+                                        else joystick_set_down(1);
 
                                         blink_kbd_a10 &= (255-64);
                     cpc_keyboard_table[0] &=(255-4);
@@ -10264,6 +10276,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 else {
                                         //puerto_65278 |=1;
                                         //puerto_61438 |=16;
+                                        tbblue_cursor_keys_state &=(255-4);
                                         joystick_release_down(1);
 
                                         blink_kbd_a10 |= 64;
@@ -10279,7 +10292,8 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 if (pressrelease) {
                                         //puerto_65278 &=255-1;
                                         //puerto_61438 &=255-8;
-                                        joystick_set_up(1);
+                                        if (tbblue_cursor_keys_as_keyboard()) tbblue_cursor_keys_state |=8;
+                                        else joystick_set_up(1);
                                         blink_kbd_a9 &= (255-64);
                     cpc_keyboard_table[0] &=(255-1);
                                         msx_keyboard_table[8] &=(255-32);
@@ -10290,6 +10304,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 else {
                                         //puerto_65278 |=1;
                                         //puerto_61438 |=8;
+                                        tbblue_cursor_keys_state &=(255-8);
                                         joystick_release_up(1);
                                         blink_kbd_a9 |= 64;
                     cpc_keyboard_table[0] |=1;

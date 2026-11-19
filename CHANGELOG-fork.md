@@ -53,6 +53,13 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
 
 ### ZX Spectrum Next
 
+- **The cursor keys are keys on the Next** (Caps Shift + 5, 6, 7, 8), like
+  on the real machine, whatever joystick type is set. They used to move the
+  emulated joystick, and as the Next firmware sets Kempston by default, they
+  did not work in 48K/128K BASIC and in programs that only read the
+  keyboard. The old behaviour can be enabled for games that only read a
+  joystick: Settings → Hardware → Joystick → *Cursor keys as joystick on
+  Next*, or `--tbblue-cursor-keys-joystick`.
 - **More complete mouse on the Next**: the Kempston mouse (Settings →
   Hardware → Mouse → Kempston Mouse) passes the wheel and the middle button to
   the Next too, like the real Next (bits 7–4 of the buttons port are the wheel

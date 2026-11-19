@@ -3667,10 +3667,11 @@ z80_byte menu_get_pressed_key(void)
 
     z80_byte tecla;
 
-    //primero joystick
-    if (puerto_especial_joystick) {
+    //primero joystick (y las teclas de cursor de la Next, que no pasan por el joystick)
+    z80_byte menu_joystick_cursores=puerto_especial_joystick | tbblue_cursor_keys_state;
+    if (menu_joystick_cursores) {
         //z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
-        if ((puerto_especial_joystick&1)) {
+        if ((menu_joystick_cursores&1)) {
             //Cursor Right
             if (menu_allow_background_windows && (puerto_65278&1)==0) {
                 //printf("Pulsada shift+cursor right\n");
@@ -3679,7 +3680,7 @@ z80_byte menu_get_pressed_key(void)
             return 9;
         }
 
-        if ((puerto_especial_joystick&2)) {
+        if ((menu_joystick_cursores&2)) {
             //Cursor Left
 
             //De momento no permitimos shift+left. solo shift+right
@@ -3694,10 +3695,10 @@ z80_byte menu_get_pressed_key(void)
         }
 
         //left joystick hace delete en menu.NO
-        //if ((puerto_especial_joystick&2)) return 12;
+        //if ((menu_joystick_cursores&2)) return 12;
 
-        if ((puerto_especial_joystick&4)) return 10;
-        if ((puerto_especial_joystick&8)) {
+        if ((menu_joystick_cursores&4)) return 10;
+        if ((menu_joystick_cursores&8)) {
             if ((puerto_65278 & 1)==0) {
                 //printf("Pulsada shift+cursor up\n");
                 return 6;
@@ -3710,7 +3711,7 @@ z80_byte menu_get_pressed_key(void)
 //11 cursor up
 
         //Fire igual que enter
-        if ((puerto_especial_joystick&16)) return 13;
+        if ((menu_joystick_cursores&16)) return 13;
     }
 
 
@@ -21820,7 +21821,7 @@ z80_byte menu_da_todas_teclas_si_reset_mouse_movido(int reset_mouse_movido,int a
     //z80_byte valor_joystick=(puerto_especial_joystick&31)^255;
 
     //no ignorar ninguno de los 4 botones de disparo
-    z80_byte valor_joystick=puerto_especial_joystick ^ 255;
+    z80_byte valor_joystick=(puerto_especial_joystick | tbblue_cursor_keys_state) ^ 255;
 
     acumulado=acumulado & valor_joystick;
 

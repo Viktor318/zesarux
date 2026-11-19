@@ -8535,6 +8535,18 @@ void menu_settings_tv(MENU_ITEM_PARAMETERS)
 
 
 
+void menu_hardware_tbblue_cursor_keys_joystick(MENU_ITEM_PARAMETERS)
+{
+    tbblue_cursor_keys_joystick.v ^=1;
+
+    //Soltar lo que hubiera pulsado al cambiar de modo
+    tbblue_cursor_keys_state=0;
+    joystick_release_left(0);
+    joystick_release_right(0);
+    joystick_release_up(0);
+    joystick_release_down(0);
+}
+
 void menu_hardware_joystick_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_common;
@@ -8561,6 +8573,18 @@ void menu_hardware_joystick_settings(MENU_ITEM_PARAMETERS)
                     "-A real joystick connected to an USB port\n"
                     "-Cursor keys on the keyboard for the directions and Home key for fire"
             );
+        }
+
+        if (MACHINE_IS_TBBLUE) {
+            menu_add_item_menu_en_es_ca(array_menu_common,MENU_OPCION_NORMAL,menu_hardware_tbblue_cursor_keys_joystick,NULL,
+                "Cursor keys as joystick on Next","Teclas cursor como joystick en Next","Tecles cursor com a joystick a Next");
+            menu_add_item_menu_prefijo_format(array_menu_common,"[%c] ",(tbblue_cursor_keys_joystick.v ? 'X' : ' ') );
+            menu_add_item_menu_tooltip(array_menu_common,"Cursor keys move the emulated joystick instead of being keys");
+            menu_add_item_menu_ayuda(array_menu_common,"On the real ZX Spectrum Next, the cursor keys are keys "
+                "(Caps Shift+5,6,7,8), whatever joystick type is set. This is the default here too, so they work in "
+                "48K/128K BASIC and in every program that reads the keyboard.\n"
+                "Enable this setting to make the cursor keys move the emulated joystick instead (the type set by the Next, "
+                "for example Kempston), for games that only read a joystick");
         }
 
         //Aunque no todas las máquinas tienen joystick, es importante que esta opción siempre aparezca

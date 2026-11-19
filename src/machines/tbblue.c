@@ -118,6 +118,20 @@ z80_bit tbblue_fast_boot_mode={0};
 //Fork: por defecto no se limita el turbo en la ROM (con el limite, RUN AT 3 en NextBASIC iba a 14 MHz)
 z80_bit tbblue_deny_turbo_rom={0};
 
+//Teclas de cursor del PC en la Next (fork): como en la maquina real, por defecto son teclas
+//(Caps Shift + 5,6,7,8 en la matriz del teclado), independientes del tipo de joystick del registro 0x05.
+//Si tbblue_cursor_keys_joystick esta activado, mueven el joystick emulado como en las demas maquinas
+z80_bit tbblue_cursor_keys_joystick={0};
+
+//Teclas de cursor pulsadas cuando actuan como teclas. Mismos bits que puerto_especial_joystick:
+//1=derecha, 2=izquierda, 4=abajo, 8=arriba
+z80_byte tbblue_cursor_keys_state=0;
+
+int tbblue_cursor_keys_as_keyboard(void)
+{
+    return (MACHINE_IS_TBBLUE && !tbblue_cursor_keys_joystick.v);
+}
+
 //Maximo turbo permitido al habilitar tbblue_deny_turbo_rom. Por defecto maximo 4X
 int tbblue_deny_turbo_rom_max_allowed=4;
 

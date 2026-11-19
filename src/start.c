@@ -1005,6 +1005,7 @@ printf (
         "--denyturbotbbluerom        Limit setting turbo mode on TBBlue ROM\n"
         "--allowturbotbbluerom       Do not limit setting turbo mode on TBBlue ROM (default setting)\n"
         "--tbblue-max-turbo-rom n    Max allowed turbo speed mode on TBBlue ROM when enabling --denyturbotbbluerom (default value: 4)\n"
+        "--tbblue-cursor-keys-joystick  On TBBlue, cursor keys move the emulated joystick instead of sending Caps Shift+5,6,7,8 (default: keys, like the real machine)\n"
 
         "--denyturbotbblueeverywhere Limit setting turbo mode on TBBlue everywhere (default setting allowed)\n"
         "--tbblue-max-turbo-everywhere n    Max allowed turbo speed mode on TBBlue everywhere when enabling --denyturbotbblueeverywhere (default value: 4)\n"
@@ -4244,6 +4245,10 @@ int parse_cmdline_options(int desde_commandline)
             //estaba permitido por defecto
             else if (!strcmp(argv[puntero_parametro],"--allowturbotbbluerom")) {
                     tbblue_deny_turbo_rom.v=0;
+            }
+
+            else if (!strcmp(argv[puntero_parametro],"--tbblue-cursor-keys-joystick")) {
+                    tbblue_cursor_keys_joystick.v=1;
             }
 
             else if (!strcmp(argv[puntero_parametro],"--tbblue-max-turbo-rom")) {

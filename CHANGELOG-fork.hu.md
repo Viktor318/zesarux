@@ -53,6 +53,14 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
 
 ### ZX Spectrum Next
 
+- **A kurzorbillentyűk a Next-en billentyűként működnek** (Caps Shift + 5,
+  6, 7, 8), ahogy a valódi gépen, a joystick beállított típusától
+  függetlenül. Eddig az emulált joystickot mozgatták, és mivel a Next
+  firmware-e alapból Kempstont állít be, a 48K/128K BASIC-ben és a csak
+  billentyűzetet olvasó programokban nem működtek. A régi viselkedés
+  bekapcsolható a csak joystickot olvasó játékokhoz: Beállítások → Hardver →
+  Joystick → *Kurzorbillentyűk joystickként (Next)*, ill.
+  `--tbblue-cursor-keys-joystick`.
 - **A Next egere teljesebb**: a Kempston egér (Beállítások → Hardver → Egér
   → Kempston egér) a Next-en a görgőt és a középső gombot is továbbítja, ahogy
   a valódi Next (a gombok portjának 7–4. bitje a görgő számlálója, a 2. bit a

@@ -6646,6 +6646,9 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
         if (joystick_emulation==JOYSTICK_CURSOR_WITH_SHIFT && puerto_especial_joystick!=0) {
             acumulado &=(255-1);
         }
+
+        //Teclas de cursor de la Next: Caps Shift
+        if (MACHINE_IS_TBBLUE && tbblue_cursor_keys_state) acumulado &=(255-1);
     }
 
     //puerto_65022   db    255  ; G    F    D    S    A     ;1
@@ -6698,6 +6701,9 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
             if ((puerto_especial_joystick&2)) acumulado &=(255-16);
         }
 
+        //Teclas de cursor de la Next: izquierda -> 5
+        if (MACHINE_IS_TBBLUE && (tbblue_cursor_keys_state&2)) acumulado &=(255-16);
+
         //gunstick
         if (lightgun_emulation_enabled.v && lightgun_emulation_type==GUNSTICK_SINCLAIR_2) {
             if (mouse_left!=0) {
@@ -6749,6 +6755,13 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 
             //Fire -> 0
             if ((puerto_especial_joystick&16)) acumulado &=(255-1);
+        }
+
+        //Teclas de cursor de la Next: derecha -> 8, abajo -> 6, arriba -> 7
+        if (MACHINE_IS_TBBLUE) {
+            if ((tbblue_cursor_keys_state&1)) acumulado &=(255-4);
+            if ((tbblue_cursor_keys_state&4)) acumulado &=(255-16);
+            if ((tbblue_cursor_keys_state&8)) acumulado &=(255-8);
         }
 
 

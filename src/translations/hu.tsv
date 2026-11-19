@@ -1219,6 +1219,7 @@ Simulate lost HSYNC	Elveszett HSYNC szimulálása	item
 TV Settings	TV beállításai	menu title
 Emulated ~~Joystick	~~Emulált joystick	item
 Fire key	Tűz gomb	item
+Cursor keys as joystick on Next	Kurzorbillentyűk joystickként (Next)	item
 SMS swap controls	SMS vezérlők felcserélése	item
 Joystick ~~Autofire	~~Joystick automatikus tűz	item
 Autofire frequency	Automatikus tűz gyakorisága	item
@@ -3458,6 +3459,8 @@ Maximum scanline duration, in microseconds	Maximális képsoridő, mikroszekundu
 Minimum accepted vsync length, in microseconds	A legrövidebb elfogadott vsync hossz, mikroszekundumban	tooltip
 Minimum accepted vsync interval (in % of 20ms) between every vsync start	A legrövidebb elfogadott vsync időköz két vsync kezdete között (a 20ms %-ában)	tooltip
 Decide which joystick type is emulated	Az emulált joystick típusa	tooltip
+Cursor keys move the emulated joystick instead of being keys	A kurzorbillentyűk az emulált joystickot mozgatják, nem billentyűként működnek	tooltip
+On the real ZX Spectrum Next, the cursor keys are keys (Caps Shift+5,6,7,8), whatever joystick type is set. This is the default here too, so they work in 48K/128K BASIC and in every program that reads the keyboard.\nEnable this setting to make the cursor keys move the emulated joystick instead (the type set by the Next, for example Kempston), for games that only read a joystick	A valódi ZX Spectrum Nexten a kurzorbillentyűk billentyűk (Caps Shift+5, 6, 7, 8), bármilyen joysticktípus van beállítva. Itt is ez az alapértelmezés, így működnek a 48K/128K BASIC-ben és minden programban, amely a billentyűzetet olvassa.\nHa bekapcsolod, a kurzorbillentyűk ehelyett az emulált joystickot mozgatják (a Next által beállított típust, például Kempstont), a csak joystickot olvasó játékokhoz	help
 Joystick is emulated with:\n-A real joystick connected to an USB port\n-Cursor keys on the keyboard for the directions and Home key for fire	A joystick emulálása történhet:\n-USB portra csatlakoztatott valódi joystickkal\n-A billentyűzet kurzorbillentyűivel (irányok) és a Home billentyűvel (tűz)	help
 Define which key triggers the fire function for the joystick	A joystick tűz funkcióját kiváltó billentyű	tooltip
 Define which key triggers the fire function for the joystick. Not all video drivers support reading all keys. Only kempston joystick allows more than one fire button	A joystick tűz funkcióját kiváltó billentyű. Nem minden videómeghajtó képes minden billentyűt beolvasni. Csak a Kempston joystick enged meg egynél több tűz gombot	help

@@ -295,6 +295,9 @@ extern void tbblue_copper_handle_next_opcode(void);
 extern void tbblue_copper_handle_vsync(void);
 
 extern z80_bit tbblue_deny_turbo_rom;
+extern z80_bit tbblue_cursor_keys_joystick;
+extern z80_byte tbblue_cursor_keys_state;
+extern int tbblue_cursor_keys_as_keyboard(void);
 extern int tbblue_deny_turbo_rom_max_allowed;
 extern z80_bit tbblue_deny_turbo_everywhere;
 extern int tbblue_deny_turbo_everywhere_max_allowed;
