@@ -38,6 +38,13 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
   ablakában, amíg az egér vissza nem került rá. Most eltűnik, amikor az egér
   kimegy az ablakból, és amikor az ablak háttérbe kerül vagy bezárul.
 
+### Egér
+
+- **A gép képébe kattintva nem nyílik meg a főmenü** (se bal, se jobb
+  gombbal). Az asztalra, a felső sávra vagy a gombokra kattintva, illetve
+  F5-tel továbbra is megnyílik. Eddig a gép képébe kattintás is megnyitotta,
+  hacsak nem volt bekapcsolva a Kempston egér vagy a fénypisztoly.
+
 ### ZX Spectrum Next
 
 - **A Next egere teljesebb**: a Kempston egér (Beállítások → Hardver → Egér

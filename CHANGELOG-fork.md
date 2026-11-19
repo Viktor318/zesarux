@@ -38,6 +38,13 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
   mouse leaves the window, and when the window goes to the background or is
   closed.
 
+### Mouse
+
+- **A click inside the machine picture does not open the main menu** (neither
+  the left nor the right button). A click on the desktop, the top bar or the
+  buttons, and F5, still open it. Until now a click inside the picture opened
+  it too, unless the Kempston mouse or the lightgun was on.
+
 ### ZX Spectrum Next
 
 - **More complete mouse on the Next**: the Kempston mouse (Settings →
