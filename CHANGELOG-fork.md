@@ -15,6 +15,11 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
   word keys such as NEW/STOP, the block graphics, BLACK in its box), at the
   same size and with the keys at the same places. Made by
   `tools/keyboards/next.py`.
+- **PNG keyboard pictures**: the program first looks for the `.png` picture
+  (with the same name) in the `keyboards` folder, and only if there is none
+  for the `.bmp`. The PNG is read by our own code with the miniz library
+  already in the program; palette, grey, RGB and RGBA PNGs all work (8 bit,
+  at most 256 colours).
 
 ## v13.1-B1-hu.1 – 2026-11-18
 

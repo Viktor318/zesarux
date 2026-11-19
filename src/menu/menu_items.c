@@ -23151,7 +23151,14 @@ void menu_help_keyboard_load_bmp(void)
     char nombrebmp_final[PATH_MAX];
     sprintf(nombrebmp_final,"keyboards/%s",nombrebmp);
 
-    int existe=find_sharedfile(nombrebmp_final,buffer_nombre);
+    //Fork: primero la imagen PNG (mismo nombre con .png), si no el BMP
+    char nombrepng_final[PATH_MAX];
+    strcpy(nombrepng_final,nombrebmp_final);
+    strcpy(&nombrepng_final[strlen(nombrepng_final)-4],".png");
+
+    int es_png=find_sharedfile(nombrepng_final,buffer_nombre);
+    int existe=es_png;
+    if (!existe) existe=find_sharedfile(nombrebmp_final,buffer_nombre);
     if (!existe)  {
             debug_printf(VERBOSE_ERR,"Unable to find bmp file %s",nombrebmp_final);
             return;
@@ -23161,7 +23168,13 @@ void menu_help_keyboard_load_bmp(void)
     //Z88 shortcuts: paleta 0
     //Ventana about: paleta 0
     //Keyboard help: paleta 1
-    help_keyboard_bmp_file_mem=util_load_bmp_file(buffer_nombre,1);
+    if (es_png) {
+        help_keyboard_bmp_file_mem=util_load_png_as_bmp(buffer_nombre);
+        if (help_keyboard_bmp_file_mem!=NULL) util_load_bmp_file_palette(help_keyboard_bmp_file_mem,1);
+        //Si el PNG no se ha podido leer, el BMP si existe
+        else if (find_sharedfile(nombrebmp_final,buffer_nombre)) help_keyboard_bmp_file_mem=util_load_bmp_file(buffer_nombre,1);
+    }
+    else help_keyboard_bmp_file_mem=util_load_bmp_file(buffer_nombre,1);
 
     menu_help_keyboard_bmp_factor=menu_help_keyboard_calculate_bmp_factor(nombrebmp,help_keyboard_bmp_file_mem);
 
@@ -23174,12 +23187,18 @@ void menu_help_keyboard_load_bmp(void)
     //Este bmp keyboard_pcw_8512_only_text.bmp utiliza la misma paleta que keyboard_pcw_8256.bmp,
     //asi no tengo que cargar otra paleta adicional solo para eso
     if (MACHINE_IS_PCW_8512) {
-        existe=find_sharedfile("keyboards/keyboard_pcw_8512_only_text.bmp",buffer_nombre);
-        if (!existe)  {
-            debug_printf(VERBOSE_ERR,"Unable to find bmp file %s",nombrebmp_final);
-            return;
+        //Fork: tambien en PNG
+        if (find_sharedfile("keyboards/keyboard_pcw_8512_only_text.png",buffer_nombre)) {
+            help_keyboard_text_512_pcw=util_load_png_as_bmp(buffer_nombre);
         }
-        help_keyboard_text_512_pcw=util_load_bmp_file_no_palette(buffer_nombre);
+        else {
+            existe=find_sharedfile("keyboards/keyboard_pcw_8512_only_text.bmp",buffer_nombre);
+            if (!existe)  {
+                debug_printf(VERBOSE_ERR,"Unable to find bmp file %s",nombrebmp_final);
+                return;
+            }
+            help_keyboard_text_512_pcw=util_load_bmp_file_no_palette(buffer_nombre);
+        }
         menu_help_keyboard_text_512_factor=menu_help_keyboard_calculate_bmp_factor("keyboard_pcw_8512_only_text.bmp",help_keyboard_text_512_pcw);
     }
 

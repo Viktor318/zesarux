@@ -25432,6 +25432,232 @@ z80_byte *util_load_bmp_file(char *archivo,int id_paleta)
     return puntero;
 }
 
+//Fork: cargar imagenes PNG (las imagenes del teclado virtual). Se convierten en memoria al mismo formato
+//que un BMP de 8 bits con paleta de 256 colores, asi el resto del codigo (escalado, paleta, teclas) no cambia.
+//Admite PNG de 8 bits por canal sin entrelazar: con paleta (tipo 3), gris (0), RGB (2) y RGBA (6).
+//Las imagenes que no son de paleta pueden tener como mucho 256 colores distintos.
+//La descompresion la hace miniz (third_party/zip.c)
+extern void *tinfl_decompress_mem_to_heap(const void *pSrc_buf, size_t src_buf_len, size_t *pOut_len, int flags);
+
+static unsigned int util_png_be32(const z80_byte *p)
+{
+    return ((unsigned int)p[0]<<24) | ((unsigned int)p[1]<<16) | ((unsigned int)p[2]<<8) | p[3];
+}
+
+static int util_png_paeth(int a,int b,int c)
+{
+    int p=a+b-c;
+    int pa=abs(p-a);
+    int pb=abs(p-b);
+    int pc=abs(p-c);
+    if (pa<=pb && pa<=pc) return a;
+    if (pb<=pc) return b;
+    return c;
+}
+
+//Retorna un bloque de memoria con formato BMP de 8 bits, o NULL si no se ha podido
+z80_byte *util_load_png_as_bmp(char *archivo)
+{
+    int tamanyo=get_file_size(archivo);
+    if (tamanyo<8+25) return NULL;
+
+    z80_byte *png=malloc(tamanyo);
+    if (png==NULL) return NULL;
+
+    FILE *ptr_file=fopen(archivo,"rb");
+    if (!ptr_file) {
+        free(png);
+        return NULL;
+    }
+    int leidos=fread(png,1,tamanyo,ptr_file);
+    fclose(ptr_file);
+
+    static const z80_byte firma[8]={0x89,'P','N','G',0x0D,0x0A,0x1A,0x0A};
+    if (leidos!=tamanyo || memcmp(png,firma,8)) {
+        debug_printf(VERBOSE_ERR,"%s is not a PNG file",archivo);
+        free(png);
+        return NULL;
+    }
+
+    int ancho=0,alto=0,profundidad=0,tipo=0,entrelazado=0;
+    z80_byte paleta_png[256*3];
+    int colores_paleta=0;
+
+    //Todos los IDAT juntos
+    z80_byte *idat=malloc(tamanyo);
+    size_t idat_total=0;
+    if (idat==NULL) {
+        free(png);
+        return NULL;
+    }
+
+    int pos=8;
+    while (pos+12<=tamanyo) {
+        unsigned int longitud=util_png_be32(&png[pos]);
+        z80_byte *tipo_bloque=&png[pos+4];
+        z80_byte *datos=&png[pos+8];
+        if (longitud>(unsigned int)(tamanyo-pos-12)) break;
+
+        if (!memcmp(tipo_bloque,"IHDR",4) && longitud>=13) {
+            ancho=util_png_be32(datos);
+            alto=util_png_be32(datos+4);
+            profundidad=datos[8];
+            tipo=datos[9];
+            entrelazado=datos[12];
+        }
+        else if (!memcmp(tipo_bloque,"PLTE",4)) {
+            colores_paleta=longitud/3;
+            if (colores_paleta>256) colores_paleta=256;
+            memcpy(paleta_png,datos,colores_paleta*3);
+        }
+        else if (!memcmp(tipo_bloque,"IDAT",4)) {
+            memcpy(&idat[idat_total],datos,longitud);
+            idat_total +=longitud;
+        }
+        else if (!memcmp(tipo_bloque,"IEND",4)) break;
+
+        pos +=12+longitud;
+    }
+    free(png);
+
+    int bytes_pixel;
+    if (tipo==3 || tipo==0) bytes_pixel=1;
+    else if (tipo==2) bytes_pixel=3;
+    else if (tipo==6) bytes_pixel=4;
+    else bytes_pixel=0;
+
+    if (ancho<=0 || alto<=0 || ancho>16384 || alto>16384 || profundidad!=8 || entrelazado || !bytes_pixel || !idat_total
+        || (tipo==3 && !colores_paleta)) {
+        debug_printf(VERBOSE_ERR,"Unsupported PNG file %s (only 8 bit, not interlaced)",archivo);
+        free(idat);
+        return NULL;
+    }
+
+    size_t tam_datos=0;
+    z80_byte *datos=tinfl_decompress_mem_to_heap(idat,idat_total,&tam_datos,1); //1: con cabecera zlib
+    free(idat);
+
+    int bytes_fila=ancho*bytes_pixel;
+    if (datos==NULL || tam_datos<(size_t)(bytes_fila+1)*alto) {
+        debug_printf(VERBOSE_ERR,"Can not decompress PNG file %s",archivo);
+        free(datos);
+        return NULL;
+    }
+
+    //Quitar los filtros de cada fila (en el mismo bloque)
+    int x,y;
+    for (y=0;y<alto;y++) {
+        z80_byte *fila=&datos[y*(bytes_fila+1)];
+        int filtro=fila[0];
+        z80_byte *p=fila+1;
+        z80_byte *anterior=(y ? &datos[(y-1)*(bytes_fila+1)+1] : NULL);
+
+        for (x=0;x<bytes_fila;x++) {
+            int a=(x>=bytes_pixel ? p[x-bytes_pixel] : 0);
+            int b=(anterior ? anterior[x] : 0);
+            int c=(anterior && x>=bytes_pixel ? anterior[x-bytes_pixel] : 0);
+            int v=p[x];
+            switch (filtro) {
+                case 1: v+=a; break;
+                case 2: v+=b; break;
+                case 3: v+=(a+b)/2; break;
+                case 4: v+=util_png_paeth(a,b,c); break;
+            }
+            p[x]=v;
+        }
+    }
+
+    //El BMP: cabecera de 14 bytes, cabecera de informacion de 40, paleta de 256*4, filas de abajo a arriba
+    int ancho_fila_bmp=(ancho+3)&~3;
+    int offset_pixeles=14+40+256*4;
+    int tam_bmp=offset_pixeles+ancho_fila_bmp*alto;
+    z80_byte *bmp=calloc(tam_bmp,1);
+    if (bmp==NULL) {
+        free(datos);
+        return NULL;
+    }
+
+    bmp[0]='B';
+    bmp[1]='M';
+    bmp[2]=tam_bmp & 0xFF; bmp[3]=(tam_bmp>>8) & 0xFF; bmp[4]=(tam_bmp>>16) & 0xFF; bmp[5]=(tam_bmp>>24) & 0xFF;
+    bmp[10]=offset_pixeles & 0xFF; bmp[11]=(offset_pixeles>>8) & 0xFF;
+    bmp[14]=40;
+    bmp[18]=ancho & 0xFF; bmp[19]=(ancho>>8) & 0xFF;
+    bmp[22]=alto & 0xFF; bmp[23]=(alto>>8) & 0xFF;
+    bmp[26]=1;
+    bmp[28]=8;
+    bmp[46]=0; bmp[47]=1; //256 colores
+
+    z80_byte *paleta_bmp=&bmp[14+40];
+
+    if (tipo==3) {
+        for (x=0;x<colores_paleta;x++) {
+            //Orden BGR0
+            paleta_bmp[x*4]=paleta_png[x*3+2];
+            paleta_bmp[x*4+1]=paleta_png[x*3+1];
+            paleta_bmp[x*4+2]=paleta_png[x*3];
+        }
+        for (y=0;y<alto;y++) {
+            memcpy(&bmp[offset_pixeles+(alto-1-y)*ancho_fila_bmp],&datos[y*(bytes_fila+1)+1],ancho);
+        }
+    }
+    else {
+        //Gris, RGB o RGBA: los colores distintos forman la paleta (como mucho 256)
+        int colores[256];
+        int total_colores=0;
+        for (y=0;y<alto;y++) {
+            z80_byte *p=&datos[y*(bytes_fila+1)+1];
+            z80_byte *destino=&bmp[offset_pixeles+(alto-1-y)*ancho_fila_bmp];
+            for (x=0;x<ancho;x++) {
+                int color;
+                if (bytes_pixel==1) color=(p[x]<<16) | (p[x]<<8) | p[x];
+                else color=(p[x*bytes_pixel]<<16) | (p[x*bytes_pixel+1]<<8) | p[x*bytes_pixel+2];
+
+                int i;
+                for (i=0;i<total_colores && colores[i]!=color;i++);
+                if (i==total_colores) {
+                    if (total_colores==256) {
+                        debug_printf(VERBOSE_ERR,"PNG file %s has more than 256 colours",archivo);
+                        free(datos);
+                        free(bmp);
+                        return NULL;
+                    }
+                    colores[total_colores++]=color;
+                    paleta_bmp[i*4]=color & 0xFF;
+                    paleta_bmp[i*4+1]=(color>>8) & 0xFF;
+                    paleta_bmp[i*4+2]=(color>>16) & 0xFF;
+                }
+                destino[x]=i;
+            }
+        }
+    }
+
+    free(datos);
+    return bmp;
+}
+
+//Fork: cargar la imagen PNG si existe (mismo nombre con .png), si no el BMP. Con o sin cargar la paleta
+//(id_paleta<0: sin paleta)
+z80_byte *util_load_png_or_bmp_file(char *archivo,int id_paleta)
+{
+    char nombre_png[PATH_MAX];
+    strcpy(nombre_png,archivo);
+    int l=strlen(nombre_png);
+    if (l>4 && !strcasecmp(&nombre_png[l-4],".bmp")) {
+        strcpy(&nombre_png[l-4],".png");
+        if (si_existe_archivo(nombre_png)) {
+            z80_byte *bmp=util_load_png_as_bmp(nombre_png);
+            if (bmp!=NULL) {
+                if (id_paleta>=0) util_load_bmp_file_palette(bmp,id_paleta);
+                return bmp;
+            }
+        }
+    }
+
+    if (id_paleta>=0) return util_load_bmp_file(archivo,id_paleta);
+    else return util_load_bmp_file_no_palette(archivo);
+}
+
 void util_rotate_file(char *filename,int archivos)
 {
 

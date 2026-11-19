@@ -16,6 +16,11 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
   típusú kétszavas gombok, a blokkgrafikák, a BLACK keretben), ugyanabban a
   méretben és a gombok ugyanazon a helyen. Készítője:
   `tools/keyboards/next.py`.
+- **PNG billentyűzetképek**: a program a `keyboards` mappában először a
+  `.png` képet keresi (ugyanazzal a névvel), és csak ha nincs, a `.bmp`-t.
+  A PNG beolvasása saját, a programban már meglévő miniz tömörítővel; a
+  palettás, a szürke, az RGB és az RGBA PNG-k is jók (8 bit, legfeljebb 256
+  szín).
 
 ## v13.1-B1-hu.1 – 2026-11-18
 
