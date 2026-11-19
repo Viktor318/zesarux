@@ -27931,3 +27931,145 @@ int util_max(int a,int b)
     if (a>b) return a;
     else return b;
 }
+
+
+/* Fork: sectores cambiados de una imagen de disco cargada en memoria (MMC, IDE)
+
+   Antes, al grabar los cambios, se escribia la imagen entera (2 GB en una tarjeta de 2 GB) cada vez que
+   el ordenador emulado escribia aunque fuera un solo sector. Ahora se marca en un mapa de bits cada sector
+   de 512 bytes escrito y al grabar solo se escriben esos sectores en su posicion del archivo. Los sectores
+   seguidos se escriben juntos.
+
+   Las marcas se ponen y se quitan con operaciones atomicas: si la escritura en el archivo coincide con una
+   escritura del ordenador emulado, el sector vuelve a quedar marcado y se graba la siguiente vez
+*/
+
+//Posicionarse en archivos de mas de 2 GB tambien en Windows (fseek usa long, de 32 bits en Windows)
+static int util_fseek64(FILE *f,long long posicion)
+{
+#if __MINGW32__
+    return _fseeki64(f,posicion,SEEK_SET);
+#else
+    return fseeko(f,(off_t)posicion,SEEK_SET);
+#endif
+}
+
+//Asigna (o reasigna) el mapa para una imagen de size bytes, sin ningun sector marcado
+void util_sector_bitmap_init(struct s_util_sector_bitmap *b,long long size)
+{
+    util_sector_bitmap_free(b);
+
+    long long sectores=(size+UTIL_SECTOR_BITMAP_SECTOR_SIZE-1)/UTIL_SECTOR_BITMAP_SECTOR_SIZE;
+    long long words=(sectores+63)/64;
+    if (words<1) words=1;
+
+    b->bits=calloc(words,sizeof(unsigned long long));
+    if (b->bits==NULL) cpu_panic("Can not allocate memory for the changed sectors map");
+    b->words=words;
+}
+
+void util_sector_bitmap_free(struct s_util_sector_bitmap *b)
+{
+    if (b->bits!=NULL) free(b->bits);
+    b->bits=NULL;
+    b->words=0;
+}
+
+void util_sector_bitmap_clear(struct s_util_sector_bitmap *b)
+{
+    long long i;
+    if (b->bits==NULL) return;
+    for (i=0;i<b->words;i++) __atomic_store_n(&b->bits[i],0,__ATOMIC_RELEASE);
+}
+
+//Marca el sector de la direccion indicada (llamado en cada escritura de un byte)
+void util_sector_bitmap_mark(struct s_util_sector_bitmap *b,long long address)
+{
+    if (b->bits==NULL) return;
+
+    long long sector=address/UTIL_SECTOR_BITMAP_SECTOR_SIZE;
+    long long word=sector/64;
+    if (word<0 || word>=b->words) return;
+
+    unsigned long long bit=1ULL<<(sector%64);
+
+    //Normalmente ya esta marcado (un sector son 512 escrituras seguidas): no hace falta la operacion atomica
+    if (__atomic_load_n(&b->bits[word],__ATOMIC_RELAXED) & bit) return;
+    __atomic_fetch_or(&b->bits[word],bit,__ATOMIC_ACQ_REL);
+}
+
+//Escribe un tramo de sectores [sector_inicio,sector_fin) en el archivo. Retorna 0 si ok
+static int util_sector_bitmap_write_run(FILE *f,long long file_offset,z80_byte *memoria,long long size,
+    long long sector_inicio,long long sector_fin,long long *bytes_escritos)
+{
+    long long inicio=sector_inicio*UTIL_SECTOR_BITMAP_SECTOR_SIZE;
+    long long fin=sector_fin*UTIL_SECTOR_BITMAP_SECTOR_SIZE;
+    if (fin>size) fin=size;
+    if (inicio>=fin) return 0;
+
+    long long longitud=fin-inicio;
+
+    if (util_fseek64(f,file_offset+inicio)!=0) return 1;
+    if ((long long)fwrite(&memoria[inicio],1,longitud,f)!=longitud) return 1;
+
+    *bytes_escritos +=longitud;
+    return 0;
+}
+
+/* Graba en el archivo los sectores marcados y quita sus marcas.
+   file_offset: posicion del primer byte de la imagen en el archivo (la cabecera de un .hdf)
+   min_file_size: el archivo debe tener al menos este tamaño; si no (o si no existe o no se puede abrir para
+   modificarlo) no se toca y retorna 1: entonces hay que grabar la imagen entera, como antes
+   Retorna 0 si ok, 1 si hay que grabar la imagen entera, 2 si error de escritura */
+int util_sector_bitmap_flush(struct s_util_sector_bitmap *b,char *filename,long long file_offset,long long min_file_size,
+    z80_byte *memoria,long long size,long long *bytes_escritos)
+{
+    *bytes_escritos=0;
+
+    if (b->bits==NULL) return 1;
+
+    if (get_file_size(filename)<min_file_size) return 1;
+
+    FILE *f=fopen(filename,"r+b");
+    if (f==NULL) return 1;
+
+    long long sector_inicio=-1;
+    long long sector_fin=-1;
+    long long w;
+    int error=0;
+
+    for (w=0;w<b->words && !error;w++) {
+        //Coger las marcas y quitarlas a la vez. Una escritura posterior vuelve a marcar el sector
+        unsigned long long bits=__atomic_exchange_n(&b->bits[w],0,__ATOMIC_ACQ_REL);
+
+        if (bits==0) {
+            if (sector_inicio>=0) {
+                error=util_sector_bitmap_write_run(f,file_offset,memoria,size,sector_inicio,sector_fin,bytes_escritos);
+                sector_inicio=-1;
+            }
+            continue;
+        }
+
+        int i;
+        for (i=0;i<64 && !error;i++) {
+            long long sector=w*64+i;
+            if (bits & (1ULL<<i)) {
+                if (sector_inicio<0) sector_inicio=sector;
+                sector_fin=sector+1;
+            }
+            else if (sector_inicio>=0) {
+                error=util_sector_bitmap_write_run(f,file_offset,memoria,size,sector_inicio,sector_fin,bytes_escritos);
+                sector_inicio=-1;
+            }
+        }
+    }
+
+    if (!error && sector_inicio>=0) {
+        error=util_sector_bitmap_write_run(f,file_offset,memoria,size,sector_inicio,sector_fin,bytes_escritos);
+    }
+
+    if (fclose(f)!=0) error=1;
+
+    if (error) return 2;
+    return 0;
+}

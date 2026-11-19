@@ -62,6 +62,20 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
   korlátozást, annál a menüben egyszer ki kell kapcsolni. A `--help` szövege
   is javítva (a `--tbblue-max-turbo-rom` alapértéke 4).
 
+### Háttértár
+
+- **Az MMC- és IDE-kép tartós írásakor csak a megváltozott szektorok
+  kerülnek a lemezre**: a program megjegyzi, melyik 512 bájtos szektorba írt
+  a gép, és a másodpercenkénti mentéskor csak ezeket írja a fájl megfelelő
+  helyére (a .hdf fejléce után), az egymás mellettieket egyben. Eddig minden
+  változáskor a teljes képet kiírta: egy 2 GB-os Next-kártyánál egy mentés
+  vagy a beállítások változtatása 2 GB írást és érezhető megakadást okozott,
+  most néhány kilobájtot (a NextBASIC SAVE például 2,5 KB). Ha a fájl
+  hiányzik vagy kisebb a vártnál, a program a régi módon a teljes képet írja.
+- Az 1 GB-nál nagyobb kép figyelmeztetése ennek megfelelően: „Az 1 GB-nál
+  nagyobb MMC lassabban töltődik be, és ugyanennyi memóriát foglal” (a kép
+  továbbra is egészben a memóriába töltődik).
+
 ## v13.1-B1-hu.1 – 2026-11-18
 
 A fork második kiadása, a ZEsarUX 13.1 Beta 1-re építve.

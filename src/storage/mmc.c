@@ -183,6 +183,9 @@ long long int mmc_size[MMC_MAX_CARDS]={64*1024*1024,64*1024*1024};
 z80_byte *mmc_memory_pointer[MMC_MAX_CARDS];
 
 int mmc_flash_must_flush_to_disk[MMC_MAX_CARDS]={0,0};
+
+//Fork: sectores escritos desde la ultima grabacion. Al grabar solo se escriben estos, no la tarjeta entera
+struct s_util_sector_bitmap mmc_sectores_cambiados[MMC_MAX_CARDS];
 char mmc_file_name[MMC_MAX_CARDS][PATH_MAX]={"",""};
 
 //Si se mapea un archivo a mmc desde esxdos
@@ -287,6 +290,32 @@ void mmc_flush_flash_to_disk_una_tarjeta(int tarjeta)
 
 
         debug_printf (VERBOSE_INFO,"Flushing MMC Card %d to disk",tarjeta+1);
+
+
+        //Fork: grabar solo los sectores que han cambiado. Si el archivo no existe o no tiene el tamaño
+        //esperado, se graba la tarjeta entera como antes
+        long long int cabecera=(mmc_file_inserted_hdf[tarjeta].v ? mmc_file_header_hdf_size[tarjeta] : 0);
+        long long int escritos_sectores;
+
+        //Antes de escribir se pone flush a 0: una escritura durante la grabacion lo vuelve a poner a 1
+        mmc_flash_must_flush_to_disk[tarjeta]=0;
+
+        int resultado=util_sector_bitmap_flush(&mmc_sectores_cambiados[tarjeta],mmc_file_name[tarjeta],
+            cabecera,cabecera+mmc_size[tarjeta],mmc_memory_pointer[tarjeta],mmc_size[tarjeta],&escritos_sectores);
+
+        if (resultado==0) {
+            debug_printf (VERBOSE_INFO,"MMC Card %d: written %lld bytes of changed sectors",tarjeta+1,escritos_sectores);
+            return;
+        }
+
+        if (resultado==2) {
+            debug_printf (VERBOSE_ERR,"Error writing to MMC file. Disabling write file operations");
+            mmc_persistent_writes[tarjeta].v=0;
+            return;
+        }
+
+        //Grabar la tarjeta entera: ya no hay sectores pendientes
+        util_sector_bitmap_clear(&mmc_sectores_cambiados[tarjeta]);
 
 
         FILE *ptr_mmcfile;
@@ -406,6 +435,9 @@ int mmc_read_file(int tarjeta)
         if (mmc_memory_pointer[tarjeta]==NULL) {
                 cpu_panic ("No enough memory for mmc emulation");
         }
+
+        //Fork: tarjeta recien leida, ningun sector cambiado
+        util_sector_bitmap_init(&mmc_sectores_cambiados[tarjeta],mmc_size[tarjeta]);
 
         return mmc_read_file_to_memory(tarjeta);
 
@@ -674,6 +706,8 @@ void mmc_disable(int tarjeta)
         if (mmc_memory_pointer[tarjeta]!=NULL) free (mmc_memory_pointer[tarjeta]);
         mmc_memory_pointer[tarjeta]=NULL;
 
+        util_sector_bitmap_free(&mmc_sectores_cambiados[tarjeta]);
+
 }
 
 
@@ -834,6 +868,7 @@ void mmc_write_byte_memory(unsigned int address,z80_byte value)
 	if (mmc_write_protection[mmc_card_selected].v) return;
 
 	mmc_memory_pointer[mmc_card_selected][address]=value;
+	util_sector_bitmap_mark(&mmc_sectores_cambiados[mmc_card_selected],address);
 	mmc_flash_must_flush_to_disk[mmc_card_selected]=1;
 
 	mmc_set_visualmem_write(address);

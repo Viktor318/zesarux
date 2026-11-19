@@ -1178,4 +1178,21 @@ extern int util_min(int a,int b);
 
 extern int util_max(int a,int b);
 
+
+//Fork: sectores cambiados de una imagen de disco cargada en memoria (MMC, IDE), para grabar en el archivo
+//solo los sectores que se han escrito y no la imagen entera
+#define UTIL_SECTOR_BITMAP_SECTOR_SIZE 512
+
+struct s_util_sector_bitmap {
+    unsigned long long *bits;
+    long long words;
+};
+
+extern void util_sector_bitmap_init(struct s_util_sector_bitmap *b,long long size);
+extern void util_sector_bitmap_free(struct s_util_sector_bitmap *b);
+extern void util_sector_bitmap_clear(struct s_util_sector_bitmap *b);
+extern void util_sector_bitmap_mark(struct s_util_sector_bitmap *b,long long address);
+extern int util_sector_bitmap_flush(struct s_util_sector_bitmap *b,char *filename,long long file_offset,long long min_file_size,
+    z80_byte *memoria,long long size,long long *bytes_escritos);
+
 #endif

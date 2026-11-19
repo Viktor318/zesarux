@@ -2369,7 +2369,7 @@ Reload Flash from file?	Újratöltöd a Flash-t fájlból?	question
 OK. MMC file reloaded	OK. MMC fájl újratöltve	message
 OK. Remember to enable DIVMMC paging to load the firmware	OK. Ne feledd bekapcsolni a DIVMMC lapozást a firmware betöltéséhez	message
 Invalid file size	Érvénytelen fájlméret	error
-Using MMC bigger than 1 GB can be very slow	Az 1 GB-nál nagyobb MMC használata nagyon lassú lehet	warning
+MMC bigger than 1 GB: slower to load and uses as much RAM	Az 1 GB-nál nagyobb MMC lassabban töltődik be, és ugyanennyi memóriát foglal	warning
 Which size?	Mekkora méret?	question
 2 GB	2 GB	option
 4 GB	4 GB	option
@@ -2378,7 +2378,7 @@ tbblue.mmc image not found	A tbblue.mmc képfájl nem található	error
 Included or download?	Beépített vagy letöltött?	question
 Use included in ZEsarUX	A ZEsarUX-ba beépített használata	option
 Download from official repo	Letöltés a hivatalos tárolóból	option
-Using IDE bigger than 1 GB can be very slow	Az 1 GB-nál nagyobb IDE használata nagyon lassú lehet	warning
+IDE bigger than 1 GB: slower to load and uses as much RAM	Az 1 GB-nál nagyobb IDE lassabban töltődik be, és ugyanennyi memóriát foglal	warning
 Load normal rom and reset?	Betöltöd a normál ROM-ot és újraindítod?	question
 Load atomlite rom and reset?	Betöltöd az atomlite ROM-ot és újraindítod?	question
 OK. IDE file reloaded	OK. IDE fájl újratöltve	message

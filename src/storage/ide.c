@@ -100,6 +100,9 @@ z80_byte *ide_memory_pointer;
 
 int ide_flash_must_flush_to_disk=0;
 
+//Fork: sectores escritos desde la ultima grabacion. Al grabar solo se escriben estos, no la imagen entera
+struct s_util_sector_bitmap ide_sectores_cambiados;
+
 
 //0: primera tarjeta
 //1: segunda tarjeta (no implementada)
@@ -178,6 +181,31 @@ void ide_flush_flash_to_disk(void)
 
 
     debug_printf (VERBOSE_INFO,"Flushing IDE to disk");
+
+
+    //Fork: grabar solo los sectores que han cambiado. Si el archivo no existe o es mas pequeño que lo que
+    //se leyo, se graba la imagen entera como antes
+    long long int escritos_sectores;
+
+    //Antes de escribir se pone flush a 0: una escritura durante la grabacion lo vuelve a poner a 1
+    ide_flash_must_flush_to_disk=0;
+
+    int resultado=util_sector_bitmap_flush(&ide_sectores_cambiados,ide_file_name,0,expected_read_ide_size,
+        ide_memory_pointer,ide_size,&escritos_sectores);
+
+    if (resultado==0) {
+        debug_printf (VERBOSE_INFO,"IDE: written %lld bytes of changed sectors",escritos_sectores);
+        return;
+    }
+
+    if (resultado==2) {
+        debug_printf (VERBOSE_ERR,"Error writing to IDE file. Disabling write file operations");
+        ide_persistent_writes.v=0;
+        return;
+    }
+
+    //Grabar la imagen entera: ya no hay sectores pendientes
+    util_sector_bitmap_clear(&ide_sectores_cambiados);
 
 
     FILE *ptr_idefile;
@@ -263,6 +291,9 @@ int ide_read_file(void)
     if (ide_memory_pointer==NULL) {
         cpu_panic ("No enough memory for ide emulation");
     }
+
+    //Fork: imagen recien leida, ningun sector cambiado
+    util_sector_bitmap_init(&ide_sectores_cambiados,ide_size);
 
     if (ide_read_file_to_memory()) {
         return 1;
@@ -370,6 +401,8 @@ void ide_disable(void)
     //Si habia memoria asignada, desasignar
     if (ide_memory_pointer!=NULL) free (ide_memory_pointer);
     ide_memory_pointer=NULL;
+
+    util_sector_bitmap_free(&ide_sectores_cambiados);
 
 }
 
@@ -571,6 +604,7 @@ void ide_write_byte_memory(unsigned int address,z80_byte value)
         if (ide_write_protection.v) return;
 
         ide_memory_pointer[address]=value;
+        util_sector_bitmap_mark(&ide_sectores_cambiados,address);
         ide_flash_must_flush_to_disk=1;
 }
 

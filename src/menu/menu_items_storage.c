@@ -12270,7 +12270,7 @@ void menu_storage_mmc_file(MENU_ITEM_PARAMETERS)
             }
 
             if (size>=1024) {
-                menu_warn_message("Using MMC bigger than 1 GB can be very slow");
+                menu_warn_message("MMC bigger than 1 GB: slower to load and uses as much RAM");
             }
 
 
@@ -12296,7 +12296,7 @@ void menu_storage_mmc_file(MENU_ITEM_PARAMETERS)
             //Comprobar aqui tambien el tamanyo
             long long int size=get_file_size(mmc_file_name[tarjeta_seleccionada]);
             if (size>1073741824L) {
-                menu_warn_message("Using MMC bigger than 1 GB can be very slow");
+                menu_warn_message("MMC bigger than 1 GB: slower to load and uses as much RAM");
             }
 
 
@@ -12861,7 +12861,7 @@ void menu_storage_ide_file(MENU_ITEM_PARAMETERS)
                         }
 
                         if (size>=1024) {
-                                menu_warn_message("Using IDE bigger than 1 GB can be very slow");
+                                menu_warn_message("IDE bigger than 1 GB: slower to load and uses as much RAM");
                         }
 
 
@@ -12887,7 +12887,7 @@ void menu_storage_ide_file(MENU_ITEM_PARAMETERS)
                         //Comprobar aqui tambien el tamanyo
                         long long int size=get_file_size(ide_file_name);
                         if (size>1073741824L) {
-                                menu_warn_message("Using IDE bigger than 1 GB can be very slow");
+                                menu_warn_message("IDE bigger than 1 GB: slower to load and uses as much RAM");
                         }
                 }
 

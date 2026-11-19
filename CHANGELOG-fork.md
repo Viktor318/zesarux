@@ -62,6 +62,20 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
   the menu. The `--help` text is fixed too (the default of
   `--tbblue-max-turbo-rom` is 4).
 
+### Storage
+
+- **Persistent writes of MMC and IDE images write only the changed sectors**:
+  the program remembers which 512 byte sectors the machine wrote, and the
+  save every second writes only these at their place in the file (after the
+  .hdf header), neighbouring sectors together. Until now every change wrote
+  the whole image: with a 2 GB Next card a save or a change of settings meant
+  2 GB of writing and a noticeable freeze, now a few kilobytes (a NextBASIC
+  SAVE for example 2.5 KB). If the file is missing or smaller than expected,
+  the whole image is written as before.
+- The warning for images larger than 1 GB says so now: “MMC bigger than 1 GB:
+  slower to load and uses as much RAM” (the image is still loaded into memory
+  as a whole).
+
 ## v13.1-B1-hu.1 – 2026-11-18
 
 The second release of the fork, based on ZEsarUX 13.1 Beta 1.
