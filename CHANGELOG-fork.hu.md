@@ -9,6 +9,12 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
 
 ## Kiadatlan
 
+### Fordítás
+
+- **Optimalizált Windows-fordítás** (`-O2`): eddig a csomag optimalizálás
+  nélkül fordult, és a Next emulációja lassú gépen nem érte el az 50 FPS-t
+  (a mérésben 36–42 helyett 50 FPS).
+
 ### Virtuális billentyűzet
 
 - **Újrarajzolt ZX Spectrum Next billentyűzet**: a fénykép helyett rajz, a

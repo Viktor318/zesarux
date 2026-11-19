@@ -8,6 +8,12 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
 
 ## Unreleased
 
+### Build
+
+- **Optimised Windows build** (`-O2`): the package used to be built without
+  optimisation, and the Next emulation did not reach 50 FPS on a slow machine
+  (36–42 vs. 50 FPS in the measurement).
+
 ### Virtual keyboard
 
 - **ZX Spectrum Next keyboard drawn again**: a drawing instead of the photo,

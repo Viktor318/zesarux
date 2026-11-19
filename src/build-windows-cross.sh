@@ -81,7 +81,9 @@ chmod +x configure.cross
 
 export PATH="$WORK/bin:$PATH"
 
-CFLAGS="-DMAX_PATH=260" ./configure.cross --c-compiler $HOST-gcc --enable-sdl2 \
+# Optimizacion -O2: sin ella (configure no pone ninguna) la emulacion de maquinas pesadas como
+# la Next no llega a los 50 FPS en equipos lentos
+CFLAGS="-O2 -DMAX_PATH=260" ./configure.cross --c-compiler $HOST-gcc --enable-sdl2 \
     --disable-pulse --disable-alsa --disable-xwindows --disable-curses --disable-cursesw \
     --disable-fbdev --disable-dsp --disable-onebitspeaker --disable-linuxrealjoystick \
     --disable-aa --disable-caca --disable-sndfile
