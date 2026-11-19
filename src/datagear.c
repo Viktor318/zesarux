@@ -29,6 +29,7 @@
 #include "operaciones.h"
 #include "ula.h"
 #include "screen.h"
+#include "tbblue.h"
 
 
 
@@ -97,6 +98,221 @@ z80_byte datagear_dma_tbblue_prescaler;
 int datagear_dma_last_testados=0;
 
 
+/* Fork: zxnDDMA (zxnDimensionalDMA, "blitter") del core 3.03 del ZX Spectrum Next.
+
+   Segun docs/zxnDDMA/zxnddma.gde de la distribucion System/Next 26.11a. Son comandos extra de la zxnDMA,
+   solo en TBBlue y solo en el puerto 0x6B (en el 0x0B el byte de comando se ignora y los bytes
+   siguientes se leen como escrituras normales de registro, igual que en un core sin zxnDDMA):
+
+   $D7 nn / $DB nn        bits 23:16 de la direccion del puerto A / B
+   $DF mm [Xlo Xhi Y]     modos: bit 0 direcciones fisicas (SRAM, sin MMU), bit 1 2D (rectangulos),
+                          bit 2 color transparente, bit 3 relleno, bit 4 destino X,Y de Layer 2
+                          (siguen 3 bytes), bit 5 pantalla oculta de Layer 2 (nextreg 0x13)
+   $E3 / $E7 ll hh        longitud de fila / numero de filas
+   $EB / $EF ll hh        distancia entre filas (stride) del puerto A / B
+   $F3 nn / $F7 nn        color transparente / valor de relleno
+   $C3 lo deja todo a cero
+
+   La transferencia, como la de la DMA normal de este archivo, no consume tiempo de la cpu
+*/
+
+#define DATAGEAR_DDMA_FLAG_PHYSICAL     0x01
+#define DATAGEAR_DDMA_FLAG_2D           0x02
+#define DATAGEAR_DDMA_FLAG_TRANSPARENT  0x04
+#define DATAGEAR_DDMA_FLAG_FILL         0x08
+#define DATAGEAR_DDMA_FLAG_LAYER2_XY    0x10
+#define DATAGEAR_DDMA_FLAG_HIDDEN       0x20
+
+//Valor de datagear_last_command mientras se reciben los parametros de un comando zxnDDMA
+#define DATAGEAR_LAST_COMMAND_DDMA 131
+
+z80_byte datagear_ddma_flags=0;
+
+//Bytes $D7 y $DB (valores iniciales) y los de trabajo, que carga $CF y avanzan con el acarreo de la direccion
+z80_byte datagear_ddma_ext_a=0;
+z80_byte datagear_ddma_ext_b=0;
+z80_byte datagear_ddma_work_ext_a=0;
+z80_byte datagear_ddma_work_ext_b=0;
+
+z80_int datagear_ddma_row_length=0;
+z80_int datagear_ddma_rows=0;
+z80_int datagear_ddma_stride_a=0;
+z80_int datagear_ddma_stride_b=0;
+
+z80_byte datagear_ddma_transparent=0;
+z80_byte datagear_ddma_fill=0;
+
+//Rectangulo en curso: inicio de la fila actual en cada puerto (24 bits), bytes que quedan de la fila y filas que quedan
+int datagear_ddma_2d_running=0;
+unsigned int datagear_ddma_row_start_a=0;
+unsigned int datagear_ddma_row_start_b=0;
+int datagear_ddma_row_bytes_left=0;
+int datagear_ddma_rows_left=0;
+
+//Comando zxnDDMA del que se estan recibiendo parametros, indice del parametro, y parametros de $DF con X,Y
+z80_byte datagear_ddma_command=0;
+int datagear_ddma_param_index=0;
+z80_byte datagear_ddma_xy[3];
+
+//Ultimo puerto por el que se ha escrito a la DMA (0x0B o 0x6B)
+z80_byte datagear_last_port_written=DATAGEAR_DMA_SECOND_PORT;
+
+//Lo que deja a cero el comando $C3 (apartado 2.6 de la guia)
+void datagear_ddma_reset(void)
+{
+    datagear_ddma_flags=0;
+    datagear_ddma_ext_a=datagear_ddma_ext_b=0;
+    datagear_ddma_row_length=datagear_ddma_rows=0;
+    datagear_ddma_stride_a=datagear_ddma_stride_b=0;
+    datagear_ddma_transparent=0;
+    datagear_ddma_fill=0;
+    datagear_ddma_2d_running=0;
+}
+
+//Si los comandos zxnDDMA estan disponibles en esta escritura
+int datagear_ddma_available(void)
+{
+    return MACHINE_IS_TBBLUE && datagear_last_port_written==DATAGEAR_DMA_SECOND_PORT;
+}
+
+//Numero de parametros que siguen a un comando zxnDDMA (sin contar los 3 de X,Y de $DF). -1 si no es un comando zxnDDMA
+int datagear_ddma_command_params(z80_byte command)
+{
+    switch (command) {
+        case 0xD7:
+        case 0xDB:
+        case 0xDF:
+        case 0xF3:
+        case 0xF7:
+            return 1;
+
+        case 0xE3:
+        case 0xE7:
+        case 0xEB:
+        case 0xEF:
+            return 2;
+
+        //$FB: era copiar la pantalla oculta de Layer 2; ya no hace nada y el byte se ignora
+        case 0xFB:
+            return 0;
+    }
+
+    return -1;
+}
+
+//Destino X,Y en Layer 2: calcula la direccion fisica del puerto B (apartado 2.5 de la guia)
+void datagear_ddma_set_layer2_xy(void)
+{
+    z80_byte registro_banco=(datagear_ddma_flags & DATAGEAR_DDMA_FLAG_HIDDEN ? tbblue_registers[0x13] : tbblue_registers[0x12]);
+
+    unsigned int base=0x40000+(registro_banco & 0x7F)*0x4000;
+
+    unsigned int x_lo=datagear_ddma_xy[0];
+    unsigned int x_hi=datagear_ddma_xy[1];
+    unsigned int y=datagear_ddma_xy[2];
+
+    unsigned int direccion;
+
+    int modo=(tbblue_registers[0x70]>>4) & 3;
+
+    //256x192: fila a fila. Solo se suma X_lo
+    if (modo==0) direccion=base+y*256+x_lo;
+
+    //320x256 y 640x256: columna a columna. La columna son 9 bits
+    else direccion=base+(x_lo | ((x_hi & 1)<<8))*256+y;
+
+    datagear_port_b_start_addr_low=direccion & 0xFF;
+    datagear_port_b_start_addr_high=(direccion>>8) & 0xFF;
+    datagear_ddma_ext_b=(direccion>>16) & 0xFF;
+
+    //La distancia entre filas del destino pasa a ser 256, hasta $EF o $C3
+    datagear_ddma_stride_b=256;
+}
+
+//Recibe un parametro del comando zxnDDMA en curso. Retorna 1 si todavia faltan parametros
+int datagear_ddma_write_param(z80_byte value)
+{
+    int indice=datagear_ddma_param_index++;
+
+    switch (datagear_ddma_command) {
+        case 0xD7:
+            datagear_ddma_ext_a=value;
+        break;
+
+        case 0xDB:
+            datagear_ddma_ext_b=value;
+        break;
+
+        case 0xDF:
+            if (indice==0) {
+                //Cada $DF fija todos los modos a la vez
+                datagear_ddma_flags=value & 0x3F;
+                if (value & DATAGEAR_DDMA_FLAG_LAYER2_XY) return 1;
+            }
+            else {
+                datagear_ddma_xy[indice-1]=value;
+                if (indice<3) return 1;
+                datagear_ddma_set_layer2_xy();
+            }
+        break;
+
+        case 0xE3:
+            if (indice==0) datagear_ddma_row_length=(datagear_ddma_row_length & 0xFF00) | value;
+            else datagear_ddma_row_length=(datagear_ddma_row_length & 0x00FF) | (value<<8);
+        break;
+
+        case 0xE7:
+            if (indice==0) datagear_ddma_rows=(datagear_ddma_rows & 0xFF00) | value;
+            else datagear_ddma_rows=(datagear_ddma_rows & 0x00FF) | (value<<8);
+        break;
+
+        case 0xEB:
+            if (indice==0) datagear_ddma_stride_a=(datagear_ddma_stride_a & 0xFF00) | value;
+            else datagear_ddma_stride_a=(datagear_ddma_stride_a & 0x00FF) | (value<<8);
+        break;
+
+        case 0xEF:
+            if (indice==0) datagear_ddma_stride_b=(datagear_ddma_stride_b & 0xFF00) | value;
+            else datagear_ddma_stride_b=(datagear_ddma_stride_b & 0x00FF) | (value<<8);
+        break;
+
+        case 0xF3:
+            datagear_ddma_transparent=value;
+        break;
+
+        case 0xF7:
+            datagear_ddma_fill=value;
+        break;
+    }
+
+    return (datagear_ddma_param_index<datagear_ddma_command_params(datagear_ddma_command));
+}
+
+//Direccion fisica de 22 bits (se pierden los bits 7:6 del byte extendido). Como en una placa de 2 MB,
+//el bit 21 tambien se pierde: las direcciones mas altas dan la vuelta
+unsigned int datagear_ddma_physical_address(z80_byte ext,z80_int address)
+{
+    unsigned int direccion=((ext & 0x3F)<<16) | address;
+    return direccion & 0x1FFFFF;
+}
+
+//Avanza la direccion de un puerto segun su modo (WR1 o WR2). En modo fisico el acarreo pasa al byte extendido
+void datagear_ddma_step_address(z80_int *address,z80_byte *ext,z80_byte wr,int physical)
+{
+    //Direccion fija
+    if (wr & 32) return;
+
+    if (wr & 16) {
+        (*address)++;
+        if (physical && *address==0) (*ext)++;
+    }
+    else {
+        if (physical && *address==0) (*ext)--;
+        (*address)--;
+    }
+}
+
+
 //Si esta activada la emulacion de dma
 z80_bit datagear_dma_emulation={0};
 
@@ -123,6 +339,16 @@ void datagear_reset(void)
     datagear_wr0=datagear_wr1=datagear_wr2=datagear_wr3=datagear_wr4=datagear_wr5=datagear_wr6=0;
     datagear_is_dma_transfering.v=0;
 
+    datagear_ddma_reset();
+    datagear_ddma_work_ext_a=datagear_ddma_work_ext_b=0;
+
+}
+
+//Escritura en la DMA indicando el puerto: los comandos zxnDDMA solo existen en el 0x6B
+void datagear_write_value_port(z80_byte puerto_l,z80_byte value)
+{
+    datagear_last_port_written=puerto_l;
+    datagear_write_value(value);
 }
 
 /*void datagear_do_transfer(void)
@@ -355,6 +581,11 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 			break;
 
 
+			//Parametros de un comando zxnDDMA
+			case DATAGEAR_LAST_COMMAND_DDMA:
+				if (!datagear_ddma_write_param(value)) datagear_mask_commands=0;
+			break;
+
 			case 130:
 				DBG_PRINT_DMA VERBOSE_DEBUG,"DMA: Reading ZXN Prescaler = %02XH",value);
 				datagear_dma_tbblue_prescaler=value;
@@ -426,10 +657,35 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 		datagear_wr6=value;
         //DBG_PRINT_DMA VERBOSE_DEBUG,"DMA: Set WR6=%02XH",datagear_wr6);
 
+		//Comandos zxnDDMA (solo TBBlue, solo puerto 0x6B)
+		if (datagear_ddma_available() && datagear_ddma_command_params(value)>=0) {
+			datagear_ddma_command=value;
+			datagear_ddma_param_index=0;
+			if (datagear_ddma_command_params(value)>0) {
+				datagear_last_command=DATAGEAR_LAST_COMMAND_DDMA;
+				datagear_mask_commands=1;        //Cualquier cosa diferente de 0 nos vale
+			}
+			return;
+		}
+
 		//Tratar todos los diferentes comandos
 		switch (value) {
+			case 0xC3:
+				//Reset. Aqui solo lo relativo a zxnDDMA; lo demas sigue como estaba
+				if (MACHINE_IS_TBBLUE) datagear_ddma_reset();
+			break;
+
 			case 0xCF:
 				//DBG_PRINT_DMA VERBOSE_DEBUG,"DMA: Load starting address for both ports, clear byte counter");
+				//zxnDDMA: los bytes $D7 y $DB pasan a las direcciones de trabajo, y el rectangulo empieza de nuevo
+				datagear_ddma_work_ext_a=datagear_ddma_ext_a;
+				datagear_ddma_work_ext_b=datagear_ddma_ext_b;
+				datagear_ddma_2d_running=0;
+			break;
+
+			case 0xD3:
+				//Continue: se mantienen las direcciones de trabajo y empiezan de nuevo los contadores
+				datagear_ddma_2d_running=0;
 			break;
 
 			case 0xAB:
@@ -500,6 +756,29 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 
 
 
+
+z80_byte datagear_read_operation(z80_int address,z80_byte dma_mem_type);
+void datagear_write_operation(z80_int address,z80_byte value,z80_byte dma_mem_type);
+
+//Lectura y escritura de un puerto de la DMA con el byte extendido: memoria fisica si el modo fisico de zxnDDMA esta activo
+z80_byte datagear_ddma_read_operation(z80_int address,z80_byte ext,z80_byte dma_mem_type)
+{
+    if (!dma_mem_type && (datagear_ddma_flags & DATAGEAR_DDMA_FLAG_PHYSICAL)) {
+        return memoria_spectrum[datagear_ddma_physical_address(ext,address)];
+    }
+
+    return datagear_read_operation(address,dma_mem_type);
+}
+
+void datagear_ddma_write_operation(z80_int address,z80_byte ext,z80_byte value,z80_byte dma_mem_type)
+{
+    if (!dma_mem_type && (datagear_ddma_flags & DATAGEAR_DDMA_FLAG_PHYSICAL)) {
+        memoria_spectrum[datagear_ddma_physical_address(ext,address)]=value;
+        return;
+    }
+
+    datagear_write_operation(address,value,dma_mem_type);
+}
 
 z80_byte datagear_read_operation(z80_int address,z80_byte dma_mem_type)
 {
@@ -597,6 +876,24 @@ void datagear_handle_dma(void)
 
 
 
+
+        //zxnDDMA: modos activos (siempre 0 fuera de TBBlue, porque solo se pueden fijar alli)
+        int ddma_physical=(datagear_ddma_flags & DATAGEAR_DDMA_FLAG_PHYSICAL ? 1 : 0);
+        int ddma_2d=(datagear_ddma_flags & DATAGEAR_DDMA_FLAG_2D ? 1 : 0);
+
+        if (ddma_2d) {
+            if (!datagear_ddma_2d_running) {
+                //Empieza un rectangulo desde las direcciones actuales. Longitud de fila o numero de filas 0 mueven un byte
+                datagear_ddma_2d_running=1;
+                datagear_ddma_row_start_a=(datagear_ddma_work_ext_a<<16) | transfer_port_a;
+                datagear_ddma_row_start_b=(datagear_ddma_work_ext_b<<16) | transfer_port_b;
+                datagear_ddma_row_bytes_left=(datagear_ddma_row_length ? datagear_ddma_row_length : 1);
+                datagear_ddma_rows_left=(datagear_ddma_rows ? datagear_ddma_rows : 1);
+            }
+
+            //En 2D no se usa la longitud de bloque: quedan bytes mientras queden filas
+            transfer_length=1;
+        }
 
         int dmapre=2; //Cada 2 estados, una transferencia
 
@@ -709,29 +1006,67 @@ Excepción:
 			//for (i=0;i<cpu_turbo_speed;i++) {
 				//printf ("dma op ");
 			           z80_byte byte_leido;
+
+                    //zxnDDMA: con relleno no se lee, se escribe el valor de $F7;
+                    //con color transparente no se escriben los bytes de ese color (las direcciones avanzan igual)
+                    int ddma_fill=(datagear_ddma_flags & DATAGEAR_DDMA_FLAG_FILL);
+                    int ddma_transparent=(datagear_ddma_flags & DATAGEAR_DDMA_FLAG_TRANSPARENT);
+
                     if (datagear_wr0 & 4) {
                         //printf("DMA READ A, WRITE B\n");
-                        byte_leido=datagear_read_operation(transfer_port_a,datagear_wr1 & 8);
-					    datagear_write_operation(transfer_port_b,byte_leido,datagear_wr2 & 8);
+                        if (ddma_fill) byte_leido=datagear_ddma_fill;
+                        else byte_leido=datagear_ddma_read_operation(transfer_port_a,datagear_ddma_work_ext_a,datagear_wr1 & 8);
+
+                        if (!ddma_transparent || byte_leido!=datagear_ddma_transparent) {
+					        datagear_ddma_write_operation(transfer_port_b,datagear_ddma_work_ext_b,byte_leido,datagear_wr2 & 8);
+                        }
                     }
 
                     else {
                         //printf("DMA READ B, WRITE A\n");
-                        byte_leido=datagear_read_operation(transfer_port_b,datagear_wr2 & 8);
-					    datagear_write_operation(transfer_port_a,byte_leido,datagear_wr1 & 8);
+                        if (ddma_fill) byte_leido=datagear_ddma_fill;
+                        else byte_leido=datagear_ddma_read_operation(transfer_port_b,datagear_ddma_work_ext_b,datagear_wr2 & 8);
+
+                        if (!ddma_transparent || byte_leido!=datagear_ddma_transparent) {
+					        datagear_ddma_write_operation(transfer_port_a,datagear_ddma_work_ext_a,byte_leido,datagear_wr1 & 8);
+                        }
                     }
 
-                    if ( (datagear_wr1 & 32) == 0 ) {
-                        if (datagear_wr1 & 16) transfer_port_a++;
-                        else transfer_port_a--;
+                    datagear_ddma_step_address(&transfer_port_a,&datagear_ddma_work_ext_a,datagear_wr1,ddma_physical);
+                    datagear_ddma_step_address(&transfer_port_b,&datagear_ddma_work_ext_b,datagear_wr2,ddma_physical);
+
+                    if (ddma_2d) {
+                        datagear_ddma_row_bytes_left--;
+
+                        if (datagear_ddma_row_bytes_left<=0) {
+                            datagear_ddma_rows_left--;
+
+                            if (datagear_ddma_rows_left<=0) {
+                                //Fin del rectangulo
+                                transfer_length=0;
+                                datagear_ddma_2d_running=0;
+                            }
+
+                            else {
+                                //Siguiente fila: la distancia entre filas se suma al inicio de la fila (24 bits)
+                                datagear_ddma_row_start_a +=datagear_ddma_stride_a;
+                                datagear_ddma_row_start_b +=datagear_ddma_stride_b;
+
+                                transfer_port_a=datagear_ddma_row_start_a & 0xFFFF;
+                                transfer_port_b=datagear_ddma_row_start_b & 0xFFFF;
+
+                                //Fuera del modo fisico la direccion da la vuelta dentro de los 64K
+                                if (ddma_physical) {
+                                    datagear_ddma_work_ext_a=(datagear_ddma_row_start_a>>16) & 0xFF;
+                                    datagear_ddma_work_ext_b=(datagear_ddma_row_start_b>>16) & 0xFF;
+                                }
+
+                                datagear_ddma_row_bytes_left=(datagear_ddma_row_length ? datagear_ddma_row_length : 1);
+                            }
+                        }
                     }
 
-                    if ( (datagear_wr2 & 32) == 0 ) {
-                        if (datagear_wr2 & 16) transfer_port_b++;
-                        else transfer_port_b--;
-                    }
-
-					transfer_length--;
+					else transfer_length--;
 
 			//}
 
@@ -760,8 +1095,11 @@ Excepción:
 
         //Guardar valores contadores
 
-        datagear_block_length_low=value_16_to_8l(transfer_length);
-        datagear_block_length_high=value_16_to_8h(transfer_length);
+        //En 2D la longitud de bloque no se usa ni se toca
+        if (!ddma_2d) {
+            datagear_block_length_low=value_16_to_8l(transfer_length);
+            datagear_block_length_high=value_16_to_8h(transfer_length);
+        }
 
         datagear_port_a_start_addr_low=value_16_to_8l(transfer_port_a);
         datagear_port_a_start_addr_high=value_16_to_8h(transfer_port_a);

@@ -61,6 +61,16 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
   saved setting is kept: if the limit was saved before, switch it off once in
   the menu. The `--help` text is fixed too (the default of
   `--tbblue-max-turbo-rom` is 4).
+- **The blitter of the Next (zxnDDMA, core 3.03)**: the DMA of the Next has
+  the new commands of core 3.03 (on port 0x6B only): 24 bit physical addresses
+  (`$D7`, `$DB`), rectangle copy (row length, number of rows, strides: `$E3`,
+  `$E7`, `$EB`, `$EF`), a transparent colour (`$F3`), fill (`$F7`), a Layer 2
+  X,Y destination in the 256×192 and 320×256 modes, the hidden Layer 2 screen
+  (register 0x13), the mode flags (`$DF`), and `$C3` clears them. Written
+  after `docs/zxnDDMA/zxnddma.gde` of System/Next 26.11a. The Next therefore
+  reports **core 3.03.03** now (3.02.03 before). The transfer, like the DMA of
+  ZEsarUX so far, takes no CPU time, so programs that measure it see it faster
+  than the real one. Test: `src/tests/tbblue_zxnddma.py`.
 
 ### Storage
 

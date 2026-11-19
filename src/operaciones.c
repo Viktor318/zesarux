@@ -9945,7 +9945,7 @@ acts as expected unless this registe is explicitly changed by the user/software.
 
 	if (datagear_dma_emulation.v && (puerto_l==DATAGEAR_DMA_FIRST_PORT || puerto_l==DATAGEAR_DMA_SECOND_PORT) ) {
 			//printf ("Writing Datagear DMA port %04XH with value %02XH. PC=%02XH\n",puerto,value,reg_pc);
-			datagear_write_value(value);
+			datagear_write_value_port(puerto_l,value);
 	}
 
 	//Fuller audio box

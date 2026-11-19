@@ -61,6 +61,17 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
   korlátozódott). A mentett beállítás megmarad: aki eddig elmentette a
   korlátozást, annál a menüben egyszer ki kell kapcsolni. A `--help` szövege
   is javítva (a `--tbblue-max-turbo-rom` alapértéke 4).
+- **A Next blittere (zxnDDMA, core 3.03)**: a Next DMA-ja megkapta a 3.03-as
+  core új parancsait (csak a 0x6B porton): 24 bites fizikai címek (`$D7`,
+  `$DB`), téglalap másolása (sorhossz, sorok száma, sorlépés: `$E3`, `$E7`,
+  `$EB`, `$EF`), átlátszó szín (`$F3`), kitöltés (`$F7`), Layer 2-es X,Y cél
+  256×192-es és 320×256-os módban, a rejtett Layer 2 képernyő (0x13-as
+  regiszter), a módok kapcsolója (`$DF`), és a `$C3` ezeket törli. A
+  System/Next 26.11a `docs/zxnDDMA/zxnddma.gde` leírása szerint készült. A
+  Next ezért mostantól **3.03.03-as core-nak** mutatja magát (eddig 3.02.03).
+  Az átvitel, ahogy a ZEsarUX DMA-ja eddig is, nem fogyaszt processzoridőt,
+  ezért az időt mérő programok a valódinál gyorsabbnak látják. Teszt:
+  `src/tests/tbblue_zxnddma.py`.
 
 ### Háttértár
 

@@ -26,7 +26,7 @@
 
 
 #define TBBLUE_CORE_DEFAULT_VERSION_MAJOR     3
-#define TBBLUE_CORE_DEFAULT_VERSION_MINOR     2
+#define TBBLUE_CORE_DEFAULT_VERSION_MINOR     3
 #define TBBLUE_CORE_DEFAULT_VERSION_SUBMINOR  3
 
 //borde izquierdo + pantalla + borde derecho, multiplicado por 2

@@ -29,6 +29,7 @@
 
 extern void datagear_reset(void);
 extern void datagear_write_value(z80_byte value);
+extern void datagear_write_value_port(z80_byte puerto_l,z80_byte value);
 
 extern z80_bit datagear_dma_emulation;
 extern z80_bit datagear_dma_is_disabled;
