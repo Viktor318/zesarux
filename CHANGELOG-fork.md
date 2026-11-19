@@ -25,6 +25,10 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
   (the CPC 1920), three times the original picture of the machine. So 150% is
   sharp too (one pixel of two), and the larger sizes stay sharp. With these
   pictures the `keyboards` folder is about 6 MB smaller.
+- **Two new sizes: 250% and 300%** in the Help menu and with a double click on
+  the title (100 → 125 → 150 → 175 → 200 → 250 → 300 → 100%). At 300% the
+  pictures drawn again are shown pixel by pixel. The double click skips a
+  size that does not fit on the screen and goes to 100%.
 
 ## v13.1-B1-hu.1 – 2026-11-18
 

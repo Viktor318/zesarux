@@ -25575,9 +25575,11 @@ void menu_help_keyboard_overlay(void)
 #define MENU_HELP_KEYBOARD_SIZE_150 3
 #define MENU_HELP_KEYBOARD_SIZE_175 4
 #define MENU_HELP_KEYBOARD_SIZE_200 5
-#define MENU_HELP_KEYBOARD_TOTAL_SIZES 5
+#define MENU_HELP_KEYBOARD_SIZE_250 6
+#define MENU_HELP_KEYBOARD_SIZE_300 7
+#define MENU_HELP_KEYBOARD_TOTAL_SIZES 7
 
-static const int menu_help_keyboard_size_percent[MENU_HELP_KEYBOARD_TOTAL_SIZES+1]={0,100,125,150,175,200};
+static const int menu_help_keyboard_size_percent[MENU_HELP_KEYBOARD_TOTAL_SIZES+1]={0,100,125,150,175,200,250,300};
 
 //Size requested from the menu, applied when the window is opened
 int menu_help_keyboard_pending_size=0;
@@ -25670,7 +25672,27 @@ void menu_help_keyboard_set_size(zxvision_window *w,int preset)
     util_add_window_geometry_compact(w);
 }
 
-//Double click on the title bar: next size, 100% -> 125% -> 150% -> 175% -> 200% -> 100%
+//Fork: si el tamano preset cabe en la pantalla (la ventana con la imagen entera a ese tamano)
+int menu_help_keyboard_size_fits(zxvision_window *w,int preset)
+{
+    z80_byte *bmp=help_keyboard_bmp_file_mem;
+    if (w==NULL || bmp==NULL) return 1;
+
+    int ancho_bmp=bmp[18] + 256 * bmp[19];
+    int alto_bmp=bmp[22] + 256 * bmp[23];
+    int escala=menu_help_keyboard_preset_scale(preset);
+
+    int pixels_x=(ancho_bmp*escala+255)/256+zoom_x*2;
+    int pixels_y=(alto_bmp*escala+255)/256+zoom_y*2;
+
+    int ancho=(pixels_x+menu_char_width*zoom_x-1)/(menu_char_width*zoom_x)+zxvision_get_minus_width_byscrollvbar(w);
+    int alto=(pixels_y+menu_char_height*zoom_y-1)/(menu_char_height*zoom_y)+2;
+
+    return (ancho<=scr_get_menu_width() && alto<=scr_get_menu_height());
+}
+
+//Double click on the title bar: next size, 100% -> 125% -> 150% -> 175% -> 200% -> 250% -> 300% -> 100%
+//Fork: los tamanos que no caben en la pantalla se saltan (se vuelve a 100%)
 void menu_help_keyboard_title_double_click(zxvision_window *w)
 {
     int preset=MENU_HELP_KEYBOARD_SIZE_100;
@@ -25701,7 +25723,7 @@ void menu_help_keyboard_title_double_click(zxvision_window *w)
         }
 
         preset=actual+1;
-        if (preset>MENU_HELP_KEYBOARD_TOTAL_SIZES) preset=MENU_HELP_KEYBOARD_SIZE_100;
+        if (preset>MENU_HELP_KEYBOARD_TOTAL_SIZES || !menu_help_keyboard_size_fits(w,preset)) preset=MENU_HELP_KEYBOARD_SIZE_100;
     }
 
     menu_help_keyboard_set_size(w,preset);
@@ -26094,6 +26116,18 @@ void menu_help_show_keyboard_size_175(MENU_ITEM_PARAMETERS)
 void menu_help_show_keyboard_full_size(MENU_ITEM_PARAMETERS)
 {
     menu_help_keyboard_pending_size=MENU_HELP_KEYBOARD_SIZE_200;
+    menu_help_show_keyboard(valor_opcion);
+}
+
+void menu_help_show_keyboard_size_250(MENU_ITEM_PARAMETERS)
+{
+    menu_help_keyboard_pending_size=MENU_HELP_KEYBOARD_SIZE_250;
+    menu_help_show_keyboard(valor_opcion);
+}
+
+void menu_help_show_keyboard_size_300(MENU_ITEM_PARAMETERS)
+{
+    menu_help_keyboard_pending_size=MENU_HELP_KEYBOARD_SIZE_300;
     menu_help_show_keyboard(valor_opcion);
 }
 
@@ -35354,7 +35388,7 @@ void menu_help(MENU_ITEM_PARAMETERS)
                 "Virtual Keyboard 100%","Teclado Virtual 100%","Teclat Virtual 100%");
             menu_add_item_menu_tooltip(array_menu_common,"Virtual keyboard at the original size");
             menu_add_item_menu_ayuda(array_menu_common,"Displays the virtual keyboard at the original size. "
-                "Double click on the window title switches between the sizes 100%, 125%, 150%, 175% and 200%.");
+                "Double click on the window title switches between the sizes 100%, 125%, 150%, 175%, 200%, 250% and 300% (the sizes that fit on the screen).");
             menu_add_item_menu_se_cerrara(array_menu_common);
             menu_add_item_menu_genera_ventana(array_menu_common);
 
@@ -35362,7 +35396,7 @@ void menu_help(MENU_ITEM_PARAMETERS)
                 "Virtual Keyboard 125%","Teclado Virtual 125%","Teclat Virtual 125%");
             menu_add_item_menu_tooltip(array_menu_common,"Virtual keyboard at 125% of the original size");
             menu_add_item_menu_ayuda(array_menu_common,"Displays the virtual keyboard at 125% of the original size. "
-                "Double click on the window title switches between the sizes 100%, 125%, 150%, 175% and 200%.");
+                "Double click on the window title switches between the sizes 100%, 125%, 150%, 175%, 200%, 250% and 300% (the sizes that fit on the screen).");
             menu_add_item_menu_se_cerrara(array_menu_common);
             menu_add_item_menu_genera_ventana(array_menu_common);
 
@@ -35370,7 +35404,7 @@ void menu_help(MENU_ITEM_PARAMETERS)
                 "Virtual Keyboard 150%","Teclado Virtual 150%","Teclat Virtual 150%");
             menu_add_item_menu_tooltip(array_menu_common,"Virtual keyboard at one and a half times the original size");
             menu_add_item_menu_ayuda(array_menu_common,"Displays the virtual keyboard at one and a half times the original size. "
-                "Double click on the window title switches between the sizes 100%, 125%, 150%, 175% and 200%.");
+                "Double click on the window title switches between the sizes 100%, 125%, 150%, 175%, 200%, 250% and 300% (the sizes that fit on the screen).");
             menu_add_item_menu_se_cerrara(array_menu_common);
             menu_add_item_menu_genera_ventana(array_menu_common);
 
@@ -35378,15 +35412,33 @@ void menu_help(MENU_ITEM_PARAMETERS)
                 "Virtual Keyboard 175%","Teclado Virtual 175%","Teclat Virtual 175%");
             menu_add_item_menu_tooltip(array_menu_common,"Virtual keyboard at 175% of the original size");
             menu_add_item_menu_ayuda(array_menu_common,"Displays the virtual keyboard at 175% of the original size. "
-                "Double click on the window title switches between the sizes 100%, 125%, 150%, 175% and 200%.");
+                "Double click on the window title switches between the sizes 100%, 125%, 150%, 175%, 200%, 250% and 300% (the sizes that fit on the screen).");
             menu_add_item_menu_se_cerrara(array_menu_common);
             menu_add_item_menu_genera_ventana(array_menu_common);
 
             menu_add_item_menu_en_es_ca(array_menu_common,MENU_OPCION_NORMAL,menu_help_show_keyboard_full_size,NULL,
                 "Virtual Keyboard 200%","Teclado Virtual 200%","Teclat Virtual 200%");
             menu_add_item_menu_tooltip(array_menu_common,"Virtual keyboard at twice the original size");
-            menu_add_item_menu_ayuda(array_menu_common,"Displays the virtual keyboard at twice the original size (the image pixel by pixel). "
-                "Double click on the window title switches between the sizes 100%, 125%, 150%, 175% and 200%.");
+            menu_add_item_menu_ayuda(array_menu_common,"Displays the virtual keyboard at twice the original size. "
+                "Double click on the window title switches between the sizes 100%, 125%, 150%, 175%, 200%, 250% and 300% (the sizes that fit on the screen).");
+            menu_add_item_menu_se_cerrara(array_menu_common);
+            menu_add_item_menu_genera_ventana(array_menu_common);
+
+            menu_add_item_menu_en_es_ca(array_menu_common,MENU_OPCION_NORMAL,menu_help_show_keyboard_size_250,NULL,
+                "Virtual Keyboard 250%","Teclado Virtual 250%","Teclat Virtual 250%");
+            menu_add_item_menu_tooltip(array_menu_common,"Virtual keyboard at two and a half times the original size");
+            menu_add_item_menu_ayuda(array_menu_common,"Displays the virtual keyboard at two and a half times the original size, "
+                "if it fits on the screen. "
+                "Double click on the window title switches between the sizes 100%, 125%, 150%, 175%, 200%, 250% and 300% (the sizes that fit on the screen).");
+            menu_add_item_menu_se_cerrara(array_menu_common);
+            menu_add_item_menu_genera_ventana(array_menu_common);
+
+            menu_add_item_menu_en_es_ca(array_menu_common,MENU_OPCION_NORMAL,menu_help_show_keyboard_size_300,NULL,
+                "Virtual Keyboard 300%","Teclado Virtual 300%","Teclat Virtual 300%");
+            menu_add_item_menu_tooltip(array_menu_common,"Virtual keyboard at three times the original size");
+            menu_add_item_menu_ayuda(array_menu_common,"Displays the virtual keyboard at three times the original size, "
+                "if it fits on the screen (the pictures drawn again: the image pixel by pixel). "
+                "Double click on the window title switches between the sizes 100%, 125%, 150%, 175%, 200%, 250% and 300% (the sizes that fit on the screen).");
             menu_add_item_menu_se_cerrara(array_menu_common);
             menu_add_item_menu_genera_ventana(array_menu_common);
 

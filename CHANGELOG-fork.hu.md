@@ -26,6 +26,10 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
   a gép eredeti képének háromszorosai. Így a 150% is éles (kettőből egy
   pixel), és a nagyobb méretek is élesek maradnak. A `keyboards` mappa ezekkel
   a képekkel kb. 6 MB-tal kisebb lett.
+- **Két új méret: 250% és 300%** a Súgó menüben és a címsorra dupla
+  kattintással (100 → 125 → 150 → 175 → 200 → 250 → 300 → 100%). A 300% az
+  újrarajzolt képeknél képpontról képpontra mutatja a képet. A dupla kattintás
+  a képernyőre nem férő méretet átugorja, és 100%-ra vált.
 
 ## v13.1-B1-hu.1 – 2026-11-18
 
