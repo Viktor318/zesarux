@@ -55,6 +55,12 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
   it on reset too, like on the real Next. Until now they started from 0: the
   unused DACs sat at the lowest value, which gave a hidden offset and a bigger
   click at the first DAC write.
+- **No turbo limit in the Next ROM by default**: “Limit turbo on ROM”
+  (Settings → Hardware → CPU) is off by default, so `RUN AT 3` of NextBASIC
+  really runs at 28 MHz (until now it was limited to 14 MHz in the ROM). A
+  saved setting is kept: if the limit was saved before, switch it off once in
+  the menu. The `--help` text is fixed too (the default of
+  `--tbblue-max-turbo-rom` is 4).
 
 ## v13.1-B1-hu.1 – 2026-11-18
 

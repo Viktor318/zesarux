@@ -55,6 +55,12 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
   újraindításkor is, ahogy a valódi Next-en. Eddig 0-ról indultak: a nem
   használt DAC-ok a legkisebb értéken álltak, ami rejtett eltolást és nagyobb
   pattanást okozott a DAC első írásakor.
+- **A Next ROM-jában alapból nincs turbókorlátozás**: a „Turbó korlátozása a
+  ROM-ban” (Beállítások → Hardver → CPU) alapból ki van kapcsolva, így a
+  NextBASIC `RUN AT 3`-ja valóban 28 MHz-en fut (eddig a ROM-ban 14 MHz-re
+  korlátozódott). A mentett beállítás megmarad: aki eddig elmentette a
+  korlátozást, annál a menüben egyszer ki kell kapcsolni. A `--help` szövege
+  is javítva (a `--tbblue-max-turbo-rom` alapértéke 4).
 
 ## v13.1-B1-hu.1 – 2026-11-18
 

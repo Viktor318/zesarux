@@ -115,8 +115,8 @@ z80_byte *tbblue_memory_paged[8];
 z80_bit tbblue_fast_boot_mode={0};
 
 
-//Por defecto denegado
-z80_bit tbblue_deny_turbo_rom={1};
+//Fork: por defecto no se limita el turbo en la ROM (con el limite, RUN AT 3 en NextBASIC iba a 14 MHz)
+z80_bit tbblue_deny_turbo_rom={0};
 
 //Maximo turbo permitido al habilitar tbblue_deny_turbo_rom. Por defecto maximo 4X
 int tbblue_deny_turbo_rom_max_allowed=4;

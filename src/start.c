@@ -1002,9 +1002,9 @@ printf (
         "\n"
 
         "--denyturbozxunoboot        Deny setting turbo mode on ZX-Uno boot\n"
-        "--denyturbotbbluerom        Limit setting turbo mode on TBBlue ROM (default setting denied)\n"
-        "--allowturbotbbluerom       Do not limit setting turbo mode on TBBlue ROM\n"
-        "--tbblue-max-turbo-rom n    Max allowed turbo speed mode on TBBlue ROM when enabling --denyturbotbbluerom (default value: 2)\n"
+        "--denyturbotbbluerom        Limit setting turbo mode on TBBlue ROM\n"
+        "--allowturbotbbluerom       Do not limit setting turbo mode on TBBlue ROM (default setting)\n"
+        "--tbblue-max-turbo-rom n    Max allowed turbo speed mode on TBBlue ROM when enabling --denyturbotbbluerom (default value: 4)\n"
 
         "--denyturbotbblueeverywhere Limit setting turbo mode on TBBlue everywhere (default setting allowed)\n"
         "--tbblue-max-turbo-everywhere n    Max allowed turbo speed mode on TBBlue everywhere when enabling --denyturbotbblueeverywhere (default value: 4)\n"
