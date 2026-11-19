@@ -7,6 +7,16 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
 [src/Changelog_hu](src/Changelog_hu) fájlban vannak (angolul:
 [src/Changelog](src/Changelog)).
 
+## Kiadatlan
+
+### Virtuális billentyűzet
+
+- **Újrarajzolt ZX Spectrum Next billentyűzet**: a fénykép helyett rajz, a
+  Next valódi billentyűzete alapján (a gombok fölötti szavak, a NEW/STOP
+  típusú kétszavas gombok, a blokkgrafikák, a BLACK keretben), ugyanabban a
+  méretben és a gombok ugyanazon a helyen. Készítője:
+  `tools/keyboards/next.py`.
+
 ## v13.1-B1-hu.1 – 2026-11-18
 
 A fork második kiadása, a ZEsarUX 13.1 Beta 1-re építve.

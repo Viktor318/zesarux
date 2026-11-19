@@ -23412,15 +23412,16 @@ z80_byte puerto_57342=255; //    db              255  ; Y    U    I    O    P   
 z80_byte puerto_49150=255; //    db              255  ; H                J         K      L    Enter ;6
 z80_byte puerto_32766=255; //    db              255  ; B    N    M    Simb Space ;7
 */
+//Fork: posiciones del teclado Next redibujado (tools/keyboards/next.py)
 int keyboard_map_table_coords_next[40*4]={
-    2,124,88,161, 143,124,181,159, 183,124,220,161, 224,124,260,159, 264,123,300,161,
-    109,83,149,119,152,83,189,119,193,84,230,120,234,83,270,120,274,84,310,120,
-    101,42,136,79,142,42,178,79,182,42,220,79,226,43,260,78,264,43,299,78,
-    80,2,115,38,122,3,156,38,162,3,197,36,203,2,240,39,243,2,281,38,
-    445,4,480,39,406,3,442,38,365,2,401,38,324,2,361,39,285,2,320,36,
-    465,42,500,80,426,43,461,79,385,42,422,80,345,42,382,79,304,43,341,78,
-    475,84,538,118,436,84,472,119,396,83,432,119,356,84,391,119,314,84,353,119,
-    203,164,381,198,2,165,38,198,384,124,421,159,344,125,381,159,304,124,339,159,
+    2,122,85,159, 141,122,178,159, 182,122,219,159, 222,122,259,159, 262,122,299,159,
+    110,82,147,118, 151,82,187,118, 192,82,229,118, 232,82,269,118, 272,82,309,118,
+    100,40,135,77, 140,40,177,77, 181,40,217,77, 222,40,258,77, 262,40,299,77,
+    80,2,115,37, 120,2,157,37, 160,2,197,37, 201,2,237,37, 242,2,279,37,
+    443,2,479,37, 404,2,439,37, 364,2,399,37, 322,2,359,37, 282,2,319,37,
+    464,40,499,77, 424,40,459,77, 384,40,420,77, 343,40,379,77, 302,40,339,77,
+    474,82,537,118, 434,82,469,118, 394,82,430,118, 352,82,389,118, 312,82,349,118,
+    202,162,380,199, 2,162,37,199, 384,122,421,159, 342,122,379,159, 302,122,339,159,
 };
 
 int keyboard_map_table_coords_cz1000_plus[40*4]={
@@ -24006,25 +24007,25 @@ keyboard_help_double_key keyboard_map_additional_tk95[]={
 };
 
 keyboard_help_double_key keyboard_map_additional_next[]={
-    { 504,163,539,198,     KEY_PORT_VALUE_SYMBOL,  NULL, 0},  //symbol derecha
-    { 466,123,538,159,      KEY_PORT_VALUE_SHIFT,   NULL, 0}, //caps shift derecha
-    { 503,43,538,120,       &puerto_49150,1,   NULL, 0}, //trozo del enter parte de arriba
-    { 91,124,137,161,        KEY_PORT_VALUE_SHIFT,   KEY_PORT_VALUE_SYMBOL }, //extend mode
-    { 484,3,538,41,          &puerto_65278,1,        &puerto_61438,1 },  //delete
-    { 2,43,46,79,            &puerto_63486,4,        KEY_PORT_VALUE_SHIFT }, //true video
-    { 51,42,96,80,           &puerto_63486,8,        KEY_PORT_VALUE_SHIFT }, //inverse video
-    { 61,83,106,118,          &puerto_61438,2,        KEY_PORT_VALUE_SHIFT },//graph
-    { 40,2,76,38,        &puerto_63486,1,        KEY_PORT_VALUE_SHIFT },//edit
-    { 2,84,56,118,       &puerto_63486,2,        KEY_PORT_VALUE_SHIFT }, //caps lock
-    { 42,165,77,198,        &puerto_57342,2,        KEY_PORT_VALUE_SYMBOL }, // ;
-    { 81,165,118,198,       &puerto_57342,1,        KEY_PORT_VALUE_SYMBOL }, // "
-    { 386,165,422,198,      &puerto_63486,16,       KEY_PORT_VALUE_SHIFT }, // flecha izq
-    { 466,164,501,198,      &puerto_61438,4,        KEY_PORT_VALUE_SHIFT }, // flecha der
-    { 425,123,463,159,      &puerto_61438,8,        KEY_PORT_VALUE_SHIFT }, // flecha arr
-    { 425,165,462,198,      &puerto_61438,16,       KEY_PORT_VALUE_SHIFT }, // flecha abaj
-    { 121,165,159,198,      &puerto_32766,8,        KEY_PORT_VALUE_SYMBOL }, // ,
-    { 163,164,201,198,      &puerto_32766,4,        KEY_PORT_VALUE_SYMBOL }, // .
-    { 2,2,37,39,          &puerto_32766,1,        KEY_PORT_VALUE_SHIFT }, // break
+    { 503,162,537,199,     KEY_PORT_VALUE_SYMBOL,  NULL, 0},  //symbol derecha
+    { 464,122,537,159,      KEY_PORT_VALUE_SHIFT,   NULL, 0}, //caps shift derecha
+    { 502,40,537,118,       &puerto_49150,1,   NULL, 0}, //trozo del enter parte de arriba
+    { 90,122,137,159,        KEY_PORT_VALUE_SHIFT,   KEY_PORT_VALUE_SYMBOL }, //extend mode
+    { 482,2,537,37,          &puerto_65278,1,        &puerto_61438,1 },  //delete
+    { 2,40,45,77,            &puerto_63486,4,        KEY_PORT_VALUE_SHIFT }, //true video
+    { 50,40,95,77,           &puerto_63486,8,        KEY_PORT_VALUE_SHIFT }, //inverse video
+    { 60,82,105,118,          &puerto_61438,2,        KEY_PORT_VALUE_SHIFT },//graph
+    { 40,2,75,37,        &puerto_63486,1,        KEY_PORT_VALUE_SHIFT },//edit
+    { 2,82,55,118,       &puerto_63486,2,        KEY_PORT_VALUE_SHIFT }, //caps lock
+    { 40,162,76,199,        &puerto_57342,2,        KEY_PORT_VALUE_SYMBOL }, // ;
+    { 80,162,117,199,       &puerto_57342,1,        KEY_PORT_VALUE_SYMBOL }, // "
+    { 384,162,420,199,      &puerto_63486,16,       KEY_PORT_VALUE_SHIFT }, // flecha izq
+    { 464,162,499,199,      &puerto_61438,4,        KEY_PORT_VALUE_SHIFT }, // flecha der
+    { 424,122,460,159,      &puerto_61438,8,        KEY_PORT_VALUE_SHIFT }, // flecha arr
+    { 424,162,460,199,      &puerto_61438,16,       KEY_PORT_VALUE_SHIFT }, // flecha abaj
+    { 120,162,158,199,      &puerto_32766,8,        KEY_PORT_VALUE_SYMBOL }, // ,
+    { 162,162,199,199,      &puerto_32766,4,        KEY_PORT_VALUE_SYMBOL }, // .
+    { 2,2,35,37,          &puerto_32766,1,        KEY_PORT_VALUE_SHIFT }, // break
 
     { 0,0,0,0,NULL,0,NULL,0 }
 };

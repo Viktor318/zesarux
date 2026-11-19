@@ -6,6 +6,16 @@ Changes of this fork on top of ZEsarUX 13.1 (the development version of the
 upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of ZEsarUX itself are in
 [src/Changelog](src/Changelog) (in Hungarian: [src/Changelog_hu](src/Changelog_hu)).
 
+## Unreleased
+
+### Virtual keyboard
+
+- **ZX Spectrum Next keyboard drawn again**: a drawing instead of the photo,
+  after the real keyboard of the Next (the words above the keys, the two
+  word keys such as NEW/STOP, the block graphics, BLACK in its box), at the
+  same size and with the keys at the same places. Made by
+  `tools/keyboards/next.py`.
+
 ## v13.1-B1-hu.1 – 2026-11-18
 
 The second release of the fork, based on ZEsarUX 13.1 Beta 1.
