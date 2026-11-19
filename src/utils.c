@@ -4908,6 +4908,9 @@ int util_write_configfile(void)
 
     if (zxdesktop_automatic_reorder_icons.v)        ADD_STRING_CONFIG,"--zxdesktop-auto-order-icons");
 
+    if (david_desktop_align_to_grid_icons.v)        ADD_STRING_CONFIG,"--david-desktop-align-grid-icons");
+
+
     if (zxdesktop_empty_trash_on_exit.v)            ADD_STRING_CONFIG,"--zxdesktop-empty-trash-on-exit");
 
     if (zxdesktop_icon_show_app_open.v==0)          ADD_STRING_CONFIG,"--zxdesktop-no-show-indicators-open-apps");
@@ -21371,6 +21374,7 @@ int util_convert_zsf_to_scr(char *filename,char *archivo_destino)
             case ZSF_BASECONF_RAMBLOCK:
             case ZSF_SCORPION_RAMBLOCK:
             case ZSF_SCORPIONGMX_RAMBLOCK:
+            case ZSF_ATM_TURBO_RAMBLOCK:
                 // Formato de bloque compatible para 128K, ZXUno, TSConf, Chrome y Didaktik.
                 /*
                 -Block ID 6: ZSF_SPEC128_RAMBLOCK

@@ -788,6 +788,33 @@ void zxvision_reorder_configurable_icons_if_invalid(void)
     }
 }
 
+
+void zxvision_align_to_grid_configurable_icons(void)
+{
+
+
+    int i;
+
+
+    int separacion_iconos=ZXVISION_SEPARACION_ICONOS_AL_ORDENAR;
+
+    for (i=0;i<MAX_ZXDESKTOP_CONFIGURABLE_ICONS;i++) {
+        if (zxdesktop_configurable_icons_list[i].status==ZXDESKTOP_CUSTOM_ICON_EXISTS) {
+
+            //Redondeamos al multiplo mas cercano
+            int x=(zxdesktop_configurable_icons_list[i].pos_x + separacion_iconos/2) / separacion_iconos;
+            x *=separacion_iconos;
+
+            int y=(zxdesktop_configurable_icons_list[i].pos_y + separacion_iconos/2) / separacion_iconos;
+            y *=separacion_iconos;
+
+            zxvision_set_configurable_icon_position(i,x,y);
+
+        }
+    }
+}
+
+
 void zxvision_reorder_configurable_icons_if_auto(void)
 {
     //Si desactivado zx desktop
@@ -795,6 +822,10 @@ void zxvision_reorder_configurable_icons_if_auto(void)
 
     if (zxdesktop_automatic_reorder_icons.v) {
         zxvision_reorder_configurable_icons();
+    }
+
+    if (david_desktop_align_to_grid_icons.v) {
+        zxvision_align_to_grid_configurable_icons();
     }
 }
 
@@ -4482,6 +4513,10 @@ void menu_put_switch_zxdesktop_footer(void)
 
         if (zxdesktop_height>=ZXDESKTOP_MAXIMUM_HEIGHT_BY_BUTTON) {
             caracter_ampliar_alto=' ';
+        }
+
+        if (zxdesktop_height==0) {
+            caracter_reducir_alto=' ';
         }
 
         //int yorigen=screen_get_emulated_display_height_no_zoom_bottomborder_en()/8;
@@ -30757,15 +30792,8 @@ void menu_inicio(void)
                 mouse_movido=0;
                 menu_espera_no_tecla();
 
-                //Si esta por debajo del limite, ponerlo a 0
-                if (zxdesktop_height<=ZXDESKTOP_MINIMUM_HEIGHT_BY_BUTTON) {
-                    zxdesktop_height=0;
-                }
 
-                //Si esta en el limite, reducir ancho
-                else {
-                    menu_ext_desk_settings_height_enlarge_reduce(0);
-                }
+                menu_ext_desk_settings_height_enlarge_reduce(0);
 
 
                 set_menu_overlay_function(normal_overlay_texto_menu);

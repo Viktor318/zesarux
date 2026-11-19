@@ -576,11 +576,24 @@ void menu_settings_config_file(MENU_ITEM_PARAMETERS)
 
 }
 
-int menu_interface_border_cond(void)
+int menu_interface_fullscreen_cond(void)
 {
     if (ventana_fullscreen) return 0;
     return 1;
 }
+
+int menu_interface_border_cond(void)
+{
+    if (!menu_interface_fullscreen_cond()) return 0;
+
+    if (!MACHINE_IS_Z88 && !MACHINE_IS_TSCONF && !MACHINE_IS_TBBLUE && !MACHINE_IS_PCW) {
+        return 1;
+    }
+
+    else return 0;
+
+}
+
 
 int menu_interface_zoom_cond(void)
 {
@@ -2865,7 +2878,7 @@ void menu_main_window_settings(MENU_ITEM_PARAMETERS)
         //necesario para que al salir de fullscreen se puedan restaurar correctamente las ventanas
         menu_add_item_menu_se_cerrara(array_menu_window_settings);
 
-        menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_disable_on_fullscreen,menu_interface_border_cond,
+        menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_disable_on_fullscreen,menu_interface_fullscreen_cond,
             "Show DAVID Desktop in Full Screen","Mostrar DAVID Desktop en pantalla completa","Mostrar DAVID Desktop a pantalla completa");
         menu_add_item_menu_prefijo_format(array_menu_window_settings,"[%c] ",(zxdesktop_disable_on_full_screen ? ' ' : 'X' ));
         menu_add_item_menu_tooltip(array_menu_window_settings,"Disable DAVID Desktop when going to full screen");
@@ -2874,7 +2887,7 @@ void menu_main_window_settings(MENU_ITEM_PARAMETERS)
         menu_add_item_menu_es_avanzado(array_menu_window_settings);
 
         if (zxdesktop_disable_on_full_screen) {
-            menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_restore_windows_after_full_screen,menu_interface_border_cond,
+            menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_restore_windows_after_full_screen,menu_interface_fullscreen_cond,
                 " Restore windows after leaving Full Screen"," Restaurar ventanas al volver"," Restaurar finestres al tornar");
             menu_add_item_menu_prefijo_format(array_menu_window_settings,"[%c] ",(zxdesktop_restore_windows_after_full_screen ? 'X' : ' ' ));
             menu_add_item_menu_tooltip(array_menu_window_settings,"Restore windows after going from full screen");
@@ -2882,14 +2895,14 @@ void menu_main_window_settings(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_es_avanzado(array_menu_window_settings);
         }
 
-        menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,menu_general_settings_disable_border_on_full_screen,menu_interface_border_cond,
+        menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,menu_general_settings_disable_border_on_full_screen,menu_interface_fullscreen_cond,
             "Show Border in Full Screen","Mostrar Border en pantalla completa","Mostrar Border a pantalla completa");
         menu_add_item_menu_prefijo_format(array_menu_window_settings,"[%c] ",(disable_border_on_full_screen ? ' ' : 'X' ));
         menu_add_item_menu_tooltip(array_menu_window_settings,"Disable Border when going to full screen");
         menu_add_item_menu_ayuda(array_menu_window_settings,"Disable Border when going to full screen");
         menu_add_item_menu_es_avanzado(array_menu_window_settings);
 
-        menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,menu_general_settings_disable_footer_on_full_screen,menu_interface_border_cond,
+        menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,menu_general_settings_disable_footer_on_full_screen,menu_interface_fullscreen_cond,
             "Show Footer in Full Screen","Mostrar Footer en pantalla completa","Mostrar Footer a pantalla completa");
         menu_add_item_menu_prefijo_format(array_menu_window_settings,"[%c] ",(disable_footer_on_full_screen ? ' ' : 'X' ));
         menu_add_item_menu_tooltip(array_menu_window_settings,"Disable Footer when going to full screen");
@@ -2979,16 +2992,7 @@ void menu_main_window_settings(MENU_ITEM_PARAMETERS)
 
 
 
-        if (!MACHINE_IS_Z88 && !MACHINE_IS_TSCONF && !MACHINE_IS_TBBLUE && !MACHINE_IS_PCW) {
-            menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_SEPARADOR,NULL,NULL,
-                "--- Border ---","--- Border ---","--- Border ---");
-            menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_border,menu_interface_border_cond,
-                "~~Border","~~Border","~~Border");
-            menu_add_item_menu_prefijo_format(array_menu_window_settings,"[%c] ", (border_enabled.v==1 ? 'X' : ' ') );
-            menu_add_item_menu_shortcut(array_menu_window_settings,'b');
 
-            menu_add_item_menu_separator(array_menu_window_settings);
-        }
 
         menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_SEPARADOR,NULL,NULL,
             "--- Frameskip ---","--- Saltar Frames ---","--- Saltar Frames ---");
@@ -3061,7 +3065,7 @@ void menu_main_window_settings(MENU_ITEM_PARAMETERS)
             "--- Footer ---","--- Footer ---","--- Footer ---");
         menu_add_item_menu_es_avanzado(array_menu_window_settings);
 
-        menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_footer,menu_interface_border_cond,"[%c] F~~ooter",(menu_footer ? 'X' : ' ') );
+        menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_footer,menu_interface_fullscreen_cond,"[%c] F~~ooter",(menu_footer ? 'X' : ' ') );
         menu_add_item_menu_shortcut(array_menu_window_settings,'o');
         menu_add_item_menu_tooltip(array_menu_window_settings,"Show on footer some machine information");
         menu_add_item_menu_ayuda(array_menu_window_settings,"Show on footer some machine information, like tape loading");
@@ -3127,7 +3131,13 @@ void menu_main_window_settings(MENU_ITEM_PARAMETERS)
 
         menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_SEPARADOR,NULL,NULL,
             "--- Emulated Display ---","--- Pantalla Emulada ---","--- Pantalla Emulada ---");
-        menu_add_item_menu_es_avanzado(array_menu_window_settings);
+
+
+        menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_border,menu_interface_border_cond,
+            "~~Border","~~Border","~~Border");
+        menu_add_item_menu_prefijo_format(array_menu_window_settings,"[%c] ", (border_enabled.v==1 ? 'X' : ' ') );
+        menu_add_item_menu_shortcut(array_menu_window_settings,'b');
+
 
 
         //Buscamos la ventana asi en vez de usar ventana_video_output_esta_abierta() porque si se ha cerrado la ventana
@@ -3209,7 +3219,6 @@ void menu_main_window_settings(MENU_ITEM_PARAMETERS)
         menu_add_item_menu_es_avanzado(array_menu_window_settings);
 
         menu_add_item_menu_separator(array_menu_window_settings);
-        menu_add_item_menu_es_avanzado(array_menu_window_settings);
 
 
         menu_add_item_menu_en_es_ca(array_menu_window_settings,MENU_OPCION_NORMAL,menu_colour_settings,NULL,
@@ -16470,6 +16479,14 @@ void menu_ext_desk_settings_automatic_reorder_icons(MENU_ITEM_PARAMETERS)
     zxvision_reorder_configurable_icons_if_auto();
 }
 
+void menu_ext_desk_settings_align_grid_icons(MENU_ITEM_PARAMETERS)
+{
+    david_desktop_align_to_grid_icons.v ^=1;
+
+    zxvision_reorder_configurable_icons_if_auto();
+}
+
+
 void menu_zxdesktop_set_stroke_color(MENU_ITEM_PARAMETERS)
 {
     menu_ext_desktop_color_contorno_iconos++;
@@ -16733,6 +16750,11 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
                 menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Place the icons automatically in a grid");
                 menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Places the icons automatically in a grid. "
                     "Drag an icon to another place in the grid to change the order of the icons");
+                menu_add_item_menu_es_avanzado(array_menu_ext_desktop_settings);
+
+                menu_add_item_menu_en_es_ca(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_align_grid_icons,NULL,
+                    "Align icons to grid","Alinear iconos a rejilla","Alinear icones a reixeta");
+                menu_add_item_menu_prefijo_format(array_menu_ext_desktop_settings,"[%c] ",(david_desktop_align_to_grid_icons.v ? 'X' : ' ' ) );
                 menu_add_item_menu_es_avanzado(array_menu_ext_desktop_settings);
 
                 menu_add_item_menu_en_es_ca(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_show_app_open,NULL,

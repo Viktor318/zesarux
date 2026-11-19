@@ -480,6 +480,29 @@ z80_int get_im2_interrupt_vector(void)
 
     //printf("%04X\n",reg_i*256+bus_value);
 
+    //ZX Spectrum Next hardware IM 2 mode: nextreg 0xC0 bit 0
+    if (MACHINE_IS_TBBLUE && (tbblue_registers[0xC0] & 0x01)) {
+        z80_byte interrupt_source_index;
+        z80_byte interrupt_vector;
+        z80_int vector_table_addr;
+
+        //In hw IM 2 mode, the interrupt vector is constructed as:
+        //bits 7:5 = nextreg 0xC0 bits 7:5
+        //bits 4:1 = interrupt source (0=line, 1=uart0rx, 2=uart1rx, 3-10=ctc0-7, 11=ula, 12=uart0tx, 13=uart1tx)
+        //bit 0 = 0
+        //Currently, the primary interrupt source is ULA (end-of-frame), which uses vector index 11
+        interrupt_source_index = 11;  //ULA interrupt
+
+        interrupt_vector = (tbblue_registers[0xC0] & 0xE0) | (interrupt_source_index << 1);
+
+        //Vector table address:
+        //Upper 8 bits = Z80 I register
+        //Lower 8 bits = interrupt vector byte (bits 7:5 from nextreg 0xC0, bits 4:1 from interrupt source, bit 0 = 0)
+        vector_table_addr = (reg_i << 8) | interrupt_vector;
+
+        return vector_table_addr;
+    }
+
     return reg_i*256+bus_value;
 }
 
@@ -2322,7 +2345,7 @@ void set_machine_params(void)
         ula_contend_port_late=ula_contend_port_late_atmturbo;
         if (MACHINE_IS_ATM_TURBO2_FAMILY) atmturbo2_update_timing();
 
-        audiodac_selected_type=1; //Covox pentagon
+        audiodac_selected_type=AUDIODAC_TYPE_COVOX_PENTAGON;
         audiodac_enabled.v=1;
     }
 
@@ -2519,6 +2542,9 @@ void set_machine_params(void)
         z80_cpu_current_type=Z80_TYPE_CMOS;
 
         baseconf_update_timing(1);
+
+        audiodac_selected_type=AUDIODAC_TYPE_COVOX_PENTAGON;
+        audiodac_enabled.v=1;
 
     }
 

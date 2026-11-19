@@ -292,29 +292,8 @@ SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior machines/tsconf.c:1251:2
 ------
 
 
--implementar máquinas de 60 Hz (timex, master system etc)
-* pendientes 60 hz: next modo 60hz
-
-
-
--modo 60 hz en atic atac, para next.
--modo 60hz en pantalla solo se ve bien con real video. sin real video, solo se ve bien modelo tk90x
-creo que por la condicion especial en: scr_get_offset_putpixel_no_rainbow
-->de momento haremos que al conmutar a 60hz, active real video
-
-ok -visual floppy: opción para ver el floppy entero, con la carcasa, etc
-*pestaña de proteccion de escritura no sale en sitio correcto
-
-
-
-------
-
 -Scorpion
 
-
-*snapshots zsf. falta restaurar modo turbo en scorpion turbo
-
-*de DEVELOPMENT, pendiente desde keyboard_48p.bmp en adelante
 
 -scorpion gmx:
 acabar de probarlo **modos de video ampliado
@@ -331,7 +310,6 @@ acabar de probarlo **modos de video ampliado
 soft? https://zxaaa.net/view_demos.php?t=&s=scorpion&title=Title&vers=35
 
 *probar gmx en otros drivers de video (sdl, x11, etc)
-ok? *memory zones
 
 
 -----
@@ -345,8 +323,10 @@ ok - covox activado?
 - timings correctos?
 ok - icono máquinas.
 ok - keyboard help
-- soporte snapshot zsf
+ok - soporte snapshot zsf
 ok - memory zones
+ok - puertos en debug i/o ports ventana
+ok - paginas en segmentos de debug cpu
 
 -software cpm http://atmturbo.nedopc.com/load_cpm.htm
 -software (en general atm):  http://atmturbo.nedopc.com/load_trdos.htm
@@ -395,18 +375,20 @@ eso deberia aplica tambien a pixeles. se invalide esa cache cuando se activa dir
 
 -Sonido de floppy 3”, simulado, de los bytes leidos
 
-----
--habilitar covox pentagon en zx evo baseconf
+-implementar máquinas de 60 Hz (timex, master system etc)
+* pendientes 60 hz: next modo 60hz
 
-ok? -poder ver paletas de colores atm, zxevo, etc
+
+
+-modo 60 hz en atic atac, para next.
+-modo 60hz en pantalla solo se ve bien con real video. sin real video, solo se ve bien modelo tk90x
+creo que por la condicion especial en: scr_get_offset_putpixel_no_rainbow
+->de momento haremos que al conmutar a 60hz, active real video
+
+-visual floppy : pestaña de proteccion de escritura no sale en sitio correcto
+
+----
 
 
 - demos para spectrums extendidos: https://www.pouet.net/prodlist.php?platform%5B%5D=ZX+Enhanced&page=1
 
--usar nueva funcion parecida a zxvision_putpixel_no_menu_gui_zoom para keyboard help pero que no haga tampoco zoom_x ni zoom_y, no zoom de ninguna clase,
-asi teclados serian todos parecidos independientemente de si la maquina tiene gui zoom 2 o 1
-Pero luego el problema será que si queremos tener el teclado mas grande, no se podra
-Quiza habria que hacer una ventana de render de teclado que el usuario pueda redimensionar como quiera, que se amplie de manera parecida a ventana de emulated display
-
-
--boton reducir alto zx desktop sale incluso con alto=0
