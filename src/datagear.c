@@ -154,6 +154,15 @@ z80_byte datagear_ddma_command=0;
 int datagear_ddma_param_index=0;
 z80_byte datagear_ddma_xy[3];
 
+//Direcciones iniciales de los puertos A y B (WR0, WR4, o el destino X,Y de zxnDDMA). Las variables
+//datagear_port_x_start_addr son las direcciones de trabajo, que avanzan con la transferencia;
+//el comando $CF (load) vuelve a cargar en ellas estas direcciones iniciales, como hace la DMA real.
+//Sin esto, un programa que repite la transferencia enviando solo $CF $87 seguia desde donde acabo la anterior
+z80_byte datagear_initial_port_a_low=0;
+z80_byte datagear_initial_port_a_high=0;
+z80_byte datagear_initial_port_b_low=0;
+z80_byte datagear_initial_port_b_high=0;
+
 //Ultimo puerto por el que se ha escrito a la DMA (0x0B o 0x6B)
 z80_byte datagear_last_port_written=DATAGEAR_DMA_SECOND_PORT;
 
@@ -221,8 +230,8 @@ void datagear_ddma_set_layer2_xy(void)
     //320x256 y 640x256: columna a columna. La columna son 9 bits
     else direccion=base+(x_lo | ((x_hi & 1)<<8))*256+y;
 
-    datagear_port_b_start_addr_low=direccion & 0xFF;
-    datagear_port_b_start_addr_high=(direccion>>8) & 0xFF;
+    datagear_port_b_start_addr_low=datagear_initial_port_b_low=direccion & 0xFF;
+    datagear_port_b_start_addr_high=datagear_initial_port_b_high=(direccion>>8) & 0xFF;
     datagear_ddma_ext_b=(direccion>>16) & 0xFF;
 
     //La distancia entre filas del destino pasa a ser 256, hasta $EF o $C3
@@ -427,11 +436,13 @@ void datagear_write_value(z80_byte value)
 				switch (datagear_command_index) {
 					case 0:
 						datagear_port_a_start_addr_low=value;
+						datagear_initial_port_a_low=value;
 						//DBG_PRINT_DMA VERBOSE_DEBUG,"DMA: Setting port a start address low to %02XH",value);
 					break;
 
 					case 1:
 						datagear_port_a_start_addr_high=value;
+						datagear_initial_port_a_high=value;
 						//DBG_PRINT_DMA VERBOSE_DEBUG,"DMA: Setting port a start address high to %02XH",value);
 					break;
 
@@ -558,11 +569,13 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 				switch (datagear_command_index) {
 					case 0:
 						datagear_port_b_start_addr_low=value;
+						datagear_initial_port_b_low=value;
 						//DBG_PRINT_DMA VERBOSE_DEBUG,"DMA: Setting port b start address low to %02X",value);
 					break;
 
 					case 1:
 						datagear_port_b_start_addr_high=value;
+						datagear_initial_port_b_high=value;
 						//DBG_PRINT_DMA VERBOSE_DEBUG,"DMA: Setting port b start address high to %02XH",value);
 					break;
 
@@ -677,6 +690,12 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 
 			case 0xCF:
 				//DBG_PRINT_DMA VERBOSE_DEBUG,"DMA: Load starting address for both ports, clear byte counter");
+				//Las direcciones iniciales pasan a las direcciones de trabajo
+				datagear_port_a_start_addr_low=datagear_initial_port_a_low;
+				datagear_port_a_start_addr_high=datagear_initial_port_a_high;
+				datagear_port_b_start_addr_low=datagear_initial_port_b_low;
+				datagear_port_b_start_addr_high=datagear_initial_port_b_high;
+
 				//zxnDDMA: los bytes $D7 y $DB pasan a las direcciones de trabajo, y el rectangulo empieza de nuevo
 				datagear_ddma_work_ext_a=datagear_ddma_ext_a;
 				datagear_ddma_work_ext_b=datagear_ddma_ext_b;

@@ -70,7 +70,11 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
   after `docs/zxnDDMA/zxnddma.gde` of System/Next 26.11a. The Next therefore
   reports **core 3.03.03** now (3.02.03 before). The transfer, like the DMA of
   ZEsarUX so far, takes no CPU time, so programs that measure it see it faster
-  than the real one. Test: `src/tests/tbblue_zxnddma.py`.
+  than the real one. The `$CF` (load) command of the DMA now loads the start
+  addresses again, like the real machine: without it a transfer repeated with
+  only `$CF $87` went on from where the last one ended. The nine zxnDDMA
+  example programs of the distribution run. Test:
+  `src/tests/tbblue_zxnddma.py`.
 
 ### Storage
 

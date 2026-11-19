@@ -70,7 +70,10 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
   System/Next 26.11a `docs/zxnDDMA/zxnddma.gde` leírása szerint készült. A
   Next ezért mostantól **3.03.03-as core-nak** mutatja magát (eddig 3.02.03).
   Az átvitel, ahogy a ZEsarUX DMA-ja eddig is, nem fogyaszt processzoridőt,
-  ezért az időt mérő programok a valódinál gyorsabbnak látják. Teszt:
+  ezért az időt mérő programok a valódinál gyorsabbnak látják. A DMA `$CF`
+  (load) parancsa mostantól visszatölti a kezdőcímeket, ahogy a valódi gépen:
+  enélkül a csak `$CF $87`-tel ismételt átvitel ott folytatódott, ahol az
+  előző véget ért. A disztribúció kilenc zxnDDMA-példaprogramja fut. Teszt:
   `src/tests/tbblue_zxnddma.py`.
 
 ### Háttértár

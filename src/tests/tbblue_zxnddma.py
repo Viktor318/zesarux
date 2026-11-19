@@ -148,6 +148,24 @@ z.dma(0xC3, 0xD7,0x0A, 0xDB,0x0B, 0xDF,0x03, 0xE3,4,0, 0xE7,2,0, 0xEB,4,0, 0xEF,
 exp=bytearray(32); exp[0:4]=bytes([4,3,2,1]); exp[16:20]=bytes([8,7,6,5])
 check("12. téglalap lefelé számláló célcímmel (tükrözés)", z.rdm(P(0x0B5000),32), bytes(exp))
 
+# --- 13. Ismétlés csak $DF x y + $CF $87-tel: a $CF a forrás kezdőcímét is visszatölti --------------
+#  (a zxnddma_compare példa így rajzol: a forráscímet csak egyszer küldi el)
+z.reg(0x70,0x10); base=0x40000+9*0x4000
+z.wr(P(base+40*256+10),[0]*8); z.wr(P(base+60*256+10),[0]*8)
+z.dma(0xC3, 0x14, 0x10, 0xA1, 0x82, 0x1D,0,0x40, 0xD7,0x0A, 0xE3,4,0, 0xE7,1,0, 0xEB,4,0)
+z.dma(0xDF,0x13,40,0,10, 0xCF, 0x87); z.run()
+z.dma(0xDF,0x13,60,0,10, 0xCF, 0x87); z.run()
+check("13a. első rajzolás", z.rdm(P(base+40*256+10),4), bytes(sprite[:4]))
+check("13b. ismétlés $1D nélkül: ugyanaz a forrás", z.rdm(P(base+60*256+10),4), bytes(sprite[:4]))
+
+# --- 14. Ugyanez a régi (16 bites) DMA-val: $CF $87 újra ugyanazt másolja ---------------------------
+src=bytes([0x31,0x32,0x33,0x34])
+z.wr(0xC600,list(src)+[0xAA]*4,zone=-1); z.wr(0xC700,[0]*8,zone=-1)
+z.dma(0xC3, 0x7D,0x00,0xC6,4,0, 0x14, 0x10, 0xAD,0x00,0xC7, 0x82, 0xCF, 0x87); z.run()
+z.wr(0xC700,[0]*8,zone=-1)
+z.dma(0xCF, 0x87); z.run()
+check("14. sima DMA: $CF visszatölti a kezdőcímeket", z.rdm(0xC700,8,zone=-1), src+b"\0\0\0\0")
+
 z.close()
 print(f"\n{ok} rendben, {fail} hibás")
 sys.exit(1 if fail else 0)
