@@ -177,7 +177,7 @@ The second release of the fork, based on ZEsarUX 13.1 Beta 1.
 ### Upstream
 
 - Merged the upstream state of 2026-11-20: the missing characters of the
-  vector font (`[ \\ ] ^ _ { | } ~`), new screenshots, the DAVID Desktop name
+  vector font (`[ \ ] ^ _ { | } ~`), new screenshots, the DAVID Desktop name
   in the README (the fork's own README is unchanged).
 - Merged the upstream state of 2026-11-19: **Next: the hardware IM2 mode
   ULA interrupt** (vector from NR 0xC0, enable from NR 0xC4, and a new

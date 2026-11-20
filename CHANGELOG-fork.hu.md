@@ -175,7 +175,7 @@ A fork második kiadása, a ZEsarUX 13.1 Beta 1-re építve.
 ### Upstream
 
 - Beolvasztva az upstream 2026-11-20-i állapota: a vektoros betűkészlet
-  hiányzó jelei (`[ \\ ] ^ _ { | } ~`), új képernyőképek, a README-ben a
+  hiányzó jelei (`[ \ ] ^ _ { | } ~`), új képernyőképek, a README-ben a
   DAVID Desktop név (a fork saját README-je nem változott).
 - Beolvasztva az upstream 2026-11-19-i állapota: **Next: a hardveres IM2
   mód ULA-megszakítása** (a vektor az NR 0xC0-ból, az engedélyezés az
