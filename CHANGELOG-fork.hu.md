@@ -53,6 +53,19 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
 
 ### ZX Spectrum Next
 
+- **Next lapozás a valódi gép szerint** (a JNEXT, vagyis a VHDL alapján):
+  - működik a **lapozászár** (a 7FFD port 5. bitje, pl. 48K BASIC-ben):
+    zárás után a 7FFD, 1FFD és DFFD írása hatástalan, a NextReg 0x08 7. bitje
+    feloldja, olvasva a zár fordítottját adja;
+  - új a **DFFD port**: a régi, 128K-s lapozással is elérhető a 128K fölötti
+    memória (a bank 7 bites);
+  - a **NextReg 0x8E** írása már nem törli az árnyékképernyő, a zár és a
+    lemezmotor bitjét, és a zárat megkerüli; olvasva a portok mostani
+    állapotát adja (eddig a legutóbb beírt értéket);
+  - a +3 **csupa RAM** módjából kilépve a felső 16K a beállított bankra
+    áll vissza (eddig a 0-s bankra);
+  - a DFFD írása nem választ AY-regisztert. Teszt:
+    `src/tests/tbblue_paging.py` (31 eset).
 - **A kurzorbillentyűk a Next-en billentyűként működnek** (Caps Shift + 5,
   6, 7, 8), ahogy a valódi gépen, a joystick beállított típusától
   függetlenül. Eddig az emulált joystickot mozgatták, és mivel a Next

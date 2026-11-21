@@ -9247,7 +9247,9 @@ Port: 10-- ---- ---- --0-
 
 
 	//Puertos Chip AY
-	if ( ((puerto & 49154) == 49152) || ((puerto & 49154) == 32768) ) {
+	//En la Next, 0xDFFD es el puerto de paginacion y no selecciona registro del AY (zxnext.vhd: port_fffd and not port_dffd)
+	if ( ( ((puerto & 49154) == 49152) || ((puerto & 49154) == 32768) ) &&
+	     !(MACHINE_IS_TBBLUE && (puerto & 0xF003) == 0xD001) ) {
 		z80_int puerto_final=puerto;
 
 		if ((puerto & 49154) == 49152) puerto_final=65533;
@@ -9906,6 +9908,9 @@ acts as expected unless this registe is explicitly changed by the user/software.
 		//Puerto tipicamente 8189
 			// the hardware will respond to all port addresses with bit 1 reset, bit 12 set and bits 13, 14 and 15 reset).
 		if ( (puerto & 61442 )== 4096) tbblue_out_port_8189(value);
+
+		//Puerto 0xDFFD: banco de RAM extendido (zxnext.vhd: A15:12=1101, A1:0=01)
+		if ( (puerto & 0xF003) == 0xD001) tbblue_out_port_dffd(value);
 
 		if (puerto==TBBLUE_SPRITE_INDEX_PORT)	tbblue_out_port_sprite_index(value);
 		if (puerto==TBBLUE_LAYER2_PORT) tbblue_out_port_layer2_value(value);

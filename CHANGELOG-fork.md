@@ -53,6 +53,19 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
 
 ### ZX Spectrum Next
 
+- **Next paging like the real machine** (based on JNEXT, i.e. the VHDL):
+  - the **paging lock** works (bit 5 of port 7FFD, e.g. in 48K BASIC): once
+    locked, writes to 7FFD, 1FFD and DFFD do nothing, bit 7 of NextReg 0x08
+    unlocks it and reads back as the inverse of the lock;
+  - new **port DFFD**: the memory above 128K can also be reached with the
+    classic 128K paging (7-bit bank);
+  - writing **NextReg 0x8E** no longer clears the shadow screen, lock and
+    disk motor bits, and it bypasses the lock; reading it gives the current
+    state of the ports (it used to give the last value written);
+  - leaving the +3 **all-RAM** mode puts back the selected bank at the top
+    16K (it used to be bank 0);
+  - writing DFFD does not select an AY register. Test:
+    `src/tests/tbblue_paging.py` (31 cases).
 - **The cursor keys are keys on the Next** (Caps Shift + 5, 6, 7, 8), like
   on the real machine, whatever joystick type is set. They used to move the
   emulated joystick, and as the Next firmware sets Kempston by default, they

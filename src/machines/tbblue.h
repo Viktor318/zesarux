@@ -296,6 +296,10 @@ extern void tbblue_copper_handle_vsync(void);
 
 extern z80_bit tbblue_deny_turbo_rom;
 extern z80_bit tbblue_cursor_keys_joystick;
+extern z80_byte tbblue_port_dffd;
+extern int tbblue_paging_locked(void);
+extern z80_byte tbblue_get_legacy_ram_bank(void);
+extern void tbblue_out_port_dffd(z80_byte value);
 extern z80_byte tbblue_cursor_keys_state;
 extern int tbblue_cursor_keys_as_keyboard(void);
 extern int tbblue_deny_turbo_rom_max_allowed;

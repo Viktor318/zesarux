@@ -123,6 +123,43 @@ z80_bit tbblue_deny_turbo_rom={0};
 //Si tbblue_cursor_keys_joystick esta activado, mueven el joystick emulado como en las demas maquinas
 z80_bit tbblue_cursor_keys_joystick={0};
 
+//Puerto 0xDFFD de la Next (fork): bits 4:0 y bit 6 del ultimo valor escrito (zxnext.vhd: port_dffd_reg, port_dffd_reg_6).
+//Completa el banco de RAM de la paginacion clasica de 128K hasta 7 bits (2 MB)
+z80_byte tbblue_port_dffd=0;
+
+//Bloqueo de paginacion: bit 5 del puerto 0x7FFD. Se quita escribiendo un 1 en el bit 7 del registro 0x08
+int tbblue_paging_locked(void)
+{
+    return (puerto_32765 & 32) ? 1 : 0;
+}
+
+//Banco de RAM de la paginacion clasica (zxnext.vhd: bank = dffd(3) & dffd(2) & dffd(1:0) & 7ffd(2:0))
+z80_byte tbblue_get_legacy_ram_bank(void)
+{
+    z80_byte bank=puerto_32765 & 7;
+    bank |=(tbblue_port_dffd & 3)<<3;
+    bank |=((tbblue_port_dffd>>2)&1)<<5;
+    bank |=((tbblue_port_dffd>>3)&1)<<6;
+    return bank;
+}
+
+//Recalcula la paginacion tras una escritura en 0x7FFD, 0x1FFD, 0xDFFD o el registro 0x8E:
+//la ROM vuelve a los segmentos 0 y 1 y, si cambiar_ram, MMU6/MMU7 toman el banco de los puertos
+void tbblue_legacy_paging_update(int cambiar_ram)
+{
+    if (cambiar_ram) {
+        z80_byte bank=tbblue_get_legacy_ram_bank();
+        tbblue_registers[80+6]=bank*2;
+        tbblue_registers[80+7]=bank*2+1;
+    }
+
+    //En rom entra la pagina habitual de modo 128k, evitando lo que diga la mmu
+    tbblue_registers[80]=255;
+    tbblue_registers[81]=255;
+
+    tbblue_set_memory_pages();
+}
+
 //Teclas de cursor pulsadas cuando actuan como teclas. Mismos bits que puerto_especial_joystick:
 //1=derecha, 2=izquierda, 4=abajo, 8=arriba
 z80_byte tbblue_cursor_keys_state=0;
@@ -3525,6 +3562,10 @@ void tbblue_set_memory_pages(void)
                 if (tbblue_was_in_p2a_ram_in_rom.v) {
                     debug_printf(VERBOSE_DEBUG,"Going from ram in rom mode to normal mode. Setting default ram pages");
                     tbblue_set_mmu_128k_default();
+                    //MMU6/MMU7 vuelven al banco de los puertos 0x7FFD/0xDFFD (zxnext.vhd), no al banco 0
+                    z80_byte bank=tbblue_get_legacy_ram_bank();
+                    tbblue_registers[86]=bank*2;
+                    tbblue_registers[87]=bank*2+1;
                     tbblue_was_in_p2a_ram_in_rom.v=0;
                 }
 
@@ -3925,6 +3966,8 @@ void reset_debug_tbblue_sprite_visibility(void)
 
 void tbblue_reset_common(void)
 {
+
+    tbblue_port_dffd=0;
 
 
     tbblue_registers[18]=8;
@@ -4669,8 +4712,6 @@ Bit	Function
 void tbblue_paging_128k_reg_142(void)
 {
     z80_byte value=tbblue_registers[142];
-    z80_byte pagina_mmu6_anterior=tbblue_registers[86];
-    z80_byte pagina_mmu7_anterior=tbblue_registers[87];
 
     /*
     0x8E (142) => Spectrum 128K Memory Mapping
@@ -4697,75 +4738,40 @@ Writes always change the ROM / allRAM mapping
 Writes immediately change the current mmu mapping as if by port write
     */
 
-    z80_byte valor_final_puerto_32765=0;
-    z80_byte valor_final_puerto_8189=0;
-
-
-    //W bit 3 = 1 to change RAM bank, 0 = no change to mmu6 / mmu7 / RAM bank in ports 0x7ffd, 0xdffd
-    if (value & 8) {
-        valor_final_puerto_32765 |=(value>>4) & 7;
-    }
-
-    else {
-        //Conservar valor anterior de pagina ram
-        valor_final_puerto_32765=puerto_32765 & 7;
-    }
-
-
-    //bit 2 = port 0x1ffd bit 0            paging mode
-
-    //If bit 2 = paging mode = 1 (special allRAM)
-    if (value & 4) {
-        //All RAM
-        //printf ("all ram\n");
-        //sleep(2);
-
-        //bit 2 = port 0x1ffd bit 0            paging mode
-        valor_final_puerto_8189 |=1;
-
-          //bit 1 = port 0x1ffd bit 2         \  all
-          //bit 0 = port 0x1ffd bit 1         /  RAM
-        valor_final_puerto_8189 |=(value&3)<<1;
-
-
-
-    }
-
-    else {
-        //If bit 2 = paging mode = 0 (normal)
-        //bit 1 = port 0x1ffd bit 2         \  ROM
-        //bit 0 = port 0x7ffd bit 4         /  select
-        valor_final_puerto_8189 |=(value & 2 ? 4 : 0);
-        valor_final_puerto_32765 |=(value & 1 ? 16 : 0);
-    }
-
-
-    //printf ("Puerto 32765: %d puerto 8189: %d\n",valor_final_puerto_32765,valor_final_puerto_8189);
-
-
-    tbblue_out_port_32765(valor_final_puerto_32765);
-    tbblue_out_port_8189(valor_final_puerto_8189);
+    //Como en zxnext.vhd: solo cambian los bits de banco y de ROM de los puertos; el resto (pantalla sombra
+    //7FFD bit 3, bloqueo 7FFD bit 5, motor e impresora 1FFD bits 3 y 4) se conserva. Ignora el bloqueo
 
     if (value & 8) {
-        //El bit 7 equivale al bit 0 de DFFD y completa el banco RAM de cuatro bits
-        z80_byte banco_ram=((value>>4)&7) | ((value&128) ? 8 : 0);
-        tbblue_registers[86]=banco_ram*2;
-        tbblue_registers[87]=banco_ram*2+1;
-    }
-    else {
-        //Una escritura con el bit 3 a cero solo cambia la ROM y debe conservar MMU6/MMU7
-        tbblue_registers[86]=pagina_mmu6_anterior;
-        tbblue_registers[87]=pagina_mmu7_anterior;
+        //7FFD bits 2:0 = bits 6:4. DFFD bits 3:1 = 0, bit 0 = bit 7
+        puerto_32765=(puerto_32765 & (255-7)) | ((value>>4)&7);
+        tbblue_port_dffd=(tbblue_port_dffd & (255-15)) | ((value&128) ? 1 : 0);
     }
 
-    //Las llamadas a los puertos anteriores recalculan el mapa antes de restaurar MMU6/MMU7
-    tbblue_set_memory_pages();
+    //Modo normal: 7FFD bit 4 = bit 0
+    if ((value & 4)==0) {
+        puerto_32765=(puerto_32765 & (255-16)) | ((value&1) ? 16 : 0);
+    }
 
+    //1FFD bit 2 = bit 1, bit 1 = bit 0, bit 0 = bit 2
+    z80_byte antes_especial=puerto_8189 & 1;
+    puerto_8189=(puerto_8189 & (255-7)) | ((value&2) ? 4 : 0) | ((value&1) ? 2 : 0) | ((value&4) ? 1 : 0);
+    z80_byte especial=puerto_8189 & 1;
 
-        //R bit 3 = 1
-    //En lectura siempre a uno, por tanto metemos siempre ese bit a 1 en el registro
-    //lo hacemos al final del todo por si acaso nos da por leer antes de nuevo ese registro tbblue_registers[142];
-    tbblue_registers[142] |=8;
+    //Con bit 3=0 no cambian MMU6/MMU7, salvo al entrar o salir del modo especial (toda RAM)
+    tbblue_legacy_paging_update( (value & 8) || especial || antes_especial );
+}
+
+//Lectura del registro 0x8E (zxnext.vhd):
+//dffd(0) & 7ffd(2:0) & '1' & 1ffd(0) & 1ffd(2) & ((7ffd(4) and not 1ffd(0)) or (1ffd(1) and 1ffd(0)))
+z80_byte tbblue_get_register_142(void)
+{
+    z80_byte especial=puerto_8189 & 1;
+    z80_byte bit0;
+
+    if (especial) bit0=(puerto_8189>>1) & 1;
+    else bit0=(puerto_32765>>4) & 1;
+
+    return ((tbblue_port_dffd & 1)<<7) | ((puerto_32765 & 7)<<4) | 8 | (especial<<2) | (((puerto_8189>>2)&1)<<1) | bit0;
 }
 
 
@@ -5208,6 +5214,9 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
   bit 0 = Reserved, must be 0
 */
 
+            //bit 7 = 1 quita el bloqueo de paginacion de 0x7FFD (zxnext.vhd: port_7ffd_reg(5) <= '0')
+            if (value & 128) puerto_32765 &= (255-32);
+
             if ( last_register_8 != value ) tbblue_set_emulator_setting_reg_8();
 
         break;
@@ -5647,6 +5656,15 @@ Bit	Function
             return ( (tbblue_registers[7] &3) | ((tbblue_registers[7] &3)<<4) );
 
 
+        break;
+
+        case 8:
+            //bit 7 = 128K paging enable: inverso del bloqueo de 0x7FFD
+            return (tbblue_registers[8] & 127) | (tbblue_paging_locked() ? 0 : 128);
+        break;
+
+        case 142:
+            return tbblue_get_register_142();
         break;
 
         case 0xE:
@@ -8815,30 +8833,35 @@ void tbblue_out_port_8189(z80_byte value)
     // the hardware will respond to all port addresses with bit 1 reset, bit 12 set and bits 13, 14 and 15 reset).
 
     //printf ("TBBLUE changing port 8189 value=0x%02XH\n",value);
+    //Bloqueo de paginacion (bit 5 de 0x7FFD)
+    if (tbblue_paging_locked()) return;
+
     puerto_8189=value;
 
-    //En rom entra la pagina habitual de modo 128k, evitando lo que diga la mmu
-    tbblue_registers[80]=255;
-    tbblue_registers[81]=255;
+    tbblue_legacy_paging_update(1);
 
-    tbblue_set_memory_pages();
+}
 
+void tbblue_out_port_dffd(z80_byte value)
+{
+    //Puerto 0xDFFD: bits 4:0 y bit 6. Bloqueado igual que 0x7FFD
+    if (tbblue_paging_locked()) return;
+
+    tbblue_port_dffd=value & (64+31);
+
+    tbblue_legacy_paging_update(1);
 }
 
 void tbblue_out_port_32765(z80_byte value)
 {
     //printf ("TBBLUE changing port 32765 value=0x%02XH\n",value);
+    //Bloqueo de paginacion (bit 5 de 0x7FFD)
+    if (tbblue_paging_locked()) return;
+
     puerto_32765=value;
 
-    //para indicar a la MMU la  pagina en los segmentos 6 y 7
-    tbblue_registers[80+6]=(value&7)*2;
-    tbblue_registers[80+7]=(value&7)*2+1;
-
-    //En rom entra la pagina habitual de modo 128k, evitando lo que diga la mmu
-    tbblue_registers[80]=255;
-    tbblue_registers[81]=255;
-
-    tbblue_set_memory_pages();
+    //MMU6/MMU7: banco de 0x7FFD completado con 0xDFFD
+    tbblue_legacy_paging_update(1);
 
     //Sincronizar bit shadow
 
