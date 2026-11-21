@@ -1090,6 +1090,12 @@ void core_spectrum_ciclo_fetch(void)
     int t_estados_antes_opcode=t_estados;
     core_refetch=0;
 
+    //Next: la DMA tiene el bus (modo continuo): la CPU no ejecuta nada, solo pasa el tiempo (fork)
+    if (MACHINE_IS_TBBLUE && datagear_tbblue_cpu_stalled()) {
+        datagear_tbblue_stall_step();
+        goto core_spectrum_fin_opcode;
+    }
+
     //Modo normal
     if (diviface_enabled.v==0) {
 
@@ -1156,6 +1162,12 @@ void core_spectrum_ciclo_fetch(void)
     scf_ccf_undoc_flags_after_changed=(Z80_FLAGS  == scf_ccf_undoc_flags_before ? 0 : 1);
 #endif
 
+    //Next: DMA en modo burst con prescaler, antes de contar los t-estados de esta instruccion,
+    //para que el tiempo que se lleva la DMA cuente para la CTC, las interrupciones, etc (fork)
+    if (MACHINE_IS_TBBLUE && datagear_dma_emulation.v && datagear_dma_is_disabled.v==0) datagear_tbblue_handle_dma();
+
+core_spectrum_fin_opcode:
+    ;
     int delta_t_estados=t_estados-t_estados_antes_opcode;
     if (MACHINE_IS_TSCONF) tsconf_dma_advance(delta_t_estados*4/cpu_turbo_speed);
 
@@ -1180,8 +1192,8 @@ void core_spectrum_ciclo_fetch(void)
     //Soporte DMA ZXUNO
     if (MACHINE_IS_ZXUNO && zxuno_dma_disabled.v==0) zxuno_handle_dma();
 
-    //Soporte Datagear/TBBlue DMA
-    if (datagear_dma_emulation.v && datagear_dma_is_disabled.v==0) datagear_handle_dma();
+    //Soporte Datagear/TBBlue DMA (en TBBlue se gestiona arriba, fork)
+    if (datagear_dma_emulation.v && datagear_dma_is_disabled.v==0 && !MACHINE_IS_TBBLUE) datagear_handle_dma();
 
     //CTC de la Next (fork)
     if (MACHINE_IS_TBBLUE) tbblue_ctc_tick(delta_t_estados);
@@ -1380,7 +1392,9 @@ void cpu_core_loop_spectrum(void)
     }
 
     //Interrupcion de cpu. gestion im0/1/2. Esto se hace al final de cada frame en spectrum o al cambio de bit6 de R en zx80/81
-    if (interrupcion_maskable_generada.v || interrupcion_non_maskable_generada.v) {
+    //Next: con la DMA en el bus la CPU no atiende interrupciones; quedan pendientes (fork)
+    if ((interrupcion_maskable_generada.v || interrupcion_non_maskable_generada.v) &&
+        !(MACHINE_IS_TBBLUE && datagear_tbblue_cpu_stalled())) {
         TIMESENSOR_ENTRY_PRE(TIMESENSOR_ID_core_spectrum_handle_interrupts);
         //printf ("Generada interrupcion cpu %d pc=%XH\n",contador_segundo,reg_pc);
         core_spectrum_handle_interrupts();

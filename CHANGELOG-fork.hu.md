@@ -53,6 +53,15 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
 
 ### ZX Spectrum Next
 
+- **A Next DMA-ja a valódi gép idejével fut** (egy KS3-on mért értékek
+  alapján, a 3.02 és a 3.03 core-ral): bájtonként az olvasás és az írás
+  ciklushossza (2/3/4 órajel), előosztóval (prescaler) legalább
+  előosztó × 32 db 28 MHz-es órajel a processzor sebességétől függetlenül;
+  folyamatos módban a processzor áll, és nem fogad megszakítást, löketes
+  (burst) módban előosztóval közben fut. Eddig minden azonnal lement, így a
+  DMA-val lejátszott minták (pl. hangok a DAC-on) egy kattanássá rövidültek.
+  A blitterre (zxnDDMA) is érvényes. A DMA portja visszaolvasható (állapot,
+  számláló, címek). Tesztprogram a KS3-hoz: `src/tests/next/dmatest`.
 - **Windowson a 28 MHz-es Next már nem néma**: a jó minőségű hang
   órajelének számítása Windowson túlcsordult (ott a `long` 32 bites), ha a
   Next 28 MHz-en futott. Ilyenkor egyetlen hangminta sem készült, és minden

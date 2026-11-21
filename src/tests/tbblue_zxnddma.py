@@ -35,8 +35,9 @@ class Z:
     def reg(s,r,v): s.c(f"tbblue-set-register {r} {v}")
     def dma(s,*vals,port=0x6B):
         for v in vals: s.c(f"write-port {port} {v}")
-    def run(s,n=4):
-        # néhány utasítás: a mag minden utasítás után meghívja a DMA-t
+    def run(s,n=64):
+        # néhány lépés: a mag minden utasítás után meghívja a DMA-t. A DMA a valódi gép szerint
+        # bájtonként 4-8 t-állapotig tart, ennyi idő alatt a processzor áll (egy lépés 8-16 t-állapot)
         s.c(f"cpu-step")
         for i in range(n-1): s.c("cpu-step")
     def close(s):

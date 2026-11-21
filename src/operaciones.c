@@ -7603,8 +7603,8 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 	if (datagear_dma_emulation.v && (puerto_l==DATAGEAR_DMA_FIRST_PORT || puerto_l==DATAGEAR_DMA_SECOND_PORT) ) {
 			//printf ("Reading Datagear DMA Port %04XH\n",puerto);
-			//TODO
-			return 0;
+			//En TBBlue: estado, contador y direcciones (fork). En otras maquinas, 0 como antes
+			return datagear_read_port();
 	}
 
     //Puertos ZXMMC. Interfiere con Fuller Audio Box

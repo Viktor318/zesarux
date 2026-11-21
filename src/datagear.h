@@ -69,6 +69,17 @@ extern z80_byte datagear_dma_tbblue_prescaler;
 
 extern void datagear_handle_dma(void);
 
+//Fork: tiempos de la DMA en TBBlue y lectura del puerto
+extern int datagear_tbblue_cpu_stalled(void);
+extern void datagear_tbblue_stall_step(void);
+extern void datagear_tbblue_handle_dma(void);
+extern z80_byte datagear_read_port(void);
+extern int datagear_tbblue_wait;
+extern int datagear_tbblue_status_atleastone;
+extern int datagear_tbblue_status_endofblock;
+extern z80_int datagear_tbblue_byte_counter;
+extern z80_byte datagear_tbblue_read_mask;
+
 extern z80_bit datagear_is_dma_transfering;
 
 //Para poder hacer debug_printf con la clase de debug adecuada

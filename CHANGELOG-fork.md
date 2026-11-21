@@ -53,6 +53,15 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
 
 ### ZX Spectrum Next
 
+- **The Next DMA runs with real hardware timing** (based on measurements on
+  a KS3, with the 3.02 and 3.03 cores): per byte the read plus write cycle
+  length (2/3/4 clocks), with a prescaler at least prescaler × 32 28 MHz
+  clocks regardless of CPU speed; in continuous mode the CPU is stopped and
+  takes no interrupts, in burst mode with a prescaler it keeps running.
+  Until now everything happened instantly, so samples played via DMA (e.g.
+  sounds on the DAC) shrank to a click. This applies to the blitter (zxnDDMA)
+  too. The DMA port can be read back (status, counter, addresses). Test
+  program for the KS3: `src/tests/next/dmatest`.
 - **The 28 MHz Next is no longer silent on Windows**: the high quality
   sound clock rate overflowed on Windows (where `long` is 32 bits) when the
   Next ran at 28 MHz, so no samples were made and everything went silent,

@@ -89,6 +89,15 @@ z80_bit datagear_is_dma_transfering={0};
 //Valor de la DMA de TBBLUE de prescaler
 z80_byte datagear_dma_tbblue_prescaler;
 
+//Fork: estado de la DMA para la lectura del puerto (TBBlue)
+int datagear_tbblue_status_atleastone=0;
+int datagear_tbblue_status_endofblock=0;
+z80_int datagear_tbblue_byte_counter=0;
+extern z80_byte datagear_tbblue_read_mask;
+static void datagear_tbblue_read_advance(int despues);
+static void datagear_tbblue_enable(void);
+void datagear_tbblue_read_index_status(void);
+
 
 //
 // Fin variables que hay que guardar en un snapshot
@@ -125,6 +134,8 @@ int datagear_dma_last_testados=0;
 
 //Valor de datagear_last_command mientras se reciben los parametros de un comando zxnDDMA
 #define DATAGEAR_LAST_COMMAND_DDMA 131
+//Fork: parametro de 0xBB (mascara de lectura)
+#define DATAGEAR_LAST_COMMAND_READ_MASK 132
 
 z80_byte datagear_ddma_flags=0;
 
@@ -599,6 +610,13 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 				if (!datagear_ddma_write_param(value)) datagear_mask_commands=0;
 			break;
 
+			case DATAGEAR_LAST_COMMAND_READ_MASK:
+				//Mascara de lectura (despues de 0xBB, fork)
+				datagear_tbblue_read_mask=value;
+				datagear_tbblue_read_advance(-1);
+				datagear_mask_commands=0;
+			break;
+
 			case 130:
 				DBG_PRINT_DMA VERBOSE_DEBUG,"DMA: Reading ZXN Prescaler = %02XH",value);
 				datagear_dma_tbblue_prescaler=value;
@@ -685,11 +703,53 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
 		switch (value) {
 			case 0xC3:
 				//Reset. Aqui solo lo relativo a zxnDDMA; lo demas sigue como estaba
-				if (MACHINE_IS_TBBLUE) datagear_ddma_reset();
+				if (MACHINE_IS_TBBLUE) {
+					datagear_ddma_reset();
+					//Como dma.vhd: ciclos de 3, sin prescaler, estado a cero (fork)
+					datagear_port_a_variable_timing_byte=1;
+					datagear_port_b_variable_timing_byte=1;
+					datagear_dma_tbblue_prescaler=0;
+					datagear_tbblue_status_atleastone=0;
+					datagear_tbblue_status_endofblock=0;
+				}
+			break;
+
+			case 0xC7:
+				//Reset de la temporizacion del puerto A (fork)
+				if (MACHINE_IS_TBBLUE) datagear_port_a_variable_timing_byte=1;
+			break;
+
+			case 0xCB:
+				//Reset de la temporizacion del puerto B (fork)
+				if (MACHINE_IS_TBBLUE) datagear_port_b_variable_timing_byte=1;
+			break;
+
+			case 0xBF:
+				//Leer el byte de estado (fork)
+				datagear_tbblue_read_index_status();
+			break;
+
+			case 0xA7:
+				//Iniciar la secuencia de lectura (fork)
+				datagear_tbblue_read_advance(-1);
+			break;
+
+			case 0x8B:
+				//Reiniciar el byte de estado (fork)
+				datagear_tbblue_status_atleastone=0;
+				datagear_tbblue_status_endofblock=0;
+			break;
+
+			case 0xBB:
+				//Sigue la mascara de lectura (fork)
+				datagear_last_command=DATAGEAR_LAST_COMMAND_READ_MASK;
+				datagear_mask_commands=1;
 			break;
 
 			case 0xCF:
 				//DBG_PRINT_DMA VERBOSE_DEBUG,"DMA: Load starting address for both ports, clear byte counter");
+				datagear_tbblue_status_endofblock=0;
+				datagear_tbblue_byte_counter=0;
 				//Las direcciones iniciales pasan a las direcciones de trabajo
 				datagear_port_a_start_addr_low=datagear_initial_port_a_low;
 				datagear_port_a_start_addr_high=datagear_initial_port_a_high;
@@ -716,6 +776,7 @@ D7  D6  D5  D4  D3  D2  D1  D0  ZXN PRESCALAR (FIXED TIME TRANSFER)
                 datagear_is_dma_transfering.v=1;
                 //datagear_do_transfer();
                 datagear_dma_last_testados=t_estados;
+                if (MACHINE_IS_TBBLUE) datagear_tbblue_enable();
 
 			break;
 
@@ -829,7 +890,8 @@ void datagear_write_operation(z80_int address,z80_byte value,z80_byte dma_mem_ty
         //if (address==0x253B) sleep(1);
 		out_port_spectrum_no_time(address,value);
 		//printf ("Port %04XH value %02XH\n",address,value);
-		t_estados +=1; //Por ejemplo ;)
+		//En TBBlue el tiempo de cada byte lo cuenta datagear_tbblue_byte_cycles (fork)
+		if (!MACHINE_IS_TBBLUE) t_estados +=1; //Por ejemplo ;)
 	}
 
     else {
@@ -875,9 +937,13 @@ int datagear_condicion_transferencia(z80_int transfer_length,int dma_continuous,
 
 }
 
-void datagear_handle_dma(void)
+//Transfiere bytes. max_bytes<0: como siempre (continuo todo de golpe, burst segun t-estados);
+//max_bytes>=0: como mucho ese numero de bytes, sin mirar el tiempo (lo controla el que llama, fork).
+//Retorna los bytes transferidos
+static int datagear_handle_dma_bytes(int max_bytes)
 {
-        if (datagear_is_dma_transfering.v==0) return;
+        if (datagear_is_dma_transfering.v==0) return 0;
+        int bytes_hechos=0;
 
 
       				z80_int transfer_length=value_8_to_16(datagear_block_length_high,datagear_block_length_low);
@@ -1020,7 +1086,9 @@ Excepción:
 		//if (dma_continuous) printf ("Transferencia modo continuous\n");
 		//else printf ("Transferencia modo burst\n");
 
-		while ( datagear_condicion_transferencia(transfer_length,dma_continuous,resta,dmapre) ) {
+		while ( max_bytes<0 ? datagear_condicion_transferencia(transfer_length,dma_continuous,resta,dmapre) :
+                (transfer_length>0 && bytes_hechos<max_bytes) ) {
+            bytes_hechos++;
 
 			//for (i=0;i<cpu_turbo_speed;i++) {
 				//printf ("dma op ");
@@ -1146,4 +1214,206 @@ Excepción:
 
 	//printf ("length: %d\n",transfer_length);
 
+    //Estado para la lectura de la DMA (fork)
+    if (bytes_hechos) {
+        datagear_tbblue_status_atleastone=1;
+        datagear_tbblue_byte_counter +=bytes_hechos;
+    }
+    if (transfer_length==0) datagear_tbblue_status_endofblock=1;
+
+    return bytes_hechos;
+}
+
+void datagear_handle_dma(void)
+{
+    if (datagear_is_dma_transfering.v==0) return;
+
+    //En TBBlue con tiempo real de la DMA: lo gestiona datagear_tbblue_handle_dma (fork)
+    if (MACHINE_IS_TBBLUE) return;
+
+    datagear_handle_dma_bytes(-1);
+}
+
+
+/* Fork: tiempos de la DMA de la ZX Spectrum Next (zxnDMA), medidos en una KS3 con los cores
+   3.02.04 y 3.03.03 (src/tests/next/dmatest) y en el sentido de dma.vhd:
+   - cada byte tarda la longitud de ciclo del puerto de origen (lectura) mas la del de destino
+     (escritura), 2, 3 o 4 ciclos de CPU. A 28 MHz una lectura de memoria de 2 ciclos tarda 3
+     (espera de la SRAM)
+   - con prescaler, entre el inicio de un byte y el del siguiente pasan al menos prescaler*32 ciclos
+     de 28 MHz, sea cual sea la velocidad de la CPU (875 kHz / prescaler bytes por segundo)
+   - modo continuo (o burst sin prescaler): la CPU esta parada hasta el final del bloque. Con
+     prescaler, tras cada espera se pierden 3 ciclos mas
+   - modo burst con prescaler: durante la espera la CPU sigue. Al acabar la espera, la DMA toma el
+     bus al final de la instruccion en curso, y tarda 3 ciclos mas el byte
+*/
+
+int datagear_tbblue_wait=0;               //t-estados que faltan para el siguiente byte
+static int datagear_tbblue_last_testados=0;
+
+static int datagear_tbblue_cycle_length(z80_byte timing)
+{
+    switch (timing & 3) {
+        case 1: return 3;
+        case 2: return 2;
+        default: return 4;
+    }
+}
+
+//t-estados de CPU de un byte (lectura + escritura)
+static int datagear_tbblue_byte_cycles(void)
+{
+    z80_byte timing_origen,timing_destino;
+    int origen_es_memoria;
+
+    if (datagear_wr0 & 4) {
+        //A -> B
+        timing_origen=datagear_port_a_variable_timing_byte;
+        timing_destino=datagear_port_b_variable_timing_byte;
+        origen_es_memoria=((datagear_wr1 & 8)==0);
+    }
+    else {
+        timing_origen=datagear_port_b_variable_timing_byte;
+        timing_destino=datagear_port_a_variable_timing_byte;
+        origen_es_memoria=((datagear_wr2 & 8)==0);
+    }
+
+    int lectura=datagear_tbblue_cycle_length(timing_origen);
+    if (cpu_turbo_speed>=8 && origen_es_memoria && lectura<3) lectura=3;
+
+    return lectura+datagear_tbblue_cycle_length(timing_destino);
+}
+
+//t-estados de CPU de la ventana del prescaler (0 si no hay prescaler)
+static int datagear_tbblue_window(void)
+{
+    return datagear_dma_tbblue_prescaler*4*cpu_turbo_speed;
+}
+
+static int datagear_tbblue_burst_mode(void)
+{
+    return (datagear_wr4 & (64+32))==64;
+}
+
+//Si la DMA tiene el bus y la CPU no puede ejecutar instrucciones
+int datagear_tbblue_cpu_stalled(void)
+{
+    if (!MACHINE_IS_TBBLUE) return 0;
+    if (datagear_dma_emulation.v==0 || datagear_dma_is_disabled.v) return 0;
+    if (datagear_is_dma_transfering.v==0) return 0;
+
+    //En burst con prescaler la CPU sigue durante la espera
+    if (datagear_tbblue_burst_mode() && datagear_dma_tbblue_prescaler) return 0;
+
+    return 1;
+}
+
+//Un paso con la CPU parada (en vez de una instruccion): avanza t-estados y transfiere.
+//Pasos cortos, para que la ULA, el copper, las interrupciones raster, etc. sigan a su ritmo
+void datagear_tbblue_stall_step(void)
+{
+    if (datagear_tbblue_wait>0) {
+        int avance=(datagear_tbblue_wait<8 ? datagear_tbblue_wait : 8);
+        t_estados +=avance;
+        datagear_tbblue_wait -=avance;
+        datagear_tbblue_last_testados=t_estados;
+        return;
+    }
+
+    int ventana=datagear_tbblue_window();
+    int ciclos=datagear_tbblue_byte_cycles();
+    int gastado=0;
+
+    do {
+        if (datagear_handle_dma_bytes(1)==0) break;
+        gastado +=ciclos;
+        if (ventana) {
+            datagear_tbblue_wait=(ventana>ciclos ? ventana-ciclos : 0)+3;
+            break;
+        }
+    } while (gastado<16 && datagear_is_dma_transfering.v);
+
+    if (!gastado) gastado=4;
+    t_estados +=gastado;
+    datagear_tbblue_last_testados=t_estados;
+}
+
+//Despues de cada instruccion: modo burst con prescaler (la CPU sigue entre bytes)
+void datagear_tbblue_handle_dma(void)
+{
+    if (datagear_is_dma_transfering.v==0) return;
+    if (datagear_tbblue_cpu_stalled()) return;
+
+    int pasado=datagear_return_resta_testados(datagear_tbblue_last_testados,t_estados);
+    datagear_tbblue_last_testados=t_estados;
+    datagear_tbblue_wait -=pasado;
+    if (datagear_tbblue_wait>0) return;
+
+    //Se acabo la espera: la DMA toma el bus al final de esta instruccion. El Z80 real cede el bus al
+    //final de un ciclo M (como mucho unos 4 t-estados), no de la instruccion: si la espera acabo antes,
+    //la ventana del byte siguiente se adelanta lo que la instruccion se paso de esos 4 t-estados
+    int tarde=-datagear_tbblue_wait;
+    int adelanto=(tarde>4 ? tarde-4 : 0);
+    int ciclos=datagear_tbblue_byte_cycles();
+    if (datagear_handle_dma_bytes(1)) {
+        t_estados +=3+ciclos;
+        int ventana=datagear_tbblue_window();
+        datagear_tbblue_wait=(ventana>ciclos ? ventana-ciclos : 0)-adelanto;
+    }
+    datagear_tbblue_last_testados=t_estados;
+}
+
+//Al habilitar la DMA (0x87)
+static void datagear_tbblue_enable(void)
+{
+    datagear_tbblue_wait=0;
+    datagear_tbblue_last_testados=t_estados;
+}
+
+/* Lectura del puerto de la DMA (fork), como dma.vhd / JNEXT: segun la mascara de lectura,
+   estado, contador (bytes transferidos) y direcciones actuales de los puertos A y B.
+   Estado: "00" & endofblock_n & "1101" & atleastone */
+z80_byte datagear_tbblue_read_mask=0x7F;
+static int datagear_tbblue_read_index=0;
+
+void datagear_tbblue_read_index_status(void)
+{
+    datagear_tbblue_read_index=0;
+}
+
+static void datagear_tbblue_read_advance(int despues)
+{
+    int i;
+    for (i=1;i<=7;i++) {
+        int bit=(despues+i)%7;
+        if (datagear_tbblue_read_mask & (1<<bit)) {
+            datagear_tbblue_read_index=bit;
+            return;
+        }
+    }
+    datagear_tbblue_read_index=0;
+}
+
+z80_byte datagear_read_port(void)
+{
+    if (!MACHINE_IS_TBBLUE) return 0;
+
+    z80_byte valor=0;
+    z80_int puerto_a=value_8_to_16(datagear_port_a_start_addr_high,datagear_port_a_start_addr_low);
+    z80_int puerto_b=value_8_to_16(datagear_port_b_start_addr_high,datagear_port_b_start_addr_low);
+
+    switch (datagear_tbblue_read_index) {
+        case 0:
+            valor=(datagear_tbblue_status_endofblock ? 0 : 0x20) | 0x1A | (datagear_tbblue_status_atleastone ? 1 : 0);
+        break;
+        case 1: valor=value_16_to_8l(datagear_tbblue_byte_counter); break;
+        case 2: valor=value_16_to_8h(datagear_tbblue_byte_counter); break;
+        case 3: valor=value_16_to_8l(puerto_a); break;
+        case 4: valor=value_16_to_8h(puerto_a); break;
+        case 5: valor=value_16_to_8l(puerto_b); break;
+        case 6: valor=value_16_to_8h(puerto_b); break;
+    }
+
+    datagear_tbblue_read_advance(datagear_tbblue_read_index);
+    return valor;
 }
