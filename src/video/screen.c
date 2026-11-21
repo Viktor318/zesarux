@@ -15651,7 +15651,10 @@ TBBLUE:
 
 */
 
-                    if (iff1.v==1 && (get_zxuno_tbblue_rasterctrl() & 2) ) {
+                    //Next en modo IM2 hardware: la peticion se guarda aunque la CPU tenga las interrupciones deshabilitadas (fork)
+                    int tbblue_hw_im2=(MACHINE_IS_TBBLUE && tbblue_im2_hw_mode() && im_mode==2);
+
+                    if ((iff1.v==1 || tbblue_hw_im2) && (get_zxuno_tbblue_rasterctrl() & 2) ) {
                         //interrupciones raster habilitadas
                         //printf ("interrupciones raster habilitadas en %d\n",zxuno_ports[0x0c] + (256 * (zxuno_ports[0x0d]&1) ));
 
@@ -15695,7 +15698,8 @@ TBBLUE:
                                 if (disparada_raster) {
                                     //Disparar interrupcion
                                     zxuno_tbblue_disparada_raster.v=1;
-                                    interrupcion_maskable_generada.v=1;
+                                    if (tbblue_hw_im2) tbblue_im2_raise(0,0); //0 = interrupcion de linea
+                                    else interrupcion_maskable_generada.v=1;
 
                                     //printf ("Generando interrupcion raster en scanline %d, raster: %d , estados en linea: %d, t_estados %d\n",
                                     //	t_scanline,linea_raster+1,estados_en_linea,t_estados);

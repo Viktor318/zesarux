@@ -436,6 +436,9 @@ void core_spectrum_fin_frame_pantalla(void)
 
     //Final de instrucciones ejecutadas en un frame de pantalla
 
+    //Next: la ULA pide interrupcion aunque la CPU tenga las interrupciones deshabilitadas (estado y modo IM2 hardware)
+    if (MACHINE_IS_TBBLUE) tbblue_im2_ula_frame();
+
     //En estado wait no se lanzan interrupciones
     if (iff1.v==1 && z80_wait_signal.v==0) {
         interrupcion_maskable_generada.v=1;
@@ -466,8 +469,8 @@ void core_spectrum_fin_frame_pantalla(void)
                     interrupcion_maskable_generada.v=0;
                 }
 
-                //Do not generate a new ULA interrupt while its ISR has not finished with RETI
-                if (tbblue_im2_ula_in_service) {
+                //Con la CPU en IM 2 la peticion pasa por el controlador IM2 (fork): no hay pulso directo
+                if (im_mode==2) {
                     interrupcion_maskable_generada.v=0;
                 }
             }
@@ -988,8 +991,7 @@ void core_spectrum_handle_interrupts(void)
 
             else temp_i=get_im2_interrupt_vector();
 
-            //Hw im2 mode: ULA interrupt is in service until its ISR exits with RETI
-            if (MACHINE_IS_TBBLUE && (tbblue_registers[0xC0] & 0x01)) tbblue_im2_ula_in_service=1;
+            //Hw im2 mode: el dispositivo pasa a S_ISR en tbblue_im2_ack_vector (get_im2_interrupt_vector)
 
             dir_l=peek_byte(temp_i++);
             dir_h=peek_byte(temp_i);
@@ -1181,6 +1183,9 @@ void core_spectrum_ciclo_fetch(void)
     //Soporte Datagear/TBBlue DMA
     if (datagear_dma_emulation.v && datagear_dma_is_disabled.v==0) datagear_handle_dma();
 
+    //CTC de la Next (fork)
+    if (MACHINE_IS_TBBLUE) tbblue_ctc_tick(delta_t_estados);
+
 //printf("Executing opcode on t_estados: %d cpu_turbo_speed: %d screen_testados_total: %d\n",t_estados,cpu_turbo_speed,screen_testados_total);
 
     //Soporte TBBlue copper y otras...
@@ -1365,6 +1370,14 @@ void cpu_core_loop_spectrum(void)
 
     }
 
+
+    //Next, modo IM2 hardware: la linea INT queda activa mientras haya un dispositivo en S_REQ con prioridad (fork)
+    if (MACHINE_IS_TBBLUE && tbblue_im2_hw_mode() && im_mode==2) {
+        if (iff1.v==1 && z80_wait_signal.v==0 && tbblue_im2_line_asserted()) {
+            interrupcion_maskable_generada.v=1;
+            testados_desde_inicio_pulso_interrupcion=0;
+        }
+    }
 
     //Interrupcion de cpu. gestion im0/1/2. Esto se hace al final de cada frame en spectrum o al cambio de bit6 de R en zx80/81
     if (interrupcion_maskable_generada.v || interrupcion_non_maskable_generada.v) {

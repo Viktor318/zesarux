@@ -53,6 +53,23 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
 
 ### ZX Spectrum Next
 
+- **CTC és teljes hardveres IM2 megszakításvezérlő a Next-en** (a VHDL, ill.
+  a JNEXT alapján):
+  - új a **CTC** (Z80 CTC-szerű, 4 csatornás időzítő/számláló a
+    0x183B–0x1B3B portokon): időzítő és számláló mód, 16-os és 256-os
+    előosztó, a csatornák láncolása (egy csatorna nullára futása a
+    következőt lépteti), megszakítás engedélyezése a NextReg 0xC5-tel;
+  - **hardveres IM2 mód** (NextReg 0xC0 0. bit): minden forrás (vonal-
+    megszakítás, CTC csatornák, ULA) a saját vektorán jelentkezik, a VHDL
+    szerinti prioritással; amíg egy kezelő fut (RETI-ig), az alacsonyabb
+    prioritású források várnak;
+  - működnek a NextReg **0xC8/0xC9** állapotbitjei (1 beírása törli), a
+    **0x20** (olvasva az állapot, írva feltétel nélküli megszakítás), és a
+    0xC0 olvasva a CPU megszakítási módját is mutatja;
+  - pulzus módban (alapállapot) a CTC is a szokásos megszakítást adja.
+  Ettől szól például az **NXModPlayer** (eddig néma volt és megállt). Teszt:
+  `src/tests/tbblue_ctc_im2.py` (18 eset). Még hiányzik: az UART-
+  megszakítások és a CTC/IM2 állapotának mentése ZSF-be.
 - **Next lapozás a valódi gép szerint** (a JNEXT, vagyis a VHDL alapján):
   - működik a **lapozászár** (a 7FFD port 5. bitje, pl. 48K BASIC-ben):
     zárás után a 7FFD, 1FFD és DFFD írása hatástalan, a NextReg 0x08 7. bitje

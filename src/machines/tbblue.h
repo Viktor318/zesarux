@@ -329,6 +329,25 @@ extern void tbblue_handle_nmi(void);
 
 extern int tbblue_im2_ula_in_service;
 extern void tbblue_reti(void);
+extern int tbblue_im2_hw_mode(void);
+extern void tbblue_im2_reset(void);
+extern void tbblue_im2_mode_changed(void);
+extern void tbblue_im2_raise(int dispositivo,int sin_condicion);
+extern int tbblue_im2_line_asserted(void);
+extern z80_byte tbblue_im2_ack_vector(void);
+extern void tbblue_im2_ula_frame(void);
+extern z80_byte tbblue_im2_get_status_c8(void);
+extern z80_byte tbblue_im2_get_status_c9(void);
+extern z80_byte tbblue_im2_get_status_20(void);
+extern void tbblue_im2_clear_status_c8(z80_byte value);
+extern void tbblue_im2_clear_status_c9(z80_byte value);
+extern void tbblue_im2_write_reg_20(z80_byte value);
+extern void tbblue_ctc_reset(void);
+extern void tbblue_ctc_write(int canal,z80_byte value);
+extern z80_byte tbblue_ctc_read(int canal);
+extern void tbblue_ctc_set_int_enable(z80_byte value);
+extern z80_byte tbblue_ctc_get_int_enable(void);
+extern void tbblue_ctc_tick(int t_estados_cpu);
 
 //extern int tbblue_prueba_dentro_nmi;
 

@@ -4031,7 +4031,8 @@ Bit	Function
 
     tbblue_registers[0x22]=0;
     tbblue_registers[0xC4]=0x81;
-    tbblue_im2_ula_in_service=0;
+    tbblue_im2_reset();
+    tbblue_ctc_reset();
 
     tbblue_clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][0]=0;
     tbblue_clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][1]=255;
@@ -5533,6 +5534,27 @@ Bit	Function
             tbblue_paging_128k_reg_142();
         break;
 
+        //CTC e IM2 hardware (fork)
+        case 0x20:
+            tbblue_im2_write_reg_20(value);
+        break;
+
+        case 0xC0:
+            tbblue_im2_mode_changed();
+        break;
+
+        case 0xC5:
+            tbblue_ctc_set_int_enable(value);
+        break;
+
+        case 0xC8:
+            tbblue_im2_clear_status_c8(value);
+        break;
+
+        case 0xC9:
+            tbblue_im2_clear_status_c9(value);
+        break;
+
 
         default:
             /*if
@@ -5665,6 +5687,28 @@ Bit	Function
 
         case 142:
             return tbblue_get_register_142();
+        break;
+
+        //CTC e IM2 hardware (fork)
+        case 0x20:
+            return tbblue_im2_get_status_20();
+        break;
+
+        case 0xC0:
+            //bits 2:1 = modo de interrupcion actual de la CPU (solo lectura)
+            return (tbblue_registers[0xC0] & (255-6)) | ((im_mode & 3)<<1);
+        break;
+
+        case 0xC5:
+            return tbblue_ctc_get_int_enable();
+        break;
+
+        case 0xC8:
+            return tbblue_im2_get_status_c8();
+        break;
+
+        case 0xC9:
+            return tbblue_im2_get_status_c9();
         break;
 
         case 0xE:
@@ -8914,14 +8958,7 @@ z80_byte tbblue_uartbridge_readstatus(void)
 
 int tbblue_pendiente_retn_stackless=0;
 
-//Hw im2 mode: ULA interrupt has been accepted and its ISR has not yet exited with RETI
-int tbblue_im2_ula_in_service=0;
-
-void tbblue_reti(void)
-{
-    //Only RETI ends a hw im2 interrupt service routine. RET does not, so the ULA interrupt stays blocked
-    tbblue_im2_ula_in_service=0;
-}
+//Hw im2 mode: tbblue_im2_ula_in_service y tbblue_reti estan al final del archivo (CTC e IM2, fork)
 
 //prueba
 //int tbblue_prueba_dentro_nmi=0;
@@ -9096,4 +9133,403 @@ void tbblue_dac_mix(void)
     v /=2;
     audio_valor_enviar_sonido_derecho=v;
 
+}
+
+
+/*
+CTC e interrupciones IM2 por hardware de la Next (fork).
+Segun zxnext.vhd, device/ctc.vhd, ctc_chan.vhd, im2_*.vhd, tomando como modelo JNEXT
+(src/peripheral/ctc.cpp, src/cpu/im2.cpp). Precision a nivel de instruccion.
+
+CTC: 4 canales, puertos 0x183B, 0x193B, 0x1A3B, 0x1B3B. Reloj de 28 MHz con preescalador 16 o 256.
+El ZC/TO de un canal dispara el canal siguiente (anillo 0->1->2->3->0).
+
+Fuentes de interrupcion, por prioridad (indice = bits 4:1 del vector):
+0 linea, 1 uart0 rx, 2 uart1 rx, 3-10 ctc 0-7, 11 ula, 12 uart0 tx, 13 uart1 tx
+Modo pulso (registro 0xC0 bit 0 = 0): cualquier fuente habilitada genera el pulso /INT normal.
+Modo IM2 hardware (bit 0 = 1): cada fuente tiene estado S_0 / S_REQ / S_ISR; cadena de prioridad;
+vector = 0xC0(7:5) & indice & '0'; RETI devuelve a S_0 el dispositivo en servicio.
+La ULA es la excepcion: en modo IM2 hardware, si la CPU no esta en IM 2, genera el pulso normal.
+*/
+
+#define TBBLUE_IM2_LINE 0
+#define TBBLUE_IM2_CTC0 3
+#define TBBLUE_IM2_ULA 11
+#define TBBLUE_IM2_DEVICES 14
+
+#define TBBLUE_CTC_S_RESET 0
+#define TBBLUE_CTC_S_RESET_TC 1
+#define TBBLUE_CTC_S_TRIGGER 2
+#define TBBLUE_CTC_S_RUN 3
+#define TBBLUE_CTC_S_RUN_TC 4
+#define TBBLUE_CTC_S_TRIGGER_AUTO 5
+
+struct s_tbblue_ctc_channel {
+    int int_en;      //bit 7 de la palabra de control (tambien registro 0xC5)
+    int counter_mode; //bit 6: 0=temporizador, 1=contador
+    int prescale256; //bit 5: 0=16, 1=256
+    int edge_rising; //bit 4
+    int trigger_wait; //bit 3: el temporizador espera a CLK/TRG
+    z80_byte time_constant;
+    z80_byte counter;
+    z80_byte prescaler;
+    int state;
+};
+
+struct s_tbblue_ctc_channel tbblue_ctc[4];
+
+//Contador del pulso de interrupcion (cores/core_spectrum.c)
+extern int testados_desde_inicio_pulso_interrupcion;
+
+//Estado de los dispositivos IM2
+#define TBBLUE_IM2_S_0 0
+#define TBBLUE_IM2_S_REQ 1
+#define TBBLUE_IM2_S_ISR 2
+
+int tbblue_im2_status[TBBLUE_IM2_DEVICES];
+int tbblue_im2_state[TBBLUE_IM2_DEVICES];
+
+//Compatibilidad con el codigo de upstream: ULA en servicio
+int tbblue_im2_ula_in_service=0;
+
+int tbblue_im2_hw_mode(void)
+{
+    return (tbblue_registers[0xC0] & 1);
+}
+
+static int tbblue_im2_enabled(int dispositivo)
+{
+    if (dispositivo==TBBLUE_IM2_LINE) return (tbblue_registers[0xC4] & 2) ? 1 : 0;
+    if (dispositivo==TBBLUE_IM2_ULA) return (tbblue_registers[0xC4] & 1) ? 1 : 0;
+    if (dispositivo>=TBBLUE_IM2_CTC0 && dispositivo<TBBLUE_IM2_CTC0+4) return tbblue_ctc[dispositivo-TBBLUE_IM2_CTC0].int_en;
+    //UART: no emulado
+    return 0;
+}
+
+void tbblue_im2_reset(void)
+{
+    int i;
+    for (i=0;i<TBBLUE_IM2_DEVICES;i++) {
+        tbblue_im2_status[i]=0;
+        tbblue_im2_state[i]=TBBLUE_IM2_S_0;
+    }
+    tbblue_im2_ula_in_service=0;
+}
+
+//Sale del modo IM2 hardware: los dispositivos vuelven a S_0 (im2_reset_n = modo)
+void tbblue_im2_mode_changed(void)
+{
+    if (!tbblue_im2_hw_mode()) {
+        int i;
+        for (i=0;i<TBBLUE_IM2_DEVICES;i++) tbblue_im2_state[i]=TBBLUE_IM2_S_0;
+        tbblue_im2_ula_in_service=0;
+    }
+}
+
+//Pulso /INT normal (modo pulso, o la ULA como excepcion)
+static void tbblue_im2_pulse(void)
+{
+    if (iff1.v==1 && z80_wait_signal.v==0) {
+        interrupcion_maskable_generada.v=1;
+        testados_desde_inicio_pulso_interrupcion=0;
+    }
+}
+
+//Peticion de interrupcion de un dispositivo. sin_condicion: registro 0x20 (int_unq), ignora la habilitacion
+void tbblue_im2_raise(int dispositivo,int sin_condicion)
+{
+    tbblue_im2_status[dispositivo]=1;
+
+    if (!sin_condicion && !tbblue_im2_enabled(dispositivo)) return;
+
+    if (tbblue_im2_hw_mode()) {
+        if (dispositivo==TBBLUE_IM2_ULA && im_mode!=2) {
+            //La ULA en modo IM2 hardware pero con la CPU en IM 0/1: pulso normal
+            tbblue_im2_pulse();
+            return;
+        }
+        if (tbblue_im2_state[dispositivo]==TBBLUE_IM2_S_0) tbblue_im2_state[dispositivo]=TBBLUE_IM2_S_REQ;
+    }
+    else {
+        tbblue_im2_pulse();
+    }
+}
+
+//Linea INT en modo IM2 hardware: el primer dispositivo (por prioridad) que no esta en S_0 esta en S_REQ
+int tbblue_im2_line_asserted(void)
+{
+    int i;
+    for (i=0;i<TBBLUE_IM2_DEVICES;i++) {
+        if (tbblue_im2_state[i]==TBBLUE_IM2_S_REQ) return 1;
+        if (tbblue_im2_state[i]==TBBLUE_IM2_S_ISR) return 0;
+    }
+    return 0;
+}
+
+//Aceptacion de la interrupcion en IM 2: retorna el byte bajo del vector y pasa el dispositivo a S_ISR
+z80_byte tbblue_im2_ack_vector(void)
+{
+    int i;
+    int dispositivo=-1;
+    for (i=0;i<TBBLUE_IM2_DEVICES;i++) {
+        if (tbblue_im2_state[i]==TBBLUE_IM2_S_REQ) {
+            dispositivo=i;
+            break;
+        }
+        if (tbblue_im2_state[i]==TBBLUE_IM2_S_ISR) break;
+    }
+
+    //Sin dispositivo pendiente (no deberia pasar): como si fuera la ULA
+    if (dispositivo<0) dispositivo=TBBLUE_IM2_ULA;
+    else tbblue_im2_state[dispositivo]=TBBLUE_IM2_S_ISR;
+
+    if (dispositivo==TBBLUE_IM2_ULA) tbblue_im2_ula_in_service=1;
+
+    return (tbblue_registers[0xC0] & 0xE0) | (dispositivo<<1);
+}
+
+//RETI: el dispositivo en servicio con IEI=1 vuelve a S_0 (los que estan en S_REQ dejan pasar el RETI)
+void tbblue_reti(void)
+{
+    if (!tbblue_im2_hw_mode() || im_mode!=2) return;
+
+    int i;
+    for (i=0;i<TBBLUE_IM2_DEVICES;i++) {
+        if (tbblue_im2_state[i]==TBBLUE_IM2_S_ISR) {
+            tbblue_im2_state[i]=TBBLUE_IM2_S_0;
+            if (i==TBBLUE_IM2_ULA) tbblue_im2_ula_in_service=0;
+            return;
+        }
+    }
+}
+
+//Interrupcion de fin de cuadro de la ULA (se llama siempre, este o no habilitada la interrupcion en la CPU)
+void tbblue_im2_ula_frame(void)
+{
+    //En modo pulso, el resto lo hace el core (iff1, bit 2 de 0x22)
+    tbblue_im2_status[TBBLUE_IM2_ULA]=1;
+
+    if (tbblue_im2_hw_mode() && im_mode==2 && tbblue_im2_enabled(TBBLUE_IM2_ULA)) {
+        if (tbblue_im2_state[TBBLUE_IM2_ULA]==TBBLUE_IM2_S_0) tbblue_im2_state[TBBLUE_IM2_ULA]=TBBLUE_IM2_S_REQ;
+    }
+}
+
+//Registros de estado 0xC8 / 0xC9 / 0xCA y 0x20 (lectura)
+z80_byte tbblue_im2_get_status_c8(void)
+{
+    return (tbblue_im2_status[TBBLUE_IM2_LINE] || tbblue_im2_state[TBBLUE_IM2_LINE]==TBBLUE_IM2_S_REQ ? 2 : 0) |
+           (tbblue_im2_status[TBBLUE_IM2_ULA] || tbblue_im2_state[TBBLUE_IM2_ULA]==TBBLUE_IM2_S_REQ ? 1 : 0);
+}
+
+z80_byte tbblue_im2_get_status_c9(void)
+{
+    z80_byte valor=0;
+    int i;
+    for (i=0;i<4;i++) {
+        if (tbblue_im2_status[TBBLUE_IM2_CTC0+i] || tbblue_im2_state[TBBLUE_IM2_CTC0+i]==TBBLUE_IM2_S_REQ) valor |=(1<<i);
+    }
+    return valor;
+}
+
+z80_byte tbblue_im2_get_status_20(void)
+{
+    return ((tbblue_im2_get_status_c8() & 2) ? 128 : 0) | ((tbblue_im2_get_status_c8() & 1) ? 64 : 0) | tbblue_im2_get_status_c9();
+}
+
+//Escritura en 0xC8 / 0xC9: un 1 borra el estado
+void tbblue_im2_clear_status_c8(z80_byte value)
+{
+    if (value & 2) tbblue_im2_status[TBBLUE_IM2_LINE]=0;
+    if (value & 1) tbblue_im2_status[TBBLUE_IM2_ULA]=0;
+}
+
+void tbblue_im2_clear_status_c9(z80_byte value)
+{
+    int i;
+    for (i=0;i<4;i++) {
+        if (value & (1<<i)) tbblue_im2_status[TBBLUE_IM2_CTC0+i]=0;
+    }
+}
+
+//Escritura en 0x20: interrupcion sin condicion (int_unq)
+void tbblue_im2_write_reg_20(z80_byte value)
+{
+    if (value & 128) tbblue_im2_raise(TBBLUE_IM2_LINE,1);
+    if (value & 64) tbblue_im2_raise(TBBLUE_IM2_ULA,1);
+    int i;
+    for (i=0;i<4;i++) {
+        if (value & (1<<i)) tbblue_im2_raise(TBBLUE_IM2_CTC0+i,1);
+    }
+}
+
+
+/* CTC */
+
+void tbblue_ctc_reset(void)
+{
+    int i;
+    for (i=0;i<4;i++) {
+        struct s_tbblue_ctc_channel *c=&tbblue_ctc[i];
+        c->int_en=0;
+        c->counter_mode=0;
+        c->prescale256=0;
+        c->edge_rising=0;
+        c->trigger_wait=0;
+        c->time_constant=0;
+        c->counter=0;
+        c->prescaler=0;
+        c->state=TBBLUE_CTC_S_RESET;
+    }
+}
+
+static void tbblue_ctc_trigger(int canal);
+
+//ZC/TO de un canal: interrupcion y disparo del canal siguiente
+static void tbblue_ctc_zc_to(int canal)
+{
+    tbblue_im2_raise(TBBLUE_IM2_CTC0+canal,0);
+    tbblue_ctc_trigger((canal+1)&3);
+}
+
+//Un paso de cuenta. Retorna 1 si llega a cero (ZC/TO)
+static int tbblue_ctc_count_step(struct s_tbblue_ctc_channel *c)
+{
+    c->counter--;
+    if (c->counter==0) {
+        c->counter=c->time_constant;
+        return 1;
+    }
+    return 0;
+}
+
+//Flanco en CLK/TRG (desde el canal anterior)
+static void tbblue_ctc_trigger(int canal)
+{
+    struct s_tbblue_ctc_channel *c=&tbblue_ctc[canal];
+
+    if (c->counter_mode) {
+        if (c->state!=TBBLUE_CTC_S_RUN && c->state!=TBBLUE_CTC_S_RUN_TC) return;
+        if (tbblue_ctc_count_step(c)) tbblue_ctc_zc_to(canal);
+        return;
+    }
+
+    if (c->state==TBBLUE_CTC_S_TRIGGER) {
+        c->state=TBBLUE_CTC_S_RUN;
+        c->prescaler=0;
+    }
+}
+
+void tbblue_ctc_write(int canal,z80_byte value)
+{
+    struct s_tbblue_ctc_channel *c=&tbblue_ctc[canal];
+
+    //Constante de tiempo
+    if (c->state==TBBLUE_CTC_S_RESET_TC || c->state==TBBLUE_CTC_S_RUN_TC) {
+        c->time_constant=value;
+        if (c->state==TBBLUE_CTC_S_RESET_TC) {
+            c->counter=value;
+            c->prescaler=0;
+            if (!c->counter_mode && c->trigger_wait) c->state=TBBLUE_CTC_S_TRIGGER;
+            else if (!c->counter_mode) c->state=TBBLUE_CTC_S_TRIGGER_AUTO;
+            else c->state=TBBLUE_CTC_S_RUN;
+        }
+        else {
+            c->state=TBBLUE_CTC_S_RUN;
+        }
+        return;
+    }
+
+    //Bit 0 = 0: vector (no se usa en la Next)
+    if (!(value & 1)) return;
+
+    //Palabra de control
+    int soft_reset=value & 2;
+    int tc_follows=value & 4;
+    int new_edge=(value & 16) ? 1 : 0;
+    int edge_changed=(new_edge!=c->edge_rising);
+
+    c->int_en=(value & 128) ? 1 : 0;
+    c->counter_mode=(value & 64) ? 1 : 0;
+    c->prescale256=(value & 32) ? 1 : 0;
+    c->edge_rising=new_edge;
+    c->trigger_wait=(value & 8) ? 1 : 0;
+
+    if (soft_reset) {
+        c->state=(tc_follows ? TBBLUE_CTC_S_RESET_TC : TBBLUE_CTC_S_RESET);
+        c->prescaler=0;
+        c->counter=c->time_constant;
+        return;
+    }
+
+    if (tc_follows) {
+        if (c->state==TBBLUE_CTC_S_RESET) c->state=TBBLUE_CTC_S_RESET_TC;
+        else if (c->state==TBBLUE_CTC_S_RUN) c->state=TBBLUE_CTC_S_RUN_TC;
+        else if (c->state==TBBLUE_CTC_S_TRIGGER || c->state==TBBLUE_CTC_S_TRIGGER_AUTO) c->state=TBBLUE_CTC_S_RESET_TC;
+    }
+
+    //Cambio de flanco: cuenta como un flanco en CLK/TRG
+    if (edge_changed && (c->state==TBBLUE_CTC_S_TRIGGER || c->state==TBBLUE_CTC_S_RUN)) {
+        if (c->state==TBBLUE_CTC_S_TRIGGER) c->state=TBBLUE_CTC_S_RUN;
+        if (c->counter_mode) {
+            int canal_actual=canal;
+            if (tbblue_ctc_count_step(c)) tbblue_ctc_zc_to(canal_actual);
+        }
+    }
+}
+
+z80_byte tbblue_ctc_read(int canal)
+{
+    return tbblue_ctc[canal].counter;
+}
+
+//Registro 0xC5: habilitacion de interrupciones de los canales (bits 3:0)
+void tbblue_ctc_set_int_enable(z80_byte value)
+{
+    int i;
+    for (i=0;i<4;i++) tbblue_ctc[i].int_en=(value>>i)&1;
+}
+
+z80_byte tbblue_ctc_get_int_enable(void)
+{
+    z80_byte valor=0;
+    int i;
+    for (i=0;i<4;i++) {
+        if (tbblue_ctc[i].int_en) valor |=(1<<i);
+    }
+    return valor;
+}
+
+//Avanza la CTC: t_estados de CPU de la ultima instruccion -> ciclos de 28 MHz
+void tbblue_ctc_tick(int t_estados_cpu)
+{
+    int ciclos=t_estados_cpu*8/cpu_turbo_speed;
+    if (ciclos<=0) return;
+
+    int canal;
+    for (canal=0;canal<4;canal++) {
+        struct s_tbblue_ctc_channel *c=&tbblue_ctc[canal];
+        if (c->counter_mode) continue;
+
+        int restantes=ciclos;
+
+        //Arranque automatico: un flanco para pasar a RUN
+        if (c->state==TBBLUE_CTC_S_TRIGGER_AUTO) {
+            c->state=TBBLUE_CTC_S_RUN;
+            c->prescaler=0;
+            c->counter=c->time_constant;
+            restantes--;
+        }
+
+        if (c->state!=TBBLUE_CTC_S_RUN && c->state!=TBBLUE_CTC_S_RUN_TC) continue;
+
+        int periodo=(c->prescale256 ? 256 : 16);
+        int fase=c->prescaler % periodo;
+        int pasos=(fase+restantes)/periodo;
+        c->prescaler=(z80_byte)(c->prescaler+restantes);
+
+        while (pasos>0) {
+            pasos--;
+            if (tbblue_ctc_count_step(c)) tbblue_ctc_zc_to(canal);
+        }
+    }
 }

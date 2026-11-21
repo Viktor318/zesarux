@@ -7569,6 +7569,9 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 		//if (puerto==0x24DF) return tbblue_port_24df;
 		if (puerto==TBBLUE_REGISTER_PORT) return tbblue_get_register_port();
 		if (puerto==TBBLUE_VALUE_PORT) return tbblue_get_value_port();
+
+		//CTC: 0x183B, 0x193B, 0x1A3B, 0x1B3B
+		if ((puerto & 0xFCFF)==0x183B) return tbblue_ctc_read((puerto>>8)&3);
 		if (puerto==TBBLUE_SPRITE_INDEX_PORT)	return tbblue_get_port_sprite_index();
 		if (puerto==TBBLUE_LAYER2_PORT)	return tbblue_get_port_layer2_value();
 
@@ -9898,6 +9901,9 @@ acts as expected unless this registe is explicitly changed by the user/software.
 		//if (puerto==0x24D9 || puerto==0x24DB || puerto==0x24DD || puerto==0x24DF) tbblue_out_port(puerto,value);
 		if (puerto==TBBLUE_REGISTER_PORT) tbblue_set_register_port(value);
 		if (puerto==TBBLUE_VALUE_PORT) tbblue_set_value_port(value);
+
+		//CTC: 0x183B, 0x193B, 0x1A3B, 0x1B3B
+		if ((puerto & 0xFCFF)==0x183B) tbblue_ctc_write((puerto>>8)&3,value);
 
 		//Puerto tipicamente 32765
 		// the hardware will respond only to those port addresses with

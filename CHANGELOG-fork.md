@@ -53,6 +53,22 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
 
 ### ZX Spectrum Next
 
+- **CTC and full hardware IM2 interrupt controller on the Next** (based on
+  the VHDL and JNEXT):
+  - new **CTC** (Z80 CTC-like 4-channel timer/counter on ports
+    0x183B–0x1B3B): timer and counter modes, prescaler 16 and 256, channel
+    chaining (a channel reaching zero clocks the next one), interrupt enable
+    via NextReg 0xC5;
+  - **hardware IM2 mode** (NextReg 0xC0 bit 0): each source (line
+    interrupt, CTC channels, ULA) arrives on its own vector with the VHDL
+    priority; while a handler runs (until RETI), lower priority sources wait;
+  - NextReg **0xC8/0xC9** status bits work (write 1 to clear), as does
+    **0x20** (read: status, write: unqualified interrupt); reading 0xC0 also
+    shows the CPU interrupt mode;
+  - in pulse mode (the default) the CTC raises the usual interrupt.
+  This makes e.g. **NXModPlayer** play (it was silent and stuck). Test:
+  `src/tests/tbblue_ctc_im2.py` (18 cases). Still missing: UART interrupts
+  and saving the CTC/IM2 state to ZSF.
 - **Next paging like the real machine** (based on JNEXT, i.e. the VHDL):
   - the **paging lock** works (bit 5 of port 7FFD, e.g. in 48K BASIC): once
     locked, writes to 7FFD, 1FFD and DFFD do nothing, bit 7 of NextReg 0x08
