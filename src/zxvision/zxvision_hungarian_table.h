@@ -4378,6 +4378,7 @@ static const struct s_hungarian_string hungarian_strings[]={
     {"~~Display","Meg~~jelen\303\255t\303\251s"},
     {"~~Documentation","~~Dokument\303\241ci\303\263"},
     {"~~Donors","~~T\303\241mogat\303\263k"},
+    {"~~Duplicate icon","~~Ikon m\303\241sol\303\241sa"},
     {"~~Edit","Sz~~erkeszt\303\251s"},
     {"~~Edit Breakpoint","T\303\266r\303\251spont ~~szerkeszt\303\251se"},
     {"~~Eject Cartridge","K\303\241rtya ~~kiv\303\251tele"},

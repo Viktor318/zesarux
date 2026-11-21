@@ -189,6 +189,11 @@ The second release of the fork, based on ZEsarUX 13.1 Beta 1.
 
 ### Upstream
 
+- Merged the upstream state of 2026-11-21: **duplicating an icon** in the
+  context menu of the desktop icons (*Duplicate icon*, translated to
+  Hungarian too), aligning to the grid no longer moves icons above the top
+  edge. This also brings in the source changes of the 2026-11-20 merge
+  (they were missing from that commit).
 - Merged the upstream state of 2026-11-20: the missing characters of the
   vector font (`[ \ ] ^ _ { | } ~`), new screenshots, the DAVID Desktop name
   in the README (the fork's own README is unchanged).

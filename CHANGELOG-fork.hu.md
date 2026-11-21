@@ -187,6 +187,11 @@ A fork második kiadása, a ZEsarUX 13.1 Beta 1-re építve.
 
 ### Upstream
 
+- Beolvasztva az upstream 2026-11-21-i állapota: **ikon másolása** a ZX
+  Desktop ikonjainak helyi menüjében (*Ikon másolása*, magyarul is), a
+  rácshoz igazításnál az ikonok nem csúsznak a felső szél fölé. Ezzel a
+  2026-11-20-i behozatal forráskód-változásai is bekerültek (azok az előző
+  commitból kimaradtak).
 - Beolvasztva az upstream 2026-11-20-i állapota: a vektoros betűkészlet
   hiányzó jelei (`[ \ ] ^ _ { | } ~`), új képernyőképek, a README-ben a
   DAVID Desktop név (a fork saját README-je nem változott).

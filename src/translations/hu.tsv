@@ -1523,6 +1523,7 @@ Change Bitmap	Kép cseréje	text
 Set default bitmap	Alapértelmezett kép beállítása	item
 Help SendKeysMenu	Súgó: billentyűküldő menü	window title
 R~~ename	Át~~nevezés	item
+~~Duplicate icon	~~Ikon másolása	item
 ~~Parameters	~~Paraméterek	item
 Change ~~Bitmap	~~Kép cseréje	item
 Close Window	Ablak bezárása	item
