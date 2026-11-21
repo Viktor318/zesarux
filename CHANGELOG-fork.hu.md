@@ -53,6 +53,11 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
 
 ### ZX Spectrum Next
 
+- **Windowson a 28 MHz-es Next már nem néma**: a jó minőségű hang
+  órajelének számítása Windowson túlcsordult (ott a `long` 32 bites), ha a
+  Next 28 MHz-en futott. Ilyenkor egyetlen hangminta sem készült, és minden
+  elnémult, pl. az NXModPlayer is. 14 MHz-ig nem jött elő, Linuxon soha.
+  A „Next DAC” ablak címe sem „Következő DAC” többé.
 - **CTC és teljes hardveres IM2 megszakításvezérlő a Next-en** (a VHDL, ill.
   a JNEXT alapján):
   - új a **CTC** (Z80 CTC-szerű, 4 csatornás időzítő/számláló a

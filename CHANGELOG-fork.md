@@ -53,6 +53,11 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
 
 ### ZX Spectrum Next
 
+- **The 28 MHz Next is no longer silent on Windows**: the high quality
+  sound clock rate overflowed on Windows (where `long` is 32 bits) when the
+  Next ran at 28 MHz, so no samples were made and everything went silent,
+  e.g. NXModPlayer. It did not happen up to 14 MHz, nor ever on Linux. The
+  Hungarian title of the "Next DAC" window is fixed too.
 - **CTC and full hardware IM2 interrupt controller on the Next** (based on
   the VHDL and JNEXT):
   - new **CTC** (Z80 CTC-like 4-channel timer/counter on ports

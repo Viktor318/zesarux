@@ -770,10 +770,12 @@ static long audio_hq_get_clock_rate(void)
     extern int original_timer_sleep_machine;
     double frame_us=original_timer_sleep_machine;
     if (frame_us<=0) frame_us=(machine_60hz.v ? 16666 : 20000);
-    long rate=(long)(screen_testados_total*1000000.0/frame_us);
-    rate=rate*porcentaje_velocidad_emulador/100;
+    //En double: en Windows long es de 32 bits y a 28 MHz (559104 t-estados por frame) rate*100 desborda,
+    //el reloj quedaba en 0 y no se generaba ninguna muestra (fork)
+    double rate=screen_testados_total*1000000.0/frame_us;
+    rate=rate*porcentaje_velocidad_emulador/100.0;
     if (rate<1) rate=1;
-    return rate;
+    return (long)rate;
 }
 
 static Blip_Buffer *audio_hq_new_buffer(void)
@@ -1004,6 +1006,7 @@ void audio_hq_end_frame(int frame_tstates)
     if (ajuste<-0.02) ajuste=-0.02;
 
     long rate=(long)(audio_hq_get_clock_rate()*(1.0+ajuste));
+    if (rate<1) rate=1;
     if (rate!=hq_clock_rate) {
         hq_clock_rate=rate;
         blip_buffer_set_clock_rate(hq_buf_beeper,rate);
