@@ -408,3 +408,8 @@ extern z80_byte tbblue_dac_c;
 extern z80_byte tbblue_dac_d;
 
 #endif
+
+//Estado de CTC, IM2 y DFFD en snapshots ZSF (fork)
+#define TBBLUE_FORK_INT_STATE_LENGTH (1+4*9+2*14+2)
+extern int tbblue_fork_int_state_save(z80_byte *b);
+extern void tbblue_fork_int_state_load(z80_byte *b,int longitud);

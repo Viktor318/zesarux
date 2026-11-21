@@ -9533,3 +9533,69 @@ void tbblue_ctc_tick(int t_estados_cpu)
         }
     }
 }
+
+
+/* Estado de CTC, IM2 y puerto DFFD en snapshots ZSF (fork). Bloque ZSF_TBBLUE_FORK_INT_STATE */
+
+//Retorna la longitud escrita (TBBLUE_FORK_INT_STATE_LENGTH)
+int tbblue_fork_int_state_save(z80_byte *b)
+{
+    int o=0;
+    b[o++]=1; //version
+
+    int i;
+    for (i=0;i<4;i++) {
+        struct s_tbblue_ctc_channel *c=&tbblue_ctc[i];
+        b[o++]=c->int_en;
+        b[o++]=c->counter_mode;
+        b[o++]=c->prescale256;
+        b[o++]=c->edge_rising;
+        b[o++]=c->trigger_wait;
+        b[o++]=c->time_constant;
+        b[o++]=c->counter;
+        b[o++]=c->prescaler;
+        b[o++]=c->state;
+    }
+
+    for (i=0;i<TBBLUE_IM2_DEVICES;i++) b[o++]=tbblue_im2_status[i];
+    for (i=0;i<TBBLUE_IM2_DEVICES;i++) b[o++]=tbblue_im2_state[i];
+
+    b[o++]=tbblue_im2_ula_in_service;
+    b[o++]=tbblue_port_dffd;
+
+    return o;
+}
+
+void tbblue_fork_int_state_load(z80_byte *b,int longitud)
+{
+    if (longitud<TBBLUE_FORK_INT_STATE_LENGTH || b[0]!=1) {
+        debug_printf(VERBOSE_ERR,"Unsupported TBBlue CTC/IM2 state in ZSF snapshot. Ignoring it");
+        return;
+    }
+
+    int o=1;
+    int i;
+    for (i=0;i<4;i++) {
+        struct s_tbblue_ctc_channel *c=&tbblue_ctc[i];
+        c->int_en=b[o++] & 1;
+        c->counter_mode=b[o++] & 1;
+        c->prescale256=b[o++] & 1;
+        c->edge_rising=b[o++] & 1;
+        c->trigger_wait=b[o++] & 1;
+        c->time_constant=b[o++];
+        c->counter=b[o++];
+        c->prescaler=b[o++];
+        c->state=b[o++];
+        if (c->state>TBBLUE_CTC_S_TRIGGER_AUTO) c->state=TBBLUE_CTC_S_RESET;
+    }
+
+    for (i=0;i<TBBLUE_IM2_DEVICES;i++) tbblue_im2_status[i]=b[o++] & 1;
+    for (i=0;i<TBBLUE_IM2_DEVICES;i++) {
+        tbblue_im2_state[i]=b[o++];
+        if (tbblue_im2_state[i]>TBBLUE_IM2_S_ISR) tbblue_im2_state[i]=TBBLUE_IM2_S_0;
+    }
+
+    tbblue_im2_ula_in_service=b[o++] & 1;
+    //Solo para las proximas escrituras en 7FFD: el mapeo actual ya esta en los registros MMU
+    tbblue_port_dffd=b[o++];
+}

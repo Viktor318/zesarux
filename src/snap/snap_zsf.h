@@ -112,6 +112,10 @@
 #define ZSF_ATM_TURBO_RAMBLOCK 85
 #define ZSF_ATM_TURBO_CONF 86
 
+//Fork: estado de CTC, IM2 y puerto DFFD de TBBLUE. Id alto, fuera de la numeracion de upstream,
+//para no chocar con los bloques que se agreguen alli (zsf_get_block_id_name lo muestra como desconocido)
+#define ZSF_TBBLUE_FORK_INT_STATE 200
+
 //Ultimo id maximo usado
 #define MAX_ZSF_BLOCK_ID_NAMES 86
 

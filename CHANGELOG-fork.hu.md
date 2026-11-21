@@ -68,8 +68,10 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
     0xC0 olvasva a CPU megszakítási módját is mutatja;
   - pulzus módban (alapállapot) a CTC is a szokásos megszakítást adja.
   Ettől szól például az **NXModPlayer** (eddig néma volt és megállt). Teszt:
-  `src/tests/tbblue_ctc_im2.py` (18 eset). Még hiányzik: az UART-
-  megszakítások és a CTC/IM2 állapotának mentése ZSF-be.
+  `src/tests/tbblue_ctc_im2.py` (21 eset). A CTC, az IM2 és a DFFD port
+  állapota a ZSF-mentésbe is bekerül (új, 200-as blokk; a régebbi ZEsarUX
+  figyelmeztet rá, de betölti a mentést), így visszatöltés után is szól a
+  lejátszó. Még hiányoznak az UART-megszakítások.
 - **Next lapozás a valódi gép szerint** (a JNEXT, vagyis a VHDL alapján):
   - működik a **lapozászár** (a 7FFD port 5. bitje, pl. 48K BASIC-ben):
     zárás után a 7FFD, 1FFD és DFFD írása hatástalan, a NextReg 0x08 7. bitje

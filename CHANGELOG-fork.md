@@ -67,8 +67,10 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
     shows the CPU interrupt mode;
   - in pulse mode (the default) the CTC raises the usual interrupt.
   This makes e.g. **NXModPlayer** play (it was silent and stuck). Test:
-  `src/tests/tbblue_ctc_im2.py` (18 cases). Still missing: UART interrupts
-  and saving the CTC/IM2 state to ZSF.
+  `src/tests/tbblue_ctc_im2.py` (21 cases). The CTC, IM2 and port DFFD
+  state is saved in ZSF snapshots too (new block 200; older ZEsarUX versions
+  warn about it but load the snapshot), so the player keeps playing after a
+  restore. UART interrupts are still missing.
 - **Next paging like the real machine** (based on JNEXT, i.e. the VHDL):
   - the **paging lock** works (bit 5 of port 7FFD, e.g. in 48K BASIC): once
     locked, writes to 7FFD, 1FFD and DFFD do nothing, bit 7 of NextReg 0x08

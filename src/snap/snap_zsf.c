@@ -980,6 +980,16 @@ Byte Fields:
 5: ram block id
 6 and next bytes: data bytes
 
+-Block ID 200: ZSF_TBBLUE_FORK_INT_STATE (only in the Viktor318/zesarux fork; other versions skip it)
+TBBLUE CTC, hardware IM2 interrupt controller and port DFFD state
+0: version (1)
+1-36: 4 CTC channels, 9 bytes each: int_en, counter_mode, prescale256, edge_rising, trigger_wait,
+      time_constant, counter, prescaler, state
+37-50: IM2 device status bits (14 devices)
+51-64: IM2 device state (0=S_0, 1=S_REQ, 2=S_ISR)
+65: ULA in service flag
+66: port DFFD
+
 -Block ID 86: ZSF_ATM_TURBO_CONF
 See functions store_zsf_atm_turbo_conf() y load_zsf_atm_turbo_conf to get info about this block
 
@@ -4076,6 +4086,10 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
         load_zsf_tbblue_clipwindows(block_data);
       break;
 
+      case ZSF_TBBLUE_FORK_INT_STATE:
+        tbblue_fork_int_state_load(block_data,block_lenght);
+      break;
+
       case ZSF_TIMEX:
         load_zsf_timex(block_data);
       break;
@@ -6670,6 +6684,11 @@ if (MACHINE_IS_TBBLUE) {
     }
 
     zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, tbblue_clipwindows_block,ZSF_TBBLUE_CLIPWINDOWS, 16);
+
+    //CTC, IM2 y DFFD (fork)
+    z80_byte tbblue_fork_int_state_block[TBBLUE_FORK_INT_STATE_LENGTH];
+    int tbblue_fork_int_state_length=tbblue_fork_int_state_save(tbblue_fork_int_state_block);
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, tbblue_fork_int_state_block,ZSF_TBBLUE_FORK_INT_STATE, tbblue_fork_int_state_length);
 
   //
   //Paletas de color

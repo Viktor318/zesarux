@@ -55,10 +55,10 @@ PROGRAMOK = {
 BIN = sys.argv[1] if len(sys.argv) > 1 else "."
 PORT = 10009
 
-def futtat(nev):
+def futtat(nev, zsf=False):
     p = subprocess.Popen(["./zesarux", "--noconfigfile", "--vo", "null", "--ao", "null", "--machine", "tbblue",
                           "--tbblue-fast-boot-mode", "--enable-remoteprotocol", "--remoteprotocol-port", str(PORT),
-                          "--exit-after", "60"], cwd=BIN, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                          "--exit-after", "60"] + (["--emulatorspeed", "10"] if zsf else []), cwd=BIN, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     for i in range(80):
         try:
             s = socket.create_connection(("127.0.0.1", PORT), timeout=10); break
@@ -83,6 +83,17 @@ def futtat(nev):
     cmd("write-memory 40991 0")
     cmd("set-register PC=8000H")
     cmd("exit-cpu-step")
+    if zsf:
+        # Futas kozben ZSF-mentes, a gep alaphelyzetbe allitasa (a CTC is), majd visszatoltes:
+        # a programnak ugy kell befejezodnie, mintha nem szakitottuk volna meg
+        # 10%-os sebesseggel a program kb. 0,6 mp-ig fut: a felenel mentunk
+        time.sleep(0.3)
+        cmd("enter-cpu-step")
+        felig = cmd("read-memory 40991 1").strip().upper() != "55"
+        cmd("snapshot-save /tmp/tbblue_ctc_im2_test.zsf")
+        cmd("hard-reset-cpu")
+        cmd("snapshot-load /tmp/tbblue_ctc_im2_test.zsf")
+        cmd("exit-cpu-step")
     t0 = time.time()
     while time.time() - t0 < 15:
         if cmd("read-memory 40991 1").strip().upper() == "55": break
@@ -93,7 +104,7 @@ def futtat(nev):
     except Exception: pass
     p.wait(timeout=10)
     w = lambda o: m[o] | (m[o + 1] << 8)
-    return dict(kesz=m[0x1F] == 0x55, pulse=w(0), ctc0=w(2), ctc1=w(4), ula=w(6), line=w(8),
+    return dict(kesz=m[0x1F] == 0x55, felig=(felig if zsf else None), pulse=w(0), ctc0=w(2), ctc1=w(4), ula=w(6), line=w(8),
                 c0=m[0x10], c5=m[0x11], c8=m[0x12], c9=m[0x13], r20=m[0x14], ctc0_szamlalo=m[0x15])
 
 hibak = 0
@@ -133,6 +144,11 @@ ell("NR 0x20 olvasva: CTC0 bit", r["r20"] & 1 == 1, "r20=%02X" % r["r20"])
 r = futtat("s7"); print("7. HW IM2, ULA tiltva (NR 0xC4 = 0):", r)
 ell("nincs ULA-megszakitas", r["ula"] == 0, "ula=%d" % r["ula"])
 ell("az ULA allapotbitje (NR 0xC8 0. bit) beall", r["c8"] & 1 == 1, "c8=%02X" % r["c8"])
+
+r = futtat("s4", zsf=True); print("8. Mint a 4., kozben ZSF-mentes, reset es visszatoltes:", r)
+ell("a mentes a program futasa kozben tortent", r["felig"], "")
+ell("befejezodott", r["kesz"], "")
+ell("CTC1 a visszatoltes utan is szamol (kb. 428)", 350 <= r["ctc1"] <= 520, "ctc1=%d" % r["ctc1"])
 
 print("\n%s" % ("Minden rendben" if hibak == 0 else "%d hiba" % hibak))
 sys.exit(1 if hibak else 0)
