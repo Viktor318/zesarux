@@ -221,6 +221,9 @@ The second release of the fork, based on ZEsarUX 13.1 Beta 1.
 
 ### Upstream
 
+- Merged the upstream state of 2026-11-22: simulated real video for the
+  **MK14** display, and lower CPU usage while the *Colour Palettes* window is
+  open.
 - Merged the upstream state of 2026-11-21: **duplicating an icon** in the
   context menu of the desktop icons (*Duplicate icon*, translated to
   Hungarian too), aligning to the grid no longer moves icons above the top

@@ -220,6 +220,9 @@ A fork második kiadása, a ZEsarUX 13.1 Beta 1-re építve.
 
 ### Upstream
 
+- Beolvasztva az upstream 2026-11-22-i állapota: az **MK14** kijelzője
+  szimulált valódi képpel jelenik meg, és kisebb a processzorterhelés, amíg
+  a *Színpaletták* ablak nyitva van.
 - Beolvasztva az upstream 2026-11-21-i állapota: **ikon másolása** a ZX
   Desktop ikonjainak helyi menüjében (*Ikon másolása*, magyarul is), a
   rácshoz igazításnál az ikonok nem csúsznak a felső szél fölé. Ezzel a
