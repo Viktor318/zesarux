@@ -53,6 +53,17 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
 
 ### ZX Spectrum Next
 
+- **Next NextRegs read back like on the real machine** (after the VHDL
+  and JNEXT, compared with a write/readback test): NR 0x03 bit 7 is the
+  9-bit palette write phase (not the written bit), NR 0x09 bit 3 reads 0 and
+  the scanline weight takes effect at the start of a frame, NR 0x22 bits
+  6–3 read 0 and bit 7 (INT) is read-only, NR 0xC0 bit 4 reads 0, NR 0xCA
+  (UART interrupts) reads 0; NR 0x06 bit 2 and NR 0x0A bits 7–5 can only be
+  written in config mode; bits that do not exist are not stored (0x0B,
+  0x12/0x13 – so the Layer 2 bank can no longer point above 2 MB –, 0x2F,
+  0x4C, 0x68, 0x6A, 0x6E/0x6F, 0x70, 0x71, 0x85, 0x89, 0x8A, 0x8F, 0xC4,
+  0xC6, 0xCC, 0xCE, 0xD8). After a reset 0x7F and 0x82–0x89 get the real
+  machine's defaults.
 - **Next NR 0x64 (copper vertical line offset) works**: at the first
   display line the line counter starts from the value of NR 0x64, and NR
   0x1E/0x1F reads, the line interrupt and the copper WAIT use it (as on the

@@ -53,6 +53,17 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
 
 ### ZX Spectrum Next
 
+- **A Next NextReg-regiszterei a valódi géphez hasonlóan olvashatók
+  vissza** (a VHDL és a JNEXT alapján, egy írás/visszaolvasás teszttel
+  összevetve): az NR 0x03 7. bitje a 9 bites palettaírás félállapota (nem a
+  beírt bit), az NR 0x09 3. bitje 0 és a scanline-erősség a képkocka elején
+  érvényesül, az NR 0x22 6–3. bitje 0 és a 7. (INT) csak olvasható, az NR
+  0xC0 4. bitje 0, az NR 0xCA (UART-megszakítások) 0; az NR 0x06 2. és az
+  NR 0x0A 7–5. bitje csak konfigurációs módban írható; a nem létező bitek
+  nem tárolódnak (0x0B, 0x12/0x13 – a Layer 2 bankja így nem mutathat a
+  2 MB fölé –, 0x2F, 0x4C, 0x68, 0x6A, 0x6E/0x6F, 0x70, 0x71, 0x85, 0x89,
+  0x8A, 0x8F, 0xC4, 0xC6, 0xCC, 0xCE, 0xD8). Reset után a 0x7F és a
+  0x82–0x89 a valódi gép alapértékét kapja.
 - **A Next NR 0x64 regisztere (a copper sor-eltolása) működik**: a
   sorszámláló a kép első soránál az NR 0x64 értékéről indul, és ezt
   használja az NR 0x1E/0x1F olvasása, a sor-megszakítás és a copper WAIT

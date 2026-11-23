@@ -4185,6 +4185,17 @@ void tbblue_hard_reset(void)
 
     tbblue_registers[0x8c]=0;
 
+    //Valores de reset del VHDL (como JNEXT): registro de usuario y habilitacion de puertos internos y del bus
+    tbblue_registers[0x7F]=0xFF;
+    tbblue_registers[0x82]=0xFF;
+    tbblue_registers[0x83]=0xFF;
+    tbblue_registers[0x84]=0xFF;
+    tbblue_registers[0x85]=0x8F;
+    tbblue_registers[0x86]=0xFF;
+    tbblue_registers[0x87]=0xFF;
+    tbblue_registers[0x88]=0xFF;
+    tbblue_registers[0x89]=0x8F;
+
     tbblue_reset_common();
 
 
@@ -4620,9 +4631,14 @@ void tbblue_restaurar_60hz_usuario(void)
     tbblue_60hz_efectivo=0;
 }
 
+//Intensidad de scanlines efectiva (NR 0x09 bits 1:0; VHDL: eff_nr_09_scanlines, al principio del frame)
+int tbblue_scanlines_efectivo=0;
+
 //Al principio de cada frame: aplicar el timing de NR 0x03 y el 50/60 Hz de NR 0x05 si han cambiado
 void tbblue_aplicar_timing_frame(void)
 {
+    tbblue_scanlines_efectivo=tbblue_registers[9] & 3;
+
     int t=tbblue_get_timing_registro();
     int hz60=tbblue_get_60hz_registro();
 
@@ -5130,6 +5146,44 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
             if (value&4) tbblue_reset_clip_window_ula_index();
             if (value&8) tbblue_reset_clip_window_tilemap_index();
             return;
+    }
+
+    //Como en el VHDL (zxnext.vhd): bits que no se guardan (se leen como 0) y bits que solo se pueden
+    //escribir en modo configuracion (si no, se mantiene el valor anterior). Comparado con JNEXT
+    {
+        int modo_configuracion=((tbblue_registers[3]&7)==0 || tbblue_bootrom.v);
+
+        switch (index_position) {
+            //bit 2 = modo PS/2, solo en modo configuracion
+            case 0x06:
+                if (!modo_configuracion) value=(value & 0xFB) | (tbblue_registers[0x06] & 0x04);
+            break;
+
+            //bits 7:5 = tipo de Multiface e intercambio de tarjetas SD, solo en modo configuracion. Bit 2 no existe
+            case 0x0A:
+                value &=0xFB;
+                if (!modo_configuracion) value=(value & 0x1F) | (tbblue_registers[0x0A] & 0xE0);
+            break;
+
+            case 0x0B: value &=0xB1; break;
+            //bit 7 (INT) solo lectura, bits 6:3 no existen
+            case 0x22: value=(value & 0x07) | (tbblue_registers[0x22] & 0x80); break;
+            //Bancos de Layer 2: 7 bits (con el bit 7 se saldria de los 2 MB)
+            case 0x12: case 0x13: value &=0x7F; break;
+            case 0x2F: value &=0x03; break;
+            case 0x4C: value &=0x0F; break;
+            case 0x68: value &=0xFD; break;
+            case 0x6A: value &=0x3F; break;
+            case 0x6E: case 0x6F: value &=0xBF; break;
+            case 0x70: value &=0x3F; break;
+            case 0x71: value &=0x01; break;
+            case 0x85: case 0x89: value &=0x8F; break;
+            case 0x8A: value &=0x3F; break;
+            case 0x8F: value &=0x03; break;
+            case 0xC4: case 0xCC: value &=0x83; break;
+            case 0xC6: case 0xCE: value &=0x77; break;
+            case 0xD8: value &=0x01; break;
+        }
     }
 
     tbblue_registers[index_position]=value;
@@ -5773,6 +5827,8 @@ int tbblue_get_cvc(void)
 }
 
 
+int tbblue_scanlines_efectivo;
+
 z80_byte tbblue_get_value_port_register(z80_byte registro)
 {
 
@@ -5866,8 +5922,31 @@ Bit	Function
         break;
 
         case 0xC0:
-            //bits 2:1 = modo de interrupcion actual de la CPU (solo lectura)
-            return (tbblue_registers[0xC0] & (255-6)) | ((im_mode & 3)<<1);
+            //bits 2:1 = modo de interrupcion actual de la CPU (solo lectura); bit 4 siempre 0
+            return (tbblue_registers[0xC0] & (255-6-16)) | ((im_mode & 3)<<1);
+        break;
+
+        //Lecturas compuestas como en el VHDL (zxnext.vhd), comparado con JNEXT
+
+        //bit 7 = primer byte de una escritura de paleta de 9 bits (NR 0x44) hecho; no el bit 7 escrito
+        case 0x03:
+            return (tbblue_registers[3] & 0x7F) | (tbblue_write_palette_state ? 0x80 : 0);
+        break;
+
+        //bit 3 (borrar mapram de DivMMC) se lee como 0
+        //bits 1:0 = intensidad de scanlines efectiva (se aplica al principio del frame)
+        case 0x09:
+            return (tbblue_registers[9] & 0xF4) | tbblue_scanlines_efectivo;
+        break;
+
+        //bits 6:3 siempre 0; bit 7 = INT
+        case 0x22:
+            return tbblue_registers[0x22] & 0x87;
+        break;
+
+        //Estado de interrupciones de UART: no hay UART emulada
+        case 0xCA:
+            return 0;
         break;
 
         case 0xC5:
