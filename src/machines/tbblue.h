@@ -93,6 +93,7 @@ extern void tbblue_set_emulator_setting_timing(void);
 extern int tbblue_timing_efectivo;
 extern int tbblue_get_timing_registro(void);
 extern void tbblue_aplicar_timing_frame(void);
+extern void tbblue_rellenar_borde_60hz(void);
 extern int tbblue_60hz_efectivo;
 extern int tbblue_get_60hz_registro(void);
 extern int tbblue_get_frame_microseconds(void);

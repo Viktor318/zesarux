@@ -424,7 +424,11 @@ void core_spectrum_fin_frame_pantalla(void)
     t_estados -=screen_testados_total;
 
     //Next: cambio de timing de pantalla (NR 0x03) al principio del frame
-    if (MACHINE_IS_TBBLUE) tbblue_aplicar_timing_frame();
+    if (MACHINE_IS_TBBLUE) {
+        //A 60 Hz: rellenar con el borde las filas que no se dibujan (antes de un posible cambio de timing)
+        tbblue_rellenar_borde_60hz();
+        tbblue_aplicar_timing_frame();
+    }
 
     if (MACHINE_IS_BASECONF) baseconf_update_timing(0);
     if (MACHINE_IS_BASECONF) baseconf_check_pending_nmi();

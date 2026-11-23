@@ -79,9 +79,10 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
   gépen kb. 20%-kal lassabbak voltak. Most a valódi géphez hasonlóan a
   képkocka elején vált: 264 sor (8 kioltott, 32 szegély, 192 kép, 32
   szegély), a sorszámláló és a sor-megszakítás ehhez igazodik, a Pentagon
-  időzítés mindig 50 Hz-es. A kép ilyenkor feljebb kerül, alatta fekete sáv
-  marad (mint a ZEsarUX más 60 Hz-es gépeinél). Másik gépre váltva a saját
-  50/60 Hz-es beállítás visszajön.
+  időzítés mindig 50 Hz-es. A kép ugyanott marad, mint 50 Hz-en; a 60 Hz-en
+  hiányzó 24-24 keretsort fent és lent a legközelebbi keretsor tölti ki, így
+  nincs fekete sáv. Másik gépre váltva a saját 50/60 Hz-es beállítás
+  visszajön.
 - **A Next processzora valós időben 3,5 MHz-en fut**: a képkocka hossza a
   valódi gépé (VGA 0, 28 MHz-es órajel): +3-as időzítéssel 50 Hz-en
   20 259 µs, 60 Hz-en 17 198 µs. Eddig a ZEsarUX fix 20 ms-os képkockát

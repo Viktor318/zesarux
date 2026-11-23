@@ -4491,12 +4491,15 @@ void tbblue_new_change_timing(int timing)
     else tbblue_set_timing_48k();
 
     //60 Hz (NR 0x05 bit 2 efectivo; Pentagon siempre a 50 Hz). Como el VHDL (zxula_timing.vhd, i_50_60='1'):
-    //264 lineas en 48K y en 128K/+3: 8 de blanking, 32 de borde superior, 192 de pantalla, 32 de borde inferior
+    //264 lineas en 48K y en 128K/+3: 8 de blanking, 32 de borde superior, 192 de pantalla, 32 de borde inferior.
+    //La pantalla empieza en la linea 40 (=-16+56). Para que la imagen quede centrada en el mismo sitio que a
+    //50 Hz (56 lineas de borde encima), el borde invisible es -16: las lineas 0..263 van a las filas 16..279
+    //del buffer, y las filas que faltan arriba y abajo se rellenan con el borde (tbblue_rellenar_borde_60hz)
     int a_60hz=(tbblue_60hz_efectivo && timing!=4);
 
     if (a_60hz) {
-        screen_invisible_borde_superior=8;
-        screen_borde_superior=32;
+        screen_invisible_borde_superior=-16;
+        screen_borde_superior=56;
         screen_total_borde_inferior=32;
     }
 
@@ -4633,6 +4636,38 @@ void tbblue_restaurar_60hz_usuario(void)
 
 //Intensidad de scanlines efectiva (NR 0x09 bits 1:0; VHDL: eff_nr_09_scanlines, al principio del frame)
 int tbblue_scanlines_efectivo=0;
+
+/*
+A 60 Hz hay 56 lineas menos que a 50 Hz (264 en vez de 311/312) y el buffer tiene el alto de 50 Hz.
+Al final de cada frame, las filas que no se dibujan (arriba y abajo de la imagen centrada) se rellenan
+copiando la linea de borde mas cercana, para que no quede una franja negra
+*/
+void tbblue_rellenar_borde_60hz(void)
+{
+    if (!tbblue_60hz_efectivo || tbblue_timing_efectivo==4 || border_enabled.v==0 || rainbow_buffer==NULL) return;
+
+    //Primera linea dibujada completa: la primera no tiene el borde izquierdo (lo dibuja la linea anterior)
+    int primera=1-screen_invisible_borde_superior;
+    //Ultima linea dibujada
+    int ultima=screen_indice_fin_pant+screen_total_borde_inferior-1-screen_invisible_borde_superior;
+
+    if (primera<0) return;
+
+    int ancho=get_total_ancho_rainbow();
+    int alto=get_total_alto_rainbow();
+
+    //Cada linea ocupa dos filas en el buffer (doble de alto)
+    int fila;
+    z80_int *origen=&rainbow_buffer[primera*2*ancho];
+    for (fila=0;fila<primera*2;fila++) {
+        memcpy(&rainbow_buffer[fila*ancho],origen,ancho*sizeof(z80_int));
+    }
+
+    origen=&rainbow_buffer[ultima*2*ancho];
+    for (fila=(ultima+1)*2;fila<alto;fila++) {
+        memcpy(&rainbow_buffer[fila*ancho],origen,ancho*sizeof(z80_int));
+    }
+}
 
 //Al principio de cada frame: aplicar el timing de NR 0x03 y el 50/60 Hz de NR 0x05 si han cambiado
 void tbblue_aplicar_timing_frame(void)

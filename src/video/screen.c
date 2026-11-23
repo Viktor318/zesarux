@@ -9406,6 +9406,12 @@ void screen_store_scanline_rainbow_solo_border_tbblue(void)
 
     int ancho_pantalla=256;
 
+    //Next a 60 Hz (imagen centrada, borde invisible negativo): no existe la linea screen_invisible_borde_superior-1
+    //donde se toma el color del borde al principio del frame; se toma en la primera linea (fork)
+    if (screen_invisible_borde_superior<=0 && t_scanline_draw==0) {
+        screen_border_last_color=get_border_colour_from_out();
+    }
+
 
     //zona de border superior o inferior. Dibujar desde posicion x donde acaba el ancho izquierdo de borde, linea horizontal
     //hasta derecha del todo, y luego trozo de ancho izquiero del borde de linea siguiente

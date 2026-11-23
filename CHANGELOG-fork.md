@@ -79,8 +79,9 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
   machine set to 60 Hz. Now, like the real machine, it switches at the
   start of a frame: 264 lines (8 blanked, 32 border, 192 display, 32
   border); the line counter and the line interrupt follow it; Pentagon
-  timing is always 50 Hz. The picture moves up with a black band below it
-  (like other 60 Hz machines in ZEsarUX). Switching to another machine
+  timing is always 50 Hz. The picture stays where it is at 50 Hz; the 24
+  border lines missing at 60 Hz above and below are filled with the nearest
+  border line, so there is no black band. Switching to another machine
   brings back the user's own 50/60 Hz setting.
 - **The Next CPU runs at 3.5 MHz in real time**: the frame length is that
   of the real machine (VGA 0, 28 MHz clock): 20,259 µs at 50 Hz and
