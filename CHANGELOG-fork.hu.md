@@ -53,6 +53,11 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
 
 ### ZX Spectrum Next
 
+- **A Next CTC-je nem késik a megszakítások miatt**: a CTC nem kapta meg
+  a megszakítás elfogadásának idejét (a visszatérési cím mentése, a vektor
+  olvasása), így sok megszakításnál lassabban járt. Az NXModPlayer
+  (másodpercenként kb. 35 000 megszakítás) emiatt 2,3%-kal lassabban és
+  mélyebben szólt, mint a JNEXT-ben. Most a CTC pontosan 28 MHz-ről jár.
 - **A Next NextReg-regiszterei a valódi géphez hasonlóan olvashatók
   vissza** (a VHDL és a JNEXT alapján, egy írás/visszaolvasás teszttel
   összevetve): az NR 0x03 7. bitje a 9 bites palettaírás félállapota (nem a

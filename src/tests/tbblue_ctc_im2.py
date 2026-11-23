@@ -129,7 +129,9 @@ ell("CTC0 egyszer, utana szolgalatban marad", r["ctc0"] == 1, "ctc0=%d" % r["ctc
 ell("az alacsonyabb prioritasu ULA blokkolva", r["ula"] == 0, "ula=%d" % r["ula"])
 
 r = futtat("s4"); print("4. HW IM2, CTC0 idozito -> CTC1 szamlalo lancolas:", r)
-ell("CTC1 (szamlalo, TC=5) kb. 428 megszakitas", 350 <= r["ctc1"] <= 520, "ctc1=%d" % r["ctc1"])
+# 214144 T kesleltetes, a kezelo 96 T (elfogadas 19 + COUNT 59 + EI/RETI 18), CTC1 periodus 500 T: 214144/(500-96) = 530
+# (2026-11-23 elott 506: a CTC nem kapta meg a megszakitas elfogadasanak idejet)
+ell("CTC1 (szamlalo, TC=5) kb. 530 megszakitas", 520 <= r["ctc1"] <= 540, "ctc1=%d" % r["ctc1"])
 ell("CTC0 nem kert megszakitast", r["ctc0"] == 0, "ctc0=%d" % r["ctc0"])
 
 r = futtat("s5"); print("5. HW IM2, vonalmegszakitas (100. sor) + ULA:", r)
@@ -148,7 +150,7 @@ ell("az ULA allapotbitje (NR 0xC8 0. bit) beall", r["c8"] & 1 == 1, "c8=%02X" % 
 r = futtat("s4", zsf=True); print("8. Mint a 4., kozben ZSF-mentes, reset es visszatoltes:", r)
 ell("a mentes a program futasa kozben tortent", r["felig"], "")
 ell("befejezodott", r["kesz"], "")
-ell("CTC1 a visszatoltes utan is szamol (kb. 428)", 350 <= r["ctc1"] <= 520, "ctc1=%d" % r["ctc1"])
+ell("CTC1 a visszatoltes utan is szamol (kb. 530)", 500 <= r["ctc1"] <= 560, "ctc1=%d" % r["ctc1"])
 
 print("\n%s" % ("Minden rendben" if hibak == 0 else "%d hiba" % hibak))
 sys.exit(1 if hibak else 0)

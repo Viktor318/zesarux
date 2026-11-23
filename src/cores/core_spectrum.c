@@ -1403,7 +1403,12 @@ void cpu_core_loop_spectrum(void)
         !(MACHINE_IS_TBBLUE && datagear_tbblue_cpu_stalled())) {
         TIMESENSOR_ENTRY_PRE(TIMESENSOR_ID_core_spectrum_handle_interrupts);
         //printf ("Generada interrupcion cpu %d pc=%XH\n",contador_segundo,reg_pc);
+        int t_estados_antes_interrupcion=t_estados;
         core_spectrum_handle_interrupts();
+        //Next: el CTC tambien cuenta el tiempo de aceptar la interrupcion (push del PC, lectura del vector...).
+        //Antes se perdia: con muchas interrupciones (NXModPlayer: unas 35000 por segundo) el CTC
+        //iba un 2,3% lento y la musica sonaba mas lenta y mas grave (fork)
+        if (MACHINE_IS_TBBLUE) tbblue_ctc_tick(t_estados-t_estados_antes_interrupcion);
         TIMESENSOR_ENTRY_POST(TIMESENSOR_ID_core_spectrum_handle_interrupts);
     }
     //Fin gestion interrupciones

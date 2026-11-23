@@ -53,6 +53,11 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
 
 ### ZX Spectrum Next
 
+- **The Next CTC no longer falls behind because of interrupts**: the CTC
+  did not get the time taken to accept an interrupt (pushing the return
+  address, reading the vector), so with many interrupts it ran slow.
+  NXModPlayer (about 35,000 interrupts a second) played 2.3% slower and
+  lower than in JNEXT. Now the CTC runs exactly from 28 MHz.
 - **Next NextRegs read back like on the real machine** (after the VHDL
   and JNEXT, compared with a write/readback test): NR 0x03 bit 7 is the
   9-bit palette write phase (not the written bit), NR 0x09 bit 3 reads 0 and
