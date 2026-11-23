@@ -53,6 +53,16 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
 
 ### ZX Spectrum Next
 
+- **Next display timing follows NR 0x03** (48K, 128K/+2, +2A/+3, Pentagon):
+  ZEsarUX used to change the timing only at 3.5 MHz, and every turbo change
+  restored the 48K one, so under NextZXOS (which sets it at 28 MHz) the Next
+  always ran with 224 T lines and 312-line frames instead of the +3's 228 T
+  and 311 lines (the line counter measured 2 lines more than a KS3 at
+  3.5 MHz). Now, like the real machine, it switches at the start of a frame,
+  survives turbo changes and is restored from ZSF; 128K and 48K BASIC get
+  their own timing. The timing changes only with bit 7 and no user lock,
+  bit 3 toggles the lock, bit 7 does not read back. Test program for a KS3:
+  `src/tests/next/nrtest` (NextReg readback and line counter).
 - **The Next DMA runs with real hardware timing** (based on measurements on
   a KS3, with the 3.02 and 3.03 cores): per byte the read plus write cycle
   length (2/3/4 clocks), with a prescaler at least prescaler × 32 28 MHz

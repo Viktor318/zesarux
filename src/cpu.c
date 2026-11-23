@@ -2437,8 +2437,8 @@ void set_machine_params(void)
     }
 
     if (MACHINE_IS_TBBLUE) {
-        //printf("Set timing 48k from set_machine_params\n");
-        tbblue_set_timing_48k();
+        //Timing efectivo de NR 0x03 (no siempre 48K), tambien tras un cambio de turbo
+        tbblue_new_change_timing(tbblue_timing_efectivo);
 
         //divmmc arranca desactivado, lo desactivamos asi para que no cambie las funciones peek/poke
         //esto ya se desactiva en set_machine

@@ -90,6 +90,10 @@ extern int tbblue_get_altrom_offset_dir(int altrom,z80_int dir);
 extern int tbblue_get_altrom(void);
 
 extern void tbblue_set_emulator_setting_timing(void);
+extern int tbblue_timing_efectivo;
+extern int tbblue_get_timing_registro(void);
+extern void tbblue_aplicar_timing_frame(void);
+extern void tbblue_new_change_timing(int timing);
 extern void tbblue_set_emulator_setting_reg_8(void);
 extern void tbblue_set_emulator_setting_divmmc(void);
 

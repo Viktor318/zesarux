@@ -53,6 +53,17 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
 
 ### ZX Spectrum Next
 
+- **A Next képidőzítése az NR 0x03 szerint** (48K, 128K/+2, +2A/+3,
+  Pentagon): eddig a ZEsarUX csak 3,5 MHz-en váltott időzítést, és minden
+  turbóváltás visszaállította a 48K-sat, így a NextZXOS alatt (amely
+  28 MHz-en állítja be) a Next mindig 224 T-s sorokkal és 312 soros
+  képkockákkal futott a +3-as 228 T és 311 sor helyett (a sorszámláló 3,5
+  MHz-en 2 sorral többet mért, mint egy KS3). Most a valódi géphez hasonlóan
+  a képkocka elején vált, a turbóváltás után is megmarad, és a ZSF-ből is
+  visszajön; a 128K és a 48K BASIC a saját időzítését kapja. Az időzítés
+  csak a 7. bittel, felhasználói zár nélkül változik, a 3. bit a zárat
+  váltja, a 7. bit nem olvasható vissza. Tesztprogram a KS3-hoz:
+  `src/tests/next/nrtest` (NextReg-visszaolvasás és sorszámláló).
 - **A Next DMA-ja a valódi gép idejével fut** (egy KS3-on mért értékek
   alapján, a 3.02 és a 3.03 core-ral): bájtonként az olvasás és az írás
   ciklushossza (2/3/4 órajel), előosztóval (prescaler) legalább

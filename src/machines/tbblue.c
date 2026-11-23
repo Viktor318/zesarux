@@ -4503,26 +4503,75 @@ void tbblue_set_emulator_setting_timing(void)
     */
 
 
-    z80_byte t=(tbblue_registers[3]>>4)&7;
+    //Se aplica ahora (snapshot). Durante la emulacion los cambios se aplican al principio del frame
+    tbblue_timing_efectivo=tbblue_get_timing_registro();
 
+    debug_printf(VERBOSE_DEBUG,"tbblue_set_emulator_setting_timing. t=%d",tbblue_timing_efectivo);
 
+    //Recalcula los parametros de la maquina con el timing efectivo y la velocidad actual
+    cpu_set_turbo_speed();
 
-    /*
-    No tiene sentido cambiar el timing si está velocidad diferente de 1x
-    Probablemente este no es el comportamiento exacto de la máquina real,
-    pero como no hay documentación pues...
-    */
+}
 
-    debug_printf(VERBOSE_DEBUG,"tbblue_set_emulator_setting_timing. t=%d",t);
+/*
+Timing efectivo de pantalla (VHDL: eff_nr_03_machine_timing): 1=48K, 2=128K, 3=+3, 4=Pentagon.
+Antes el emulador solo cambiaba el timing a velocidad 1X y cada cambio de turbo volvia a 48K,
+por lo que con NextZXOS (que escribe NR 0x03 a 28 MHz) la maquina siempre iba con timing de 48K
+(224 t-estados por linea, 312 lineas) aunque el registro indicase +3 (228, 311).
+*/
+int tbblue_timing_efectivo=1;
 
-    if (cpu_turbo_speed!=1) {
-        debug_printf(VERBOSE_DEBUG,"Called to tbblue_set_emulator_setting_timing but cpu speed is not 1X. Do not change timings");
-        return;
-    }
+//Timing seleccionado en NR 0x03 bits 6:4, decodificado como en el VHDL (000 -> 48K, 101-111 -> +3)
+int tbblue_get_timing_registro(void)
+{
+    int t=(tbblue_registers[3]>>4)&7;
 
+    if (t==0) return 1;
+    if (t>4) return 3;
+    return t;
+}
+
+void tbblue_cambiar_timing_pantalla(int t);
+
+//Al principio de cada frame: aplicar el timing de NR 0x03 si ha cambiado
+void tbblue_aplicar_timing_frame(void)
+{
+    int t=tbblue_get_timing_registro();
+
+    if (t==tbblue_timing_efectivo) return;
+
+    debug_printf(VERBOSE_DEBUG,"TBBlue: changing display timing from %d to %d",tbblue_timing_efectivo,t);
+
+    tbblue_timing_efectivo=t;
+
+    tbblue_cambiar_timing_pantalla(t);
+}
+
+/*
+Cambia solo los parametros de timing (t-estados por linea, lineas por frame, contencion) manteniendo
+el turbo, sin pasar por set_machine_params: este se llama al principio de un frame en cualquier momento
+(por ejemplo mientras NextZXOS cambia de maquina) y no debe reinicializar nada mas.
+Mismos pasos que el final de cpu_set_turbo_speed.
+*/
+void tbblue_cambiar_timing_pantalla(int t)
+{
+    int velocidad=cpu_turbo_speed;
+    int antes_t_estados=t_estados/velocidad;
+
+    //Los parametros de timing se calculan a 1X y luego se multiplican por el turbo
+    cpu_turbo_speed=1;
     tbblue_new_change_timing(t);
+    cpu_turbo_speed=velocidad;
 
+    screen_testados_linea *=cpu_turbo_speed;
+    screen_set_video_params_indices();
+    inicializa_tabla_contend_cached_change_cpu_speed();
 
+    recalcular_get_total_ancho_rainbow();
+    recalcular_get_total_alto_rainbow();
+    init_cache_putpixel();
+
+    t_estados=antes_t_estados*cpu_turbo_speed;
 }
 
 
@@ -4956,12 +5005,20 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
             100 = Pentagon display timing (changes to 50 Hz)
         */
 
-       if ((value&128)==0) {
-            debug_printf(VERBOSE_DEBUG,"Do not allow timing changes as bit 7 is not 1");
+       //Como en el VHDL (zxnext.vhd): el timing solo cambia con bit 7=1, sin bloqueo de usuario (bit 3)
+       //y si el bit 3 escrito es 0. Un 1 en el bit 3 conmuta el bloqueo. El bit 7 no se guarda
+       z80_byte bloqueo_timing=last_register_3 & 0x08;
+
+       if ((value&128)==0 || bloqueo_timing || (value&0x08)) {
+            debug_printf(VERBOSE_DEBUG,"Do not allow timing changes (bit 7 is not 1, user lock or bit 3 set)");
             z80_byte previous_timing=last_register_3 & 0x70;
             value &=(255-0x70);
             value |=previous_timing;
        }
+
+       if (value&0x08) bloqueo_timing ^=0x08;
+
+       value=(value & 0x77) | bloqueo_timing;
     }
 
     if (index_position==28) {
@@ -5125,11 +5182,8 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 
             }
 
-            //Permitir cambios de timings
-            //Solo cuando hay cambio
-            if ( last_register_3 != value ) {
-                tbblue_set_emulator_setting_timing();
-            }
+            //El cambio de timing se aplica al principio del siguiente frame (tbblue_aplicar_timing_frame),
+            //como eff_nr_03_machine_timing en el VHDL
         break;
 
 

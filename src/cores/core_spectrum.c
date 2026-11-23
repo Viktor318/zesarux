@@ -423,6 +423,9 @@ void core_spectrum_fin_frame_pantalla(void)
 
     t_estados -=screen_testados_total;
 
+    //Next: cambio de timing de pantalla (NR 0x03) al principio del frame
+    if (MACHINE_IS_TBBLUE) tbblue_aplicar_timing_frame();
+
     if (MACHINE_IS_BASECONF) baseconf_update_timing(0);
     if (MACHINE_IS_BASECONF) baseconf_check_pending_nmi();
     if (MACHINE_IS_TSCONF) baseconf_ps2_scan_keyboard();
