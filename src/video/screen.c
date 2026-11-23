@@ -1337,6 +1337,16 @@ void init_rainbow(void)
 
 }
 
+//Borra los dos buffers rainbow (por ejemplo cuando una maquina cambia el alto de la zona usada,
+//como el Next al pasar de 50 a 60 Hz)
+void screen_clear_rainbow_buffers(void)
+{
+    if (rainbow_buffer_one==NULL || anterior_tamanyo_rainbow<=0) return;
+
+    memset(rainbow_buffer_one,0,anterior_tamanyo_rainbow);
+    memset(rainbow_buffer_two,0,anterior_tamanyo_rainbow);
+}
+
 //Para evitar que mientras se inicializa cache putpixel (despues del free y antes de asignar la memoria),
 //entre un clear_putpixel_cache como consecuencia de un cambio de ventana que en Mac OS salta a resizeContentToWidth y de ahi a clear_putpixel_cache
 //Y eso provocaria que clear_putpixel_cache estuviera usando memoria desasignada y generar un posible segfault

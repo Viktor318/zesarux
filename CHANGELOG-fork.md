@@ -53,6 +53,24 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
 
 ### ZX Spectrum Next
 
+- **The Next also runs at 60 Hz** (NR 0x05 bit 2, the firmware's
+  `50_60hz` setting): the Next used to run 50 Hz frames of 312/311 lines
+  even when set to 60 Hz, so programs and music were about 20% slower on a
+  machine set to 60 Hz. Now, like the real machine, it switches at the
+  start of a frame: 264 lines (8 blanked, 32 border, 192 display, 32
+  border); the line counter and the line interrupt follow it; Pentagon
+  timing is always 50 Hz. The picture moves up with a black band below it
+  (like other 60 Hz machines in ZEsarUX). Switching to another machine
+  brings back the user's own 50/60 Hz setting.
+- **The Next CPU runs at 3.5 MHz in real time**: the frame length is that
+  of the real machine (VGA 0, 28 MHz clock): 20,259 µs at 50 Hz and
+  17,198 µs at 60 Hz with +3 timing. ZEsarUX used a fixed 20 ms frame, so
+  tones were slightly off (after the timing fix they would have been 1.3%
+  higher, 3.2% at 60 Hz).
+- **Sound no longer goes silent after the audio driver restarts** (SDL2,
+  high quality sound): if the driver was restarted while running (e.g.
+  when the Next timing changes or the emulation speed is set) during
+  silence, the audio device stayed paused.
 - **Next display timing follows NR 0x03** (48K, 128K/+2, +2A/+3, Pentagon):
   ZEsarUX used to change the timing only at 3.5 MHz, and every turbo change
   restored the 48K one, so under NextZXOS (which sets it at 28 MHz) the Next

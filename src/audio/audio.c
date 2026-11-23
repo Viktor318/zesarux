@@ -2561,10 +2561,12 @@ void audio_send_stereo_sample(char valor_sonido_izquierdo,char valor_sonido_dere
 	//Fusionar una de cada 131 con la anterior no es un remuestreo perfecto,
 	//pero es la solucion mas sencilla y evita cambiar la frecuencia de audio
 	//de 15600 Hz a 15720 Hz (262 lineas * 60 frames) en todos los drivers.
-	if (machine_60hz.v) {
+	//Con otro numero de lineas (Next a 60 Hz: 264) se fusiona una de cada lineas/(lineas-260)
+	//(262 -> 131, 264 -> 66)
+	if (machine_60hz.v && screen_scanlines>260) {
 		audio_contador_remuestreo_60hz++;
 
-		if (audio_contador_remuestreo_60hz>=131) {
+		if (audio_contador_remuestreo_60hz>=screen_scanlines/(screen_scanlines-260)) {
 			audio_contador_remuestreo_60hz=0;
 
 			if (audio_buffer_indice>=2) {

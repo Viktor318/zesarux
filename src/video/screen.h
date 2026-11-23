@@ -424,6 +424,7 @@ extern int last_x_atributo;
 extern void clear_putpixel_cache(void);
 
 extern void init_cache_putpixel(void);
+extern void screen_clear_rainbow_buffers(void);
 
 extern void cache_putpixel_end_lock_semaphore(void);
 

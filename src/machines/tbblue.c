@@ -44,6 +44,7 @@ static void tbblue_hq_dac_update(void);
 #include "audio.h"
 
 #include "datagear.h"
+#include "timer.h"
 #include "ay38912.h"
 #include "multiface.h"
 #include "uartbridge.h"
@@ -4395,6 +4396,9 @@ void tbblue_set_timing_48k(void)
 
 }
 
+int tbblue_60hz_efectivo;
+void tbblue_set_machine_60hz(int valor);
+
 void tbblue_new_change_timing(int timing)
 {
 
@@ -4466,6 +4470,18 @@ void tbblue_new_change_timing(int timing)
     else if (timing==3) tbblue_set_timing_p2a();
     else tbblue_set_timing_48k();
 
+    //60 Hz (NR 0x05 bit 2 efectivo; Pentagon siempre a 50 Hz). Como el VHDL (zxula_timing.vhd, i_50_60='1'):
+    //264 lineas en 48K y en 128K/+3: 8 de blanking, 32 de borde superior, 192 de pantalla, 32 de borde inferior
+    int a_60hz=(tbblue_60hz_efectivo && timing!=4);
+
+    if (a_60hz) {
+        screen_invisible_borde_superior=8;
+        screen_borde_superior=32;
+        screen_total_borde_inferior=32;
+    }
+
+    tbblue_set_machine_60hz(a_60hz);
+
     screen_set_video_params_indices();
     inicializa_tabla_contend();
 
@@ -4505,11 +4521,15 @@ void tbblue_set_emulator_setting_timing(void)
 
     //Se aplica ahora (snapshot). Durante la emulacion los cambios se aplican al principio del frame
     tbblue_timing_efectivo=tbblue_get_timing_registro();
+    tbblue_60hz_efectivo=tbblue_get_60hz_registro();
 
-    debug_printf(VERBOSE_DEBUG,"tbblue_set_emulator_setting_timing. t=%d",tbblue_timing_efectivo);
+    debug_printf(VERBOSE_DEBUG,"tbblue_set_emulator_setting_timing. t=%d 60hz=%d",tbblue_timing_efectivo,tbblue_60hz_efectivo);
 
     //Recalcula los parametros de la maquina con el timing efectivo y la velocidad actual
     cpu_set_turbo_speed();
+
+    //Puede haber cambiado el alto de la zona usada (50/60 Hz): borrar los restos
+    screen_clear_rainbow_buffers();
 
 }
 
@@ -4533,18 +4553,84 @@ int tbblue_get_timing_registro(void)
 
 void tbblue_cambiar_timing_pantalla(int t);
 
-//Al principio de cada frame: aplicar el timing de NR 0x03 si ha cambiado
+//60 Hz efectivo (VHDL: eff_nr_05_5060), se aplica al principio de cada frame
+int tbblue_60hz_efectivo=0;
+
+//Valor de machine_60hz antes de que TBBlue lo cambiara, para restaurarlo al cambiar de maquina (-1: no guardado)
+int tbblue_60hz_usuario=-1;
+
+//Duracion real de un frame en microsegundos con el timing y el 50/60 Hz efectivos, a 3,5 MHz:
+//t-estados por frame * 2 / 7 (48K: 224*312, 128K/+3: 228*311, Pentagon: 224*320; a 60 Hz 264 lineas)
+int tbblue_get_frame_microseconds(void)
+{
+    int t=tbblue_timing_efectivo;
+    int linea=(t==2 || t==3 ? 228 : 224);
+    int lineas;
+
+    if (tbblue_60hz_efectivo && t!=4) lineas=264;
+    else if (t==4) lineas=320;
+    else if (t==2 || t==3) lineas=311;
+    else lineas=312;
+
+    return (linea*lineas*2+3)/7;
+}
+
+//60 Hz pedido por los registros: NR 0x05 bit 2, salvo con timing Pentagon
+int tbblue_get_60hz_registro(void)
+{
+    if (tbblue_get_timing_registro()==4) return 0;
+
+    return (tbblue_registers[5] & 4) ? 1 : 0;
+}
+
+//Ajusta machine_60hz y la duracion del frame segun el 60 Hz efectivo.
+//La duracion es la real de un frame a 3,5 MHz (reloj de 28 MHz, VGA 0): 70908 t-estados (+3, 50 Hz) son
+//20259 us, 60192 (+3, 60 Hz) son 17198 us. Asi la CPU va a 3,5 MHz como en la maquina real; antes, con frames
+//fijos de 20 ms / 16,7 ms, iba un 1,3% / 3,2% mas rapida (y los tonos sonaban mas agudos).
+//Se llama con los parametros de timing a 1X
+void tbblue_set_machine_60hz(int valor)
+{
+    if (tbblue_60hz_usuario<0) tbblue_60hz_usuario=machine_60hz.v;
+
+    int frame_us=tbblue_get_frame_microseconds();
+
+    if (machine_60hz.v!=valor || original_timer_sleep_machine!=frame_us) {
+        machine_60hz.v=valor;
+        original_timer_sleep_machine=frame_us;
+        set_emulator_speed();
+    }
+}
+
+//Al salir de TBBlue: restaurar el machine_60hz que tenia el usuario
+void tbblue_restaurar_60hz_usuario(void)
+{
+    if (tbblue_60hz_usuario<0) return;
+
+    machine_60hz.v=tbblue_60hz_usuario;
+    tbblue_60hz_usuario=-1;
+    tbblue_60hz_efectivo=0;
+}
+
+//Al principio de cada frame: aplicar el timing de NR 0x03 y el 50/60 Hz de NR 0x05 si han cambiado
 void tbblue_aplicar_timing_frame(void)
 {
     int t=tbblue_get_timing_registro();
+    int hz60=tbblue_get_60hz_registro();
 
-    if (t==tbblue_timing_efectivo) return;
+    if (t==tbblue_timing_efectivo && hz60==tbblue_60hz_efectivo) return;
 
-    debug_printf(VERBOSE_DEBUG,"TBBlue: changing display timing from %d to %d",tbblue_timing_efectivo,t);
+    debug_printf(VERBOSE_DEBUG,"TBBlue: changing display timing from %d to %d, 60 Hz from %d to %d",
+        tbblue_timing_efectivo,t,tbblue_60hz_efectivo,hz60);
+
+    int cambio_frecuencia=(hz60!=tbblue_60hz_efectivo);
 
     tbblue_timing_efectivo=t;
+    tbblue_60hz_efectivo=hz60;
 
     tbblue_cambiar_timing_pantalla(t);
+
+    //Cambia el alto de la zona usada del buffer: borrar los restos del otro modo
+    if (cambio_frecuencia) screen_clear_rainbow_buffers();
 }
 
 /*

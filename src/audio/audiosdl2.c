@@ -135,6 +135,11 @@ int audiosdl_init(void)
 
 		//SDL_PauseAudioDevice(dispositivo_sdl, 0); /* start audio playing. */
 
+	//Sonido de alta calidad: el dispositivo lee del FIFO (silencio si esta vacio), se puede arrancar ya.
+	//Si no, tras reiniciar el driver con la maquina en silencio (el detector de silencio del sonido
+	//clasico no llama a audiosdl_send_frame) el dispositivo quedaba pausado para siempre (fork)
+	if (audiosdl_hq_mode) SDL_PauseAudioDevice(dispositivo_sdl,0);
+
 
 	//Esto debe estar al final, para que funcione correctamente desde menu, cuando se selecciona un driver, y no va, que pueda volver al anterior
 	audio_set_driver_name("sdl");

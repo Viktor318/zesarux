@@ -53,6 +53,24 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
 
 ### ZX Spectrum Next
 
+- **A Next 60 Hz-en is fut** (NR 0x05 2. bit, a firmware `50_60hz`
+  beállítása): eddig a Next 60 Hz-es beállítással is 50 Hz-es, 312/311
+  soros képkockákkal ment, így a programok és a zene a 60 Hz-re állított
+  gépen kb. 20%-kal lassabbak voltak. Most a valódi géphez hasonlóan a
+  képkocka elején vált: 264 sor (8 kioltott, 32 szegély, 192 kép, 32
+  szegély), a sorszámláló és a sor-megszakítás ehhez igazodik, a Pentagon
+  időzítés mindig 50 Hz-es. A kép ilyenkor feljebb kerül, alatta fekete sáv
+  marad (mint a ZEsarUX más 60 Hz-es gépeinél). Másik gépre váltva a saját
+  50/60 Hz-es beállítás visszajön.
+- **A Next processzora valós időben 3,5 MHz-en fut**: a képkocka hossza a
+  valódi gépé (VGA 0, 28 MHz-es órajel): +3-as időzítéssel 50 Hz-en
+  20 259 µs, 60 Hz-en 17 198 µs. Eddig a ZEsarUX fix 20 ms-os képkockát
+  vett, így a hangok kicsit eltértek (az időzítés javítása után +1,3%-kal,
+  60 Hz-en +3,2%-kal magasabbak lettek volna).
+- **A hang nem némul el a hangmeghajtó újraindítása után** (SDL2, jó
+  minőségű hang): ha a meghajtó futás közben újraindult (pl. a Next
+  időzítésének váltásakor vagy az emuláció sebességének állításakor), és
+  közben csend volt, a hangeszköz szünetelő állapotban maradt.
 - **A Next képidőzítése az NR 0x03 szerint** (48K, 128K/+2, +2A/+3,
   Pentagon): eddig a ZEsarUX csak 3,5 MHz-en váltott időzítést, és minden
   turbóváltás visszaállította a 48K-sat, így a NextZXOS alatt (amely

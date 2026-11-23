@@ -1425,6 +1425,9 @@ void random_ram_inves(z80_byte *puntero,int longitud)
 //y por tanto tambien el sonido sonaba algo mas grave. Las demas maquinas siguen con 20000
 int cpu_get_real_frame_microseconds(void)
 {
+    //Next: segun el timing y el 50/60 Hz efectivos (ver tbblue_get_frame_microseconds)
+    if (MACHINE_IS_TBBLUE) return tbblue_get_frame_microseconds();
+
     if (current_machine_type==MACHINE_ID_SPECTRUM_16 || current_machine_type==MACHINE_ID_SPECTRUM_48 ||
         MACHINE_IS_SPECTRUM_48_PLUS_SPA || MACHINE_IS_SPECTRUM_48_PLUS_ENG) {
         return 19968;
@@ -1456,6 +1459,11 @@ void set_emulator_speed(void)
     int nueva_frecuencia_sonido=FRECUENCIA_CONSTANTE_NORMAL_SONIDO*porcentaje_velocidad_emulador/100;
     if (!machine_60hz.v && original_timer_sleep_machine>=19000 && original_timer_sleep_machine<=21000) {
         nueva_frecuencia_sonido=(int)((long long)nueva_frecuencia_sonido*20000/original_timer_sleep_machine);
+    }
+
+    //Lo mismo a 60 Hz si el frame no dura 16666 us (Next: 17198 us con 264 lineas de 228 t-estados)
+    else if (machine_60hz.v && original_timer_sleep_machine>=16000 && original_timer_sleep_machine<=18000) {
+        nueva_frecuencia_sonido=(int)((long long)nueva_frecuencia_sonido*16666/original_timer_sleep_machine);
     }
 
     //Si ha cambiado velocidad, reiniciar driver audio con frecuencia adecuada
@@ -1902,6 +1910,10 @@ void malloc_mem_machine(void) {
 
 void set_machine_params(void)
 {
+
+    //Si se sale de TBBlue, devolver el 50/60 Hz que tenia el usuario (TBBlue lo controla con NR 0x05)
+    if (!MACHINE_IS_TBBLUE) tbblue_restaurar_60hz_usuario();
+
 
 /*
 0=Sinclair 16k
