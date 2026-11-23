@@ -779,6 +779,9 @@ void core_spectrum_fin_scanline(void)
     t_scanline_next_line();
     TIMESENSOR_ENTRY_POST(TIMESENSOR_ID_core_spectrum_t_scanline_next_line);
 
+    //Next: contador de lineas con el desplazamiento de NR 0x64
+    if (MACHINE_IS_TBBLUE) tbblue_cvc_nueva_linea();
+
     //zeng_online_client_increment_scanline_counter();
 
 

@@ -53,6 +53,10 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
 
 ### ZX Spectrum Next
 
+- **A Next NR 0x64 regisztere (a copper sor-eltolása) működik**: a
+  sorszámláló a kép első soránál az NR 0x64 értékéről indul, és ezt
+  használja az NR 0x1E/0x1F olvasása, a sor-megszakítás és a copper WAIT
+  utasítása is (mint a valódi gépen). Eddig az NR 0x64-nek nem volt hatása.
 - **A Next 60 Hz-en is fut** (NR 0x05 2. bit, a firmware `50_60hz`
   beállítása): eddig a Next 60 Hz-es beállítással is 50 Hz-es, 312/311
   soros képkockákkal ment, így a programok és a zene a 60 Hz-re állított

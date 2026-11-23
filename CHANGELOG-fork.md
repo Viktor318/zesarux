@@ -53,6 +53,10 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
 
 ### ZX Spectrum Next
 
+- **Next NR 0x64 (copper vertical line offset) works**: at the first
+  display line the line counter starts from the value of NR 0x64, and NR
+  0x1E/0x1F reads, the line interrupt and the copper WAIT use it (as on the
+  real machine). NR 0x64 used to have no effect.
 - **The Next also runs at 60 Hz** (NR 0x05 bit 2, the firmware's
   `50_60hz` setting): the Next used to run 50 Hz frames of 312/311 lines
   even when set to 60 Hz, so programs and music were about 20% slower on a

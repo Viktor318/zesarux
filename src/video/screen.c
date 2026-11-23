@@ -15800,7 +15800,12 @@ TBBLUE:
                                 //es zona de vsync y borde superior
                                 //Aqui el contador raster tiene valor (192+56 en adelante)
                                 //contador de scanlines del core, entre 0 y screen_indice_inicio_pant ,
-                                if (t_scanline<screen_indice_inicio_pant) {
+                                //Next: se compara con el contador de lineas desplazado por NR 0x64 (cvc)
+                                if (MACHINE_IS_TBBLUE) {
+                                    if (tbblue_get_cvc()==linea_raster) disparada_raster=1;
+                                }
+
+                                else if (t_scanline<screen_indice_inicio_pant) {
                                     if (t_scanline==linea_raster-192-screen_total_borde_inferior) disparada_raster=1;
                                 }
 

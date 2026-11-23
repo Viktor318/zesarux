@@ -748,6 +748,8 @@ z80_byte tbblue_copper_get_control_bits(void)
     return 0;
 }*/
 
+int tbblue_get_cvc(void);
+
 //Si scanline y posicion actual corresponde con instruccion wait
 int tbblue_copper_wait_cond_fired(void)
 {
@@ -760,7 +762,8 @@ int tbblue_copper_wait_cond_fired(void)
     z80_int linea, horiz;
     tbblue_copper_get_wait_opcode_parameters(&linea,&horiz);
 
-    int current_raster=tbblue_get_current_raster_position();
+    //El copper compara con el contador de lineas desplazado por NR 0x64 (cvc)
+    int current_raster=tbblue_get_cvc();
 
     //511, 63
     //if (tbblue_copper_get_pc()==0x24)
@@ -3965,8 +3968,14 @@ void reset_debug_tbblue_sprite_visibility(void)
     }
 }
 
+int tbblue_cvc_offset;
+
 void tbblue_reset_common(void)
 {
+
+    //VHDL: NR 0x64 vuelve a 0 en cualquier reset
+    tbblue_registers[0x64]=0;
+    tbblue_cvc_offset=0;
 
     tbblue_port_dffd=0;
 
@@ -5741,6 +5750,28 @@ Row	Start	Row End	Length	Description
 
 }
 
+/*
+Contador de lineas del Next (VHDL: cvc, zxula_timing.vhd): en la primera linea de paper toma el valor de
+NR 0x64 (desplazamiento de linea del copper, i_cu_offset), y sube una vez por linea hasta la ultima linea
+del frame. Lo usan la lectura de NR 0x1E/0x1F, la interrupcion de linea y la espera (WAIT) del copper.
+*/
+int tbblue_cvc_offset=0;
+
+//Llamar al empezar cada linea: el desplazamiento se toma en la primera linea de paper
+void tbblue_cvc_nueva_linea(void)
+{
+    if (t_scanline==screen_indice_inicio_pant) tbblue_cvc_offset=tbblue_registers[0x64];
+}
+
+int tbblue_get_cvc(void)
+{
+    int linea=tbblue_get_raster_line();
+
+    if (tbblue_cvc_offset) linea=(linea+tbblue_cvc_offset)%screen_scanlines;
+
+    return linea;
+}
+
 
 z80_byte tbblue_get_value_port_register(z80_byte registro)
 {
@@ -5901,13 +5932,13 @@ Bit	Function
         */
 
         case 30:
-            linea_raster=tbblue_get_raster_line();
+            linea_raster=tbblue_get_cvc();
             linea_raster=linea_raster >> 8;
             return (linea_raster&1);
         break;
 
         case 31:
-            linea_raster=tbblue_get_raster_line();
+            linea_raster=tbblue_get_cvc();
             return (linea_raster&0xFF);
         break;
 
