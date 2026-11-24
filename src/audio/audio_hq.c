@@ -215,6 +215,17 @@ static blip_time_t audio_hq_time(int tstates);
 //Por encima del objetivo mas esto se descarta audio antiguo (solo en casos extremos)
 #define AUDIO_HQ_FIFO_MAX_EXTRA (AUDIO_HQ_SAMPLE_RATE*230/1000)
 
+//Ajuste fino de velocidad (fork): margen sin corregir (fraccion del objetivo), parte proporcional e integral,
+//y cambio maximo por frame
+//(KI: por frame; con un error de 0,2 la parte lenta cambia un 0,1% en unos 10 segundos a 50 Hz)
+#define AUDIO_HQ_AJUSTE_MARGEN 0.10
+#define AUDIO_HQ_AJUSTE_KP 0.01
+#define AUDIO_HQ_AJUSTE_MAX_PROPORCIONAL 0.002
+#define AUDIO_HQ_AJUSTE_KI 0.00001
+#define AUDIO_HQ_AJUSTE_MAX_INTEGRAL 0.005
+#define AUDIO_HQ_AJUSTE_MAX_TOTAL 0.005
+#define AUDIO_HQ_AJUSTE_PASO 0.00002
+
 //Usando el retardo largo (lo cambia el hilo de emulacion, lo lee tambien el de audio)
 static volatile int hq_fifo_long=0;
 
@@ -974,7 +985,7 @@ void audio_hq_end_frame(int frame_tstates)
 
     //Ajuste fino de la velocidad: el reloj del emulador y el de la tarjeta de sonido nunca van exactamente
     //igual. En vez de descartar o repetir audio, se generan un poco mas o menos muestras por frame
-    //(como mucho un 2%, y cambiando muy despacio) para mantener el FIFO cerca del retardo objetivo
+    //para mantener el FIFO cerca del retardo objetivo (ver mas abajo: como mucho un 0,5% y muy despacio)
     //Retardo largo mientras toca el reproductor AY
     //(con el reproductor en hilo aparte la musica no pasa por aqui: retardo corto)
     int largo=(ay_player_playing.v && !ay_tp_active() ? 1 : 0);
@@ -995,15 +1006,60 @@ void audio_hq_end_frame(int frame_tstates)
         }
     }
 
+    /*
+    El ajuste cambia el tono, asi que tiene que ser inaudible (fork). Antes llegaba al 2% y reaccionaba en
+    1-2 segundos: tras un tiron del sistema (Windows, frames perdidos) el FIFO bajaba y el tono caia hasta un
+    1,4% (unos 24 cents) durante 10-20 segundos, y se oia el sonido "deslizarse". Ahora hay dos partes:
+    -una lenta (integral, como mucho +-0,5%) que sigue la diferencia constante entre el reloj del emulador
+     y el de la tarjeta: es un desplazamiento fijo de unos pocos cents, que no se oye como deslizamiento
+    -una rapida y pequena (proporcional, como mucho +-0,2%, unos 3 cents) para los tirones
+    El total nunca pasa de +-0,5% (unos 9 cents)
+    Ademas: el nivel del FIFO se promedia en unos 4 segundos, no se corrige dentro de un margen de +-10%
+    alrededor del objetivo, el ajuste total cambia como mucho un 0,002% por frame (0,1% por segundo), y
+    mientras el FIFO se rellena tras quedarse vacio (fundido a silencio) no se corrige
+    */
     int objetivo=audio_hq_fifo_target();
     static double fifo_medio=AUDIO_HQ_FIFO_TARGET_SHORT;
-    double ajuste=0;
+    static double ajuste_actual=0;
+    static double ajuste_integral=0;
+    double ajuste_deseado=ajuste_actual;
+
     if (audio_hq_fifo_in_use) {
-        fifo_medio=fifo_medio*0.98+audio_hq_fifo_frames()*0.02;
-        ajuste=(fifo_medio-objetivo)/objetivo*0.02;
+        if (hq_fifo_buffering) {
+            fifo_medio=objetivo;
+        }
+        else {
+            fifo_medio=fifo_medio*0.995+audio_hq_fifo_frames()*0.005;
+
+            double error=(fifo_medio-objetivo)/objetivo;
+            double margen=AUDIO_HQ_AJUSTE_MARGEN;
+            if (error>margen) error-=margen;
+            else if (error<-margen) error+=margen;
+            else error=0;
+
+            ajuste_integral+=error*AUDIO_HQ_AJUSTE_KI;
+            if (ajuste_integral>AUDIO_HQ_AJUSTE_MAX_INTEGRAL) ajuste_integral=AUDIO_HQ_AJUSTE_MAX_INTEGRAL;
+            if (ajuste_integral<-AUDIO_HQ_AJUSTE_MAX_INTEGRAL) ajuste_integral=-AUDIO_HQ_AJUSTE_MAX_INTEGRAL;
+
+            double proporcional=error*AUDIO_HQ_AJUSTE_KP;
+            if (proporcional>AUDIO_HQ_AJUSTE_MAX_PROPORCIONAL) proporcional=AUDIO_HQ_AJUSTE_MAX_PROPORCIONAL;
+            if (proporcional<-AUDIO_HQ_AJUSTE_MAX_PROPORCIONAL) proporcional=-AUDIO_HQ_AJUSTE_MAX_PROPORCIONAL;
+
+            ajuste_deseado=ajuste_integral+proporcional;
+            if (ajuste_deseado>AUDIO_HQ_AJUSTE_MAX_TOTAL) ajuste_deseado=AUDIO_HQ_AJUSTE_MAX_TOTAL;
+            if (ajuste_deseado<-AUDIO_HQ_AJUSTE_MAX_TOTAL) ajuste_deseado=-AUDIO_HQ_AJUSTE_MAX_TOTAL;
+        }
     }
-    if (ajuste>0.02) ajuste=0.02;
-    if (ajuste<-0.02) ajuste=-0.02;
+    else {
+        ajuste_deseado=0;
+    }
+
+    //Cambio lento
+    if (ajuste_deseado>ajuste_actual+AUDIO_HQ_AJUSTE_PASO) ajuste_actual+=AUDIO_HQ_AJUSTE_PASO;
+    else if (ajuste_deseado<ajuste_actual-AUDIO_HQ_AJUSTE_PASO) ajuste_actual-=AUDIO_HQ_AJUSTE_PASO;
+    else ajuste_actual=ajuste_deseado;
+
+    double ajuste=ajuste_actual;
 
     long rate=(long)(audio_hq_get_clock_rate()*(1.0+ajuste));
     if (rate<1) rate=1;

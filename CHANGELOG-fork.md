@@ -51,6 +51,18 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
   buttons, and F5, still open it. Until now a click inside the picture opened
   it too, unless the Kempston mouse or the lightgun was on.
 
+### Sound
+
+- **The pitch no longer slides** (high quality sound): the speed adjustment
+  that keeps the sound buffer level could pull up to ±2% and reacted within
+  1–2 seconds. After a system hiccup (a few dropped frames on Windows) the
+  sound could therefore play up to 1.4% (about a quarter of a semitone) lower
+  for 10–20 seconds, sliding audibly up and down. Now it is at most ±0.5%
+  (about 9 cents) and changes slowly: a slow part follows the constant
+  difference between the emulator's and the sound card's clocks, a small one
+  (±0.2%) the momentary fluctuation; the buffer level is averaged over about
+  4 seconds, and there is no adjustment within ±10% of the target.
+
 ### ZX Spectrum Next
 
 - **The Next CTC no longer falls behind because of interrupts**: the CTC

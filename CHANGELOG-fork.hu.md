@@ -51,6 +51,18 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
   F5-tel továbbra is megnyílik. Eddig a gép képébe kattintás is megnyitotta,
   hacsak nem volt bekapcsolva a Kempston egér vagy a fénypisztoly.
 
+### Hang
+
+- **Nem csúszkál a hang magassága** (jó minőségű hang): a hangpuffer
+  szintjét tartó sebességigazítás eddig ±2%-ig húzhatott, és 1–2 másodperc
+  alatt reagált. Egy rendszerakadás (Windowson néhány kihagyott képkocka)
+  után így a hang 10–20 másodpercig akár 1,4%-kal (kb. negyed félhanggal)
+  mélyebben szólt, és hallhatóan fel-le csúszott. Most legfeljebb ±0,5%
+  (kb. 9 cent), és lassan változik: egy lassú rész követi az emulátor és a
+  hangkártya órájának állandó eltérését, egy kicsi (±0,2%) a pillanatnyi
+  ingadozást, a puffer szintjét kb. 4 másodpercre átlagolja, és a cél körüli
+  ±10%-on belül nem igazít.
+
 ### ZX Spectrum Next
 
 - **A Next CTC-je nem késik a megszakítások miatt**: a CTC nem kapta meg
