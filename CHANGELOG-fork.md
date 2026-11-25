@@ -216,6 +216,21 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
   slower to load and uses as much RAM” (the image is still loaded into memory
   as a whole).
 
+### Upstream
+
+- Merged the upstream state of 2026-11-25 (38 commits): **full screen on
+  the Next** no longer disables the border (it cannot be disabled there);
+  the **light gun and Spectrum Doodler** positions are right on the machine
+  picture shown in its own window too (with the fork's scaling, fit to
+  window and scrolling); without the ZX Desktop the machine area shows the
+  theme background when the picture is in a window; **the screen of any
+  machine can be saved to an SCR file**, and ZSF snapshots of non Spectrum
+  machines carry an SCR preview (*ZSF save Screen*, `--zsf-no-save-scr`,
+  translated to Hungarian too); fixed BMP header; snapshots in RAM on the
+  Jupiter Ace, Sam Coupé and Z88 too; cartridge RAM on the Master System;
+  MK14 without border; Linux AppImage preparation. The fork's own README is
+  unchanged.
+
 ## v13.1-B1-hu.1 – 2026-11-18
 
 The second release of the fork, based on ZEsarUX 13.1 Beta 1.

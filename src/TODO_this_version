@@ -146,13 +146,6 @@ QL-Qsound AY
 *Qsound opciones para habilitar en archivos .config
 *Incluir alguna demo de QL en extras?
 
-----
-
--master system:
-outrun: corregido dibujado pista y tablero y nubes
-chasehq: tambien bien
-bank panic ok
-astro flash ok
 
 
 ------
@@ -198,9 +191,6 @@ necesita core 3.2.0 o inferior!
 ***Baseconf*****
 
 
--modo video que aparezca en debug->baseconf->video info
-->mas info adicional?
-->mas ventanas en debug->baseconf?
 
 -probado con mmc pruebabaseconf.mmc
 -probado con ide con baseconf-fat32.ide
@@ -286,38 +276,6 @@ soft? https://zxaaa.net/view_demos.php?t=&s=scorpion&title=Title&vers=35
 
 ---------------
 
----- ventana video output como sustituto del render normal de maquina:
-
-
--que las pulsaciones sobre zx desktop en zona de maquina emulada, con ventana video output, se consideren zx desktop
-
-Que pasa sin ZX desktop? Quizá no se debería hacer este cambio a ventana si
-No hay ZX desktop
-
-
--sin zxdesktop y con ventana emulated display activa, que ponemos en el fondo ? o no permitimos emulated display window si el zx desktop no esta activado?
-
--al iniciar ZEsarUX, autoordenar iconos, que empiece por esquina sup-izq si ventana emulated display se ha restaurado al inicio
-
--si emulated display window abierta, que al maximizar ventanas considere posicion arriba izquierda como inicial
-
-
--- propuesta para incremento de cpu cuando hay muchas ventanas abiertas: que en memoria_overlay (cada caracter) diga si esta visible o no, cacheado,
-eso deberia aplica tambien a pixeles. se invalide esa cache cuando se activa dirty_user_must_draw_contents
-->creo que eso no reduce mucho el uso de cpu
-
--gestion pulsaciones con el raton en la zona donde se ubica Docked display
-
--maquinas no soportadas:
-
-ok *mk14: no tiene render real video
-MK14 que renderice en real video reusando lo que hay ahora y simplemente haciendo que escriba en rainbow buffer (creo que es parecido a lo que hay con Z88)
-
-
-
----------------------
-
--en teoria en las máquinas que no se puede quitar border, si me voy a fullscreen con opcion de "no border en full screen", se verán mal, ejemplo tbblue
 
 -snapshot zsf que guarde rainbow buffer? quiza es demasiado espacio
 
@@ -358,5 +316,7 @@ Debug:    ZENG Online: Error returning data from command streaming-get-audio-con
 Deberia detectar la salida correcta
 
 
--display palettes: ver si tiene sentido el uso de window_colour_palette_left_mouse
-Parece que si lo deshabilito, dibuja bien la ventana
+-en checklist Test cargar juegos PCW
+
+
+-generar AppImage desde un docker debian 13

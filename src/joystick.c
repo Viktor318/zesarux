@@ -28,6 +28,7 @@
 #include "debug.h"
 #include "screen.h"
 #include "zxvision.h"
+#include "menu_items.h"
 #include "zeng.h"
 #include "mem128.h"
 #include "ula.h"
@@ -164,6 +165,26 @@ int lightgun_x=0;
 int lightgun_y=0;
 
 
+void lightgun_get_xy(int *x,int *y)
+{
+    *x=lightgun_x;
+    *y=lightgun_y;
+
+    //Si esta ventana de emulated display, ajustar coordenadas
+    if (ventana_video_output_esta_abierta()) {
+        //printf("Compensar pos. antes:   %d,%d. pos ventana: %d,%d\n",*x,*y,ventana_video_output_x,ventana_video_output_y);
+        *x -=(ventana_video_output_x+1)*menu_char_width*menu_gui_zoom;
+        *y -=(ventana_video_output_y+1)*menu_char_height*menu_gui_zoom;
+        int ancho_imagen,alto_imagen;
+        ventana_video_output_get_image_size(&ancho_imagen,&alto_imagen);
+        if (ancho_imagen>0 && alto_imagen>0) {
+            *x=(*x)*get_total_ancho_rainbow()/ancho_imagen;
+            *y=(*y)*get_total_alto_rainbow()/alto_imagen;
+        }
+        //printf("Compensar pos. despues: %d,%d\n",*x,*y);
+    }
+
+}
 
 //Coordenadas x,y tal cual las retorna el driver de video, segun el tamanyo de ventana activo
 //en xwindows, normalmente entre
@@ -542,10 +563,14 @@ int old_lightgun_view_white(void)
     ancho=screen_get_emulated_display_width_no_zoom();
     alto=screen_get_emulated_display_height_no_zoom();
 
-    if (lightgun_x<ancho && lightgun_y<alto) {
+    int lx,ly;
+
+    lightgun_get_xy(&lx,&ly);
+
+    if (lx<ancho && ly<alto) {
         int indice_cache;
 
-        indice_cache=(get_total_ancho_rainbow()*lightgun_y)+lightgun_x;
+        indice_cache=(get_total_ancho_rainbow()*ly)+lx;
 
         z80_byte color=putpixel_cache[indice_cache];
 
@@ -577,9 +602,13 @@ int lightgun_view_white(void)
 
     int color;
 
+    int lx,ly;
 
-    color=lightgun_view_pixel_color_no_rainbow(lightgun_x-screen_testados_total_borde_izquierdo*2,
-                                    lightgun_y-screen_borde_superior);
+    lightgun_get_xy(&lx,&ly);
+
+
+    color=lightgun_view_pixel_color_no_rainbow(lx-screen_testados_total_borde_izquierdo*2,
+                                    ly-screen_borde_superior);
 
     //color blanco con o sin brillo
     if (color==15 || color==7) {
@@ -601,8 +630,7 @@ int lightgun_view_electron_color(void)
 
     //Ver si hay algo en blanco cerca de donde se ha disparado
 
-    x=lightgun_x;
-    y=lightgun_y;
+    lightgun_get_xy(&x,&y);
 
 
     int color;
@@ -623,7 +651,7 @@ int lightgun_view_electron_color(void)
                                 y-screen_borde_superior);
 
     if (color!=0 && color!=8) {
-        //debug_printf (VERBOSE_DEBUG,"Non black zone detected on lightgun. lightgun x: %d y: %d, color=%d",lightgun_x,lightgun_y,color);
+        //debug_printf (VERBOSE_DEBUG,"Non black zone detected on lightgun. lightgun x: %d y: %d, color=%d",lx,ly,color);
         return 1;
     }
 
@@ -653,7 +681,6 @@ int lightgun_view_electron_check_offset(int electron_offset,int lightgun_offset)
 
     //printf("Electron esta en rango de la pistola\n");
 
-    //debug_printf (VERBOSE_DEBUG,"lightgun y (%d) is in range of electron (%d)",lightgun_y,y);
 
 
     return lightgun_view_electron_color();
@@ -687,15 +714,22 @@ int lightgun_view_electron(void)
 
     x=x*2;
 
+    int lx,ly;
+
+    lightgun_get_xy(&lx,&ly);
+
 
     //debug_printf (VERBOSE_PARANOID,"electron is at t_estados: %6d x: %3d y: %3d . gun is at x: %3d y: %3d",
-    //    t_estados,x,y,lightgun_x,lightgun_y);
+    //    t_estados,x,y,lx,ly);
 
     //printf ("electron is at t_estados: %6d x: %3d y: %3d . gun is at x: %3d y: %3d\n",
-    //    t_estados,x,y,lightgun_x,lightgun_y);
+    //    t_estados,x,y,lx,ly);
 
 
     int electron_offset=y*(screen_testados_linea*2)+x;
+
+
+
 
 
     if (!lightgun_vertical_threshold) {
@@ -703,16 +737,16 @@ int lightgun_view_electron(void)
         //Nuevo calculo para saber si esta en rango. Mediante offset total
         //Contamos rango en pixeles (de ahí los *2)
 
-        int lightgun_offset=lightgun_y*(screen_testados_linea*2)+lightgun_x;
+        int lightgun_offset=ly*(screen_testados_linea*2)+lx;
 
         return lightgun_view_electron_check_offset(electron_offset,lightgun_offset);
     }
 
     else {
         int umbral_vertical=lightgun_vertical_threshold;
-        int pistola_y=lightgun_y-umbral_vertical/2;
+        int pistola_y=ly-umbral_vertical/2;
         for (;umbral_vertical>0;umbral_vertical--,pistola_y++) {
-            int lightgun_offset=pistola_y*(screen_testados_linea*2)+lightgun_x;
+            int lightgun_offset=pistola_y*(screen_testados_linea*2)+lx;
             int coincide=lightgun_view_electron_check_offset(electron_offset,lightgun_offset);
             if (coincide) return coincide;
         }
@@ -743,7 +777,7 @@ void lightgun_draw_scope(void)
 
     if (rainbow_enabled.v==0) return;
 
-    if (menu_abierto) return;
+    if (menu_abierto && !ventana_video_output_esta_activa() ) return;
 
     int ancho_rainbow=get_total_ancho_rainbow();
     int alto_rainbow=get_total_alto_rainbow();
@@ -754,11 +788,15 @@ void lightgun_draw_scope(void)
 
     if (mouse_left) bitmap=bitmap_button_ext_desktop_mirilla_lightgun_disparada;
 
-    //margen en los laterales para poder poner la mirilla centrada
-    if (lightgun_x>=offset_x && lightgun_y>=offset_y &&
-        lightgun_x<=ancho_rainbow-ZESARUX_ASCII_LOGO_ANCHO+offset_x && lightgun_y<=alto_rainbow-ZESARUX_ASCII_LOGO_ALTO+offset_y) {
+    int lx,ly;
 
-        screen_put_asciibitmap_generic(bitmap,rainbow_buffer,lightgun_x-offset_x,lightgun_y-offset_y,
+    lightgun_get_xy(&lx,&ly);
+
+    //margen en los laterales para poder poner la mirilla centrada
+    if (lx>=offset_x && ly>=offset_y &&
+        lx<=ancho_rainbow-ZESARUX_ASCII_LOGO_ANCHO+offset_x && ly<=alto_rainbow-ZESARUX_ASCII_LOGO_ALTO+offset_y) {
+
+        screen_put_asciibitmap_generic(bitmap,rainbow_buffer,lx-offset_x,ly-offset_y,
             ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, get_total_ancho_rainbow(),get_total_alto_rainbow(),screen_generic_putpixel_indexcolour,1,0,0);
 
     }

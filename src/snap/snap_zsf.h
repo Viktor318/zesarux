@@ -111,13 +111,14 @@
 #define ZSF_SCORPIONGMX_CONF 84
 #define ZSF_ATM_TURBO_RAMBLOCK 85
 #define ZSF_ATM_TURBO_CONF 86
+#define ZSF_RAINBOW_SCR 87
 
 //Fork: estado de CTC, IM2 y puerto DFFD de TBBLUE. Id alto, fuera de la numeracion de upstream,
 //para no chocar con los bloques que se agreguen alli (zsf_get_block_id_name lo muestra como desconocido)
 #define ZSF_TBBLUE_FORK_INT_STATE 200
 
 //Ultimo id maximo usado
-#define MAX_ZSF_BLOCK_ID_NAMES 86
+#define MAX_ZSF_BLOCK_ID_NAMES 87
 
 //Importante NO alterar los ID existentes o se rompera compatibilidad hacia atras del formato ZSF
 //Siempre agregar, nunca modificar ni borrar

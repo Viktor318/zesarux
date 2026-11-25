@@ -4543,3 +4543,9 @@ Scale the emulated display to fill its window	Az emulált kijelző képe kitölt
 Scale the emulated display to fit the available area of its window. The image is resized when the window size changes.	Az emulált kijelző képe kitölti az ablak rendelkezésre álló területét. Az ablak átméretezésekor a kép is átméreteződik.	help
 Keep proportions on the emulated display when fit image to window	Az emulált kijelző képaránya megmarad, amikor a kép az ablakhoz igazodik	tooltip
 Autoresize the emulated display when changing machine	Gépváltáskor az emulált kijelző ablaka az új gép képéhez igazodik	tooltip
+ZSF save Screen	ZSF mentése képernyővel	item
+Add SCR image file for non Spectrum machines in saved ZSF snapshot	A nem Spectrum gépeken SCR képernyőkép hozzáadása a mentett ZSF pillanatképhez	tooltip
+Need real video enabled	Ehhez be kell kapcsolni a Real Videót	error
+Can not allocate memory for SCR save	Nem sikerült memóriát foglalni az SCR mentéséhez	error
+Can not allocate memory for ZSF SCR preview	Nem sikerült memóriát foglalni a ZSF SCR előnézetéhez	error
+Can not allocate memory for compressed ZSF SCR preview	Nem sikerült memóriát foglalni a tömörített ZSF SCR előnézetéhez	error

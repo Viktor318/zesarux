@@ -3756,6 +3756,58 @@ if (MACHINE_IS_Z88) {
 
 }
 
+void scr_return_dimensions_rainbow(int *ancho,int *alto)
+{
+        if (MACHINE_IS_Z88) {
+                *ancho=SCREEN_Z88_WIDTH;
+                *alto=SCREEN_Z88_HEIGHT;
+        }
+        else if (MACHINE_IS_CPC) {
+                *ancho=CPC_DISPLAY_WIDTH;
+                *alto=CPC_DISPLAY_HEIGHT;
+        }
+        else if (MACHINE_IS_PCW) {
+                *ancho=PCW_DISPLAY_WIDTH;
+                *alto=PCW_DISPLAY_HEIGHT;
+        }
+        else if (MACHINE_IS_PRISM) {
+                *ancho=PRISM_DISPLAY_WIDTH;
+                *alto=PRISM_DISPLAY_HEIGHT;
+        }
+        else if (MACHINE_IS_TSCONF) {
+                *ancho=TSCONF_DISPLAY_WIDTH;
+                *alto=TSCONF_DISPLAY_HEIGHT;
+        }
+        else if (MACHINE_IS_BASECONF) {
+                *ancho=BASECONF_DISPLAY_WIDTH;
+                *alto=BASECONF_DISPLAY_HEIGHT;
+        }
+        else if (MACHINE_IS_ATM_TURBO) {
+                *ancho=ATM_TURBO_DISPLAY_WIDTH;
+                *alto=ATM_TURBO_DISPLAY_HEIGHT;
+        }
+        else if (MACHINE_IS_SCORPION_GMX) {
+                *ancho=SCORPIONGMX_DISPLAY_WIDTH;
+                *alto=SCORPIONGMX_DISPLAY_HEIGHT;
+        }
+        else if (MACHINE_IS_TBBLUE) {
+                *ancho=TBBLUE_DISPLAY_WIDTH;
+                *alto=TBBLUE_DISPLAY_HEIGHT;
+        }
+        else if (MACHINE_IS_SAM) {
+                *ancho=SAM_DISPLAY_WIDTH;
+                *alto=SAM_DISPLAY_HEIGHT;
+        }
+        else if (MACHINE_IS_QL) {
+                *ancho=ql_get_display_width_with_proportion();
+                *alto=QL_DISPLAY_HEIGHT;
+        }
+        else {
+                *ancho=ANCHO_PANTALLA;
+                *alto=ALTO_PANTALLA;
+        }
+}
+
 //Retorna 0 si ese pixel no se debe mostrar debido a tamaño de caracter < 8
 int scr_putchar_menu_comun_zoom_reduce_charwidth(int bit)
 {
@@ -5959,7 +6011,7 @@ void scr_refresca_border_mk14_rainbow(int color)
 
 
 
-//Refresco pantalla Para mk14. De momento solo poner la pantalla en blanco
+//Refresco pantalla Para mk14.
 void scr_refresca_pantalla_y_border_mk14_comun(void)
 {
 
@@ -5982,10 +6034,15 @@ void scr_refresca_pantalla_y_border_mk14_comun(void)
 
         }
 
+        screen_mk14_putpixel_zoom_rainbow_offset_x=LEFT_BORDER_NO_ZOOM;
+        screen_mk14_putpixel_zoom_rainbow_offset_y=TOP_BORDER_NO_ZOOM;
+
     }
 
-    screen_mk14_putpixel_zoom_rainbow_offset_x=LEFT_BORDER_NO_ZOOM;
-    screen_mk14_putpixel_zoom_rainbow_offset_y=TOP_BORDER_NO_ZOOM;
+    else {
+        screen_mk14_putpixel_zoom_rainbow_offset_x=0;
+        screen_mk14_putpixel_zoom_rainbow_offset_y=0;
+    }
 
 
     int x,y;
@@ -6273,24 +6330,13 @@ void load_screen(char *scrfile)
 
         else {
 
-            /*if (MACHINE_IS_SPECTRUM_16_48) fread(memoria_spectrum+16384,1,6912,ptr_scrfile);
 
-            else {
-
-                //modo 128k. cargar en pagina 5 o 7
-                int pagina=5;
-                if ( (puerto_32765&8) ) pagina=7;
-
-                fread(ram_mem_table[pagina],1,6912,ptr_scrfile);
-            }
-            */
             z80_byte leido;
             int i;
             for (i=0;i<6912;i++) {
                 fread(&leido,1,1,ptr_scrfile);
                 poke_byte_no_time(16384+i,leido);
             }
-
 
 
             fclose(ptr_scrfile);
@@ -6330,6 +6376,29 @@ void load_screen(char *scrfile)
     else {
         debug_printf (VERBOSE_ERR,"Screen loading only allowed on Spectrum or QL models");
     }
+
+}
+
+void save_rainbow_to_scr(char *scrfile)
+{
+
+    if (rainbow_enabled.v==0) {
+        debug_printf(VERBOSE_ERR,"Need real video enabled");
+        return;
+    }
+
+
+    debug_printf (VERBOSE_INFO,"Saving Screen File");
+
+
+
+    z80_byte *scrmem=util_malloc(6912,"Can not allocate memory for SCR save");
+
+    convert_rainbow_to_scr(scrmem);
+
+    util_save_file(scrmem,6912,scrfile);
+
+    free(scrmem);
 
 }
 

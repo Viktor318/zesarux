@@ -1,0 +1,33 @@
+FROM debian:bookworm
+
+RUN apt-get update && apt-get -y install git gcc make libncurses-dev libssl-dev xorg-dev libsdl1.2-dev libpulse-dev libsndfile1-dev libasound2-dev
+RUN apt-get -y install wget file binutils patchelf squashfs-tools desktop-file-utils libfuse2
+
+RUN wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+
+# Workaround for AppImage ELF header incompatibility with Docker emulation
+RUN dd if=/dev/zero bs=1 count=3 seek=8 conv=notrunc \
+    of=/linuxdeploy-x86_64.AppImage
+
+RUN chmod +x linuxdeploy-x86_64.AppImage
+
+ENV CFLAGS "-O3"
+ENV LDFLAGS "-O3"
+
+RUN git clone https://github.com/chernandezba/zesarux.git && cd zesarux/src && ./configure --enable-ssl --disable-caca --disable-aa --disable-cursesw --prefix /usr && make clean && make -j2
+
+# Se usa APPIMAGE_EXTRACT_AND_RUN porque necesitariamos Fuse pero no está disponible en docker
+RUN cd /zesarux/src && APPIMAGE_EXTRACT_AND_RUN=1 make appimage
+
+# Nota: el binario generado no va en docker por la misma razon que linuxdeploy. Si se quiere probar hacer:
+# cp ZEsarUX-x86_64.AppImage ZEsarUX-test.AppImage
+
+# dd if=/dev/zero bs=1 count=3 seek=8 conv=notrunc of=ZEsarUX-test.AppImage
+# APPIMAGE_EXTRACT_AND_RUN=1 ./ZEsarUX-test.AppImage
+
+
+WORKDIR /zesarux/src
+
+ENTRYPOINT [ "./zesarux" ]
+
+CMD [ "--vo" , "stdout", "--ao" , "null" ]

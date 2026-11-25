@@ -18967,6 +18967,8 @@ void menu_display_save_screen(MENU_ITEM_PARAMETERS)
 
     char *filtros[6];
 
+    int salvar_rainbow_to_scr=0;
+
 
     if (MACHINE_IS_SPECTRUM) {
         filtros[0]="scr";
@@ -18991,9 +18993,20 @@ void menu_display_save_screen(MENU_ITEM_PARAMETERS)
     }
 
     else {
-        filtros[0]="bmp";
-        filtros[1]="txt";
-        filtros[2]=0;
+        if (rainbow_enabled.v) {
+            filtros[0]="scr";
+            filtros[1]="bmp";
+            filtros[2]="txt";
+            filtros[3]=0;
+            salvar_rainbow_to_scr=1;
+        }
+
+        else {
+            filtros[0]="bmp";
+            filtros[1]="txt";
+            filtros[2]=0;
+        }
+
     }
 
 
@@ -19008,7 +19021,13 @@ void menu_display_save_screen(MENU_ITEM_PARAMETERS)
 
         }
 
-        save_screen(screen_save_file);
+        if (!util_compare_file_extension(screen_save_file,"scr") && salvar_rainbow_to_scr) {
+            save_rainbow_to_scr(screen_save_file);
+        }
+
+        else {
+            save_screen(screen_save_file);
+        }
 
         //Si ha ido bien la grabacion
         if (!if_pending_error_message) menu_generic_message_splash("Save Screen","OK. Screen saved");
@@ -20671,6 +20690,7 @@ void menu_text_adventure_tools(MENU_ITEM_PARAMETERS)
 zxvision_window *menu_video_output_window;
 
 
+
 //sin putpixel cache: render normal: 40% cpu. render ventana: 56% cpu
 
 //con putpixel cache: render normal: 27% cpu. render ventana: 56% cpu
@@ -20910,6 +20930,30 @@ static void menu_video_output_tamano_dibujo(zxvision_window *w,int *p_ancho,int 
     *p_alto=alto_final;
 }
 
+/* Tamano de la imagen en la ventana, en pixeles sin el zoom de la ventana del emulador (zoom_x/zoom_y), como
+   lightgun_x/lightgun_y. Upstream lo usa para la posicion de la pistola de luz y del Spectrum Doodler (joystick.c,
+   operaciones.c); en el fork, con el tamano elegido (screen_emulated_display_scale) o el ajuste a la ventana */
+void ventana_video_output_get_image_size(int *p_ancho, int *p_alto)
+{
+    int ancho,alto;
+
+    if (menu_video_output_window!=NULL) {
+        menu_video_output_tamano_dibujo(menu_video_output_window,&ancho,&alto);
+    }
+    else {
+        menu_video_output_tamano_imagen(&ancho,&alto);
+    }
+
+    if (zoom_x>0) ancho/=zoom_x;
+    if (zoom_y>0) alto/=zoom_y;
+
+    if (ancho<1) ancho=1;
+    if (alto<1) alto=1;
+
+    *p_ancho=ancho;
+    *p_alto=alto;
+}
+
 void menu_video_output_dibuja_escalado(zxvision_window *w,z80_int *origen,int ancho,int alto)
 {
     if (ancho<1 || alto<1) return;
@@ -21073,6 +21117,8 @@ int menu_video_output_last_machine=-1;
 
 int menu_video_output_forzar_redibujado_frames=0;
 
+void ventana_video_output_sync_coords_variables(void);
+
 void menu_video_output_overlay(void)
 {
 
@@ -21092,20 +21138,49 @@ void menu_video_output_overlay(void)
         z80_int *puntero;
         puntero=rainbow_buffer;
 
+        int renderizar_fondo=0;
+
         //Autoredimensionar al cambiar de maquina (upstream). Fork: al tamano elegido para la ventana
         //(screen_emulated_display_scale), como al cambiarlo con los botones de zoom
         if (menu_video_output_last_machine!=-1 && setting_emulated_display_win_autoresize.v &&
             menu_video_output_last_machine!=current_machine_type) {
             menu_video_output_ajusta_ventana();
+            //al cambiar de tamano, forzar redibujado tambien en el siguiente frame (upstream)
+            menu_video_output_forzar_redibujado_frames=2;
         }
 
         menu_video_output_last_machine=current_machine_type;
+
+        //Fork: posicion actual de la ventana para la pistola de luz (tambien tras moverla o desplazarla)
+        ventana_video_output_sync_coords_variables();
 
         //Efectos especiales (FX)
         puntero=screen_rainbow_effects(puntero,ancho,alto);
 
         //Fork: dibujar con el tamano elegido para la pantalla emulada en ventana
         menu_video_output_dibuja_escalado(menu_video_output_window,puntero,ancho,alto);
+
+        //Fondo de la zona de la maquina (upstream): con la pantalla emulada en ventana y sin ZX Desktop nadie la dibuja
+        if (menu_video_output_window->dirty_user_must_draw_contents || menu_video_output_forzar_redibujado_frames) {
+            renderizar_fondo=1;
+            menu_video_output_window->dirty_user_must_draw_contents=0;
+        }
+
+        //Si no esta ZX Desktop, alguien tiene que dibujar algo en la zona de la pantalla docked
+        if (!screen_ext_desktop_enabled && renderizar_fondo) {
+            int total_ancho=screen_get_emulated_display_width_zoom_border_en();
+            int total_alto=screen_get_emulated_display_height_zoom_border_en();
+
+            //dibujar el fondo con el color del tema
+            int color_fondo_docked=ESTILO_GUI_PAPEL_NORMAL;
+
+            int x,y;
+            for (y=0;y<total_alto;y++) {
+                for (x=0;x<total_ancho;x++) {
+                    scr_putpixel(x,y,color_fondo_docked);
+                }
+            }
+        }
 
     }
 
@@ -21126,6 +21201,21 @@ zxvision_window zxvision_window_video_output;
 
 int ventana_video_output_activa=0;
 int ventana_video_output_abierta=0;
+
+//Coordenadas donde está la ventana para saberlo rapidamente, usado en lightgun por ejemplo
+int ventana_video_output_x=0;
+int ventana_video_output_y=0;
+
+void ventana_video_output_sync_coords_variables(void)
+{
+
+    if (!ventana_video_output_abierta) return;
+
+    //Fork: menos el desplazamiento de la ventana (scroll), pues la imagen se dibuja desplazada
+    ventana_video_output_x=menu_video_output_window->x-menu_video_output_window->offset_x;
+    ventana_video_output_y=menu_video_output_window->y-menu_video_output_window->offset_y;
+
+}
 
 int ventana_video_output_esta_activa(void)
 {
@@ -21223,6 +21313,8 @@ void menu_video_output(MENU_ITEM_PARAMETERS)
 
     ventana_video_output_abierta=1;
 
+    ventana_video_output_sync_coords_variables();
+
 
     //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
     //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
@@ -21266,6 +21358,8 @@ void menu_video_output(MENU_ITEM_PARAMETERS)
             //Y no atendemos a cursores, pgup, dn, shift+opqa etc porque se usan dentro de maquina emulada
             //y no queremos que actue en la ventana
         }
+
+        ventana_video_output_sync_coords_variables();
 
 
     } while (salir==0);

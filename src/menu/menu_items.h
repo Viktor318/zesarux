@@ -68,6 +68,10 @@ extern void menu_video_output_ajusta_ventana(void);
 extern void menu_video_output_set_scale(int escala);
 extern int menu_video_output_scale_next(int dir);
 extern void menu_video_output_dibuja_escalado(zxvision_window *w,z80_int *origen,int ancho,int alto);
+extern void ventana_video_output_get_image_size(int *p_ancho, int *p_alto);
+
+extern int ventana_video_output_x;
+extern int ventana_video_output_y;
 
 extern int ventana_video_output_abierta;
 extern int ventana_video_output_activa;

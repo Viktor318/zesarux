@@ -219,6 +219,20 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
   nagyobb MMC lassabban töltődik be, és ugyanennyi memóriát foglal” (a kép
   továbbra is egészben a memóriába töltődik).
 
+### Upstream
+
+- Beolvasztva az upstream 2026-11-25-i állapota (38 commit): a **Next-en
+  teljes képernyőn** nem kapcsolja ki a keretet (ott nem lehet); a
+  **pisztoly és a Spectrum Doodler** helye jó a külön ablakban megjelenő
+  gépképen is (a fork nagyításával, az ablakhoz igazítással és a
+  görgetéssel együtt); ZX Desktop nélkül a gép helyén a téma háttérszíne
+  látszik, ha a kép ablakban van; **bármelyik gép képernyője menthető SCR
+  fájlba**, és a nem Spectrum gépek ZSF-mentéseiben SCR előnézet van
+  (*ZSF mentése képernyővel*, `--zsf-no-save-scr`, magyarul is); javított
+  BMP-fejléc; pillanatkép a memóriában Jupiter Ace-en, Sam Coupé-n és
+  Z88-on is; a Master System kazetta saját memóriája; MK14 keret nélkül;
+  Linux AppImage előkészítése. A fork saját README-je nem változott.
+
 ## v13.1-B1-hu.1 – 2026-11-18
 
 A fork második kiadása, a ZEsarUX 13.1 Beta 1-re építve.

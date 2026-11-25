@@ -586,7 +586,7 @@ int menu_interface_border_cond(void)
 {
     if (!menu_interface_fullscreen_cond()) return 0;
 
-    if (!MACHINE_IS_Z88 && !MACHINE_IS_TSCONF && !MACHINE_IS_TBBLUE && !MACHINE_IS_PCW) {
+    if (!MACHINE_IS_Z88 && !MACHINE_IS_TSCONF && !MACHINE_IS_TBBLUE) {
         return 1;
     }
 
@@ -837,9 +837,10 @@ void menu_interface_fullscreen_enable(void)
 
     }
 
-    //desactivar border
-    if (border_enabled.v && disable_border_on_full_screen) {
-        border_state_before_full_screen=border_enabled.v;
+    // desactivar border en las maquinas que es posible
+    border_state_before_full_screen=border_enabled.v;
+
+    if (border_enabled.v && disable_border_on_full_screen && menu_interface_border_cond() ) {
         menu_interface_border(0);
         //Estos scr_refresca_pantalla_solo_driver son necesarios en Mac por ejemplo, si no, no cambia bien cuando
         //desactiva footer y border... por que? a saber... esto es un poco buggy...
@@ -12766,6 +12767,13 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
         menu_add_item_menu_shortcut(array_menu_settings_snapshot,'c');
         menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Setting to save compressed ZSF files or not");
         menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Setting to save compressed ZSF files or not");
+
+        menu_add_item_menu_en_es_ca(array_menu_settings_snapshot,MENU_OPCION_NORMAL,NULL,NULL,
+            "ZSF save Screen","ZSF grabar Pantalla","ZSF gravar Pantalla");
+        menu_add_item_menu_prefijo_format(array_menu_settings_snapshot,"[%c] ",(zsf_snap_save_scr.v ? 'X' : ' ') );
+        menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Add SCR image file for non Spectrum machines in saved ZSF snapshot");
+        menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Add SCR image file for non Spectrum machines in saved ZSF snapshot");
+        menu_add_item_menu_opcion_conmuta(array_menu_settings_snapshot,&zsf_snap_save_scr);
 
         menu_add_item_menu_en_es_ca(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_settings_rom_zsf,NULL,
             "ZSF save R~~OM","ZSF grabar R~~OM","ZSF gravar R~~OM");

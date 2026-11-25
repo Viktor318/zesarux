@@ -11,6 +11,8 @@ További joystick-típusok támogatása Macen (Dpad, eltérő tengelyek)
 60 Hz-es támogatás a következő gépeken: Master System, SG1000, MSX, Colecovision, Spectravideo, Timex Sinclair 2068
 Privát üzenetek küldhetők a felhasználóknak a ZENG Online-on
 SCL fájlok okos betöltése
+SCR előnézet minden ZSF pillanatképben
+Bármelyik gép képernyője menthető SCR fájlba (Spectrum képernyőfájl)
 Új eszközikonok: esxdos kezelő, kartusho, iFrom, LEC memória, superupgrade
 Az F-funkcióbillentyűk műveletei (CPU újraindítása, ablak megnyitása, NMI stb.) joystickról is kiválthatók. A "Quicksave", "Rewind" és "FForward" joystick-események megszűntek, ezek mostantól műveletként válthatók ki
 A kimeneti fájl kiválasztható a Külső hangforrás ablakból
@@ -106,7 +108,7 @@ Javítva a Spectrum online böngésző lekérdezései
 Javítva a NextZXOS 2.09 indítása Spectrum Nexten
 Javítva a Spectrum multicolor effektek (Nirvana stb.). Köszönet: noentiendo
 Javítva a Keresés menü kikapcsolása
-Javítva a BMP mentés 4-gyel nem osztható szélességeknél
+Javítva a BMP mentés 4-gyel nem osztható szélességeknél, javítva a fejléc
 Javítva a pzx fájlok létrehozása: a blokkok közé egy másodperces szünet kerül
 Javítva a kazetta hullámformájának megjelenítése a Vizuális valódi kazetta ablakban
 Javítva a Fade Out videóeffekt

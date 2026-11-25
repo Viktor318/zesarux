@@ -135,6 +135,7 @@ extern int screen_get_machine_area_width_no_zoom(void);
 extern int screen_get_machine_area_height_no_zoom(void);
 
 extern void scr_return_margenxy_rainbow(int *margenx_izq,int *margeny_arr);
+extern void scr_return_dimensions_rainbow(int *ancho,int *alto);
 
 extern void (*scr_putpixel_zoom) (int x,int y,unsigned color);
 extern void (*scr_putpixel_zoom_rainbow)(int x,int y,unsigned int color);
@@ -173,6 +174,7 @@ extern int scr_get_4pixel_rainbow(int x,int y);
 //extern int if_store_scanline_interlace(int y);
 
 extern void convertir_color_spectrum_paleta_to_rgb(z80_int valor,int *r,int *g,int *b);
+extern int spectrum_colortable_original_new[16];
 
 extern z80_byte compare_char(unsigned char *origen,unsigned char *inverse);
 extern z80_byte compare_char_step(z80_byte *origen,z80_byte *inverse,int step);
@@ -237,6 +239,7 @@ extern int screen_simpletext_driver;
 extern void load_screen(char *scrfile);
 extern void save_screen_scr(char *scrfile);
 extern void save_screen(char *screen_save_file);
+extern void save_rainbow_to_scr(char *scrfile);
 
 //extern z80_bit interlaced_frame_par;
 extern z80_byte interlaced_numero_frame;

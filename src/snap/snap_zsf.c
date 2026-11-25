@@ -474,13 +474,13 @@ Byte Fields:
 5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff, ...)
 
 -Block ID 37: ZSF_SMS_RAMBLOCK
-A rom binary block for a SMS
+A RAM binary block for a SMS
 Byte Fields:
 0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
     YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
 1,2: Block start address (currently unused)
 3,4: Block lenght
-5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff, ...)
+5: memory segment(0=RAM de la consola, 1=RAM del cartucho)
 
 -Block ID 38: ZSF_SMS_CONF
 Ports and internal registers of SMS machine
@@ -993,6 +993,15 @@ TBBLUE CTC, hardware IM2 interrupt controller and port DFFD state
 -Block ID 86: ZSF_ATM_TURBO_CONF
 See functions store_zsf_atm_turbo_conf() y load_zsf_atm_turbo_conf to get info about this block
 
+-Block ID 87: ZSF_RAINBOW_SCR
+Vista previa de la pantalla sin borde, en formato SCR de Spectrum (6912 bytes).
+Byte Fields:
+0: Flags. Bit 0: datos comprimidos con repeticiones DD DD YY ZZ
+1,2: Direccion inicial (0)
+3,4: Longitud sin comprimir (6912)
+5 y siguientes: datos de pantalla
+No se utiliza para restaurar el estado de la maquina.
+
 
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
@@ -1094,6 +1103,7 @@ char *zsf_block_id_names[]={
   "ZSF_SCORPIONGMX_CONF",
   "ZSF_ATM_TURBO_RAMBLOCK",
   "ZSF_ATM_TURBO_CONF",
+  "ZSF_RAINBOW_SCR",
 
 
   "Unknown"  //Este siempre al final
@@ -1935,7 +1945,7 @@ void load_zsf_sms_ramblock_snapshot_block_data(z80_byte *block_data,int longitud
     YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
 1,2: Block start address (currently unused)
 3,4: Block lenght
-5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff, ....)
+5: memory segment(0=RAM de la consola, 1=RAM del cartucho)
 */
 
 
@@ -1968,7 +1978,11 @@ void load_zsf_sms_ramblock_snapshot_block_data(z80_byte *block_data,int longitud
   //return &memoria_spectrum[SMS_MAX_ROM_SIZE + (direccion & 8191)];
 
 
-  load_zsf_snapshot_block_data_addr(&block_data[i],&memoria_spectrum[SMS_MAX_ROM_SIZE],block_lenght,longitud_original,block_flags&1);
+  // El segmento cero es RAM de la consola; el uno, RAM del cartucho.
+  if (segment<=1 && block_lenght<=SMS_SYSTEM_RAM_SIZE) {
+    int offset=(segment==0 ? SMS_MAX_ROM_SIZE : SMS_CARTRIDGE_RAM_OFFSET);
+    load_zsf_snapshot_block_data_addr(&block_data[i],&memoria_spectrum[offset],block_lenght,longitud_original,block_flags&1);
+  }
 
 
 
@@ -4326,6 +4340,10 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
         load_zsf_didaktikgama_ramblock(block_data,block_lenght);
     break;
 
+    case ZSF_RAINBOW_SCR:
+        //La pantalla de vista previa no modifica el estado de la maquina.
+    break;
+
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
       break;
@@ -6525,7 +6543,7 @@ Byte Fields:
 
     //Y bloque RAM
 
-    longitud_ram=8192;
+    longitud_ram=SMS_SYSTEM_RAM_SIZE;
     compressed_ramblock[0]=0;
     compressed_ramblock[1]=value_16_to_8l(16384);
     compressed_ramblock[2]=value_16_to_8h(16384);
@@ -6542,6 +6560,13 @@ Byte Fields:
 
 
     zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_SMS_RAMBLOCK, longitud_bloque+6);
+
+    // Guardar también la RAM que el paginador del cartucho muestra en el tercer slot.
+    compressed_ramblock[0]=0;
+    compressed_ramblock[5]=1;
+    longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[SMS_CARTRIDGE_RAM_OFFSET],&compressed_ramblock[6],SMS_CARTRIDGE_RAM_SIZE,&si_comprimido);
+    if (si_comprimido) compressed_ramblock[0]|=1;
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total,compressed_ramblock,ZSF_SMS_RAMBLOCK,longitud_bloque+6);
 
 
 
@@ -7568,6 +7593,25 @@ bit 1: ql_audio_output_bit
   }
 
 
+
+  if (!MACHINE_IS_SPECTRUM && !MACHINE_IS_ZX8081 && !MACHINE_IS_QL && rainbow_enabled.v && zsf_snap_save_scr.v) {
+    z80_byte *scrmem=util_malloc(6912,"Can not allocate memory for ZSF SCR preview");
+    z80_byte *compressed_scrblock=util_malloc(6912*2+5,"Can not allocate memory for compressed ZSF SCR preview");
+
+    convert_rainbow_to_scr(scrmem);
+    compressed_scrblock[1]=compressed_scrblock[2]=0;
+    compressed_scrblock[3]=value_16_to_8l(6912);
+    compressed_scrblock[4]=value_16_to_8h(6912);
+
+    int si_comprimido;
+    int longitud_bloque=save_zsf_copyblock_compress_uncompres(scrmem,&compressed_scrblock[5],6912,&si_comprimido);
+    compressed_scrblock[0]=si_comprimido;
+
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total,compressed_scrblock,ZSF_RAINBOW_SCR,longitud_bloque+5);
+
+    free(compressed_scrblock);
+    free(scrmem);
+  }
 
   //test meter un NOOP
   //zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, NULL,0, 0);
