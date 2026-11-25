@@ -230,6 +230,23 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
   Jupiter Ace, Sam Coupé and Z88 too; cartridge RAM on the Master System;
   MK14 without border; Linux AppImage preparation. The fork's own README is
   unchanged.
+- Merged the upstream state of 2026-11-22: simulated real video for the
+  **MK14** display, and lower CPU usage while the *Colour Palettes* window is
+  open.
+- Merged the upstream state of 2026-11-21: **duplicating an icon** in the
+  context menu of the desktop icons (*Duplicate icon*, translated to
+  Hungarian too), aligning to the grid no longer moves icons above the top
+  edge. This also brings in the source changes of the 2026-11-20 merge
+  (they were missing from that commit).
+- Merged the upstream state of 2026-11-20: the missing characters of the
+  vector font (`[ \ ] ^ _ { | } ~`), new screenshots, the DAVID Desktop name
+  in the README (the fork's own README is unchanged).
+- Merged the upstream state of 2026-11-19: **Next: the hardware IM2 mode
+  ULA interrupt** (vector from NR 0xC0, enable from NR 0xC4, and a new
+  interrupt only after RETI), the **right edge of the Layer 2 clip window**
+  in the 320×256 and 640×256 modes; ATM Turbo snapshots (ZSF) and debugging;
+  Covox on the BaseConf machine; **aligning the icons to a grid** on the
+  desktop (*Align icons to grid*, translated to Hungarian too).
 
 ## v13.1-B1-hu.1 – 2026-11-18
 
@@ -297,23 +314,6 @@ The second release of the fork, based on ZEsarUX 13.1 Beta 1.
 
 ### Upstream
 
-- Merged the upstream state of 2026-11-22: simulated real video for the
-  **MK14** display, and lower CPU usage while the *Colour Palettes* window is
-  open.
-- Merged the upstream state of 2026-11-21: **duplicating an icon** in the
-  context menu of the desktop icons (*Duplicate icon*, translated to
-  Hungarian too), aligning to the grid no longer moves icons above the top
-  edge. This also brings in the source changes of the 2026-11-20 merge
-  (they were missing from that commit).
-- Merged the upstream state of 2026-11-20: the missing characters of the
-  vector font (`[ \ ] ^ _ { | } ~`), new screenshots, the DAVID Desktop name
-  in the README (the fork's own README is unchanged).
-- Merged the upstream state of 2026-11-19: **Next: the hardware IM2 mode
-  ULA interrupt** (vector from NR 0xC0, enable from NR 0xC4, and a new
-  interrupt only after RETI), the **right edge of the Layer 2 clip window**
-  in the 320×256 and 640×256 modes; ATM Turbo snapshots (ZSF) and debugging;
-  Covox on the BaseConf machine; **aligning the icons to a grid** on the
-  desktop (*Align icons to grid*, translated to Hungarian too).
 - Merged the upstream state of 2026-11-18: **ZX Desktop is renamed DAVID
   Desktop** (in the English interface), ATM Turbo memory zones for the
   debugger, small fixes. In the Hungarian interface the name stays **ZX

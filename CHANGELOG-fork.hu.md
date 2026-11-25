@@ -232,6 +232,24 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
   BMP-fejléc; pillanatkép a memóriában Jupiter Ace-en, Sam Coupé-n és
   Z88-on is; a Master System kazetta saját memóriája; MK14 keret nélkül;
   Linux AppImage előkészítése. A fork saját README-je nem változott.
+- Beolvasztva az upstream 2026-11-22-i állapota: az **MK14** kijelzője
+  szimulált valódi képpel jelenik meg, és kisebb a processzorterhelés, amíg
+  a *Színpaletták* ablak nyitva van.
+- Beolvasztva az upstream 2026-11-21-i állapota: **ikon másolása** a ZX
+  Desktop ikonjainak helyi menüjében (*Ikon másolása*, magyarul is), a
+  rácshoz igazításnál az ikonok nem csúsznak a felső szél fölé. Ezzel a
+  2026-11-20-i behozatal forráskód-változásai is bekerültek (azok az előző
+  commitból kimaradtak).
+- Beolvasztva az upstream 2026-11-20-i állapota: a vektoros betűkészlet
+  hiányzó jelei (`[ \ ] ^ _ { | } ~`), új képernyőképek, a README-ben a
+  DAVID Desktop név (a fork saját README-je nem változott).
+- Beolvasztva az upstream 2026-11-19-i állapota: **Next: a hardveres IM2
+  mód ULA-megszakítása** (a vektor az NR 0xC0-ból, az engedélyezés az
+  NR 0xC4-ből, és új megszakítás csak a RETI után jön), a **Layer 2
+  vágóablakának jobb széle** 320×256-os és 640×256-os módban; az ATM Turbo
+  gyorsmentése (ZSF) és hibakeresője; Covox a BaseConf gépen; **az ikonok
+  rácshoz igazítása** a ZX Desktopon (*Ikonok rácshoz igazítása*, magyarul
+  is).
 
 ## v13.1-B1-hu.1 – 2026-11-18
 
@@ -296,24 +314,6 @@ A fork második kiadása, a ZEsarUX 13.1 Beta 1-re építve.
 
 ### Upstream
 
-- Beolvasztva az upstream 2026-11-22-i állapota: az **MK14** kijelzője
-  szimulált valódi képpel jelenik meg, és kisebb a processzorterhelés, amíg
-  a *Színpaletták* ablak nyitva van.
-- Beolvasztva az upstream 2026-11-21-i állapota: **ikon másolása** a ZX
-  Desktop ikonjainak helyi menüjében (*Ikon másolása*, magyarul is), a
-  rácshoz igazításnál az ikonok nem csúsznak a felső szél fölé. Ezzel a
-  2026-11-20-i behozatal forráskód-változásai is bekerültek (azok az előző
-  commitból kimaradtak).
-- Beolvasztva az upstream 2026-11-20-i állapota: a vektoros betűkészlet
-  hiányzó jelei (`[ \ ] ^ _ { | } ~`), új képernyőképek, a README-ben a
-  DAVID Desktop név (a fork saját README-je nem változott).
-- Beolvasztva az upstream 2026-11-19-i állapota: **Next: a hardveres IM2
-  mód ULA-megszakítása** (a vektor az NR 0xC0-ból, az engedélyezés az
-  NR 0xC4-ből, és új megszakítás csak a RETI után jön), a **Layer 2
-  vágóablakának jobb széle** 320×256-os és 640×256-os módban; az ATM Turbo
-  gyorsmentése (ZSF) és hibakeresője; Covox a BaseConf gépen; **az ikonok
-  rácshoz igazítása** a ZX Desktopon (*Ikonok rácshoz igazítása*, magyarul
-  is).
 - Beolvasztva az upstream 2026-11-18-i állapota: a **ZX Desktop új neve
   DAVID Desktop** (az angol felületen), az ATM Turbo memóriazónái a
   hibakeresőhöz, kisebb javítások. A magyar felületen a név továbbra is
