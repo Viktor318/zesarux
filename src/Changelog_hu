@@ -6,6 +6,7 @@ ZEsarUX 13.1 - Zorro edition. 2026. október 6.
 Új gépek: Scorpion ZS-256, Scorpion ZS-256 Turbo+, Scorpion GMX
 Új gép: Didaktik Gama
 Új gépek: Microdigital TK90X ULA Ferranti (spanyol és portugál)
+Linux AppImage csomag
 Új konfigurációs fájl beállítás, amellyel Azerty billentyűzeten a számbillentyűk Shift lenyomása nélkül is használhatók
 További joystick-típusok támogatása Macen (Dpad, eltérő tengelyek)
 60 Hz-es támogatás a következő gépeken: Master System, SG1000, MSX, Colecovision, Spectravideo, Timex Sinclair 2068
@@ -28,6 +29,7 @@ Bájtok keresése a Hexadecimális szerkesztőből
 
 * Fejlesztések:
 
+A Spectrum Next SD-kártyája (tbblue.mmc) frissítve a legújabb disztribúcióra
 Továbbfejlesztett Sinclair QL emuláció:
 - Qsound emuláció
 - Javított Intel 8049 hang

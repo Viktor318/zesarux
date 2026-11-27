@@ -25,6 +25,9 @@
 # Sacar lista con:
 # A=`find . -name "*.c"|sort|cut -d '/' -f2|grep -v "\.c"|uniq` ; echo $A
 
+APPIMAGE_BUILD=""
+DOCKER_BUILD=""
+
 CCOMPILER=gcc
 
 echo
@@ -76,6 +79,8 @@ show_help()
 	echo "--disable-contend            Disable Contended Memory emulation"
 	echo "--disable-putpixel-cache     Disable putpixel cache. Test feature"
 	echo "--spectrum-reduced-core      Use reduced Spectrum core by default, recommended for slow devices like Raspberry Pi 1 and Zero. You can also switch it from command line or menu"
+	echo "--enable-appimage            Some settings to indicate AppImage build"
+	echo "--enable-docker              Some settings to indicate Docker build"
 	echo
 	echo "Installation directories:"
 	echo "--prefix PREFIX              Install program files in PREFIX [/usr/local]"
@@ -346,6 +351,14 @@ while [ $# -gt 0 ]; do
 	OPTIONREDUCED_CORE_SPECTRUM="yes"
 	;;
 
+	--enable-appimage)
+	APPIMAGE_BUILD=" (AppImage)"
+	;;
+
+	--enable-docker)
+	DOCKER_BUILD=" (Docker)"
+	;;
+
         --other-unix)
 	OPTIONOTHER_UNIX="yes"
 	;;
@@ -475,6 +488,9 @@ SISTEMA_RELEASE="$SISTEMA"
 if [ -e /etc/os-release ]; then
 	SISTEMA_RELEASE=`cat /etc/os-release |grep PRETTY_NAME| head -n1 |cut -d '"' -f2`
 fi
+
+# Agregar sufijo para indicar que esta generado como AppImage y/o con Docker
+SISTEMA_RELEASE="${SISTEMA_RELEASE}${APPIMAGE_BUILD}${DOCKER_BUILD}"
 
 
 if [ "$CHECK_CCOMPILER" = "yes" ] && [ "$OPTIONOTHER_UNIX" = "" ]; then
@@ -2063,7 +2079,7 @@ appimage:
 	cp -a \$(COMMONFILES) ZEsarUX.AppDir/usr/share/zesarux/
 	/linuxdeploy-x86_64.AppImage --appdir ZEsarUX.AppDir --executable ./zesarux --desktop-file ./zesarux.desktop --icon-file ./zesarux_48.png --output appimage
 	echo
-	echo "Generated file is : ZEsarUX.AppDirXXXXX"
+	echo "Generated file is : ZEsarUX-x86_64.AppImage"
 
 
 fedora:

@@ -199,7 +199,7 @@ void ide_flush_flash_to_disk(void)
     }
 
     if (resultado==2) {
-        debug_printf (VERBOSE_ERR,"Error writing to IDE file. Disabling write file operations");
+        debug_printf (VERBOSE_ERR,"Error writing to IDE file. Disabling persistent write");
         ide_persistent_writes.v=0;
         return;
     }
@@ -238,7 +238,7 @@ void ide_flush_flash_to_disk(void)
     //printf ("escritos: %d\n",escritos);
 
     if (escritos!=size || ptr_idefile==NULL) {
-        debug_printf (VERBOSE_ERR,"Error writing to IDE file. Disabling write file operations");
+        debug_printf (VERBOSE_ERR,"Error writing to IDE file. Disabling persistent write");
         ide_persistent_writes.v=0;
     }
 

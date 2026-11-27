@@ -221,6 +221,12 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
 
 ### Upstream
 
+- Beolvasztva az upstream 2026-11-27-i állapota (14 commit): a beépített
+  **Next SD-kártyakép** (`tbblue.mmc`, 64 MB) a 26.11a disztribúció
+  (NextZXOS 2.10a, firmware 1.46; eddig NextZXOS 2.06H); Linux AppImage és
+  Docker build (`--enable-appimage`, `--enable-docker`); ha egy lemez- vagy
+  kártyakép nem írható, az üzenet: „… A tartós írás kikapcsolva” (a fork
+  szektoronkénti MMC/IDE írása is így jelzi).
 - Beolvasztva az upstream 2026-11-25-i állapota (38 commit): a **Next-en
   teljes képernyőn** nem kapcsolja ki a keretet (ott nem lehet); a
   **pisztoly és a Spectrum Doodler** helye jó a külön ablakban megjelenő

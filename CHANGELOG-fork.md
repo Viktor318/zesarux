@@ -218,6 +218,12 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
 
 ### Upstream
 
+- Merged the upstream state of 2026-11-27 (14 commits): the built-in
+  **Next SD card image** (`tbblue.mmc`, 64 MB) is the 26.11a distribution
+  (NextZXOS 2.10a, firmware 1.46; it was NextZXOS 2.06H); Linux AppImage and
+  Docker build (`--enable-appimage`, `--enable-docker`); when a disk or card
+  image cannot be written, the message is "… Disabling persistent write"
+  (the fork's sector-by-sector MMC/IDE writing says so too).
 - Merged the upstream state of 2026-11-25 (38 commits): **full screen on
   the Next** no longer disables the border (it cannot be disabled there);
   the **light gun and Spectrum Doodler** positions are right on the machine

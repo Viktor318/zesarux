@@ -281,6 +281,7 @@ ZEsarUX_linux-13.0-debian13_i686.tar.gz                 43 MB
 ZEsarUX_linux-13.0-debian13_x86_64.tar.gz               43 MB
 ZEsarUX_linux-13.0-fedora42_x86_64.tar.gz               43 MB
 ZEsarUX_linux-13.0-ubuntu24_x86_64.tar.gz               43 MB
+ZEsarUX_linux-13.0_x86_64.AppImage                      47 MB
 ZEsarUX_macos-intel-13.0.dmg                            41 MB
 ZEsarUX_macos-silicon-13.0.dmg                          41 MB
 ZEsarUX_raspberrypios-framebuffer-13.0_armv6l.tar.gz    42 MB
@@ -398,50 +399,17 @@ make rpi
 
 ** AppImage
 
+docker build --tag=zesarux.appimage --progress plain -f Dockerfile.appimage .
 
-con root:
-apt install \
-    wget \
-    file \
-    binutils \
-    patchelf \
-    squashfs-tools \
-    desktop-file-utils \
-    libfuse2t64
+# por si ya se estaba ejecutando
+docker container rm run-zesarux-appimage
 
-Debian 12: libfuse2
-Debian 13: libfuse2t64
+docker run --name run-zesarux-appimage -it zesarux.appimage --vo stdout --ao null --disable-first-start-wizard --exit-after 1
 
+#para dar tiempo a arrancar
+sleep 1
 
-no root:
-
-cd ~
-
-
-wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
-
-chmod +x linuxdeploy-x86_64.AppImage
-
-usuario@debian64:~$ ./linuxdeploy-x86_64.AppImage --version
-
-usuario@debian64:~$ ./linuxdeploy-x86_64.AppImage --list-plugins
-
-
-
-cd zesarux/src/
-
-
-
-mkdir -p ZEsarUX.AppDir/usr/share/zesarux
-
-#TODO: copiar todo lo necesario...
-cp -a *.rom ZEsarUX.AppDir/usr/share/zesarux/
-
-~/linuxdeploy-x86_64.AppImage --appdir ZEsarUX.AppDir --executable ./zesarux --desktop-file ./zesarux.desktop --icon-file ./zesarux_48.png     --output appimage
-
-
-
-
+docker cp run-zesarux-appimage:/zesarux/src/ZEsarUX-x86_64.AppImage ZEsarUX_linux-13.1_x86_64.AppImage
 
 
 ** Mac Arm ("Silicon")

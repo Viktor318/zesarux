@@ -7,6 +7,7 @@ Added machines Scorpion ZS-256, Scorpion ZS-256 Turbo+, Scorpion GMX
 Added machines ATM Turbo 1, ATM Turbo 2, ATM Turbo 2+, ATM Turbo 3
 Added machine Didaktik Gama
 Added machines Microdigital TK90X ULA Ferranti (Spanish and Portuguese)
+Added Linux AppImage package
 Allow to render emulated display on a separate window
 Added configuration file setting for enabling to use numeric keys on Azerty keyboard, without having to press Shift
 Added more different joystick support for Mac (Dpad, different axis)
@@ -76,6 +77,7 @@ Improved DAVID Desktop (formerly called ZX Desktop):
 
 Improved TR-DOS integration on Pentagon
 Improved Virtual Keyboard: allow to scale keyboard
+Updated Spectrum Next SD card (tbblue.mmc) to last distribution
 Improved cpu usage on Colour Palettes window
 Add casing views to Visual Floppy (disk, clear case, opaque case)
 Special effects for video output are applied dynamically when moving cursor
