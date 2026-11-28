@@ -176,6 +176,7 @@ struct s_machines_info {
 extern struct s_machines_info machines_info[];
 
 extern char *get_machine_name(z80_byte m);
+extern const char *get_machine_description(int machine_id);
 
 extern char *debug_machine_info_family_get_family(enum machine_families_list family_id);
 extern char *debug_machine_info_family(int machine_id);
@@ -1001,7 +1002,7 @@ extern int util_get_time_milliseconds(void);
 #define MEMORY_ZONE_LEC_MEMORY 53
 #define MEMORY_ZONE_ZXMMCPLUS_FLASHROM 54
 #define MEMORY_ZONE_ZXMMCPLUS_RAM 55
-
+#define MEMORY_ZONE_BASECONF_TEXT_FONT 56
 
 
 extern void util_str_add_char(char *texto,int posicion,char letra);

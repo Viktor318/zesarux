@@ -38999,6 +38999,9 @@ void menu_debug_main(MENU_ITEM_PARAMETERS)
         menu_add_item_menu_genera_ventana(array_menu_debug);
         menu_add_item_menu_se_cerrara(array_menu_debug);
 
+        menu_add_item_menu_en_es_ca(array_menu_debug,MENU_OPCION_NORMAL,menu_machine_description,NULL,
+            "Machine description","Descripción máquina","Descripció màquina");
+        menu_add_item_menu_add_flags(array_menu_debug,MENU_ITEM_FLAG_GENERA_VENTANA | MENU_ITEM_FLAG_SE_CERRARA);
 
         menu_add_item_menu_separator(array_menu_debug);
         menu_add_item_menu_es_avanzado(array_menu_debug);

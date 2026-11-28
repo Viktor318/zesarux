@@ -221,6 +221,11 @@ fejlesztői változata; a v13.1-B1-hu.1 a 13.1 Beta 1-re épül). A ZEsarUX saj�
 
 ### Upstream
 
+- Beolvasztva az upstream 2026-11-28-i állapota (4 commit): **gépleírás**
+  (*Gép leírása* a Hibakeresés menüben és a ZX Desktop ikonjainak helyi
+  menüjében: rövid ismertető az éppen futó gépről); mind a 75 gép leírása
+  magyarul is; a BaseConf szövegmódjának betűkészlete memóriazónaként a
+  hibakeresőben.
 - Beolvasztva az upstream 2026-11-27-i állapota (14 commit): a beépített
   **Next SD-kártyakép** (`tbblue.mmc`, 64 MB) a 26.11a disztribúció
   (NextZXOS 2.10a, firmware 1.46; eddig NextZXOS 2.06H); Linux AppImage és

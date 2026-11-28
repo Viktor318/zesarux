@@ -218,6 +218,11 @@ upstream `main` branch; v13.1-B1-hu.1 is based on 13.1 Beta 1). The changes of Z
 
 ### Upstream
 
+- Merged the upstream state of 2026-11-28 (4 commits): **machine
+  description** (*Machine description* in the Debug menu and in the context
+  menu of the desktop icons: a short description of the running machine);
+  all 75 machine descriptions translated to Hungarian too; the BaseConf text
+  mode font as a memory zone in the debugger.
 - Merged the upstream state of 2026-11-27 (14 commits): the built-in
   **Next SD card image** (`tbblue.mmc`, 64 MB) is the 26.11a distribution
   (NextZXOS 2.10a, firmware 1.46; it was NextZXOS 2.06H); Linux AppImage and
